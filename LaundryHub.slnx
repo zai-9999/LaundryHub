@@ -1,0 +1,5 @@
+<Solution>
+  <Project Path="LaundryHub.App/LaundryHub.App.csproj" />
+  <Project Path="LaundryHub.Core/LaundryHub.Core.csproj" />
+  <Project Path="LaundryHub.Data/LaundryHub.Data.csproj" />
+</Solution>
