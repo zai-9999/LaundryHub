@@ -10,282 +10,33 @@ public partial class FrmOrderDetail : Form
     private Order _order;
     private CustomerModel? _customer;
 
+    public FrmOrderDetail() : this(new Order { OrderNumber = "LH-DEMO-001", Status = "Washing", TotalAmount = 260.00m, WeightKg = 4.0m })
+    {
+    }
+
     public FrmOrderDetail(Order order)
     {
         _order = order;
-        _customer = AppServices.Customers.GetById(order.CustomerId);
-        InitializeForm();
+        InitializeComponent();
         RefreshOrderData();
     }
 
-    // ─── UI Controls ─────────────────────────────────────────────────────────
-
-    private Label lblOrderNumber = null!;
-    private Label lblStatusBadge = null!;
-    private Label lblCustomerInfo = null!;
-    private Label lblServiceInfo = null!;
-    private Label lblWeightInfo = null!;
-    private Label lblTotalAmount = null!;
-    private Label lblPaymentStatus = null!;
-    private Label lblPickupDate = null!;
-    private Label lblCreatedDate = null!;
-    private Label lblCancelReason = null!;
-    private PictureBox picQrCode = null!;
-    private Button btnAdvanceStatus = null!;
-    private Button btnClaimOrder = null!;
-    private Button btnCancelOrder = null!;
-    private Button btnResendEmail = null!;
-    private Button btnPrintQr = null!;
-
-    private void InitializeForm()
+    private void btnClose_Click(object? sender, EventArgs e)
     {
-        this.Text = $"Order Details – {_order.OrderNumber}";
-        this.Size = new Size(820, 620);
-        this.StartPosition = FormStartPosition.CenterParent;
-        this.BackColor = Color.FromArgb(15, 23, 42); // slate-900
-        this.ForeColor = Color.White;
-        this.Font = new Font("Segoe UI", 9.5f);
-        this.FormBorderStyle = FormBorderStyle.FixedDialog;
-        this.MaximizeBox = false;
-
-        // Top Header
-        var header = new Panel
-        {
-            Dock = DockStyle.Top,
-            Height = 70,
-            BackColor = Color.FromArgb(30, 41, 59),
-            Padding = new Padding(24, 0, 24, 0)
-        };
-
-        lblOrderNumber = new Label
-        {
-            Text = $"🧾 {_order.OrderNumber}",
-            Font = new Font("Segoe UI", 16, FontStyle.Bold),
-            ForeColor = Color.FromArgb(96, 165, 250),
-            AutoSize = true,
-            Location = new Point(24, 18)
-        };
-
-        lblStatusBadge = new Label
-        {
-            Font = new Font("Segoe UI", 10, FontStyle.Bold),
-            AutoSize = false,
-            Size = new Size(160, 32),
-            Location = new Point(480, 19),
-            TextAlign = ContentAlignment.MiddleCenter
-        };
-
-        var btnClose = new Button
-        {
-            Text = "✕ Close",
-            Size = new Size(80, 32),
-            Location = new Point(690, 19),
-            FlatStyle = FlatStyle.Flat,
-            BackColor = Color.FromArgb(51, 65, 85),
-            ForeColor = Color.White,
-            Cursor = Cursors.Hand
-        };
-        btnClose.FlatAppearance.BorderSize = 0;
-        btnClose.Click += (_, _) => this.Close();
-
-        header.Controls.AddRange(new Control[] { lblOrderNumber, lblStatusBadge, btnClose });
-        this.Controls.Add(header);
-
-        // Main Container
-        var container = new Panel
-        {
-            Dock = DockStyle.Fill,
-            Padding = new Padding(20)
-        };
-        this.Controls.Add(container);
-
-        // Left Details Card
-        var leftCard = new Panel
-        {
-            Dock = DockStyle.Left,
-            Width = 470,
-            BackColor = Color.FromArgb(30, 41, 59),
-            Padding = new Padding(20)
-        };
-
-        var lblDetailsTitle = new Label
-        {
-            Text = "Order & Customer Details",
-            Font = new Font("Segoe UI", 12, FontStyle.Bold),
-            ForeColor = Color.White,
-            Dock = DockStyle.Top,
-            Height = 30
-        };
-        leftCard.Controls.Add(lblDetailsTitle);
-
-        var detailsTable = new TableLayoutPanel
-        {
-            Dock = DockStyle.Fill,
-            ColumnCount = 2,
-            RowCount = 8,
-            Padding = new Padding(0, 10, 0, 0)
-        };
-        detailsTable.ColumnStyles.Add(new ColumnStyle(SizeType.Absolute, 130));
-        detailsTable.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 100));
-
-        AddDetailRow(detailsTable, 0, "Customer:", out lblCustomerInfo);
-        AddDetailRow(detailsTable, 1, "Service Type:", out lblServiceInfo);
-        AddDetailRow(detailsTable, 2, "Weight:", out lblWeightInfo);
-        AddDetailRow(detailsTable, 3, "Total Amount:", out lblTotalAmount);
-        AddDetailRow(detailsTable, 4, "Payment:", out lblPaymentStatus);
-        AddDetailRow(detailsTable, 5, "Target Pickup:", out lblPickupDate);
-        AddDetailRow(detailsTable, 6, "Order Date:", out lblCreatedDate);
-        AddDetailRow(detailsTable, 7, "Notes/Reason:", out lblCancelReason);
-
-        leftCard.Controls.Add(detailsTable);
-
-        // Bottom Actions in Left Card
-        var actionPanel = new FlowLayoutPanel
-        {
-            Dock = DockStyle.Bottom,
-            Height = 90,
-            FlowDirection = FlowDirection.LeftToRight,
-            Padding = new Padding(0, 10, 0, 0)
-        };
-
-        btnAdvanceStatus = new Button
-        {
-            Size = new Size(135, 36),
-            BackColor = Color.FromArgb(37, 99, 235),
-            ForeColor = Color.White,
-            FlatStyle = FlatStyle.Flat,
-            Font = new Font("Segoe UI", 9, FontStyle.Bold),
-            Cursor = Cursors.Hand
-        };
-        btnAdvanceStatus.FlatAppearance.BorderSize = 0;
-        btnAdvanceStatus.Click += btnAdvanceStatus_Click;
-
-        btnClaimOrder = new Button
-        {
-            Text = "💰 Claim / Pay",
-            Size = new Size(135, 36),
-            BackColor = Color.FromArgb(16, 185, 129),
-            ForeColor = Color.White,
-            FlatStyle = FlatStyle.Flat,
-            Font = new Font("Segoe UI", 9, FontStyle.Bold),
-            Cursor = Cursors.Hand
-        };
-        btnClaimOrder.FlatAppearance.BorderSize = 0;
-        btnClaimOrder.Click += btnClaimOrder_Click;
-
-        btnCancelOrder = new Button
-        {
-            Text = "✕ Cancel Order",
-            Size = new Size(135, 36),
-            BackColor = Color.FromArgb(220, 38, 38),
-            ForeColor = Color.White,
-            FlatStyle = FlatStyle.Flat,
-            Font = new Font("Segoe UI", 9),
-            Cursor = Cursors.Hand
-        };
-        btnCancelOrder.FlatAppearance.BorderSize = 0;
-        btnCancelOrder.Click += btnCancelOrder_Click;
-
-        actionPanel.Controls.AddRange(new Control[] { btnAdvanceStatus, btnClaimOrder, btnCancelOrder });
-        leftCard.Controls.Add(actionPanel);
-        container.Controls.Add(leftCard);
-
-        // Right Card (QR & Communication)
-        var rightCard = new Panel
-        {
-            Dock = DockStyle.Fill,
-            BackColor = Color.FromArgb(30, 41, 59),
-            Margin = new Padding(16, 0, 0, 0),
-            Padding = new Padding(20)
-        };
-        var rightWrapper = new Panel
-        {
-            Dock = DockStyle.Fill,
-            Padding = new Padding(16, 0, 0, 0)
-        };
-        rightWrapper.Controls.Add(rightCard);
-
-        var lblQrTitle = new Label
-        {
-            Text = "QR Code E-Ticket",
-            Font = new Font("Segoe UI", 12, FontStyle.Bold),
-            ForeColor = Color.White,
-            Dock = DockStyle.Top,
-            Height = 30,
-            TextAlign = ContentAlignment.MiddleCenter
-        };
-        rightCard.Controls.Add(lblQrTitle);
-
-        picQrCode = new PictureBox
-        {
-            Size = new Size(190, 190),
-            SizeMode = PictureBoxSizeMode.Zoom,
-            BackColor = Color.White,
-            BorderStyle = BorderStyle.FixedSingle,
-            Location = new Point(45, 60)
-        };
-        rightCard.Controls.Add(picQrCode);
-
-        btnPrintQr = new Button
-        {
-            Text = "🖨 Print QR Ticket",
-            Size = new Size(220, 36),
-            Location = new Point(30, 270),
-            BackColor = Color.FromArgb(51, 65, 85),
-            ForeColor = Color.White,
-            FlatStyle = FlatStyle.Flat,
-            Cursor = Cursors.Hand
-        };
-        btnPrintQr.FlatAppearance.BorderSize = 0;
-        btnPrintQr.Click += btnPrintQr_Click;
-        rightCard.Controls.Add(btnPrintQr);
-
-        btnResendEmail = new Button
-        {
-            Text = "✉ Resend Email Receipt",
-            Size = new Size(220, 36),
-            Location = new Point(30, 320),
-            BackColor = Color.FromArgb(37, 99, 235),
-            ForeColor = Color.White,
-            FlatStyle = FlatStyle.Flat,
-            Cursor = Cursors.Hand
-        };
-        btnResendEmail.FlatAppearance.BorderSize = 0;
-        btnResendEmail.Click += btnResendEmail_Click;
-        rightCard.Controls.Add(btnResendEmail);
-
-        container.Controls.Add(rightWrapper);
+        this.Close();
     }
-
-    private static void AddDetailRow(TableLayoutPanel table, int row, string header, out Label valueLabel)
-    {
-        var lblHeader = new Label
-        {
-            Text = header,
-            ForeColor = Color.FromArgb(148, 163, 184),
-            Font = new Font("Segoe UI", 9),
-            Dock = DockStyle.Fill,
-            TextAlign = ContentAlignment.MiddleLeft
-        };
-        valueLabel = new Label
-        {
-            ForeColor = Color.White,
-            Font = new Font("Segoe UI", 9.5f, FontStyle.Bold),
-            Dock = DockStyle.Fill,
-            TextAlign = ContentAlignment.MiddleLeft
-        };
-        table.Controls.Add(lblHeader, 0, row);
-        table.Controls.Add(valueLabel, 1, row);
-    }
-
-    // ─── Data Binding & Status Updates ───────────────────────────────────────
 
     private void RefreshOrderData()
     {
-        var updated = AppServices.Orders.GetById(_order.OrderId);
-        if (updated != null) _order = updated;
-        _customer = AppServices.Customers.GetById(_order.CustomerId);
+        if (_order.OrderId > 0)
+        {
+            var updated = AppServices.Orders.GetById(_order.OrderId);
+            if (updated != null) _order = updated;
+            _customer = AppServices.Customers.GetById(_order.CustomerId);
+        }
 
+        this.Text = $"Order Details – {_order.OrderNumber}";
+        lblOrderNumber.Text = $"🧾 {_order.OrderNumber}";
         lblCustomerInfo.Text = $"{_customer?.FullName ?? _order.CustomerName} ({_customer?.Phone ?? _order.CustomerPhone})";
         lblServiceInfo.Text = _order.ServiceName ?? "Standard Laundry";
         lblWeightInfo.Text = $"{_order.WeightKg:F2} kg";
@@ -366,8 +117,8 @@ public partial class FrmOrderDetail : Form
         string nextStatus = _order.Status switch
         {
             "Washing" => "Drying",
-            "Drying"  => "Ready for Pickup",
-            _         => _order.Status
+            "Drying" => "Ready for Pickup",
+            _ => _order.Status
         };
 
         if (nextStatus != _order.Status)

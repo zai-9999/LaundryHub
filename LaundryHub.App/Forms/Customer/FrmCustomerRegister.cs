@@ -10,145 +10,19 @@ public partial class FrmCustomerRegister : Form
 {
     public FrmCustomerRegister()
     {
-        InitializeForm();
+        InitializeComponent();
     }
 
-    private TextBox txtUsername = null!;
-    private TextBox txtPassword = null!;
-    private TextBox txtConfirmPassword = null!;
-    private TextBox txtFullName = null!;
-    private TextBox txtPhone = null!;
-    private TextBox txtEmail = null!;
-    private TextBox txtAddress = null!;
-    private Button btnRegister = null!;
-    private Button btnBack = null!;
-    private Label lblError = null!;
-
-    private void InitializeForm()
+    private void pnlCard_Paint(object? sender, PaintEventArgs e)
     {
-        this.Text = "LaundryHub – Create Customer Account";
-        this.Size = new Size(520, 750);
-        this.StartPosition = FormStartPosition.CenterScreen;
-        this.BackColor = Color.FromArgb(15, 23, 42); // slate-900
-        this.ForeColor = Color.White;
-        this.Font = new Font("Segoe UI", 9.5f);
-        this.FormBorderStyle = FormBorderStyle.FixedSingle;
-        this.MaximizeBox = false;
-
-        var card = new Panel
-        {
-            Size = new Size(440, 660),
-            Location = new Point(40, 25),
-            BackColor = Color.FromArgb(30, 41, 59),
-            Padding = new Padding(24)
-        };
-        card.Paint += (s, e) =>
-        {
-            using var pen = new Pen(Color.FromArgb(59, 130, 246), 1);
-            e.Graphics.DrawRectangle(pen, 0, 0, card.Width - 1, card.Height - 1);
-        };
-
-        var lblTitle = new Label
-        {
-            Text = "Create Customer Account",
-            Font = new Font("Segoe UI", 16, FontStyle.Bold),
-            ForeColor = Color.FromArgb(96, 165, 250),
-            Size = new Size(390, 32),
-            Location = new Point(24, 15),
-            TextAlign = ContentAlignment.MiddleCenter
-        };
-
-        var lblSub = new Label
-        {
-            Text = "Track your laundry orders anytime from home",
-            Font = new Font("Segoe UI", 8.5f),
-            ForeColor = Color.FromArgb(148, 163, 184),
-            Size = new Size(390, 20),
-            Location = new Point(24, 48),
-            TextAlign = ContentAlignment.MiddleCenter
-        };
-
-        card.Controls.AddRange(new Control[] { lblTitle, lblSub });
-
-        int top = 80;
-        int step = 60;
-
-        AddField(card, "Full Name *", ref txtFullName, ref top, step);
-        AddField(card, "Phone Number *", ref txtPhone, ref top, step);
-        AddField(card, "Username *", ref txtUsername, ref top, step);
-        AddField(card, "Password *", ref txtPassword, ref top, step, isPassword: true);
-        AddField(card, "Confirm Password *", ref txtConfirmPassword, ref top, step, isPassword: true);
-        AddField(card, "Email Address (Optional)", ref txtEmail, ref top, step);
-        AddField(card, "Home / Delivery Address (Optional)", ref txtAddress, ref top, step);
-
-        lblError = new Label
-        {
-            ForeColor = Color.FromArgb(248, 113, 113),
-            Location = new Point(24, top + 6),
-            Size = new Size(390, 34),
-            Visible = false,
-            Font = new Font("Segoe UI", 8.5f)
-        };
-        card.Controls.Add(lblError);
-
-        btnRegister = new Button
-        {
-            Text = "✨ Create Account",
-            Location = new Point(24, top + 45),
-            Size = new Size(390, 38),
-            BackColor = Color.FromArgb(37, 99, 235),
-            ForeColor = Color.White,
-            FlatStyle = FlatStyle.Flat,
-            Font = new Font("Segoe UI", 10, FontStyle.Bold),
-            Cursor = Cursors.Hand
-        };
-        btnRegister.FlatAppearance.BorderSize = 0;
-        btnRegister.Click += btnRegister_Click;
-
-        btnBack = new Button
-        {
-            Text = "← Back to Login",
-            Location = new Point(24, top + 90),
-            Size = new Size(390, 32),
-            BackColor = Color.Transparent,
-            ForeColor = Color.FromArgb(148, 163, 184),
-            FlatStyle = FlatStyle.Flat,
-            Cursor = Cursors.Hand
-        };
-        btnBack.FlatAppearance.BorderSize = 0;
-        btnBack.Click += (_, _) =>
-        {
-            new Auth.FrmLogin().Show();
-            this.Close();
-        };
-
-        card.Controls.AddRange(new Control[] { btnRegister, btnBack });
-        this.Controls.Add(card);
-        this.AcceptButton = btnRegister;
+        using var pen = new Pen(Color.FromArgb(59, 130, 246), 1);
+        e.Graphics.DrawRectangle(pen, 0, 0, pnlCard.Width - 1, pnlCard.Height - 1);
     }
 
-    private static void AddField(Panel card, string labelText, ref TextBox tb, ref int top, int step, bool isPassword = false)
+    private void btnBack_Click(object? sender, EventArgs e)
     {
-        var lbl = new Label
-        {
-            Text = labelText,
-            ForeColor = Color.FromArgb(148, 163, 184),
-            Location = new Point(24, top),
-            Size = new Size(390, 18),
-            Font = new Font("Segoe UI", 8.5f)
-        };
-        tb = new TextBox
-        {
-            Location = new Point(24, top + 20),
-            Size = new Size(390, 30),
-            Font = new Font("Segoe UI", 10),
-            BackColor = Color.FromArgb(15, 23, 42),
-            ForeColor = Color.White,
-            BorderStyle = BorderStyle.FixedSingle
-        };
-        if (isPassword) tb.PasswordChar = '●';
-        card.Controls.AddRange(new Control[] { lbl, tb });
-        top += step;
+        new Auth.FrmLogin().Show();
+        this.Close();
     }
 
     private void btnRegister_Click(object? sender, EventArgs e)
