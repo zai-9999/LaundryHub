@@ -168,7 +168,7 @@ public partial class FrmOrderDetail : Form
             ForeColor = Color.FromArgb(52, 211, 153)
         };
 
-        txtAmount.TextChanged += (_, _) =>
+        void UpdateChange()
         {
             if (decimal.TryParse(txtAmount.Text, out var paid))
             {
@@ -176,7 +176,15 @@ public partial class FrmOrderDetail : Form
                 lblChange.Text = change >= 0 ? $"Change: ₱{change:N2}" : $"Short by: ₱{Math.Abs(change):N2}";
                 lblChange.ForeColor = change >= 0 ? Color.FromArgb(52, 211, 153) : Color.FromArgb(248, 113, 113);
             }
-        };
+            else
+            {
+                lblChange.Text = "Enter a valid payment amount";
+                lblChange.ForeColor = Color.FromArgb(148, 163, 184);
+            }
+        }
+
+        txtAmount.TextChanged += (_, _) => UpdateChange();
+        UpdateChange();
 
         var btnConfirm = new Button
         {
