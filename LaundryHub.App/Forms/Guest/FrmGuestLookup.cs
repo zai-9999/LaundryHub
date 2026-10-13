@@ -41,7 +41,6 @@ public partial class FrmGuestLookup : Form
 
     private void btnBack_Click(object? sender, EventArgs e)
     {
-        new Auth.FrmLogin().Show();
         this.Close();
     }
 

@@ -22,7 +22,6 @@ public partial class FrmCustomerRegister : Form
 
     private void btnBack_Click(object? sender, EventArgs e)
     {
-        new Auth.FrmLogin().Show();
         this.Close();
     }
 
@@ -66,7 +65,6 @@ public partial class FrmCustomerRegister : Form
 
             MessageBox.Show("Account successfully created! You may now log in to view your orders.", "Registration Complete", MessageBoxButtons.OK, MessageBoxIcon.Information);
 
-            new Auth.FrmLogin().Show();
             this.Close();
         }
         catch (Exception ex)
