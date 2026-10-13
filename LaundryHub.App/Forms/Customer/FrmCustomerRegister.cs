@@ -11,6 +11,7 @@ public partial class FrmCustomerRegister : Form
     public FrmCustomerRegister()
     {
         InitializeComponent();
+        InputValidator.RestrictToPhoneInput(txtPhone);
     }
 
     private void pnlCard_Paint(object? sender, PaintEventArgs e)
@@ -85,9 +86,9 @@ public partial class FrmCustomerRegister : Form
             return false;
         }
 
-        if (string.IsNullOrWhiteSpace(txtPhone.Text) || txtPhone.Text.Trim().Length < 7)
+        if (!InputValidator.IsValidPhone(txtPhone.Text))
         {
-            ShowError("Please enter a valid phone number (min 7 digits).");
+            ShowError(InputValidator.PhoneError);
             txtPhone.Focus();
             return false;
         }
@@ -113,9 +114,9 @@ public partial class FrmCustomerRegister : Form
             return false;
         }
 
-        if (string.IsNullOrWhiteSpace(txtPassword.Text) || txtPassword.Text.Length < 6)
+        if (!InputValidator.IsValidPassword(txtPassword.Text, out var pwdError))
         {
-            ShowError("Password must be at least 6 characters.");
+            ShowError(pwdError);
             txtPassword.Focus();
             return false;
         }

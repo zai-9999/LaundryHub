@@ -19,6 +19,8 @@ public partial class FrmUpdateProfile : Form
         _user = user;
         InitializeComponent();
 
+        InputValidator.RestrictToPhoneInput(txtPhone);
+
         if (customer != null)
         {
             txtFullName.Text = customer.FullName ?? "";
@@ -48,9 +50,9 @@ public partial class FrmUpdateProfile : Form
             return;
         }
 
-        if (string.IsNullOrWhiteSpace(phone) || phone.Length < 7)
+        if (!InputValidator.IsValidPhone(phone))
         {
-            ShowError("Please enter a valid phone number.");
+            ShowError(InputValidator.PhoneError);
             return;
         }
 
@@ -66,6 +68,12 @@ public partial class FrmUpdateProfile : Form
             return;
         }
 
+        if (!string.IsNullOrWhiteSpace(newPwd) && !InputValidator.IsValidPassword(newPwd, out var pwdError))
+        {
+            ShowError(pwdError);
+            return;
+        }
+
         // Update customer
         _customer.FullName = name;
         _customer.Phone = phone;
@@ -78,11 +86,6 @@ public partial class FrmUpdateProfile : Form
         if (!string.IsNullOrWhiteSpace(email)) _user.Email = email;
         if (!string.IsNullOrWhiteSpace(newPwd))
         {
-            if (newPwd.Length < 6)
-            {
-                ShowError("New password must be at least 6 characters.");
-                return;
-            }
             _user.PasswordHash = BCrypt.Net.BCrypt.HashPassword(newPwd);
         }
         AppServices.Users.Update(_user);

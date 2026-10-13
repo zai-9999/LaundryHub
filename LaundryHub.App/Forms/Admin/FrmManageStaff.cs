@@ -163,12 +163,20 @@ public partial class FrmManageStaff : Form
                 txtUsername.Focus();
                 return false;
             }
-            if (string.IsNullOrWhiteSpace(txtPassword.Text) || txtPassword.Text.Length < 6)
+            if (!InputValidator.IsValidPassword(txtPassword.Text, out var pwdError))
             {
-                ShowError("Password must be at least 6 characters.");
+                ShowError(pwdError);
                 txtPassword.Focus();
                 return false;
             }
+        }
+
+        if (_editingUserId != 0 && !string.IsNullOrWhiteSpace(txtPassword.Text)
+            && !InputValidator.IsValidPassword(txtPassword.Text, out var editPwdError))
+        {
+            ShowError(editPwdError);
+            txtPassword.Focus();
+            return false;
         }
 
         if (string.IsNullOrWhiteSpace(txtEmail.Text) || !Regex.IsMatch(txtEmail.Text.Trim(), @"^[^@\s]+@[^@\s]+\.[^@\s]+$"))

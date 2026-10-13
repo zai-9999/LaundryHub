@@ -353,7 +353,7 @@ partial class FrmCustomerRegistration
         // 
         lblError.Font = new Font("Segoe UI", 8.5F);
         lblError.ForeColor = Color.FromArgb(248, 113, 113);
-        lblError.Location = new Point(0, 263);
+        lblError.Location = new Point(3, 263);
         lblError.Name = "lblError";
         lblError.Size = new Size(320, 30);
         lblError.TabIndex = 8;
@@ -364,7 +364,7 @@ partial class FrmCustomerRegistration
         flpButtons.Controls.Add(btnSave);
         flpButtons.Controls.Add(btnClear);
         flpButtons.Controls.Add(btnSelect);
-        flpButtons.Location = new Point(0, 296);
+        flpButtons.Location = new Point(3, 296);
         flpButtons.Name = "flpButtons";
         flpButtons.Size = new Size(320, 120);
         flpButtons.TabIndex = 9;
