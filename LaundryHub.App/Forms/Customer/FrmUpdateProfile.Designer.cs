@@ -1,3 +1,9 @@
+using Panel = System.Windows.Forms.Panel;
+using CheckBox = System.Windows.Forms.CheckBox;
+using ReaLTaiizor;
+using ReaLTaiizor.Controls;
+using ReaLTaiizor.Util;
+
 namespace LaundryHub.App.Forms.Customer;
 
 partial class FrmUpdateProfile
@@ -18,18 +24,18 @@ partial class FrmUpdateProfile
     private void InitializeComponent()
     {
         pnlMain = new Panel();
-        btnCancel = new Button();
-        btnSave = new Button();
+        btnCancel = new HopeButton();
+        btnSave = new HopeButton();
         lblError = new Label();
-        txtNewPassword = new TextBox();
+        txtNewPassword = new HopeTextBox();
         lblNewPassword = new Label();
-        txtAddress = new TextBox();
+        txtAddress = new HopeTextBox();
         lblAddress = new Label();
-        txtEmail = new TextBox();
+        txtEmail = new HopeTextBox();
         lblEmail = new Label();
-        txtPhone = new TextBox();
+        txtPhone = new HopeTextBox();
         lblPhone = new Label();
-        txtFullName = new TextBox();
+        txtFullName = new HopeTextBox();
         lblFullName = new Label();
         lblTitle = new Label();
         pnlMain.SuspendLayout();
@@ -37,7 +43,7 @@ partial class FrmUpdateProfile
         // 
         // pnlMain
         // 
-        pnlMain.BackColor = Color.FromArgb(30, 41, 59);
+        pnlMain.BackColor = Color.FromArgb(242, 239, 231);
         pnlMain.Controls.Add(btnCancel);
         pnlMain.Controls.Add(btnSave);
         pnlMain.Controls.Add(lblError);
@@ -56,184 +62,192 @@ partial class FrmUpdateProfile
         pnlMain.Location = new Point(0, 0);
         pnlMain.Name = "pnlMain";
         pnlMain.Padding = new Padding(24);
-        pnlMain.Size = new Size(460, 520);
+        pnlMain.Size = new Size(472, 500);
         pnlMain.TabIndex = 0;
         // 
-        // btnCancel
+        // lblTitle
         // 
-        btnCancel.BackColor = Color.FromArgb(51, 65, 85);
-        btnCancel.Cursor = Cursors.Hand;
-        btnCancel.FlatAppearance.BorderSize = 0;
-        btnCancel.FlatStyle = FlatStyle.Flat;
-        btnCancel.ForeColor = Color.White;
-        btnCancel.Location = new Point(224, 445);
-        btnCancel.Name = "btnCancel";
-        btnCancel.Size = new Size(190, 38);
-        btnCancel.TabIndex = 14;
-        btnCancel.Text = "Cancel";
-        btnCancel.UseVisualStyleBackColor = false;
-        btnCancel.Click += btnCancel_Click;
+        lblTitle.Font = new Font("Segoe UI", 14F, FontStyle.Bold);
+        lblTitle.ForeColor = Color.FromArgb(37, 78, 122);
+        lblTitle.Location = new Point(24, 20);
+        lblTitle.Name = "lblTitle";
+        lblTitle.Size = new Size(424, 32);
+        lblTitle.TabIndex = 0;
+        lblTitle.Text = "👤 My Profile Details";
         // 
-        // btnSave
+        // lblFullName
         // 
-        btnSave.BackColor = Color.FromArgb(37, 99, 235);
-        btnSave.Cursor = Cursors.Hand;
-        btnSave.FlatAppearance.BorderSize = 0;
-        btnSave.FlatStyle = FlatStyle.Flat;
-        btnSave.Font = new Font("Segoe UI", 9.5F, FontStyle.Bold);
-        btnSave.ForeColor = Color.White;
-        btnSave.Location = new Point(24, 445);
-        btnSave.Name = "btnSave";
-        btnSave.Size = new Size(190, 38);
-        btnSave.TabIndex = 13;
-        btnSave.Text = "💾 Save Changes";
-        btnSave.UseVisualStyleBackColor = false;
-        btnSave.Click += btnSave_Click;
+        lblFullName.Font = new Font("Segoe UI", 8.5F, FontStyle.Bold);
+        lblFullName.ForeColor = Color.FromArgb(51, 104, 160);
+        lblFullName.Location = new Point(24, 62);
+        lblFullName.Name = "lblFullName";
+        lblFullName.Size = new Size(390, 16);
+        lblFullName.TabIndex = 2;
+        lblFullName.Text = "Full Name *";
+        // 
+        // txtFullName
+        // 
+        txtFullName.BackColor = Color.White;
+        txtFullName.BaseColor = Color.FromArgb(242, 239, 231);
+        txtFullName.BorderColorA = Color.FromArgb(102, 163, 191);
+        txtFullName.BorderColorB = Color.FromArgb(200, 223, 219);
+        txtFullName.Font = new Font("Segoe UI", 9.5F);
+        txtFullName.ForeColor = Color.FromArgb(51, 104, 160);
+        txtFullName.Location = new Point(24, 80);
+        txtFullName.Name = "txtFullName";
+        txtFullName.Size = new Size(390, 32);
+        txtFullName.TabIndex = 3;
+        // 
+        // lblPhone
+        // 
+        lblPhone.Font = new Font("Segoe UI", 8.5F, FontStyle.Bold);
+        lblPhone.ForeColor = Color.FromArgb(51, 104, 160);
+        lblPhone.Location = new Point(24, 118);
+        lblPhone.Name = "lblPhone";
+        lblPhone.Size = new Size(390, 16);
+        lblPhone.TabIndex = 4;
+        lblPhone.Text = "Phone Number *";
+        // 
+        // txtPhone
+        // 
+        txtPhone.BackColor = Color.White;
+        txtPhone.BaseColor = Color.FromArgb(242, 239, 231);
+        txtPhone.BorderColorA = Color.FromArgb(102, 163, 191);
+        txtPhone.BorderColorB = Color.FromArgb(200, 223, 219);
+        txtPhone.Font = new Font("Segoe UI", 9.5F);
+        txtPhone.ForeColor = Color.FromArgb(51, 104, 160);
+        txtPhone.Location = new Point(24, 136);
+        txtPhone.Name = "txtPhone";
+        txtPhone.Size = new Size(390, 32);
+        txtPhone.TabIndex = 5;
+        // 
+        // lblEmail
+        // 
+        lblEmail.Font = new Font("Segoe UI", 8.5F, FontStyle.Bold);
+        lblEmail.ForeColor = Color.FromArgb(51, 104, 160);
+        lblEmail.Location = new Point(24, 174);
+        lblEmail.Name = "lblEmail";
+        lblEmail.Size = new Size(390, 16);
+        lblEmail.TabIndex = 6;
+        lblEmail.Text = "Email Address";
+        // 
+        // txtEmail
+        // 
+        txtEmail.BackColor = Color.White;
+        txtEmail.BaseColor = Color.FromArgb(242, 239, 231);
+        txtEmail.BorderColorA = Color.FromArgb(102, 163, 191);
+        txtEmail.BorderColorB = Color.FromArgb(200, 223, 219);
+        txtEmail.Font = new Font("Segoe UI", 9.5F);
+        txtEmail.ForeColor = Color.FromArgb(51, 104, 160);
+        txtEmail.Location = new Point(24, 192);
+        txtEmail.Name = "txtEmail";
+        txtEmail.Size = new Size(390, 32);
+        txtEmail.TabIndex = 7;
+        // 
+        // lblAddress
+        // 
+        lblAddress.Font = new Font("Segoe UI", 8.5F, FontStyle.Bold);
+        lblAddress.ForeColor = Color.FromArgb(51, 104, 160);
+        lblAddress.Location = new Point(24, 230);
+        lblAddress.Name = "lblAddress";
+        lblAddress.Size = new Size(390, 16);
+        lblAddress.TabIndex = 8;
+        lblAddress.Text = "Home / Delivery Address";
+        // 
+        // txtAddress
+        // 
+        txtAddress.BackColor = Color.White;
+        txtAddress.BaseColor = Color.FromArgb(242, 239, 231);
+        txtAddress.BorderColorA = Color.FromArgb(102, 163, 191);
+        txtAddress.BorderColorB = Color.FromArgb(200, 223, 219);
+        txtAddress.Font = new Font("Segoe UI", 9.5F);
+        txtAddress.ForeColor = Color.FromArgb(51, 104, 160);
+        txtAddress.Location = new Point(24, 248);
+        txtAddress.Name = "txtAddress";
+        txtAddress.Size = new Size(390, 32);
+        txtAddress.TabIndex = 9;
+        // 
+        // lblNewPassword
+        // 
+        lblNewPassword.Font = new Font("Segoe UI", 8.5F, FontStyle.Bold);
+        lblNewPassword.ForeColor = Color.FromArgb(51, 104, 160);
+        lblNewPassword.Location = new Point(24, 286);
+        lblNewPassword.Name = "lblNewPassword";
+        lblNewPassword.Size = new Size(390, 16);
+        lblNewPassword.TabIndex = 10;
+        lblNewPassword.Text = "Change Password (leave blank to keep current)";
+        // 
+        // txtNewPassword
+        // 
+        txtNewPassword.BackColor = Color.White;
+        txtNewPassword.BaseColor = Color.FromArgb(242, 239, 231);
+        txtNewPassword.BorderColorA = Color.FromArgb(102, 163, 191);
+        txtNewPassword.BorderColorB = Color.FromArgb(200, 223, 219);
+        txtNewPassword.Font = new Font("Segoe UI", 9.5F);
+        txtNewPassword.ForeColor = Color.FromArgb(51, 104, 160);
+        txtNewPassword.Location = new Point(24, 304);
+        txtNewPassword.Name = "txtNewPassword";
+        txtNewPassword.PasswordChar = '●';
+        txtNewPassword.UseSystemPasswordChar = true;
+        txtNewPassword.Size = new Size(390, 32);
+        txtNewPassword.TabIndex = 11;
         // 
         // lblError
         // 
         lblError.Font = new Font("Segoe UI", 8.5F);
-        lblError.ForeColor = Color.FromArgb(248, 113, 113);
-        lblError.Location = new Point(24, 410);
+        lblError.ForeColor = Color.FromArgb(220, 53, 69);
+        lblError.Location = new Point(24, 344);
         lblError.Name = "lblError";
         lblError.Size = new Size(390, 26);
         lblError.TabIndex = 12;
         lblError.Visible = false;
         // 
-        // txtNewPassword
+        // btnSave
         // 
-        txtNewPassword.BackColor = Color.FromArgb(15, 23, 42);
-        txtNewPassword.BorderStyle = BorderStyle.FixedSingle;
-        txtNewPassword.Font = new Font("Segoe UI", 10F);
-        txtNewPassword.ForeColor = Color.White;
-        txtNewPassword.Location = new Point(24, 370);
-        txtNewPassword.Name = "txtNewPassword";
-        txtNewPassword.PasswordChar = '●';
-        txtNewPassword.Size = new Size(390, 25);
-        txtNewPassword.TabIndex = 11;
+        btnSave.ButtonType = HopeButtonType.Primary;
+        btnSave.PrimaryColor = Color.FromArgb(37, 78, 122);
+        btnSave.TextColor = Color.White;
+        btnSave.HoverTextColor = Color.White;
+        btnSave.Cursor = Cursors.Hand;
+        btnSave.Font = new Font("Segoe UI", 9.5F, FontStyle.Bold);
+        btnSave.Location = new Point(24, 368);
+        btnSave.Name = "btnSave";
+        btnSave.Size = new Size(196, 42);
+        btnSave.TabIndex = 13;
+        btnSave.Text = "Save Changes";
+        btnSave.Click += btnSave_Click;
         // 
-        // lblNewPassword
+        // btnCancel
         // 
-        lblNewPassword.Font = new Font("Segoe UI", 8.5F);
-        lblNewPassword.ForeColor = Color.FromArgb(148, 163, 184);
-        lblNewPassword.Location = new Point(24, 350);
-        lblNewPassword.Name = "lblNewPassword";
-        lblNewPassword.Size = new Size(390, 18);
-        lblNewPassword.TabIndex = 10;
-        lblNewPassword.Text = "Change Password (leave blank to keep current)";
-        // 
-        // txtAddress
-        // 
-        txtAddress.BackColor = Color.FromArgb(15, 23, 42);
-        txtAddress.BorderStyle = BorderStyle.FixedSingle;
-        txtAddress.Font = new Font("Segoe UI", 10F);
-        txtAddress.ForeColor = Color.White;
-        txtAddress.Location = new Point(24, 310);
-        txtAddress.Name = "txtAddress";
-        txtAddress.Size = new Size(390, 25);
-        txtAddress.TabIndex = 9;
-        // 
-        // lblAddress
-        // 
-        lblAddress.Font = new Font("Segoe UI", 8.5F);
-        lblAddress.ForeColor = Color.FromArgb(148, 163, 184);
-        lblAddress.Location = new Point(24, 290);
-        lblAddress.Name = "lblAddress";
-        lblAddress.Size = new Size(390, 18);
-        lblAddress.TabIndex = 8;
-        lblAddress.Text = "Home / Delivery Address";
-        // 
-        // txtEmail
-        // 
-        txtEmail.BackColor = Color.FromArgb(15, 23, 42);
-        txtEmail.BorderStyle = BorderStyle.FixedSingle;
-        txtEmail.Font = new Font("Segoe UI", 10F);
-        txtEmail.ForeColor = Color.White;
-        txtEmail.Location = new Point(24, 250);
-        txtEmail.Name = "txtEmail";
-        txtEmail.Size = new Size(390, 25);
-        txtEmail.TabIndex = 7;
-        // 
-        // lblEmail
-        // 
-        lblEmail.Font = new Font("Segoe UI", 8.5F);
-        lblEmail.ForeColor = Color.FromArgb(148, 163, 184);
-        lblEmail.Location = new Point(24, 230);
-        lblEmail.Name = "lblEmail";
-        lblEmail.Size = new Size(390, 18);
-        lblEmail.TabIndex = 6;
-        lblEmail.Text = "Email Address";
-        // 
-        // txtPhone
-        // 
-        txtPhone.BackColor = Color.FromArgb(15, 23, 42);
-        txtPhone.BorderStyle = BorderStyle.FixedSingle;
-        txtPhone.Font = new Font("Segoe UI", 10F);
-        txtPhone.ForeColor = Color.White;
-        txtPhone.Location = new Point(24, 190);
-        txtPhone.Name = "txtPhone";
-        txtPhone.Size = new Size(390, 25);
-        txtPhone.TabIndex = 5;
-        // 
-        // lblPhone
-        // 
-        lblPhone.Font = new Font("Segoe UI", 8.5F);
-        lblPhone.ForeColor = Color.FromArgb(148, 163, 184);
-        lblPhone.Location = new Point(24, 170);
-        lblPhone.Name = "lblPhone";
-        lblPhone.Size = new Size(390, 18);
-        lblPhone.TabIndex = 4;
-        lblPhone.Text = "Phone Number *";
-        // 
-        // txtFullName
-        // 
-        txtFullName.BackColor = Color.FromArgb(15, 23, 42);
-        txtFullName.BorderStyle = BorderStyle.FixedSingle;
-        txtFullName.Font = new Font("Segoe UI", 10F);
-        txtFullName.ForeColor = Color.White;
-        txtFullName.Location = new Point(24, 130);
-        txtFullName.Name = "txtFullName";
-        txtFullName.Size = new Size(390, 25);
-        txtFullName.TabIndex = 3;
-        // 
-        // lblFullName
-        // 
-        lblFullName.Font = new Font("Segoe UI", 8.5F);
-        lblFullName.ForeColor = Color.FromArgb(148, 163, 184);
-        lblFullName.Location = new Point(24, 110);
-        lblFullName.Name = "lblFullName";
-        lblFullName.Size = new Size(390, 18);
-        lblFullName.TabIndex = 2;
-        lblFullName.Text = "Full Name *";
-        // 
-        // lblTitle
-        // 
-        lblTitle.Dock = DockStyle.Top;
-        lblTitle.Font = new Font("Segoe UI", 14F, FontStyle.Bold);
-        lblTitle.ForeColor = Color.FromArgb(96, 165, 250);
-        lblTitle.Location = new Point(24, 24);
-        lblTitle.Name = "lblTitle";
-        lblTitle.Size = new Size(412, 35);
-        lblTitle.TabIndex = 0;
-        lblTitle.Text = "👤 My Profile Details";
+        btnCancel.ButtonType = HopeButtonType.Primary;
+        btnCancel.PrimaryColor = Color.FromArgb(108, 117, 125);
+        btnCancel.BorderColor = Color.FromArgb(108, 117, 125);
+        btnCancel.TextColor = Color.White;
+        btnCancel.HoverTextColor = Color.White;
+        btnCancel.Cursor = Cursors.Hand;
+        btnCancel.Font = new Font("Segoe UI", 9.5F);
+        btnCancel.Location = new Point(228, 368);
+        btnCancel.Name = "btnCancel";
+        btnCancel.Size = new Size(196, 42);
+        btnCancel.TabIndex = 14;
+        btnCancel.Text = "Cancel";
+        btnCancel.Click += btnCancel_Click;
         // 
         // FrmUpdateProfile
         // 
-        AcceptButton = btnSave;
         AutoScaleDimensions = new SizeF(7F, 17F);
         AutoScaleMode = AutoScaleMode.Font;
-        BackColor = Color.FromArgb(15, 23, 42);
-        ClientSize = new Size(460, 520);
+        BackColor = Color.FromArgb(37, 78, 122);
+        ClientSize = new Size(520, 560);
         Controls.Add(pnlMain);
         Font = new Font("Segoe UI", 9.5F);
-        ForeColor = Color.White;
+        ForeColor = Color.FromArgb(51, 104, 160);
         FormBorderStyle = FormBorderStyle.FixedDialog;
         MaximizeBox = false;
         Name = "FrmUpdateProfile";
         StartPosition = FormStartPosition.CenterParent;
         Text = "LaundryHub – Edit Profile";
         pnlMain.ResumeLayout(false);
-        pnlMain.PerformLayout();
         ResumeLayout(false);
     }
 
@@ -242,16 +256,17 @@ partial class FrmUpdateProfile
     private Panel pnlMain;
     private Label lblTitle;
     private Label lblFullName;
-    private TextBox txtFullName;
+    private HopeTextBox txtFullName;
     private Label lblPhone;
-    private TextBox txtPhone;
+    private HopeTextBox txtPhone;
     private Label lblEmail;
-    private TextBox txtEmail;
+    private HopeTextBox txtEmail;
     private Label lblAddress;
-    private TextBox txtAddress;
+    private HopeTextBox txtAddress;
     private Label lblNewPassword;
-    private TextBox txtNewPassword;
+    private HopeTextBox txtNewPassword;
     private Label lblError;
-    private Button btnSave;
-    private Button btnCancel;
+    private HopeButton btnSave;
+    private HopeButton btnCancel;
 }
+

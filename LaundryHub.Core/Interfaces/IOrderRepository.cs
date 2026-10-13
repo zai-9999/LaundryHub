@@ -11,7 +11,7 @@ public interface IOrderRepository
     IEnumerable<Order> GetByDate(DateTime date);
     IEnumerable<Order> Search(string term);
     int Add(Order order);
-    void UpdateStatus(int orderId, string newStatus, string? cancelReason = null);
+    void UpdateStatus(int orderId, string newStatus, string? cancelReason = null, int? changedBy = null, string? notes = null);
     void RecordPayment(int orderId, decimal amountPaid);
     void Archive(int orderId);
     string GenerateOrderNumber();

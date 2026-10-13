@@ -103,11 +103,24 @@ CREATE INDEX idx_customers_phone    ON customers(phone);
 -- ─────────────────────────────────────────────
 INSERT INTO users (username, password_hash, full_name, email, role)
 VALUES (
-    'admin',
-    '$2a$11$K5v4gXUn8dE.XFh0vJHyauE4Xm2dPkl8YJ3B5gN1lR7sQ9Oz6Cdie',
+    'admin@gmail.com',
+    '$2a$11$N28/PDQK9RdJBQSnEF.ejeQQOTG5VZeEILHGnLgqbUtkZXyUJdxcK',
     'Shop Administrator',
-    'admin@laundryhub.local',
+    'admin@gmail.com',
     'Admin'
+);
+
+-- ─────────────────────────────────────────────
+-- SEED: Default Staff account
+-- Password: Staff@123  (BCrypt hash below)
+-- ─────────────────────────────────────────────
+INSERT INTO users (username, password_hash, full_name, email, role)
+VALUES (
+    'staff@gmail.com',
+    '$2a$12$bqdcauyXLjzgZZVOy.ak1OOMlSsckfPeFil4oF.oWyTbBNpt6TliS',
+    'Laundry Staff',
+    'staff@gmail.com',
+    'Staff'
 );
 
 -- ─────────────────────────────────────────────

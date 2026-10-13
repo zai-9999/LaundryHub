@@ -72,7 +72,7 @@ public class OrderRepository : IOrderRepository
     public int Add(Order order)
     {
         using var conn = _db.CreateConnection();
-        return conn.ExecuteScalar<int>(@"
+        int orderId = conn.ExecuteScalar<int>(@"
             INSERT INTO orders
               (order_number, customer_id, service_id, weight_kg, total_amount,
                status, created_by, pickup_date)
@@ -81,11 +81,25 @@ public class OrderRepository : IOrderRepository
                @Status, @CreatedBy, @PickupDate)
             RETURNING order_id",
             order);
+
+        // Record initial status in order_status_log
+        try
+        {
+            conn.Execute(@"
+                INSERT INTO order_status_log (order_id, old_status, new_status, changed_by, notes)
+                VALUES (@OrderId, NULL, @NewStatus, @ChangedBy, 'Order created')",
+                new { OrderId = orderId, NewStatus = order.Status ?? "Washing", ChangedBy = order.CreatedBy });
+        }
+        catch { }
+
+        return orderId;
     }
 
-    public void UpdateStatus(int orderId, string newStatus, string? cancelReason = null)
+    public void UpdateStatus(int orderId, string newStatus, string? cancelReason = null, int? changedBy = null, string? notes = null)
     {
         using var conn = _db.CreateConnection();
+        var oldStatus = conn.ExecuteScalar<string?>("SELECT status FROM orders WHERE order_id = @OrderId", new { OrderId = orderId });
+
         conn.Execute(@"
             UPDATE orders
             SET status = @Status,
@@ -94,6 +108,23 @@ public class OrderRepository : IOrderRepository
                 updated_at = NOW()
             WHERE order_id = @OrderId",
             new { Status = newStatus, CancelReason = cancelReason, OrderId = orderId });
+
+        // Record status transition in order_status_log
+        try
+        {
+            conn.Execute(@"
+                INSERT INTO order_status_log (order_id, old_status, new_status, changed_by, notes)
+                VALUES (@OrderId, @OldStatus, @NewStatus, @ChangedBy, @Notes)",
+                new
+                {
+                    OrderId = orderId,
+                    OldStatus = oldStatus,
+                    NewStatus = newStatus,
+                    ChangedBy = changedBy,
+                    Notes = notes ?? cancelReason
+                });
+        }
+        catch { }
     }
 
     public void RecordPayment(int orderId, decimal amountPaid)

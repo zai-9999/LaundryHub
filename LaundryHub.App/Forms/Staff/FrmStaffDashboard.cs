@@ -1,5 +1,6 @@
 using LaundryHub.App.Helpers;
 using LaundryHub.Core.Models;
+using System.Drawing.Drawing2D;
 
 namespace LaundryHub.App.Forms.Staff;
 
@@ -8,14 +9,66 @@ public partial class FrmStaffDashboard : Form
     public FrmStaffDashboard()
     {
         InitializeComponent();
+        DoubleBuffered = true;
+        ResizeRedraw = true;
+        UIThemeHelper.StyleStandardForm(this);
+        pnlSidebar.Paint += pnlSidebar_Paint;
+        UIThemeHelper.StyleDataGridView(dgvOrders);
+        UIThemeHelper.ApplyRoundedRegion(pnlContent, UIThemeHelper.ContentCardRadius);
+        pnlContent.SizeChanged += (s, e) => UIThemeHelper.ApplyRoundedRegion(pnlContent, UIThemeHelper.ContentCardRadius);
+        ApplyNavButtonStyles();
 
         if (SessionManager.CurrentUser != null)
         {
             this.Text = $"LaundryHub – Staff Dashboard ({SessionManager.CurrentUser.FullName})";
-            lblUser.Text = $"👤 {SessionManager.CurrentUser.FullName}\n   {SessionManager.CurrentUser.Role}";
+            lblUser.Text = $"{SessionManager.CurrentUser.FullName}\n   {SessionManager.CurrentUser.Role}";
             lblDashboard.Text = $"Dashboard — {DateTime.Today:MMMM dd, yyyy}";
             LoadSummary();
         }
+    }
+
+    protected override void OnPaintBackground(PaintEventArgs e)
+    {
+        base.OnPaintBackground(e);
+        UIThemeHelper.PaintGradientBackground(this, e);
+    }
+
+    private void pnlContent_Paint(object sender, PaintEventArgs e)
+    {
+        UIThemeHelper.PaintRoundedSolidCard(pnlContent, e, Color.White, UIThemeHelper.ContentCardRadius);
+    }
+
+    private void pnlSidebar_Paint(object? sender, PaintEventArgs e)
+    {
+        UIThemeHelper.PaintGradientBackground(pnlSidebar, e);
+    }
+
+    private void ApplyNavButtonStyles()
+    {
+        // Nav button colors are now fully set in the Designer (FlatStyle.Flat + sidebar blue).
+        // Only override the HopeButton pill here.
+        btnNewOrder.PrimaryColor = Color.FromArgb(102, 163, 191);
+        btnNewOrder.TextColor = Color.White;
+        btnNewOrder.HoverTextColor = Color.White;
+
+        // Add a coloured left-accent strip and subtle border to each stat card for visual polish
+        ApplyCardAccent(pnlStatPending,  Color.FromArgb(102, 163, 191));
+        ApplyCardAccent(pnlStatTotal,    Color.FromArgb(51, 104, 160));
+        ApplyCardAccent(pnlStatClaimed,  Color.FromArgb(40, 167, 69));
+        ApplyCardAccent(pnlStatSales,    Color.FromArgb(0, 150, 136));
+    }
+
+    private static void ApplyCardAccent(Panel card, Color accentColor)
+    {
+        card.Paint += (s, e) =>
+        {
+            e.Graphics.SmoothingMode = SmoothingMode.AntiAlias;
+            using var pen = new Pen(Color.FromArgb(215, 228, 238), 1);
+            e.Graphics.DrawRectangle(pen, 0, 0, card.Width - 1, card.Height - 1);
+            using var brush = new SolidBrush(accentColor);
+            e.Graphics.FillRectangle(brush, 0, 0, 5, card.Height);
+        };
+        card.Padding = new Padding(14, 8, 8, 8);
     }
 
     private void LoadSummary()
@@ -75,36 +128,12 @@ public partial class FrmStaffDashboard : Form
         if (dgvOrders.Columns[e.ColumnIndex].Name != "Status") return;
         e.CellStyle.ForeColor = e.Value?.ToString() switch
         {
-            "Washing" => Color.FromArgb(251, 191, 36),
-            "Drying" => Color.FromArgb(96, 165, 250),
-            "Ready for Pickup" => Color.FromArgb(52, 211, 153),
-            "Claimed" => Color.FromArgb(134, 239, 172),
-            "Cancelled" => Color.FromArgb(248, 113, 113),
-            _ => Color.White
+            "Washing"          => Color.FromArgb(51, 104, 160),
+            "Drying"           => Color.FromArgb(102, 163, 191),
+            "Ready for Pickup" => Color.FromArgb(40, 167, 69),
+            "Claimed"          => Color.FromArgb(108, 117, 125),
+            "Cancelled"        => Color.FromArgb(220, 53, 69),
+            _                  => Color.FromArgb(51, 104, 160)
         };
-    }
-
-    private void pnlStatPending_Paint(object? sender, PaintEventArgs e)
-    {
-        using var pen = new Pen(Color.FromArgb(245, 158, 11), 2);
-        e.Graphics.DrawLine(pen, 0, 0, 0, pnlStatPending.Height);
-    }
-
-    private void pnlStatTotal_Paint(object? sender, PaintEventArgs e)
-    {
-        using var pen = new Pen(Color.FromArgb(59, 130, 246), 2);
-        e.Graphics.DrawLine(pen, 0, 0, 0, pnlStatTotal.Height);
-    }
-
-    private void pnlStatClaimed_Paint(object? sender, PaintEventArgs e)
-    {
-        using var pen = new Pen(Color.FromArgb(16, 185, 129), 2);
-        e.Graphics.DrawLine(pen, 0, 0, 0, pnlStatClaimed.Height);
-    }
-
-    private void pnlStatSales_Paint(object? sender, PaintEventArgs e)
-    {
-        using var pen = new Pen(Color.FromArgb(139, 92, 246), 2);
-        e.Graphics.DrawLine(pen, 0, 0, 0, pnlStatSales.Height);
     }
 }

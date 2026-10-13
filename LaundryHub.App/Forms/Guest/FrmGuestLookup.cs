@@ -11,7 +11,17 @@ public partial class FrmGuestLookup : Form
     public FrmGuestLookup()
     {
         InitializeComponent();
+        DoubleBuffered = true;
+        ResizeRedraw = true;
         InitProgressArrays();
+        UIThemeHelper.StyleAuthForm(this, pnlCard, btnLookup, btnBack);
+        pnlCard.Paint += (_, e) => UIThemeHelper.PaintRoundedSolidCard(pnlCard, e, Color.White, UIThemeHelper.LoginCardRadius);
+    }
+
+    protected override void OnPaintBackground(PaintEventArgs e)
+    {
+        base.OnPaintBackground(e);
+        UIThemeHelper.PaintGradientBackground(this, e);
     }
 
     private void InitProgressArrays()
@@ -27,22 +37,25 @@ public partial class FrmGuestLookup : Form
         progressLabels[3] = lblStep3;
     }
 
-    private void pnlCard_Paint(object? sender, PaintEventArgs e)
+    protected override bool ProcessCmdKey(ref Message msg, Keys keyData)
     {
-        using var pen = new Pen(Color.FromArgb(59, 130, 246), 1);
-        e.Graphics.DrawRectangle(pen, 0, 0, pnlCard.Width - 1, pnlCard.Height - 1);
-    }
-
-    private void pnlResult_Paint(object? sender, PaintEventArgs e)
-    {
-        using var pen = new Pen(Color.FromArgb(71, 85, 105), 1);
-        e.Graphics.DrawRectangle(pen, 0, 0, pnlResult.Width - 1, pnlResult.Height - 1);
+        if (keyData == Keys.Enter)
+        {
+            btnLookup_Click(btnLookup, EventArgs.Empty);
+            return true;
+        }
+        return base.ProcessCmdKey(ref msg, keyData);
     }
 
     private void btnBack_Click(object? sender, EventArgs e)
     {
-        new Auth.FrmLogin().Show();
         this.Close();
+    }
+
+    private void lnkPricing_LinkClicked(object? sender, LinkLabelLinkClickedEventArgs e)
+    {
+        var pricing = new FrmGuestPricing();
+        pricing.ShowDialog(this);
     }
 
     private void btnLookup_Click(object? sender, EventArgs e)
@@ -86,8 +99,8 @@ public partial class FrmGuestLookup : Form
         lblResultCustomer.Text = customer.FullName;
         lblResultService.Text = $"{order.ServiceName ?? "Standard Laundry"} ({order.WeightKg} kg)";
         lblResultTotal.Text = $"₱{order.TotalAmount:N2}";
-        lblResultPayment.Text = order.PaymentRecorded ? "✔ Paid" : "⏳ Unpaid";
-        lblResultPayment.ForeColor = order.PaymentRecorded ? Color.FromArgb(52, 211, 153) : Color.FromArgb(248, 113, 113);
+        lblResultPayment.Text = order.PaymentRecorded ? "Paid" : "Unpaid";
+        lblResultPayment.ForeColor = order.PaymentRecorded ? Color.FromArgb(40, 167, 69) : Color.FromArgb(220, 53, 69);
         lblResultPickup.Text = order.PickupDate?.ToString("MMMM dd, yyyy") ?? "Pending schedule";
 
         UpdateTimeline(order.Status);
@@ -107,15 +120,23 @@ public partial class FrmGuestLookup : Form
 
         for (int i = 0; i < 4; i++)
         {
-            if (i <= activeIdx)
+            if (i == activeIdx)
             {
-                progressSteps[i].BackColor = i == activeIdx ? Color.FromArgb(37, 99, 235) : Color.FromArgb(16, 185, 129);
+                // Current active stage
+                progressSteps[i].BackColor = Color.FromArgb(51, 104, 160);
+                progressLabels[i].ForeColor = Color.White;
+            }
+            else if (i < activeIdx)
+            {
+                // Completed past stage
+                progressSteps[i].BackColor = Color.FromArgb(102, 163, 191);
                 progressLabels[i].ForeColor = Color.White;
             }
             else
             {
-                progressSteps[i].BackColor = Color.FromArgb(30, 41, 59);
-                progressLabels[i].ForeColor = Color.FromArgb(100, 116, 139);
+                // Upcoming stage
+                progressSteps[i].BackColor = Color.FromArgb(200, 223, 219);
+                progressLabels[i].ForeColor = Color.FromArgb(51, 104, 160);
             }
         }
     }

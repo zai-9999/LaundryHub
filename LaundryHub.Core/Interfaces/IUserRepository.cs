@@ -10,6 +10,6 @@ public interface IUserRepository
     void Add(User user);
     void Update(User user);
     void SetActive(int userId, bool isActive);
-    bool UsernameExists(string username);
-    bool EmailExists(string email);
+    bool UsernameExists(string username, int excludeUserId = 0);
+    bool EmailExists(string email, int excludeUserId = 0);
 }

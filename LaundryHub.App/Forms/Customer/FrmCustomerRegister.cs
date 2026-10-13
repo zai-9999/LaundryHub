@@ -11,17 +11,30 @@ public partial class FrmCustomerRegister : Form
     public FrmCustomerRegister()
     {
         InitializeComponent();
+        DoubleBuffered = true;
+        ResizeRedraw = true;
+        UIThemeHelper.StyleAuthForm(this, pnlCard, btnRegister, btnBack);
+        pnlCard.Paint += (_, e) => UIThemeHelper.PaintRoundedSolidCard(pnlCard, e, Color.White, UIThemeHelper.LoginCardRadius);
     }
 
-    private void pnlCard_Paint(object? sender, PaintEventArgs e)
+    protected override void OnPaintBackground(PaintEventArgs e)
     {
-        using var pen = new Pen(Color.FromArgb(59, 130, 246), 1);
-        e.Graphics.DrawRectangle(pen, 0, 0, pnlCard.Width - 1, pnlCard.Height - 1);
+        base.OnPaintBackground(e);
+        UIThemeHelper.PaintGradientBackground(this, e);
+    }
+
+    protected override bool ProcessCmdKey(ref Message msg, Keys keyData)
+    {
+        if (keyData == Keys.Enter)
+        {
+            btnRegister_Click(btnRegister, EventArgs.Empty);
+            return true;
+        }
+        return base.ProcessCmdKey(ref msg, keyData);
     }
 
     private void btnBack_Click(object? sender, EventArgs e)
     {
-        new Auth.FrmLogin().Show();
         this.Close();
     }
 
@@ -65,7 +78,6 @@ public partial class FrmCustomerRegister : Form
 
             MessageBox.Show("Account successfully created! You may now log in to view your orders.", "Registration Complete", MessageBoxButtons.OK, MessageBoxIcon.Information);
 
-            new Auth.FrmLogin().Show();
             this.Close();
         }
         catch (Exception ex)
@@ -129,9 +141,16 @@ public partial class FrmCustomerRegister : Form
 
         if (!string.IsNullOrWhiteSpace(txtEmail.Text))
         {
-            if (!Regex.IsMatch(txtEmail.Text.Trim(), @"^[^@\s]+@[^@\s]+\.[^@\s]+$"))
+            var emailInput = txtEmail.Text.Trim();
+            if (!Regex.IsMatch(emailInput, @"^[^@\s]+@[^@\s]+\.[^@\s]+$"))
             {
                 ShowError("Please enter a valid email address.");
+                txtEmail.Focus();
+                return false;
+            }
+            if (AppServices.Users.EmailExists(emailInput))
+            {
+                ShowError("This email is already registered. Please use another.");
                 txtEmail.Focus();
                 return false;
             }

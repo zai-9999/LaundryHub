@@ -9,9 +9,27 @@ public partial class FrmExportReport : Form
 
     public FrmExportReport()
     {
-        InitializeComponent();
+        DoubleBuffered = true;
+        ResizeRedraw = true;
+        UIThemeHelper.StyleStandardForm(this);
+        pnlHeader.BackColor = Color.FromArgb(37, 78, 122);
+        lblTitle.BackColor = Color.FromArgb(37, 78, 122);
+        pnlContainer.BackColor = Color.FromArgb(240, 244, 248);
+        pnlGridWrap.BackColor = Color.FromArgb(240, 244, 248);
+        UIThemeHelper.StyleDataGridView(dgvPreview);
+        UIThemeHelper.ApplyRoundedRegion(pnlStatOrders, 10);
+        UIThemeHelper.ApplyRoundedRegion(pnlStatPending, 10);
+        UIThemeHelper.ApplyRoundedRegion(pnlStatClaimed, 10);
+        UIThemeHelper.ApplyRoundedRegion(pnlStatSales, 10);
+        UIThemeHelper.ApplyRoundedRegion(pnlFilterBar, 10);
         dtpDate.Value = DateTime.Today;
         LoadReportForDate(DateTime.Today);
+    }
+
+    protected override void OnPaintBackground(PaintEventArgs e)
+    {
+        base.OnPaintBackground(e);
+        UIThemeHelper.PaintGradientBackground(this, e);
     }
 
     private void btnClose_Click(object? sender, EventArgs e) => this.Close();

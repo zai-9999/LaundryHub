@@ -1,5 +1,7 @@
 using LaundryHub.App.Helpers;
 using LaundryHub.Core.Models;
+using System.Drawing.Drawing2D;
+using ReaLTaiizor.Util;
 
 namespace LaundryHub.App.Forms.Admin;
 
@@ -10,6 +12,22 @@ public partial class FrmAdminDashboard : Form
     public FrmAdminDashboard()
     {
         InitializeComponent();
+        DoubleBuffered = true;
+        ResizeRedraw = true;
+        pnlHeader.BackColor = Color.FromArgb(37, 78, 122);
+        lblWelcome.BackColor = Color.FromArgb(37, 78, 122);
+        lblLogo.BackColor = Color.FromArgb(37, 78, 122);
+        lblClock.BackColor = Color.FromArgb(37, 78, 122);
+        UIThemeHelper.StyleDataGridView(dgvTodayOrders);
+        UIThemeHelper.ApplyRoundedRegion(pnlMain, UIThemeHelper.ContentCardRadius);
+        pnlMain.SizeChanged += (s, e) => UIThemeHelper.ApplyRoundedRegion(pnlMain, UIThemeHelper.ContentCardRadius);
+        UIThemeHelper.ApplyRoundedRegion(pnlStatOrders, 10);
+        UIThemeHelper.ApplyRoundedRegion(pnlStatRevenue, 10);
+        UIThemeHelper.ApplyRoundedRegion(pnlStatPending, 10);
+        UIThemeHelper.ApplyRoundedRegion(pnlStatClaimed, 10);
+
+        pnlSidebar.Paint += pnlSidebar_Paint;
+        ApplyNavButtonStyles();
 
         if (SessionManager.CurrentUser != null)
         {
@@ -21,6 +39,49 @@ public partial class FrmAdminDashboard : Form
         clockTimer.Tick += (_, _) => lblClock.Text = DateTime.Now.ToString("dddd, MMM dd, yyyy  hh:mm:ss tt");
         clockTimer.Start();
         lblClock.Text = DateTime.Now.ToString("dddd, MMM dd, yyyy  hh:mm:ss tt");
+    }
+
+    protected override void OnPaintBackground(PaintEventArgs e)
+    {
+        base.OnPaintBackground(e);
+        UIThemeHelper.PaintGradientBackground(this, e);
+    }
+
+    private void pnlMain_Paint(object sender, PaintEventArgs e)
+    {
+        UIThemeHelper.PaintRoundedSolidCard(pnlMain, e, Color.White, UIThemeHelper.ContentCardRadius);
+    }
+
+    private void pnlSidebar_Paint(object? sender, PaintEventArgs e)
+    {
+        UIThemeHelper.PaintGradientBackground(pnlSidebar, e);
+    }
+
+    private void ApplyNavButtonStyles()
+    {
+        foreach (var btn in new[] { btnManageStaff, btnServicePricing, btnExportReport, btnStaffDashboard, btnCustomerRegistration, btnRefresh })
+        {
+            btn.ButtonType = HopeButtonType.Primary;
+            btn.PrimaryColor = Color.FromArgb(37, 78, 122);
+            btn.TextColor = Color.White;
+            btn.HoverTextColor = Color.White;
+        }
+
+        // Primary action button — HopeButton pill highlight.
+        btnNewOrder.ButtonType = HopeButtonType.Primary;
+        btnNewOrder.PrimaryColor = Color.FromArgb(102, 163, 191);
+        btnNewOrder.TextColor = Color.White;
+        btnNewOrder.HoverTextColor = Color.White;
+
+        btnLogout.ButtonType = HopeButtonType.Primary;
+        btnLogout.PrimaryColor = Color.FromArgb(190, 60, 60);
+        btnLogout.TextColor = Color.White;
+        btnLogout.HoverTextColor = Color.White;
+
+        btnLogoutNav.ButtonType = HopeButtonType.Primary;
+        btnLogoutNav.PrimaryColor = Color.FromArgb(190, 60, 60);
+        btnLogoutNav.TextColor = Color.White;
+        btnLogoutNav.HoverTextColor = Color.White;
     }
 
     private void btnLogout_Click(object? sender, EventArgs e) => this.Close();
@@ -83,13 +144,13 @@ public partial class FrmAdminDashboard : Form
             Service = o.ServiceName,
             Weight = $"{o.WeightKg} kg",
             Total = $"₱{o.TotalAmount:N2}",
-            Payment = o.PaymentRecorded ? "✔ Paid" : "⏳ Unpaid",
+            Payment = o.PaymentRecorded ? "Paid" : "Unpaid",
             o.Status,
             Time = o.CreatedAt.ToString("hh:mm tt")
         }).ToList();
 
-        if (dgvTodayOrders.Columns["OrderId"] != null)
-            dgvTodayOrders.Columns["OrderId"].Visible = false;
+        if (dgvTodayOrders.Columns["OrderId"] is { } col)
+            col.Visible = false;
     }
 
     private void OpenSelectedOrderDetail()

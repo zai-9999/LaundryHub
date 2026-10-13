@@ -19,6 +19,24 @@ public partial class FrmUpdateProfile : Form
         _user = user;
         InitializeComponent();
 
+        UIThemeHelper.StyleStandardForm(this, pnlMain);
+        pnlMain.Dock = DockStyle.None;
+        pnlMain.BackColor = UIThemeHelper.CardWhite;
+        this.ClientSize = new Size(520, 560);
+        pnlMain.Bounds = new Rectangle(24, 24, this.ClientSize.Width - 48, this.ClientSize.Height - 48);
+        UIThemeHelper.ApplyRoundedRegion(pnlMain, UIThemeHelper.LoginCardRadius);
+        pnlMain.SizeChanged += (s, e) => UIThemeHelper.ApplyRoundedRegion(pnlMain, UIThemeHelper.LoginCardRadius);
+        UIThemeHelper.ApplyRoundedButtons(UIThemeHelper.LoginButtonRadius, btnSave, btnCancel);
+        // Save button – navy
+        btnSave.PrimaryColor = Color.FromArgb(37, 78, 122);
+        btnSave.TextColor = Color.White;
+        btnSave.HoverTextColor = Color.White;
+        // Cancel button – solid gray, always clearly visible
+        btnCancel.PrimaryColor = Color.FromArgb(108, 117, 125);
+        btnCancel.BorderColor = Color.FromArgb(108, 117, 125);
+        btnCancel.TextColor = Color.White;
+        btnCancel.HoverTextColor = Color.White;
+
         if (customer != null)
         {
             txtFullName.Text = customer.FullName ?? "";
@@ -26,6 +44,22 @@ public partial class FrmUpdateProfile : Form
             txtEmail.Text = customer.Email ?? "";
             txtAddress.Text = customer.Address ?? "";
         }
+    }
+
+    protected override void OnPaintBackground(PaintEventArgs e)
+    {
+        base.OnPaintBackground(e);
+        UIThemeHelper.PaintGradientBackground(this, e);
+    }
+
+    protected override bool ProcessCmdKey(ref Message msg, Keys keyData)
+    {
+        if (keyData == Keys.Enter)
+        {
+            btnSave_Click(btnSave, EventArgs.Empty);
+            return true;
+        }
+        return base.ProcessCmdKey(ref msg, keyData);
     }
 
     private void btnCancel_Click(object? sender, EventArgs e)
