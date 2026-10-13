@@ -1,3 +1,4 @@
+using Dapper;
 using Microsoft.Extensions.Configuration;
 using LaundryHub.Data;
 using LaundryHub.Data.Repositories;
@@ -22,7 +23,7 @@ public static class AppServices
 
     public static void Initialize()
     {
-        Dapper.DefaultTypeMap.MatchNamesWithUnderscores = true;
+        DefaultTypeMap.MatchNamesWithUnderscores = true;
 
         Configuration = new ConfigurationBuilder()
             .SetBasePath(AppContext.BaseDirectory)

@@ -73,7 +73,7 @@ public partial class FrmGuestLookup : Form
             return;
         }
 
-        if (string.IsNullOrWhiteSpace(phone4) || phone4.Length != 4)
+        if (phone4.Length != 4 || !phone4.All(c => c is >= '0' and <= '9'))
         {
             ShowError("Please enter exactly 4 digits of your phone number.");
             txtPhoneLast4.Focus();

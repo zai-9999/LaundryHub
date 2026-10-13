@@ -13,23 +13,8 @@ public partial class FrmManageStaff : Form
     public FrmManageStaff()
     {
         InitializeComponent();
-        DoubleBuffered = true;
-        ResizeRedraw = true;
-        UIThemeHelper.StyleStandardForm(this, pnlLeftCard);
-        pnlHeader.BackColor = Color.FromArgb(37, 78, 122);
-        lblTitle.BackColor = Color.FromArgb(37, 78, 122);
-        pnlContainer.BackColor = Color.FromArgb(240, 244, 248);
-        pnlRight.BackColor = Color.FromArgb(240, 244, 248);
-        flpForm.BackColor = Color.White;
-        UIThemeHelper.StyleDataGridView(dgvStaff);
         cmbRole.SelectedIndex = 0;
         LoadStaff();
-    }
-
-    protected override void OnPaintBackground(PaintEventArgs e)
-    {
-        base.OnPaintBackground(e);
-        UIThemeHelper.PaintGradientBackground(this, e);
     }
 
     private void btnClose_Click(object? sender, EventArgs e) => this.Close();
@@ -50,8 +35,8 @@ public partial class FrmManageStaff : Form
             Created = u.CreatedAt.ToString("MM/dd/yyyy")
         }).ToList();
 
-        if (dgvStaff.Columns["UserId"] is { } col)
-            col.Visible = false;
+        if (dgvStaff.Columns["UserId"] != null)
+            dgvStaff.Columns["UserId"].Visible = false;
     }
 
     private void dgvStaff_SelectionChanged(object? sender, EventArgs e)
@@ -64,8 +49,8 @@ public partial class FrmManageStaff : Form
             if (_selectedUser != null)
             {
                 _editingUserId = _selectedUser.UserId;
-                lblFormTitle.Text = $"Edit Staff Member #{_selectedUser.UserId}";
-                btnSave.Text = "Update Info";
+                lblFormTitle.Text = $"✏ Edit Staff Member #{_selectedUser.UserId}";
+                btnSave.Text = "✔ Update Info";
                 txtFullName.Text = _selectedUser.FullName;
                 txtUsername.Text = _selectedUser.Username;
                 txtUsername.Enabled = false; // keep username immutable
@@ -140,8 +125,8 @@ public partial class FrmManageStaff : Form
     {
         _editingUserId = 0;
         _selectedUser = null;
-        lblFormTitle.Text = "New Staff Member";
-        btnSave.Text = "Save Account";
+        lblFormTitle.Text = "➕ New Staff Member";
+        btnSave.Text = "💾 Save Account";
         txtFullName.Clear();
         txtUsername.Clear();
         txtUsername.Enabled = true;
@@ -178,25 +163,25 @@ public partial class FrmManageStaff : Form
                 txtUsername.Focus();
                 return false;
             }
-            if (string.IsNullOrWhiteSpace(txtPassword.Text) || txtPassword.Text.Length < 6)
+            if (!InputValidator.IsValidPassword(txtPassword.Text, out var pwdError))
             {
-                ShowError("Password must be at least 6 characters.");
+                ShowError(pwdError);
                 txtPassword.Focus();
                 return false;
             }
         }
 
-        var email = txtEmail.Text.Trim();
-        if (string.IsNullOrWhiteSpace(email) || !Regex.IsMatch(email, @"^[^@\s]+@[^@\s]+\.[^@\s]+$"))
+        if (_editingUserId != 0 && !string.IsNullOrWhiteSpace(txtPassword.Text)
+            && !InputValidator.IsValidPassword(txtPassword.Text, out var editPwdError))
         {
-            ShowError("Please enter a valid email address.");
-            txtEmail.Focus();
+            ShowError(editPwdError);
+            txtPassword.Focus();
             return false;
         }
 
-        if (AppServices.Users.EmailExists(email, _editingUserId))
+        if (string.IsNullOrWhiteSpace(txtEmail.Text) || !Regex.IsMatch(txtEmail.Text.Trim(), @"^[^@\s]+@[^@\s]+\.[^@\s]+$"))
         {
-            ShowError("Email address is already in use by another account.");
+            ShowError("Please enter a valid email address.");
             txtEmail.Focus();
             return false;
         }

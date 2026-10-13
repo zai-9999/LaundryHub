@@ -32,6 +32,8 @@ public partial class FrmCustomerRegistration : Form
         flpForm.BackColor = Color.White;
         UIThemeHelper.StyleDataGridView(dgvCustomers);
 
+        InputValidator.RestrictToPhoneInput(txtPhone);
+
         this.Text = _returnCustomer ? "Select / Register Customer" : "Customer Management";
         lblTitle.Text = _returnCustomer ? "Select or Register Customer" : "Customer Directory & Registration";
         btnSelect.Visible = _returnCustomer;
@@ -225,16 +227,9 @@ public partial class FrmCustomerRegistration : Form
             return false;
         }
 
-        if (string.IsNullOrWhiteSpace(phone) || phone.Length < 7)
+        if (!InputValidator.IsValidPhone(phone))
         {
-            ShowError("Please enter a valid phone number (min 7 digits).");
-            txtPhone.Focus();
-            return false;
-        }
-
-        if (AppServices.Customers.PhoneExists(phone, _editingCustomerId))
-        {
-            ShowError("This phone number is already registered to another customer.");
+            ShowError(InputValidator.PhoneError);
             txtPhone.Focus();
             return false;
         }

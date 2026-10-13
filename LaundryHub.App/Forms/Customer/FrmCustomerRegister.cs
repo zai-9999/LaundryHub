@@ -11,26 +11,13 @@ public partial class FrmCustomerRegister : Form
     public FrmCustomerRegister()
     {
         InitializeComponent();
-        DoubleBuffered = true;
-        ResizeRedraw = true;
-        UIThemeHelper.StyleAuthForm(this, pnlCard, btnRegister, btnBack);
-        pnlCard.Paint += (_, e) => UIThemeHelper.PaintRoundedSolidCard(pnlCard, e, Color.White, UIThemeHelper.LoginCardRadius);
+        InputValidator.RestrictToPhoneInput(txtPhone);
     }
 
-    protected override void OnPaintBackground(PaintEventArgs e)
+    private void pnlCard_Paint(object? sender, PaintEventArgs e)
     {
-        base.OnPaintBackground(e);
-        UIThemeHelper.PaintGradientBackground(this, e);
-    }
-
-    protected override bool ProcessCmdKey(ref Message msg, Keys keyData)
-    {
-        if (keyData == Keys.Enter)
-        {
-            btnRegister_Click(btnRegister, EventArgs.Empty);
-            return true;
-        }
-        return base.ProcessCmdKey(ref msg, keyData);
+        using var pen = new Pen(Color.FromArgb(59, 130, 246), 1);
+        e.Graphics.DrawRectangle(pen, 0, 0, pnlCard.Width - 1, pnlCard.Height - 1);
     }
 
     private void btnBack_Click(object? sender, EventArgs e)
@@ -97,9 +84,9 @@ public partial class FrmCustomerRegister : Form
             return false;
         }
 
-        if (string.IsNullOrWhiteSpace(txtPhone.Text) || txtPhone.Text.Trim().Length < 7)
+        if (!InputValidator.IsValidPhone(txtPhone.Text))
         {
-            ShowError("Please enter a valid phone number (min 7 digits).");
+            ShowError(InputValidator.PhoneError);
             txtPhone.Focus();
             return false;
         }
@@ -125,9 +112,9 @@ public partial class FrmCustomerRegister : Form
             return false;
         }
 
-        if (string.IsNullOrWhiteSpace(txtPassword.Text) || txtPassword.Text.Length < 6)
+        if (!InputValidator.IsValidPassword(txtPassword.Text, out var pwdError))
         {
-            ShowError("Password must be at least 6 characters.");
+            ShowError(pwdError);
             txtPassword.Focus();
             return false;
         }
@@ -141,16 +128,9 @@ public partial class FrmCustomerRegister : Form
 
         if (!string.IsNullOrWhiteSpace(txtEmail.Text))
         {
-            var emailInput = txtEmail.Text.Trim();
-            if (!Regex.IsMatch(emailInput, @"^[^@\s]+@[^@\s]+\.[^@\s]+$"))
+            if (!Regex.IsMatch(txtEmail.Text.Trim(), @"^[^@\s]+@[^@\s]+\.[^@\s]+$"))
             {
                 ShowError("Please enter a valid email address.");
-                txtEmail.Focus();
-                return false;
-            }
-            if (AppServices.Users.EmailExists(emailInput))
-            {
-                ShowError("This email is already registered. Please use another.");
                 txtEmail.Focus();
                 return false;
             }
