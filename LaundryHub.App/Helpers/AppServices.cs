@@ -1,3 +1,4 @@
+using Dapper;
 using Microsoft.Extensions.Configuration;
 using LaundryHub.Data;
 using LaundryHub.Data.Repositories;
@@ -22,6 +23,8 @@ public static class AppServices
 
     public static void Initialize()
     {
+        DefaultTypeMap.MatchNamesWithUnderscores = true;
+
         Configuration = new ConfigurationBuilder()
             .SetBasePath(AppContext.BaseDirectory)
             .AddJsonFile("appsettings.json", optional: false, reloadOnChange: true)
