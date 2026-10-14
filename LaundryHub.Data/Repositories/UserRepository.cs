@@ -14,7 +14,7 @@ public class UserRepository : IUserRepository
     {
         using var conn = _db.CreateConnection();
         return conn.QueryFirstOrDefault<User>(
-            "SELECT * FROM users WHERE username = @Username AND is_active = TRUE",
+            "SELECT * FROM users WHERE (LOWER(username) = LOWER(@Username) OR LOWER(email) = LOWER(@Username)) AND is_active = TRUE",
             new { Username = username });
     }
 
@@ -46,7 +46,12 @@ public class UserRepository : IUserRepository
     {
         using var conn = _db.CreateConnection();
         conn.Execute(@"
-            UPDATE users SET full_name = @FullName, email = @Email, role = @Role
+            UPDATE users
+            SET full_name = @FullName,
+                email = @Email,
+                role = @Role,
+                is_active = @IsActive,
+                password_hash = CASE WHEN @PasswordHash IS NOT NULL AND @PasswordHash != '' THEN @PasswordHash ELSE password_hash END
             WHERE user_id = @UserId",
             user);
     }
@@ -58,19 +63,19 @@ public class UserRepository : IUserRepository
             new { IsActive = isActive, UserId = userId });
     }
 
-    public bool UsernameExists(string username)
+    public bool UsernameExists(string username, int excludeUserId = 0)
     {
         using var conn = _db.CreateConnection();
         return conn.ExecuteScalar<int>(
-            "SELECT COUNT(1) FROM users WHERE username = @Username",
-            new { Username = username }) > 0;
+            "SELECT COUNT(1) FROM users WHERE LOWER(username) = LOWER(@Username) AND user_id != @ExcludeId",
+            new { Username = username, ExcludeId = excludeUserId }) > 0;
     }
 
-    public bool EmailExists(string email)
+    public bool EmailExists(string email, int excludeUserId = 0)
     {
         using var conn = _db.CreateConnection();
         return conn.ExecuteScalar<int>(
-            "SELECT COUNT(1) FROM users WHERE email = @Email",
-            new { Email = email }) > 0;
+            "SELECT COUNT(1) FROM users WHERE LOWER(email) = LOWER(@Email) AND user_id != @ExcludeId",
+            new { Email = email, ExcludeId = excludeUserId }) > 0;
     }
 }

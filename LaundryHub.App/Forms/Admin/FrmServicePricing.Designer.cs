@@ -1,3 +1,10 @@
+using Panel = System.Windows.Forms.Panel;
+using CheckBox = System.Windows.Forms.CheckBox;
+using Button = System.Windows.Forms.Button;
+using ReaLTaiizor;
+using ReaLTaiizor.Controls;
+using ReaLTaiizor.Util;
+
 namespace LaundryHub.App.Forms.Admin;
 
 partial class FrmServicePricing
@@ -20,28 +27,28 @@ partial class FrmServicePricing
         DataGridViewCellStyle dataGridViewCellStyle1 = new DataGridViewCellStyle();
         DataGridViewCellStyle dataGridViewCellStyle2 = new DataGridViewCellStyle();
         pnlHeader = new Panel();
-        btnClose = new Button();
+        btnClose = new HopeButton();
         lblTitle = new Label();
         pnlContainer = new Panel();
         pnlRight = new Panel();
         pnlGridWrap = new Panel();
         dgvServices = new DataGridView();
         pnlToolBar = new Panel();
-        btnToggleActive = new Button();
+        btnToggleActive = new HopeButton();
         lblGridTitle = new Label();
         pnlLeftCard = new Panel();
         flpForm = new FlowLayoutPanel();
         lblServiceName = new Label();
-        txtServiceName = new TextBox();
+        txtServiceName = new HopeTextBox();
         lblPricePerKilo = new Label();
-        txtPricePerKilo = new TextBox();
+        txtPricePerKilo = new HopeTextBox();
         lblMinWeight = new Label();
-        txtMinWeight = new TextBox();
+        txtMinWeight = new HopeTextBox();
         chkActive = new CheckBox();
         lblError = new Label();
         flpButtons = new FlowLayoutPanel();
-        btnSave = new Button();
-        btnClear = new Button();
+        btnSave = new HopeButton();
+        btnClear = new HopeButton();
         lblFormTitle = new Label();
         pnlHeader.SuspendLayout();
         pnlContainer.SuspendLayout();
@@ -56,7 +63,7 @@ partial class FrmServicePricing
         // 
         // pnlHeader
         // 
-        pnlHeader.BackColor = Color.FromArgb(30, 41, 59);
+        pnlHeader.BackColor = Color.FromArgb(51, 104, 160);
         pnlHeader.Controls.Add(btnClose);
         pnlHeader.Controls.Add(lblTitle);
         pnlHeader.Dock = DockStyle.Top;
@@ -68,33 +75,35 @@ partial class FrmServicePricing
         // 
         // btnClose
         // 
-        btnClose.BackColor = Color.FromArgb(51, 65, 85);
+        btnClose.ButtonType = HopeButtonType.Default;
+        btnClose.DefaultColor = Color.FromArgb(102, 163, 191);
+        btnClose.BorderColor = Color.FromArgb(200, 223, 219);
+        btnClose.TextColor = Color.FromArgb(242, 239, 231);
+        btnClose.HoverTextColor = Color.White;
         btnClose.Cursor = Cursors.Hand;
-        btnClose.FlatAppearance.BorderSize = 0;
-        btnClose.FlatStyle = FlatStyle.Flat;
-        btnClose.ForeColor = Color.White;
+        btnClose.Font = new Font("Segoe UI", 9.5F, FontStyle.Bold);
         btnClose.Location = new Point(766, 16);
         btnClose.Name = "btnClose";
         btnClose.Size = new Size(90, 34);
         btnClose.TabIndex = 1;
         btnClose.Text = "✕ Close";
-        btnClose.UseVisualStyleBackColor = false;
         btnClose.Click += btnClose_Click;
         // 
         // lblTitle
         // 
         lblTitle.Dock = DockStyle.Left;
         lblTitle.Font = new Font("Segoe UI", 16F, FontStyle.Bold);
-        lblTitle.ForeColor = Color.FromArgb(96, 165, 250);
+        lblTitle.ForeColor = Color.FromArgb(242, 239, 231);
         lblTitle.Location = new Point(24, 0);
         lblTitle.Name = "lblTitle";
         lblTitle.Size = new Size(420, 65);
         lblTitle.TabIndex = 0;
-        lblTitle.Text = "🏷 Service Types & Price Rates";
+        lblTitle.Text = "Service Types & Price Rates";
         lblTitle.TextAlign = ContentAlignment.MiddleLeft;
         // 
         // pnlContainer
         // 
+        pnlContainer.BackColor = Color.FromArgb(242, 239, 231);
         pnlContainer.Controls.Add(pnlRight);
         pnlContainer.Controls.Add(pnlLeftCard);
         pnlContainer.Dock = DockStyle.Fill;
@@ -106,6 +115,7 @@ partial class FrmServicePricing
         // 
         // pnlRight
         // 
+        pnlRight.BackColor = Color.Transparent;
         pnlRight.Controls.Add(pnlGridWrap);
         pnlRight.Controls.Add(pnlToolBar);
         pnlRight.Dock = DockStyle.Fill;
@@ -130,29 +140,29 @@ partial class FrmServicePricing
         dgvServices.AllowUserToAddRows = false;
         dgvServices.AllowUserToDeleteRows = false;
         dgvServices.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.Fill;
-        dgvServices.BackgroundColor = Color.FromArgb(30, 41, 59);
+        dgvServices.BackgroundColor = Color.White;
         dgvServices.BorderStyle = BorderStyle.None;
         dataGridViewCellStyle1.Alignment = DataGridViewContentAlignment.MiddleLeft;
-        dataGridViewCellStyle1.BackColor = Color.FromArgb(15, 23, 42);
+        dataGridViewCellStyle1.BackColor = Color.FromArgb(51, 104, 160);
         dataGridViewCellStyle1.Font = new Font("Segoe UI", 9.5F, FontStyle.Bold);
-        dataGridViewCellStyle1.ForeColor = Color.FromArgb(148, 163, 184);
+        dataGridViewCellStyle1.ForeColor = Color.FromArgb(242, 239, 231);
         dataGridViewCellStyle1.Padding = new Padding(6);
-        dataGridViewCellStyle1.SelectionBackColor = SystemColors.Highlight;
-        dataGridViewCellStyle1.SelectionForeColor = SystemColors.HighlightText;
+        dataGridViewCellStyle1.SelectionBackColor = Color.FromArgb(51, 104, 160);
+        dataGridViewCellStyle1.SelectionForeColor = Color.FromArgb(242, 239, 231);
         dataGridViewCellStyle1.WrapMode = DataGridViewTriState.True;
         dgvServices.ColumnHeadersDefaultCellStyle = dataGridViewCellStyle1;
         dgvServices.ColumnHeadersHeightSizeMode = DataGridViewColumnHeadersHeightSizeMode.AutoSize;
         dataGridViewCellStyle2.Alignment = DataGridViewContentAlignment.MiddleLeft;
-        dataGridViewCellStyle2.BackColor = Color.FromArgb(30, 41, 59);
+        dataGridViewCellStyle2.BackColor = Color.White;
         dataGridViewCellStyle2.Font = new Font("Segoe UI", 9.5F);
-        dataGridViewCellStyle2.ForeColor = Color.White;
-        dataGridViewCellStyle2.SelectionBackColor = Color.FromArgb(37, 99, 235);
-        dataGridViewCellStyle2.SelectionForeColor = Color.White;
+        dataGridViewCellStyle2.ForeColor = Color.FromArgb(51, 104, 160);
+        dataGridViewCellStyle2.SelectionBackColor = Color.FromArgb(200, 223, 219);
+        dataGridViewCellStyle2.SelectionForeColor = Color.FromArgb(51, 104, 160);
         dataGridViewCellStyle2.WrapMode = DataGridViewTriState.False;
         dgvServices.DefaultCellStyle = dataGridViewCellStyle2;
         dgvServices.Dock = DockStyle.Fill;
         dgvServices.EnableHeadersVisualStyles = false;
-        dgvServices.GridColor = Color.FromArgb(51, 65, 85);
+        dgvServices.GridColor = Color.FromArgb(200, 223, 219);
         dgvServices.Location = new Point(0, 10);
         dgvServices.Name = "dgvServices";
         dgvServices.ReadOnly = true;
@@ -165,47 +175,48 @@ partial class FrmServicePricing
         // 
         // pnlToolBar
         // 
-        pnlToolBar.BackColor = Color.FromArgb(30, 41, 59);
+        pnlToolBar.BackColor = Color.Transparent;
         pnlToolBar.Controls.Add(btnToggleActive);
         pnlToolBar.Controls.Add(lblGridTitle);
         pnlToolBar.Dock = DockStyle.Top;
         pnlToolBar.Location = new Point(16, 0);
         pnlToolBar.Name = "pnlToolBar";
-        pnlToolBar.Padding = new Padding(12, 6, 12, 6);
+        pnlToolBar.Padding = new Padding(0, 4, 0, 4);
         pnlToolBar.Size = new Size(484, 44);
         pnlToolBar.TabIndex = 0;
         // 
         // btnToggleActive
         // 
-        btnToggleActive.BackColor = Color.FromArgb(51, 65, 85);
+        btnToggleActive.ButtonType = HopeButtonType.Default;
+        btnToggleActive.DefaultColor = Color.FromArgb(200, 223, 219);
+        btnToggleActive.BorderColor = Color.FromArgb(102, 163, 191);
+        btnToggleActive.TextColor = Color.FromArgb(51, 104, 160);
+        btnToggleActive.HoverTextColor = Color.FromArgb(51, 104, 160);
         btnToggleActive.Cursor = Cursors.Hand;
         btnToggleActive.Dock = DockStyle.Right;
-        btnToggleActive.FlatAppearance.BorderSize = 0;
-        btnToggleActive.FlatStyle = FlatStyle.Flat;
-        btnToggleActive.ForeColor = Color.White;
-        btnToggleActive.Location = new Point(292, 6);
+        btnToggleActive.Font = new Font("Segoe UI", 9F, FontStyle.Bold);
+        btnToggleActive.Location = new Point(290, 4);
         btnToggleActive.Name = "btnToggleActive";
-        btnToggleActive.Size = new Size(180, 32);
+        btnToggleActive.Size = new Size(194, 36);
         btnToggleActive.TabIndex = 1;
-        btnToggleActive.Text = "🔄 Toggle Active/Disabled";
-        btnToggleActive.UseVisualStyleBackColor = false;
+        btnToggleActive.Text = "Toggle Active/Disabled";
         btnToggleActive.Click += btnToggleActive_Click;
         // 
         // lblGridTitle
         // 
         lblGridTitle.Dock = DockStyle.Left;
-        lblGridTitle.Font = new Font("Segoe UI", 11F, FontStyle.Bold);
-        lblGridTitle.ForeColor = Color.White;
-        lblGridTitle.Location = new Point(12, 6);
+        lblGridTitle.Font = new Font("Segoe UI", 12F, FontStyle.Bold);
+        lblGridTitle.ForeColor = Color.FromArgb(51, 104, 160);
+        lblGridTitle.Location = new Point(0, 4);
         lblGridTitle.Name = "lblGridTitle";
-        lblGridTitle.Size = new Size(200, 32);
+        lblGridTitle.Size = new Size(200, 36);
         lblGridTitle.TabIndex = 0;
         lblGridTitle.Text = "Available Services List";
         lblGridTitle.TextAlign = ContentAlignment.MiddleLeft;
         // 
         // pnlLeftCard
         // 
-        pnlLeftCard.BackColor = Color.FromArgb(30, 41, 59);
+        pnlLeftCard.BackColor = Color.White;
         pnlLeftCard.Controls.Add(flpForm);
         pnlLeftCard.Controls.Add(lblFormTitle);
         pnlLeftCard.Dock = DockStyle.Left;
@@ -218,6 +229,7 @@ partial class FrmServicePricing
         // flpForm
         // 
         flpForm.AutoScroll = true;
+        flpForm.BackColor = Color.Transparent;
         flpForm.Controls.Add(lblServiceName);
         flpForm.Controls.Add(txtServiceName);
         flpForm.Controls.Add(lblPricePerKilo);
@@ -237,10 +249,10 @@ partial class FrmServicePricing
         // 
         // lblServiceName
         // 
-        lblServiceName.Font = new Font("Segoe UI", 8.5F);
-        lblServiceName.ForeColor = Color.FromArgb(148, 163, 184);
-        lblServiceName.Location = new Point(0, 5);
-        lblServiceName.Margin = new Padding(0, 5, 0, 2);
+        lblServiceName.Font = new Font("Segoe UI", 9F, FontStyle.Bold);
+        lblServiceName.ForeColor = Color.FromArgb(51, 104, 160);
+        lblServiceName.Location = new Point(0, 4);
+        lblServiceName.Margin = new Padding(0, 4, 0, 2);
         lblServiceName.Name = "lblServiceName";
         lblServiceName.Size = new Size(290, 18);
         lblServiceName.TabIndex = 0;
@@ -248,22 +260,25 @@ partial class FrmServicePricing
         // 
         // txtServiceName
         // 
-        txtServiceName.BackColor = Color.FromArgb(15, 23, 42);
-        txtServiceName.BorderStyle = BorderStyle.FixedSingle;
-        txtServiceName.Font = new Font("Segoe UI", 10F);
-        txtServiceName.ForeColor = Color.White;
-        txtServiceName.Location = new Point(0, 28);
-        txtServiceName.Margin = new Padding(0, 3, 0, 3);
+        txtServiceName.BackColor = Color.White;
+        txtServiceName.BaseColor = Color.White;
+        txtServiceName.BorderColorA = Color.FromArgb(102, 163, 191);
+        txtServiceName.BorderColorB = Color.FromArgb(200, 223, 219);
+        txtServiceName.Font = new Font("Segoe UI", 9.5F);
+        txtServiceName.ForeColor = Color.FromArgb(51, 104, 160);
+        txtServiceName.Hint = "Enter service name";
+        txtServiceName.Location = new Point(0, 26);
+        txtServiceName.Margin = new Padding(0, 2, 0, 4);
         txtServiceName.Name = "txtServiceName";
-        txtServiceName.Size = new Size(290, 25);
+        txtServiceName.Size = new Size(290, 34);
         txtServiceName.TabIndex = 1;
         // 
         // lblPricePerKilo
         // 
-        lblPricePerKilo.Font = new Font("Segoe UI", 8.5F);
-        lblPricePerKilo.ForeColor = Color.FromArgb(148, 163, 184);
-        lblPricePerKilo.Location = new Point(0, 61);
-        lblPricePerKilo.Margin = new Padding(0, 5, 0, 2);
+        lblPricePerKilo.Font = new Font("Segoe UI", 9F, FontStyle.Bold);
+        lblPricePerKilo.ForeColor = Color.FromArgb(51, 104, 160);
+        lblPricePerKilo.Location = new Point(0, 66);
+        lblPricePerKilo.Margin = new Padding(0, 4, 0, 2);
         lblPricePerKilo.Name = "lblPricePerKilo";
         lblPricePerKilo.Size = new Size(290, 18);
         lblPricePerKilo.TabIndex = 2;
@@ -271,22 +286,25 @@ partial class FrmServicePricing
         // 
         // txtPricePerKilo
         // 
-        txtPricePerKilo.BackColor = Color.FromArgb(15, 23, 42);
-        txtPricePerKilo.BorderStyle = BorderStyle.FixedSingle;
-        txtPricePerKilo.Font = new Font("Segoe UI", 10F);
-        txtPricePerKilo.ForeColor = Color.White;
-        txtPricePerKilo.Location = new Point(0, 84);
-        txtPricePerKilo.Margin = new Padding(0, 3, 0, 3);
+        txtPricePerKilo.BackColor = Color.White;
+        txtPricePerKilo.BaseColor = Color.White;
+        txtPricePerKilo.BorderColorA = Color.FromArgb(102, 163, 191);
+        txtPricePerKilo.BorderColorB = Color.FromArgb(200, 223, 219);
+        txtPricePerKilo.Font = new Font("Segoe UI", 9.5F);
+        txtPricePerKilo.ForeColor = Color.FromArgb(51, 104, 160);
+        txtPricePerKilo.Hint = "0.00";
+        txtPricePerKilo.Location = new Point(0, 88);
+        txtPricePerKilo.Margin = new Padding(0, 2, 0, 4);
         txtPricePerKilo.Name = "txtPricePerKilo";
-        txtPricePerKilo.Size = new Size(290, 25);
+        txtPricePerKilo.Size = new Size(290, 34);
         txtPricePerKilo.TabIndex = 3;
         // 
         // lblMinWeight
         // 
-        lblMinWeight.Font = new Font("Segoe UI", 8.5F);
-        lblMinWeight.ForeColor = Color.FromArgb(148, 163, 184);
-        lblMinWeight.Location = new Point(0, 117);
-        lblMinWeight.Margin = new Padding(0, 5, 0, 2);
+        lblMinWeight.Font = new Font("Segoe UI", 9F, FontStyle.Bold);
+        lblMinWeight.ForeColor = Color.FromArgb(51, 104, 160);
+        lblMinWeight.Location = new Point(0, 128);
+        lblMinWeight.Margin = new Padding(0, 4, 0, 2);
         lblMinWeight.Name = "lblMinWeight";
         lblMinWeight.Size = new Size(290, 18);
         lblMinWeight.TabIndex = 4;
@@ -294,24 +312,28 @@ partial class FrmServicePricing
         // 
         // txtMinWeight
         // 
-        txtMinWeight.BackColor = Color.FromArgb(15, 23, 42);
-        txtMinWeight.BorderStyle = BorderStyle.FixedSingle;
-        txtMinWeight.Font = new Font("Segoe UI", 10F);
-        txtMinWeight.ForeColor = Color.White;
-        txtMinWeight.Location = new Point(0, 140);
-        txtMinWeight.Margin = new Padding(0, 3, 0, 3);
+        txtMinWeight.BackColor = Color.White;
+        txtMinWeight.BaseColor = Color.White;
+        txtMinWeight.BorderColorA = Color.FromArgb(102, 163, 191);
+        txtMinWeight.BorderColorB = Color.FromArgb(200, 223, 219);
+        txtMinWeight.Font = new Font("Segoe UI", 9.5F);
+        txtMinWeight.ForeColor = Color.FromArgb(51, 104, 160);
+        txtMinWeight.Hint = "1.0";
+        txtMinWeight.Location = new Point(0, 150);
+        txtMinWeight.Margin = new Padding(0, 2, 0, 4);
         txtMinWeight.Name = "txtMinWeight";
-        txtMinWeight.Size = new Size(290, 25);
+        txtMinWeight.Size = new Size(290, 34);
         txtMinWeight.TabIndex = 5;
         // 
         // chkActive
         // 
         chkActive.Checked = true;
         chkActive.CheckState = CheckState.Checked;
-        chkActive.ForeColor = Color.White;
-        chkActive.Location = new Point(0, 171);
+        chkActive.Font = new Font("Segoe UI", 9F, FontStyle.Bold);
+        chkActive.ForeColor = Color.FromArgb(51, 104, 160);
+        chkActive.Location = new Point(0, 190);
         chkActive.Name = "chkActive";
-        chkActive.Padding = new Padding(0, 6, 0, 6);
+        chkActive.Padding = new Padding(0, 4, 0, 4);
         chkActive.Size = new Size(290, 30);
         chkActive.TabIndex = 6;
         chkActive.Text = "Active Service";
@@ -319,11 +341,11 @@ partial class FrmServicePricing
         // 
         // lblError
         // 
-        lblError.Font = new Font("Segoe UI", 8.5F);
-        lblError.ForeColor = Color.FromArgb(248, 113, 113);
-        lblError.Location = new Point(0, 204);
+        lblError.Font = new Font("Segoe UI", 9F);
+        lblError.ForeColor = Color.FromArgb(200, 50, 50);
+        lblError.Location = new Point(0, 224);
         lblError.Name = "lblError";
-        lblError.Size = new Size(290, 30);
+        lblError.Size = new Size(290, 28);
         lblError.TabIndex = 7;
         lblError.Visible = false;
         // 
@@ -331,63 +353,63 @@ partial class FrmServicePricing
         // 
         flpButtons.Controls.Add(btnSave);
         flpButtons.Controls.Add(btnClear);
-        flpButtons.Location = new Point(0, 237);
+        flpButtons.Location = new Point(0, 256);
         flpButtons.Name = "flpButtons";
         flpButtons.Size = new Size(290, 60);
         flpButtons.TabIndex = 8;
         // 
         // btnSave
         // 
-        btnSave.BackColor = Color.FromArgb(37, 99, 235);
+        btnSave.ButtonType = HopeButtonType.Primary;
+        btnSave.PrimaryColor = Color.FromArgb(51, 104, 160);
+        btnSave.TextColor = Color.FromArgb(242, 239, 231);
+        btnSave.HoverTextColor = Color.White;
         btnSave.Cursor = Cursors.Hand;
-        btnSave.FlatAppearance.BorderSize = 0;
-        btnSave.FlatStyle = FlatStyle.Flat;
         btnSave.Font = new Font("Segoe UI", 9.5F, FontStyle.Bold);
-        btnSave.ForeColor = Color.White;
         btnSave.Location = new Point(3, 3);
         btnSave.Name = "btnSave";
-        btnSave.Size = new Size(135, 38);
+        btnSave.Size = new Size(135, 40);
         btnSave.TabIndex = 0;
-        btnSave.Text = "💾 Save Service";
-        btnSave.UseVisualStyleBackColor = false;
+        btnSave.Text = "Save Service";
         btnSave.Click += btnSave_Click;
         // 
         // btnClear
         // 
-        btnClear.BackColor = Color.FromArgb(51, 65, 85);
+        btnClear.ButtonType = HopeButtonType.Default;
+        btnClear.DefaultColor = Color.FromArgb(200, 223, 219);
+        btnClear.BorderColor = Color.FromArgb(102, 163, 191);
+        btnClear.TextColor = Color.FromArgb(51, 104, 160);
+        btnClear.HoverTextColor = Color.FromArgb(51, 104, 160);
         btnClear.Cursor = Cursors.Hand;
-        btnClear.FlatAppearance.BorderSize = 0;
-        btnClear.FlatStyle = FlatStyle.Flat;
-        btnClear.ForeColor = Color.White;
+        btnClear.Font = new Font("Segoe UI", 9.5F);
         btnClear.Location = new Point(144, 3);
         btnClear.Name = "btnClear";
-        btnClear.Size = new Size(135, 38);
+        btnClear.Size = new Size(135, 40);
         btnClear.TabIndex = 1;
         btnClear.Text = "↺ Clear";
-        btnClear.UseVisualStyleBackColor = false;
         btnClear.Click += btnClear_Click;
         // 
         // lblFormTitle
         // 
         lblFormTitle.Dock = DockStyle.Top;
-        lblFormTitle.Font = new Font("Segoe UI", 12F, FontStyle.Bold);
-        lblFormTitle.ForeColor = Color.White;
+        lblFormTitle.Font = new Font("Segoe UI", 13F, FontStyle.Bold);
+        lblFormTitle.ForeColor = Color.FromArgb(51, 104, 160);
         lblFormTitle.Location = new Point(20, 20);
         lblFormTitle.Name = "lblFormTitle";
         lblFormTitle.Size = new Size(300, 35);
         lblFormTitle.TabIndex = 0;
-        lblFormTitle.Text = "➕ New Service Type";
+        lblFormTitle.Text = "New Service Type";
         // 
         // FrmServicePricing
         // 
         AutoScaleDimensions = new SizeF(7F, 17F);
         AutoScaleMode = AutoScaleMode.Font;
-        BackColor = Color.FromArgb(15, 23, 42);
+        BackColor = Color.FromArgb(242, 239, 231);
         ClientSize = new Size(880, 560);
         Controls.Add(pnlContainer);
         Controls.Add(pnlHeader);
         Font = new Font("Segoe UI", 9.5F);
-        ForeColor = Color.White;
+        ForeColor = Color.FromArgb(51, 104, 160);
         FormBorderStyle = FormBorderStyle.FixedDialog;
         MaximizeBox = false;
         Name = "FrmServicePricing";
@@ -410,26 +432,26 @@ partial class FrmServicePricing
 
     private Panel pnlHeader;
     private Label lblTitle;
-    private Button btnClose;
+    private HopeButton btnClose;
     private Panel pnlContainer;
     private Panel pnlLeftCard;
     private Label lblFormTitle;
     private FlowLayoutPanel flpForm;
     private Label lblServiceName;
-    private TextBox txtServiceName;
+    private HopeTextBox txtServiceName;
     private Label lblPricePerKilo;
-    private TextBox txtPricePerKilo;
+    private HopeTextBox txtPricePerKilo;
     private Label lblMinWeight;
-    private TextBox txtMinWeight;
+    private HopeTextBox txtMinWeight;
     private CheckBox chkActive;
     private Label lblError;
     private FlowLayoutPanel flpButtons;
-    private Button btnSave;
-    private Button btnClear;
+    private HopeButton btnSave;
+    private HopeButton btnClear;
     private Panel pnlRight;
     private Panel pnlToolBar;
     private Label lblGridTitle;
-    private Button btnToggleActive;
+    private HopeButton btnToggleActive;
     private Panel pnlGridWrap;
     private DataGridView dgvServices;
 }

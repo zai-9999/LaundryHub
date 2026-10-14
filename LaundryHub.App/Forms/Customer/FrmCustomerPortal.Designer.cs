@@ -1,3 +1,9 @@
+using Panel = System.Windows.Forms.Panel;
+using CheckBox = System.Windows.Forms.CheckBox;
+using ReaLTaiizor;
+using ReaLTaiizor.Controls;
+using ReaLTaiizor.Util;
+
 namespace LaundryHub.App.Forms.Customer;
 
 partial class FrmCustomerPortal
@@ -21,15 +27,16 @@ partial class FrmCustomerPortal
         DataGridViewCellStyle dataGridViewCellStyle2 = new DataGridViewCellStyle();
         pnlHeader = new Panel();
         lblWelcome = new Label();
-        btnProfile = new Button();
-        btnLogout = new Button();
+        btnBookOrder = new HopeButton();
+        btnProfile = new HopeButton();
+        btnLogout = new HopeButton();
         pnlBody = new Panel();
         pnlGridWrap = new Panel();
         dgvOrders = new DataGridView();
         pnlFilterBar = new Panel();
         lblOrdersTitle = new Label();
         chkActiveOnly = new CheckBox();
-        btnViewTicket = new Button();
+        btnViewTicket = new HopeButton();
         flpStats = new FlowLayoutPanel();
         pnlStatActive = new Panel();
         lblActiveStat = new Label();
@@ -56,8 +63,9 @@ partial class FrmCustomerPortal
         // 
         // pnlHeader
         // 
-        pnlHeader.BackColor = Color.FromArgb(30, 41, 59);
+        pnlHeader.BackColor = Color.Transparent;
         pnlHeader.Controls.Add(lblWelcome);
+        pnlHeader.Controls.Add(btnBookOrder);
         pnlHeader.Controls.Add(btnProfile);
         pnlHeader.Controls.Add(btnLogout);
         pnlHeader.Dock = DockStyle.Top;
@@ -71,46 +79,65 @@ partial class FrmCustomerPortal
         // 
         lblWelcome.Dock = DockStyle.Left;
         lblWelcome.Font = new Font("Segoe UI", 15F, FontStyle.Bold);
-        lblWelcome.ForeColor = Color.FromArgb(96, 165, 250);
+        lblWelcome.ForeColor = Color.FromArgb(242, 239, 231);
         lblWelcome.Location = new Point(24, 0);
         lblWelcome.Name = "lblWelcome";
-        lblWelcome.Size = new Size(550, 70);
+        lblWelcome.Size = new Size(540, 70);
         lblWelcome.TabIndex = 0;
-        lblWelcome.Text = "🧺 Welcome, Customer!";
+        lblWelcome.Text = "Welcome, Customer!";
         lblWelcome.TextAlign = ContentAlignment.MiddleLeft;
+        // 
+        // btnBookOrder
+        // 
+        btnBookOrder.ButtonType = HopeButtonType.Primary;
+        btnBookOrder.PrimaryColor = Color.FromArgb(51, 104, 160);
+        btnBookOrder.BorderColor = Color.FromArgb(102, 163, 191);
+        btnBookOrder.TextColor = Color.White;
+        btnBookOrder.HoverTextColor = Color.White;
+        btnBookOrder.Cursor = Cursors.Hand;
+        btnBookOrder.Font = new Font("Segoe UI", 9.5F, FontStyle.Bold);
+        btnBookOrder.Location = new Point(575, 18);
+        btnBookOrder.Name = "btnBookOrder";
+        btnBookOrder.Size = new Size(155, 34);
+        btnBookOrder.TabIndex = 3;
+        btnBookOrder.Text = "+ Book Laundry";
+        btnBookOrder.Click += btnBookOrder_Click;
         // 
         // btnProfile
         // 
-        btnProfile.BackColor = Color.FromArgb(51, 65, 85);
+        btnProfile.ButtonType = HopeButtonType.Default;
+        btnProfile.DefaultColor = Color.FromArgb(200, 223, 219);
+        btnProfile.BorderColor = Color.FromArgb(102, 163, 191);
+        btnProfile.TextColor = Color.FromArgb(51, 104, 160);
+        btnProfile.HoverTextColor = Color.FromArgb(51, 104, 160);
         btnProfile.Cursor = Cursors.Hand;
-        btnProfile.FlatAppearance.BorderSize = 0;
-        btnProfile.FlatStyle = FlatStyle.Flat;
-        btnProfile.ForeColor = Color.White;
-        btnProfile.Location = new Point(771, 18);
+        btnProfile.Font = new Font("Segoe UI", 9F);
+        btnProfile.Location = new Point(745, 18);
         btnProfile.Name = "btnProfile";
-        btnProfile.Size = new Size(110, 34);
+        btnProfile.Size = new Size(125, 34);
         btnProfile.TabIndex = 1;
-        btnProfile.Text = "👤 My Profile";
-        btnProfile.UseVisualStyleBackColor = false;
+        btnProfile.Text = "My Profile";
         btnProfile.Click += btnProfile_Click;
         // 
         // btnLogout
         // 
-        btnLogout.BackColor = Color.FromArgb(153, 27, 27);
+        btnLogout.ButtonType = HopeButtonType.Default;
+        btnLogout.DefaultColor = Color.FromArgb(242, 239, 231);
+        btnLogout.BorderColor = Color.FromArgb(102, 163, 191);
+        btnLogout.TextColor = Color.FromArgb(51, 104, 160);
+        btnLogout.HoverTextColor = Color.FromArgb(51, 104, 160);
         btnLogout.Cursor = Cursors.Hand;
-        btnLogout.FlatAppearance.BorderSize = 0;
-        btnLogout.FlatStyle = FlatStyle.Flat;
-        btnLogout.ForeColor = Color.White;
-        btnLogout.Location = new Point(887, 18);
+        btnLogout.Font = new Font("Segoe UI", 9F);
+        btnLogout.Location = new Point(885, 18);
         btnLogout.Name = "btnLogout";
         btnLogout.Size = new Size(95, 34);
         btnLogout.TabIndex = 2;
-        btnLogout.Text = "🚪 Logout";
-        btnLogout.UseVisualStyleBackColor = false;
+        btnLogout.Text = "Logout";
         btnLogout.Click += btnLogout_Click;
         // 
         // pnlBody
         // 
+        pnlBody.BackColor = Color.White;
         pnlBody.Controls.Add(pnlGridWrap);
         pnlBody.Controls.Add(pnlFilterBar);
         pnlBody.Controls.Add(flpStats);
@@ -120,6 +147,7 @@ partial class FrmCustomerPortal
         pnlBody.Padding = new Padding(24);
         pnlBody.Size = new Size(1000, 610);
         pnlBody.TabIndex = 1;
+        pnlBody.Paint += pnlBody_Paint;
         // 
         // pnlGridWrap
         // 
@@ -136,29 +164,29 @@ partial class FrmCustomerPortal
         dgvOrders.AllowUserToAddRows = false;
         dgvOrders.AllowUserToDeleteRows = false;
         dgvOrders.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.Fill;
-        dgvOrders.BackgroundColor = Color.FromArgb(30, 41, 59);
+        dgvOrders.BackgroundColor = Color.White;
         dgvOrders.BorderStyle = BorderStyle.None;
         dataGridViewCellStyle1.Alignment = DataGridViewContentAlignment.MiddleLeft;
-        dataGridViewCellStyle1.BackColor = Color.FromArgb(15, 23, 42);
+        dataGridViewCellStyle1.BackColor = Color.FromArgb(200, 223, 219);
         dataGridViewCellStyle1.Font = new Font("Segoe UI", 9.5F, FontStyle.Bold);
-        dataGridViewCellStyle1.ForeColor = Color.FromArgb(148, 163, 184);
+        dataGridViewCellStyle1.ForeColor = Color.FromArgb(51, 104, 160);
         dataGridViewCellStyle1.Padding = new Padding(6);
-        dataGridViewCellStyle1.SelectionBackColor = SystemColors.Highlight;
-        dataGridViewCellStyle1.SelectionForeColor = SystemColors.HighlightText;
+        dataGridViewCellStyle1.SelectionBackColor = Color.FromArgb(200, 223, 219);
+        dataGridViewCellStyle1.SelectionForeColor = Color.FromArgb(51, 104, 160);
         dataGridViewCellStyle1.WrapMode = DataGridViewTriState.True;
         dgvOrders.ColumnHeadersDefaultCellStyle = dataGridViewCellStyle1;
         dgvOrders.ColumnHeadersHeightSizeMode = DataGridViewColumnHeadersHeightSizeMode.AutoSize;
         dataGridViewCellStyle2.Alignment = DataGridViewContentAlignment.MiddleLeft;
-        dataGridViewCellStyle2.BackColor = Color.FromArgb(30, 41, 59);
+        dataGridViewCellStyle2.BackColor = Color.White;
         dataGridViewCellStyle2.Font = new Font("Segoe UI", 9.5F);
-        dataGridViewCellStyle2.ForeColor = Color.White;
-        dataGridViewCellStyle2.SelectionBackColor = Color.FromArgb(37, 99, 235);
+        dataGridViewCellStyle2.ForeColor = Color.FromArgb(51, 104, 160);
+        dataGridViewCellStyle2.SelectionBackColor = Color.FromArgb(102, 163, 191);
         dataGridViewCellStyle2.SelectionForeColor = Color.White;
         dataGridViewCellStyle2.WrapMode = DataGridViewTriState.False;
         dgvOrders.DefaultCellStyle = dataGridViewCellStyle2;
         dgvOrders.Dock = DockStyle.Fill;
         dgvOrders.EnableHeadersVisualStyles = false;
-        dgvOrders.GridColor = Color.FromArgb(51, 65, 85);
+        dgvOrders.GridColor = Color.FromArgb(200, 223, 219);
         dgvOrders.Location = new Point(0, 10);
         dgvOrders.Name = "dgvOrders";
         dgvOrders.ReadOnly = true;
@@ -177,7 +205,7 @@ partial class FrmCustomerPortal
         pnlFilterBar.Dock = DockStyle.Top;
         pnlFilterBar.Location = new Point(24, 124);
         pnlFilterBar.Name = "pnlFilterBar";
-        pnlFilterBar.Padding = new Padding(0, 8, 0, 0);
+        pnlFilterBar.Padding = new Padding(0, 4, 0, 0);
         pnlFilterBar.Size = new Size(952, 45);
         pnlFilterBar.TabIndex = 1;
         // 
@@ -185,10 +213,10 @@ partial class FrmCustomerPortal
         // 
         lblOrdersTitle.Dock = DockStyle.Left;
         lblOrdersTitle.Font = new Font("Segoe UI", 12F, FontStyle.Bold);
-        lblOrdersTitle.ForeColor = Color.White;
-        lblOrdersTitle.Location = new Point(0, 8);
+        lblOrdersTitle.ForeColor = Color.FromArgb(51, 104, 160);
+        lblOrdersTitle.Location = new Point(0, 4);
         lblOrdersTitle.Name = "lblOrdersTitle";
-        lblOrdersTitle.Size = new Size(200, 37);
+        lblOrdersTitle.Size = new Size(200, 41);
         lblOrdersTitle.TabIndex = 0;
         lblOrdersTitle.Text = "My Laundry Orders";
         lblOrdersTitle.TextAlign = ContentAlignment.MiddleLeft;
@@ -197,11 +225,12 @@ partial class FrmCustomerPortal
         // 
         chkActiveOnly.AutoSize = true;
         chkActiveOnly.Dock = DockStyle.Left;
-        chkActiveOnly.ForeColor = Color.FromArgb(148, 163, 184);
-        chkActiveOnly.Location = new Point(200, 8);
+        chkActiveOnly.Font = new Font("Segoe UI", 9F);
+        chkActiveOnly.ForeColor = Color.FromArgb(51, 104, 160);
+        chkActiveOnly.Location = new Point(200, 4);
         chkActiveOnly.Name = "chkActiveOnly";
         chkActiveOnly.Padding = new Padding(10, 0, 0, 0);
-        chkActiveOnly.Size = new Size(302, 37);
+        chkActiveOnly.Size = new Size(302, 41);
         chkActiveOnly.TabIndex = 1;
         chkActiveOnly.Text = "Show active only (Washing / Drying / Ready)";
         chkActiveOnly.UseVisualStyleBackColor = true;
@@ -209,20 +238,19 @@ partial class FrmCustomerPortal
         // 
         // btnViewTicket
         // 
-        btnViewTicket.BackColor = Color.FromArgb(37, 99, 235);
+        btnViewTicket.ButtonType = HopeButtonType.Primary;
+        btnViewTicket.PrimaryColor = Color.FromArgb(51, 104, 160);
+        btnViewTicket.TextColor = Color.FromArgb(242, 239, 231);
+        btnViewTicket.HoverTextColor = Color.White;
         btnViewTicket.Cursor = Cursors.Hand;
         btnViewTicket.Dock = DockStyle.Right;
-        btnViewTicket.FlatAppearance.BorderSize = 0;
-        btnViewTicket.FlatStyle = FlatStyle.Flat;
         btnViewTicket.Font = new Font("Segoe UI", 9F, FontStyle.Bold);
-        btnViewTicket.ForeColor = Color.White;
-        btnViewTicket.Location = new Point(762, 8);
+        btnViewTicket.Location = new Point(742, 4);
         btnViewTicket.Name = "btnViewTicket";
-        btnViewTicket.Size = new Size(190, 37);
+        btnViewTicket.Size = new Size(210, 41);
         btnViewTicket.TabIndex = 2;
-        btnViewTicket.Text = "🎫 View E-Ticket / QR Code";
-        btnViewTicket.UseVisualStyleBackColor = false;
-        btnViewTicket.Click += btnViewTicket_Click;
+        btnViewTicket.Text = "View E-Ticket / QR Code";
+        btnViewTicket.Click += BtnViewTicket_Click;
         // 
         // flpStats
         // 
@@ -237,7 +265,7 @@ partial class FrmCustomerPortal
         // 
         // pnlStatActive
         // 
-        pnlStatActive.BackColor = Color.FromArgb(30, 41, 59);
+        pnlStatActive.BackColor = Color.White;
         pnlStatActive.Controls.Add(lblActiveStat);
         pnlStatActive.Controls.Add(lblActiveTitle);
         pnlStatActive.Controls.Add(pnlStripActive);
@@ -247,12 +275,13 @@ partial class FrmCustomerPortal
         pnlStatActive.Padding = new Padding(16, 12, 16, 12);
         pnlStatActive.Size = new Size(295, 80);
         pnlStatActive.TabIndex = 0;
+        pnlStatActive.Region = new Region(RoundRectangle.CreateRoundRect(0, 0, 295, 80, 10));
         // 
         // lblActiveStat
         // 
         lblActiveStat.Dock = DockStyle.Fill;
         lblActiveStat.Font = new Font("Segoe UI", 18F, FontStyle.Bold);
-        lblActiveStat.ForeColor = Color.White;
+        lblActiveStat.ForeColor = Color.FromArgb(51, 104, 160);
         lblActiveStat.Location = new Point(20, 30);
         lblActiveStat.Name = "lblActiveStat";
         lblActiveStat.Size = new Size(259, 38);
@@ -263,7 +292,7 @@ partial class FrmCustomerPortal
         // 
         lblActiveTitle.Dock = DockStyle.Top;
         lblActiveTitle.Font = new Font("Segoe UI", 8.5F);
-        lblActiveTitle.ForeColor = Color.FromArgb(148, 163, 184);
+        lblActiveTitle.ForeColor = Color.FromArgb(102, 163, 191);
         lblActiveTitle.Location = new Point(20, 12);
         lblActiveTitle.Name = "lblActiveTitle";
         lblActiveTitle.Size = new Size(259, 18);
@@ -272,7 +301,7 @@ partial class FrmCustomerPortal
         // 
         // pnlStripActive
         // 
-        pnlStripActive.BackColor = Color.FromArgb(59, 130, 246);
+        pnlStripActive.BackColor = Color.FromArgb(102, 163, 191);
         pnlStripActive.Dock = DockStyle.Left;
         pnlStripActive.Location = new Point(16, 12);
         pnlStripActive.Name = "pnlStripActive";
@@ -281,7 +310,7 @@ partial class FrmCustomerPortal
         // 
         // pnlStatReady
         // 
-        pnlStatReady.BackColor = Color.FromArgb(30, 41, 59);
+        pnlStatReady.BackColor = Color.White;
         pnlStatReady.Controls.Add(lblReadyStat);
         pnlStatReady.Controls.Add(lblReadyTitle);
         pnlStatReady.Controls.Add(pnlStripReady);
@@ -291,12 +320,13 @@ partial class FrmCustomerPortal
         pnlStatReady.Padding = new Padding(16, 12, 16, 12);
         pnlStatReady.Size = new Size(295, 80);
         pnlStatReady.TabIndex = 1;
+        pnlStatReady.Region = new Region(RoundRectangle.CreateRoundRect(0, 0, 295, 80, 10));
         // 
         // lblReadyStat
         // 
         lblReadyStat.Dock = DockStyle.Fill;
         lblReadyStat.Font = new Font("Segoe UI", 18F, FontStyle.Bold);
-        lblReadyStat.ForeColor = Color.White;
+        lblReadyStat.ForeColor = Color.FromArgb(51, 104, 160);
         lblReadyStat.Location = new Point(20, 30);
         lblReadyStat.Name = "lblReadyStat";
         lblReadyStat.Size = new Size(259, 38);
@@ -307,7 +337,7 @@ partial class FrmCustomerPortal
         // 
         lblReadyTitle.Dock = DockStyle.Top;
         lblReadyTitle.Font = new Font("Segoe UI", 8.5F);
-        lblReadyTitle.ForeColor = Color.FromArgb(148, 163, 184);
+        lblReadyTitle.ForeColor = Color.FromArgb(102, 163, 191);
         lblReadyTitle.Location = new Point(20, 12);
         lblReadyTitle.Name = "lblReadyTitle";
         lblReadyTitle.Size = new Size(259, 18);
@@ -316,7 +346,7 @@ partial class FrmCustomerPortal
         // 
         // pnlStripReady
         // 
-        pnlStripReady.BackColor = Color.FromArgb(16, 185, 129);
+        pnlStripReady.BackColor = Color.FromArgb(51, 104, 160);
         pnlStripReady.Dock = DockStyle.Left;
         pnlStripReady.Location = new Point(16, 12);
         pnlStripReady.Name = "pnlStripReady";
@@ -325,7 +355,7 @@ partial class FrmCustomerPortal
         // 
         // pnlStatTotal
         // 
-        pnlStatTotal.BackColor = Color.FromArgb(30, 41, 59);
+        pnlStatTotal.BackColor = Color.White;
         pnlStatTotal.Controls.Add(lblTotalStat);
         pnlStatTotal.Controls.Add(lblTotalTitle);
         pnlStatTotal.Controls.Add(pnlStripTotal);
@@ -335,12 +365,13 @@ partial class FrmCustomerPortal
         pnlStatTotal.Padding = new Padding(16, 12, 16, 12);
         pnlStatTotal.Size = new Size(295, 80);
         pnlStatTotal.TabIndex = 2;
+        pnlStatTotal.Region = new Region(RoundRectangle.CreateRoundRect(0, 0, 295, 80, 10));
         // 
         // lblTotalStat
         // 
         lblTotalStat.Dock = DockStyle.Fill;
         lblTotalStat.Font = new Font("Segoe UI", 18F, FontStyle.Bold);
-        lblTotalStat.ForeColor = Color.White;
+        lblTotalStat.ForeColor = Color.FromArgb(51, 104, 160);
         lblTotalStat.Location = new Point(20, 30);
         lblTotalStat.Name = "lblTotalStat";
         lblTotalStat.Size = new Size(259, 38);
@@ -351,7 +382,7 @@ partial class FrmCustomerPortal
         // 
         lblTotalTitle.Dock = DockStyle.Top;
         lblTotalTitle.Font = new Font("Segoe UI", 8.5F);
-        lblTotalTitle.ForeColor = Color.FromArgb(148, 163, 184);
+        lblTotalTitle.ForeColor = Color.FromArgb(102, 163, 191);
         lblTotalTitle.Location = new Point(20, 12);
         lblTotalTitle.Name = "lblTotalTitle";
         lblTotalTitle.Size = new Size(259, 18);
@@ -360,7 +391,7 @@ partial class FrmCustomerPortal
         // 
         // pnlStripTotal
         // 
-        pnlStripTotal.BackColor = Color.FromArgb(139, 92, 246);
+        pnlStripTotal.BackColor = Color.FromArgb(200, 223, 219);
         pnlStripTotal.Dock = DockStyle.Left;
         pnlStripTotal.Location = new Point(16, 12);
         pnlStripTotal.Name = "pnlStripTotal";
@@ -371,12 +402,12 @@ partial class FrmCustomerPortal
         // 
         AutoScaleDimensions = new SizeF(7F, 17F);
         AutoScaleMode = AutoScaleMode.Font;
-        BackColor = Color.FromArgb(15, 23, 42);
+        BackColor = Color.FromArgb(102, 163, 191);
         ClientSize = new Size(1000, 680);
         Controls.Add(pnlBody);
         Controls.Add(pnlHeader);
         Font = new Font("Segoe UI", 9.5F);
-        ForeColor = Color.White;
+        ForeColor = Color.FromArgb(51, 104, 160);
         Name = "FrmCustomerPortal";
         StartPosition = FormStartPosition.CenterScreen;
         Text = "LaundryHub – Customer Portal";
@@ -397,8 +428,9 @@ partial class FrmCustomerPortal
 
     private Panel pnlHeader;
     private Label lblWelcome;
-    private Button btnProfile;
-    private Button btnLogout;
+    private HopeButton btnBookOrder;
+    private HopeButton btnProfile;
+    private HopeButton btnLogout;
     private Panel pnlBody;
     private FlowLayoutPanel flpStats;
     private Panel pnlStatActive;
@@ -416,7 +448,8 @@ partial class FrmCustomerPortal
     private Panel pnlFilterBar;
     private Label lblOrdersTitle;
     private CheckBox chkActiveOnly;
-    private Button btnViewTicket;
+    private HopeButton btnViewTicket;
     private Panel pnlGridWrap;
     private DataGridView dgvOrders;
 }
+

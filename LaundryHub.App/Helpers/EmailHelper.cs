@@ -42,7 +42,7 @@ public static class EmailHelper
 
         var message   = new MimeMessage();
         message.From.Add(new MailboxAddress(senderName, sender));
-        message.To.Add(new MailboxAddress(customer.FullName, customer.Email));
+        message.To.Add(new MailboxAddress(customer.FullName, customer.Email!));
         message.Subject = $"[{shopName}] Order Receipt – {order.OrderNumber}";
 
         // Attach QR code image

@@ -1,5 +1,6 @@
 using LaundryHub.App.Helpers;
 using LaundryHub.Core.Models;
+using System.Drawing.Drawing2D;
 
 namespace LaundryHub.App.Forms.Customer;
 
@@ -11,18 +12,33 @@ public partial class FrmCustomerPortal : Form
     public FrmCustomerPortal()
     {
         InitializeComponent();
+        DoubleBuffered = true;
+        ResizeRedraw = true;
+        UIThemeHelper.StyleStandardForm(this, pnlBody);
+        UIThemeHelper.StyleDataGridView(dgvOrders);
 
         if (SessionManager.CurrentUser != null)
         {
             _user = SessionManager.CurrentUser;
             _customer = AppServices.Customers.GetByUserId(_user.UserId);
-            lblWelcome.Text = $"🧺 Welcome, {_customer?.FullName ?? _user.FullName}!";
+            lblWelcome.Text = $"Welcome, {_customer?.FullName ?? _user.FullName}!";
             LoadOrders();
         }
         else
         {
             _user = new User { FullName = "Customer" };
         }
+    }
+
+    protected override void OnPaintBackground(PaintEventArgs e)
+    {
+        base.OnPaintBackground(e);
+        UIThemeHelper.PaintGradientBackground(this, e);
+    }
+
+    private void pnlBody_Paint(object sender, PaintEventArgs e)
+    {
+        UIThemeHelper.PaintRoundedSolidCard(pnlBody, e, Color.White, 16);
     }
 
     private void btnProfile_Click(object? sender, EventArgs e)
@@ -33,8 +49,24 @@ public partial class FrmCustomerPortal : Form
             if (f.ShowDialog(this) == DialogResult.OK)
             {
                 _customer = AppServices.Customers.GetByUserId(_user.UserId);
-                lblWelcome.Text = $"🧺 Welcome, {_customer?.FullName ?? _user.FullName}!";
+                lblWelcome.Text = $"Welcome, {_customer?.FullName ?? _user.FullName}!";
             }
+        }
+    }
+
+    private void btnBookOrder_Click(object? sender, EventArgs e)
+    {
+        if (_customer == null)
+        {
+            MessageBox.Show("Please complete your profile before booking an order.", "Notice", MessageBoxButtons.OK, MessageBoxIcon.Information);
+            return;
+        }
+
+        var bookForm = new FrmBookOrder(_customer, _user);
+        if (bookForm.ShowDialog(this) == DialogResult.OK && bookForm.CreatedOrder != null)
+        {
+            LoadOrders();
+            ShowTicketModal(bookForm.CreatedOrder);
         }
     }
 
@@ -50,7 +82,7 @@ public partial class FrmCustomerPortal : Form
 
     private void dgvOrders_CellDoubleClick(object? sender, DataGridViewCellEventArgs e)
     {
-        btnViewTicket_Click(null, EventArgs.Empty);
+        BtnViewTicket_Click(null, EventArgs.Empty);
     }
 
     private void LoadOrders()
@@ -76,17 +108,17 @@ public partial class FrmCustomerPortal : Form
             Service = o.ServiceName ?? "Laundry",
             Weight = $"{o.WeightKg} kg",
             Total = $"₱{o.TotalAmount:N2}",
-            Payment = o.PaymentRecorded ? "✔ Paid" : "⏳ Unpaid",
+            Payment = o.PaymentRecorded ? "Paid" : "Unpaid",
             o.Status,
             Pickup_Date = o.PickupDate?.ToString("MMM dd, yyyy") ?? "—",
             Date_Placed = o.CreatedAt.ToString("MMM dd, yyyy")
         }).ToList();
 
-        if (dgvOrders.Columns["OrderId"] != null)
-            dgvOrders.Columns["OrderId"].Visible = false;
+        if (dgvOrders.Columns["OrderId"] is { } col)
+            col.Visible = false;
     }
 
-    private void btnViewTicket_Click(object? sender, EventArgs e)
+    private void BtnViewTicket_Click(object? sender, EventArgs e)
     {
         if (dgvOrders.SelectedRows.Count == 0) return;
         var row = dgvOrders.SelectedRows[0];
@@ -107,8 +139,8 @@ public partial class FrmCustomerPortal : Form
             Text = $"E-Ticket – {order.OrderNumber}",
             Size = new Size(380, 480),
             StartPosition = FormStartPosition.CenterParent,
-            BackColor = Color.FromArgb(15, 23, 42),
-            ForeColor = Color.White,
+            BackColor = Color.White,
+            ForeColor = Color.FromArgb(30, 41, 59),
             FormBorderStyle = FormBorderStyle.FixedDialog,
             MaximizeBox = false,
             MinimizeBox = false
@@ -128,7 +160,7 @@ public partial class FrmCustomerPortal : Form
         {
             Text = order.OrderNumber,
             Font = new Font("Segoe UI", 13, FontStyle.Bold),
-            ForeColor = Color.FromArgb(96, 165, 250),
+            ForeColor = Color.FromArgb(37, 78, 122),
             Location = new Point(20, 230),
             Size = new Size(330, 25),
             TextAlign = ContentAlignment.MiddleCenter
@@ -138,7 +170,7 @@ public partial class FrmCustomerPortal : Form
         {
             Text = $"Status: {order.Status.ToUpper()}",
             Font = new Font("Segoe UI", 10, FontStyle.Bold),
-            ForeColor = Color.FromArgb(52, 211, 153),
+            ForeColor = Color.FromArgb(51, 104, 160),
             Location = new Point(20, 260),
             Size = new Size(330, 22),
             TextAlign = ContentAlignment.MiddleCenter
@@ -148,7 +180,7 @@ public partial class FrmCustomerPortal : Form
         {
             Text = $"Service: {order.ServiceName} ({order.WeightKg} kg)\nTotal Amount: ₱{order.TotalAmount:N2} ({(order.PaymentRecorded ? "Paid" : "Unpaid")})\nTarget Pickup: {order.PickupDate:MMMM dd, yyyy}",
             Font = new Font("Segoe UI", 9),
-            ForeColor = Color.FromArgb(148, 163, 184),
+            ForeColor = Color.FromArgb(71, 85, 105),
             Location = new Point(20, 290),
             Size = new Size(330, 65),
             TextAlign = ContentAlignment.MiddleCenter
@@ -159,9 +191,11 @@ public partial class FrmCustomerPortal : Form
             Text = "Close Ticket",
             Location = new Point(100, 380),
             Size = new Size(170, 36),
-            BackColor = Color.FromArgb(51, 65, 85),
+            BackColor = Color.FromArgb(37, 78, 122),
             ForeColor = Color.White,
-            FlatStyle = FlatStyle.Flat
+            FlatStyle = FlatStyle.Flat,
+            Font = new Font("Segoe UI", 9.5f, FontStyle.Bold),
+            Cursor = Cursors.Hand
         };
         btnClose.FlatAppearance.BorderSize = 0;
         btnClose.Click += (_, _) => dlg.Close();

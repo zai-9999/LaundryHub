@@ -21,14 +21,30 @@ public partial class FrmCustomerRegistration : Form
     {
         _returnCustomer = returnCustomer;
         InitializeComponent();
+        DoubleBuffered = true;
+        ResizeRedraw = true;
+        UIThemeHelper.StyleStandardForm(this, pnlLeftCard);
+        pnlHeader.BackColor = Color.FromArgb(37, 78, 122);
+        lblTitle.BackColor = Color.FromArgb(37, 78, 122);
+        pnlContainer.BackColor = Color.FromArgb(240, 244, 248);
+        pnlRight.BackColor = Color.FromArgb(240, 244, 248);
+        pnlSearchBar.BackColor = Color.FromArgb(240, 244, 248);
+        flpForm.BackColor = Color.White;
+        UIThemeHelper.StyleDataGridView(dgvCustomers);
 
         InputValidator.RestrictToPhoneInput(txtPhone);
 
         this.Text = _returnCustomer ? "Select / Register Customer" : "Customer Management";
-        lblTitle.Text = _returnCustomer ? "Select or Register Customer" : "👥 Customer Directory & Registration";
+        lblTitle.Text = _returnCustomer ? "Select or Register Customer" : "Customer Directory & Registration";
         btnSelect.Visible = _returnCustomer;
 
         LoadCustomers();
+    }
+
+    protected override void OnPaintBackground(PaintEventArgs e)
+    {
+        base.OnPaintBackground(e);
+        UIThemeHelper.PaintGradientBackground(this, e);
     }
 
     private void btnClose_Click(object? sender, EventArgs e)
@@ -65,8 +81,8 @@ public partial class FrmCustomerRegistration : Form
         }).ToList();
 
         dgvCustomers.DataSource = list;
-        if (dgvCustomers.Columns["CustomerId"] != null)
-            dgvCustomers.Columns["CustomerId"].Visible = false;
+        if (dgvCustomers.Columns["CustomerId"] is { } col)
+            col.Visible = false;
     }
 
     private void dgvCustomers_SelectionChanged(object? sender, EventArgs e)
@@ -79,8 +95,8 @@ public partial class FrmCustomerRegistration : Form
             if (_selectedCustomer != null)
             {
                 _editingCustomerId = _selectedCustomer.CustomerId;
-                lblFormTitle.Text = $"✏ Edit Customer #{_selectedCustomer.CustomerId}";
-                btnSave.Text = "✔ Update Info";
+                lblFormTitle.Text = $"Edit Customer #{_selectedCustomer.CustomerId}";
+                btnSave.Text = "Update Info";
                 txtFullName.Text = _selectedCustomer.FullName;
                 txtPhone.Text = _selectedCustomer.Phone;
                 txtEmail.Text = _selectedCustomer.Email ?? "";
@@ -187,8 +203,8 @@ public partial class FrmCustomerRegistration : Form
     {
         _editingCustomerId = 0;
         _selectedCustomer = null;
-        lblFormTitle.Text = "➕ New Customer";
-        btnSave.Text = "💾 Save Customer";
+        lblFormTitle.Text = "New Customer";
+        btnSave.Text = "Save Customer";
         txtFullName.Clear();
         txtPhone.Clear();
         txtEmail.Clear();

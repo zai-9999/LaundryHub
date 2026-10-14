@@ -1,3 +1,10 @@
+using Panel = System.Windows.Forms.Panel;
+using CheckBox = System.Windows.Forms.CheckBox;
+using Button = System.Windows.Forms.Button;
+using ReaLTaiizor;
+using ReaLTaiizor.Controls;
+using ReaLTaiizor.Util;
+
 namespace LaundryHub.App.Forms.Admin;
 
 partial class FrmExportReport
@@ -20,7 +27,7 @@ partial class FrmExportReport
         DataGridViewCellStyle dataGridViewCellStyle1 = new DataGridViewCellStyle();
         DataGridViewCellStyle dataGridViewCellStyle2 = new DataGridViewCellStyle();
         pnlHeader = new Panel();
-        btnClose = new Button();
+        btnClose = new HopeButton();
         lblTitle = new Label();
         pnlContainer = new Panel();
         pnlGridWrap = new Panel();
@@ -44,8 +51,8 @@ partial class FrmExportReport
         lblSalesTitle = new Label();
         pnlStripSales = new Panel();
         pnlFilterBar = new Panel();
-        btnExportExcel = new Button();
-        btnLoad = new Button();
+        btnExportExcel = new HopeButton();
+        btnLoad = new HopeButton();
         dtpDate = new DateTimePicker();
         lblSelectDate = new Label();
         pnlHeader.SuspendLayout();
@@ -62,7 +69,7 @@ partial class FrmExportReport
         // 
         // pnlHeader
         // 
-        pnlHeader.BackColor = Color.FromArgb(30, 41, 59);
+        pnlHeader.BackColor = Color.FromArgb(51, 104, 160);
         pnlHeader.Controls.Add(btnClose);
         pnlHeader.Controls.Add(lblTitle);
         pnlHeader.Dock = DockStyle.Top;
@@ -74,33 +81,35 @@ partial class FrmExportReport
         // 
         // btnClose
         // 
-        btnClose.BackColor = Color.FromArgb(51, 65, 85);
+        btnClose.ButtonType = HopeButtonType.Default;
+        btnClose.DefaultColor = Color.FromArgb(102, 163, 191);
+        btnClose.BorderColor = Color.FromArgb(200, 223, 219);
+        btnClose.TextColor = Color.FromArgb(242, 239, 231);
+        btnClose.HoverTextColor = Color.White;
         btnClose.Cursor = Cursors.Hand;
-        btnClose.FlatAppearance.BorderSize = 0;
-        btnClose.FlatStyle = FlatStyle.Flat;
-        btnClose.ForeColor = Color.White;
+        btnClose.Font = new Font("Segoe UI", 9.5F, FontStyle.Bold);
         btnClose.Location = new Point(836, 16);
         btnClose.Name = "btnClose";
         btnClose.Size = new Size(90, 34);
         btnClose.TabIndex = 1;
         btnClose.Text = "✕ Close";
-        btnClose.UseVisualStyleBackColor = false;
         btnClose.Click += btnClose_Click;
         // 
         // lblTitle
         // 
         lblTitle.Dock = DockStyle.Left;
         lblTitle.Font = new Font("Segoe UI", 16F, FontStyle.Bold);
-        lblTitle.ForeColor = Color.FromArgb(96, 165, 250);
+        lblTitle.ForeColor = Color.FromArgb(242, 239, 231);
         lblTitle.Location = new Point(24, 0);
         lblTitle.Name = "lblTitle";
         lblTitle.Size = new Size(450, 65);
         lblTitle.TabIndex = 0;
-        lblTitle.Text = "📊 Daily Laundry Business Report";
+        lblTitle.Text = "Daily Laundry Business Report";
         lblTitle.TextAlign = ContentAlignment.MiddleLeft;
         // 
         // pnlContainer
         // 
+        pnlContainer.BackColor = Color.FromArgb(242, 239, 231);
         pnlContainer.Controls.Add(pnlGridWrap);
         pnlContainer.Controls.Add(lblGridLabel);
         pnlContainer.Controls.Add(flpStats);
@@ -116,10 +125,10 @@ partial class FrmExportReport
         // 
         pnlGridWrap.Controls.Add(dgvPreview);
         pnlGridWrap.Dock = DockStyle.Fill;
-        pnlGridWrap.Location = new Point(24, 201);
+        pnlGridWrap.Location = new Point(24, 206);
         pnlGridWrap.Name = "pnlGridWrap";
         pnlGridWrap.Padding = new Padding(0, 6, 0, 0);
-        pnlGridWrap.Size = new Size(902, 350);
+        pnlGridWrap.Size = new Size(902, 345);
         pnlGridWrap.TabIndex = 3;
         // 
         // dgvPreview
@@ -127,44 +136,44 @@ partial class FrmExportReport
         dgvPreview.AllowUserToAddRows = false;
         dgvPreview.AllowUserToDeleteRows = false;
         dgvPreview.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.Fill;
-        dgvPreview.BackgroundColor = Color.FromArgb(30, 41, 59);
+        dgvPreview.BackgroundColor = Color.White;
         dgvPreview.BorderStyle = BorderStyle.None;
         dataGridViewCellStyle1.Alignment = DataGridViewContentAlignment.MiddleLeft;
-        dataGridViewCellStyle1.BackColor = Color.FromArgb(15, 23, 42);
+        dataGridViewCellStyle1.BackColor = Color.FromArgb(51, 104, 160);
         dataGridViewCellStyle1.Font = new Font("Segoe UI", 9.5F, FontStyle.Bold);
-        dataGridViewCellStyle1.ForeColor = Color.FromArgb(148, 163, 184);
+        dataGridViewCellStyle1.ForeColor = Color.FromArgb(242, 239, 231);
         dataGridViewCellStyle1.Padding = new Padding(6);
-        dataGridViewCellStyle1.SelectionBackColor = SystemColors.Highlight;
-        dataGridViewCellStyle1.SelectionForeColor = SystemColors.HighlightText;
+        dataGridViewCellStyle1.SelectionBackColor = Color.FromArgb(51, 104, 160);
+        dataGridViewCellStyle1.SelectionForeColor = Color.FromArgb(242, 239, 231);
         dataGridViewCellStyle1.WrapMode = DataGridViewTriState.True;
         dgvPreview.ColumnHeadersDefaultCellStyle = dataGridViewCellStyle1;
         dgvPreview.ColumnHeadersHeightSizeMode = DataGridViewColumnHeadersHeightSizeMode.AutoSize;
         dataGridViewCellStyle2.Alignment = DataGridViewContentAlignment.MiddleLeft;
-        dataGridViewCellStyle2.BackColor = Color.FromArgb(30, 41, 59);
+        dataGridViewCellStyle2.BackColor = Color.White;
         dataGridViewCellStyle2.Font = new Font("Segoe UI", 9.5F);
-        dataGridViewCellStyle2.ForeColor = Color.White;
-        dataGridViewCellStyle2.SelectionBackColor = Color.FromArgb(37, 99, 235);
-        dataGridViewCellStyle2.SelectionForeColor = Color.White;
+        dataGridViewCellStyle2.ForeColor = Color.FromArgb(51, 104, 160);
+        dataGridViewCellStyle2.SelectionBackColor = Color.FromArgb(200, 223, 219);
+        dataGridViewCellStyle2.SelectionForeColor = Color.FromArgb(51, 104, 160);
         dataGridViewCellStyle2.WrapMode = DataGridViewTriState.False;
         dgvPreview.DefaultCellStyle = dataGridViewCellStyle2;
         dgvPreview.Dock = DockStyle.Fill;
         dgvPreview.EnableHeadersVisualStyles = false;
-        dgvPreview.GridColor = Color.FromArgb(51, 65, 85);
+        dgvPreview.GridColor = Color.FromArgb(200, 223, 219);
         dgvPreview.Location = new Point(0, 6);
         dgvPreview.Name = "dgvPreview";
         dgvPreview.ReadOnly = true;
         dgvPreview.RowHeadersVisible = false;
         dgvPreview.RowTemplate.Height = 36;
         dgvPreview.SelectionMode = DataGridViewSelectionMode.FullRowSelect;
-        dgvPreview.Size = new Size(902, 344);
+        dgvPreview.Size = new Size(902, 339);
         dgvPreview.TabIndex = 0;
         // 
         // lblGridLabel
         // 
         lblGridLabel.Dock = DockStyle.Top;
         lblGridLabel.Font = new Font("Segoe UI", 11F, FontStyle.Bold);
-        lblGridLabel.ForeColor = Color.White;
-        lblGridLabel.Location = new Point(24, 169);
+        lblGridLabel.ForeColor = Color.FromArgb(51, 104, 160);
+        lblGridLabel.Location = new Point(24, 174);
         lblGridLabel.Name = "lblGridLabel";
         lblGridLabel.Size = new Size(902, 32);
         lblGridLabel.TabIndex = 2;
@@ -178,19 +187,19 @@ partial class FrmExportReport
         flpStats.Controls.Add(pnlStatClaimed);
         flpStats.Controls.Add(pnlStatSales);
         flpStats.Dock = DockStyle.Top;
-        flpStats.Location = new Point(24, 74);
+        flpStats.Location = new Point(24, 76);
         flpStats.Name = "flpStats";
-        flpStats.Padding = new Padding(0, 10, 0, 5);
-        flpStats.Size = new Size(902, 95);
+        flpStats.Padding = new Padding(0, 8, 0, 4);
+        flpStats.Size = new Size(902, 98);
         flpStats.TabIndex = 1;
         // 
         // pnlStatOrders
         // 
-        pnlStatOrders.BackColor = Color.FromArgb(30, 41, 59);
+        pnlStatOrders.BackColor = Color.FromArgb(245, 248, 252);
         pnlStatOrders.Controls.Add(lblTotalOrders);
         pnlStatOrders.Controls.Add(lblOrdersTitle);
         pnlStatOrders.Controls.Add(pnlStripOrders);
-        pnlStatOrders.Location = new Point(0, 10);
+        pnlStatOrders.Location = new Point(0, 8);
         pnlStatOrders.Margin = new Padding(0, 0, 12, 0);
         pnlStatOrders.Name = "pnlStatOrders";
         pnlStatOrders.Padding = new Padding(14, 10, 14, 10);
@@ -201,7 +210,7 @@ partial class FrmExportReport
         // 
         lblTotalOrders.Dock = DockStyle.Fill;
         lblTotalOrders.Font = new Font("Segoe UI", 16F, FontStyle.Bold);
-        lblTotalOrders.ForeColor = Color.White;
+        lblTotalOrders.ForeColor = Color.FromArgb(51, 104, 160);
         lblTotalOrders.Location = new Point(18, 28);
         lblTotalOrders.Name = "lblTotalOrders";
         lblTotalOrders.Size = new Size(178, 42);
@@ -211,8 +220,8 @@ partial class FrmExportReport
         // lblOrdersTitle
         // 
         lblOrdersTitle.Dock = DockStyle.Top;
-        lblOrdersTitle.Font = new Font("Segoe UI", 8.5F);
-        lblOrdersTitle.ForeColor = Color.FromArgb(148, 163, 184);
+        lblOrdersTitle.Font = new Font("Segoe UI", 8.5F, FontStyle.Bold);
+        lblOrdersTitle.ForeColor = Color.FromArgb(102, 163, 191);
         lblOrdersTitle.Location = new Point(18, 10);
         lblOrdersTitle.Name = "lblOrdersTitle";
         lblOrdersTitle.Size = new Size(178, 18);
@@ -221,7 +230,7 @@ partial class FrmExportReport
         // 
         // pnlStripOrders
         // 
-        pnlStripOrders.BackColor = Color.FromArgb(59, 130, 246);
+        pnlStripOrders.BackColor = Color.FromArgb(51, 104, 160);
         pnlStripOrders.Dock = DockStyle.Left;
         pnlStripOrders.Location = new Point(14, 10);
         pnlStripOrders.Name = "pnlStripOrders";
@@ -230,11 +239,11 @@ partial class FrmExportReport
         // 
         // pnlStatPending
         // 
-        pnlStatPending.BackColor = Color.FromArgb(30, 41, 59);
+        pnlStatPending.BackColor = Color.FromArgb(245, 248, 252);
         pnlStatPending.Controls.Add(lblPending);
         pnlStatPending.Controls.Add(lblPendingTitle);
         pnlStatPending.Controls.Add(pnlStripPending);
-        pnlStatPending.Location = new Point(222, 10);
+        pnlStatPending.Location = new Point(222, 8);
         pnlStatPending.Margin = new Padding(0, 0, 12, 0);
         pnlStatPending.Name = "pnlStatPending";
         pnlStatPending.Padding = new Padding(14, 10, 14, 10);
@@ -245,7 +254,7 @@ partial class FrmExportReport
         // 
         lblPending.Dock = DockStyle.Fill;
         lblPending.Font = new Font("Segoe UI", 16F, FontStyle.Bold);
-        lblPending.ForeColor = Color.White;
+        lblPending.ForeColor = Color.FromArgb(51, 104, 160);
         lblPending.Location = new Point(18, 28);
         lblPending.Name = "lblPending";
         lblPending.Size = new Size(178, 42);
@@ -255,8 +264,8 @@ partial class FrmExportReport
         // lblPendingTitle
         // 
         lblPendingTitle.Dock = DockStyle.Top;
-        lblPendingTitle.Font = new Font("Segoe UI", 8.5F);
-        lblPendingTitle.ForeColor = Color.FromArgb(148, 163, 184);
+        lblPendingTitle.Font = new Font("Segoe UI", 8.5F, FontStyle.Bold);
+        lblPendingTitle.ForeColor = Color.FromArgb(102, 163, 191);
         lblPendingTitle.Location = new Point(18, 10);
         lblPendingTitle.Name = "lblPendingTitle";
         lblPendingTitle.Size = new Size(178, 18);
@@ -265,7 +274,7 @@ partial class FrmExportReport
         // 
         // pnlStripPending
         // 
-        pnlStripPending.BackColor = Color.FromArgb(245, 158, 11);
+        pnlStripPending.BackColor = Color.FromArgb(102, 163, 191);
         pnlStripPending.Dock = DockStyle.Left;
         pnlStripPending.Location = new Point(14, 10);
         pnlStripPending.Name = "pnlStripPending";
@@ -274,11 +283,11 @@ partial class FrmExportReport
         // 
         // pnlStatClaimed
         // 
-        pnlStatClaimed.BackColor = Color.FromArgb(30, 41, 59);
+        pnlStatClaimed.BackColor = Color.FromArgb(245, 248, 252);
         pnlStatClaimed.Controls.Add(lblClaimed);
         pnlStatClaimed.Controls.Add(lblClaimedTitle);
         pnlStatClaimed.Controls.Add(pnlStripClaimed);
-        pnlStatClaimed.Location = new Point(444, 10);
+        pnlStatClaimed.Location = new Point(444, 8);
         pnlStatClaimed.Margin = new Padding(0, 0, 12, 0);
         pnlStatClaimed.Name = "pnlStatClaimed";
         pnlStatClaimed.Padding = new Padding(14, 10, 14, 10);
@@ -289,7 +298,7 @@ partial class FrmExportReport
         // 
         lblClaimed.Dock = DockStyle.Fill;
         lblClaimed.Font = new Font("Segoe UI", 16F, FontStyle.Bold);
-        lblClaimed.ForeColor = Color.White;
+        lblClaimed.ForeColor = Color.FromArgb(51, 104, 160);
         lblClaimed.Location = new Point(18, 28);
         lblClaimed.Name = "lblClaimed";
         lblClaimed.Size = new Size(178, 42);
@@ -299,8 +308,8 @@ partial class FrmExportReport
         // lblClaimedTitle
         // 
         lblClaimedTitle.Dock = DockStyle.Top;
-        lblClaimedTitle.Font = new Font("Segoe UI", 8.5F);
-        lblClaimedTitle.ForeColor = Color.FromArgb(148, 163, 184);
+        lblClaimedTitle.Font = new Font("Segoe UI", 8.5F, FontStyle.Bold);
+        lblClaimedTitle.ForeColor = Color.FromArgb(102, 163, 191);
         lblClaimedTitle.Location = new Point(18, 10);
         lblClaimedTitle.Name = "lblClaimedTitle";
         lblClaimedTitle.Size = new Size(178, 18);
@@ -309,7 +318,7 @@ partial class FrmExportReport
         // 
         // pnlStripClaimed
         // 
-        pnlStripClaimed.BackColor = Color.FromArgb(16, 185, 129);
+        pnlStripClaimed.BackColor = Color.FromArgb(200, 223, 219);
         pnlStripClaimed.Dock = DockStyle.Left;
         pnlStripClaimed.Location = new Point(14, 10);
         pnlStripClaimed.Name = "pnlStripClaimed";
@@ -318,11 +327,11 @@ partial class FrmExportReport
         // 
         // pnlStatSales
         // 
-        pnlStatSales.BackColor = Color.FromArgb(30, 41, 59);
+        pnlStatSales.BackColor = Color.FromArgb(245, 248, 252);
         pnlStatSales.Controls.Add(lblSales);
         pnlStatSales.Controls.Add(lblSalesTitle);
         pnlStatSales.Controls.Add(pnlStripSales);
-        pnlStatSales.Location = new Point(666, 10);
+        pnlStatSales.Location = new Point(666, 8);
         pnlStatSales.Margin = new Padding(0, 0, 12, 0);
         pnlStatSales.Name = "pnlStatSales";
         pnlStatSales.Padding = new Padding(14, 10, 14, 10);
@@ -333,7 +342,7 @@ partial class FrmExportReport
         // 
         lblSales.Dock = DockStyle.Fill;
         lblSales.Font = new Font("Segoe UI", 16F, FontStyle.Bold);
-        lblSales.ForeColor = Color.White;
+        lblSales.ForeColor = Color.FromArgb(51, 104, 160);
         lblSales.Location = new Point(18, 28);
         lblSales.Name = "lblSales";
         lblSales.Size = new Size(178, 42);
@@ -343,8 +352,8 @@ partial class FrmExportReport
         // lblSalesTitle
         // 
         lblSalesTitle.Dock = DockStyle.Top;
-        lblSalesTitle.Font = new Font("Segoe UI", 8.5F);
-        lblSalesTitle.ForeColor = Color.FromArgb(148, 163, 184);
+        lblSalesTitle.Font = new Font("Segoe UI", 8.5F, FontStyle.Bold);
+        lblSalesTitle.ForeColor = Color.FromArgb(102, 163, 191);
         lblSalesTitle.Location = new Point(18, 10);
         lblSalesTitle.Name = "lblSalesTitle";
         lblSalesTitle.Size = new Size(178, 18);
@@ -353,7 +362,7 @@ partial class FrmExportReport
         // 
         // pnlStripSales
         // 
-        pnlStripSales.BackColor = Color.FromArgb(139, 92, 246);
+        pnlStripSales.BackColor = Color.FromArgb(51, 104, 160);
         pnlStripSales.Dock = DockStyle.Left;
         pnlStripSales.Location = new Point(14, 10);
         pnlStripSales.Name = "pnlStripSales";
@@ -362,7 +371,7 @@ partial class FrmExportReport
         // 
         // pnlFilterBar
         // 
-        pnlFilterBar.BackColor = Color.FromArgb(30, 41, 59);
+        pnlFilterBar.BackColor = Color.White;
         pnlFilterBar.Controls.Add(btnExportExcel);
         pnlFilterBar.Controls.Add(btnLoad);
         pnlFilterBar.Controls.Add(dtpDate);
@@ -371,41 +380,41 @@ partial class FrmExportReport
         pnlFilterBar.Location = new Point(24, 24);
         pnlFilterBar.Name = "pnlFilterBar";
         pnlFilterBar.Padding = new Padding(16, 8, 16, 8);
-        pnlFilterBar.Size = new Size(902, 50);
+        pnlFilterBar.Size = new Size(902, 52);
         pnlFilterBar.TabIndex = 0;
         // 
         // btnExportExcel
         // 
-        btnExportExcel.BackColor = Color.FromArgb(16, 185, 129);
+        btnExportExcel.ButtonType = HopeButtonType.Primary;
+        btnExportExcel.PrimaryColor = Color.FromArgb(51, 104, 160);
+        btnExportExcel.TextColor = Color.FromArgb(242, 239, 231);
+        btnExportExcel.HoverTextColor = Color.White;
         btnExportExcel.Cursor = Cursors.Hand;
         btnExportExcel.Dock = DockStyle.Right;
-        btnExportExcel.FlatAppearance.BorderSize = 0;
-        btnExportExcel.FlatStyle = FlatStyle.Flat;
         btnExportExcel.Font = new Font("Segoe UI", 9.5F, FontStyle.Bold);
-        btnExportExcel.ForeColor = Color.White;
         btnExportExcel.Location = new Point(686, 8);
         btnExportExcel.Name = "btnExportExcel";
-        btnExportExcel.Size = new Size(200, 34);
+        btnExportExcel.Size = new Size(200, 36);
         btnExportExcel.TabIndex = 3;
         btnExportExcel.Text = "📥 Export to Excel (.xlsx)";
-        btnExportExcel.UseVisualStyleBackColor = false;
         btnExportExcel.Click += btnExportExcel_Click;
         // 
         // btnLoad
         // 
-        btnLoad.BackColor = Color.FromArgb(51, 65, 85);
+        btnLoad.ButtonType = HopeButtonType.Default;
+        btnLoad.DefaultColor = Color.FromArgb(200, 223, 219);
+        btnLoad.BorderColor = Color.FromArgb(102, 163, 191);
+        btnLoad.TextColor = Color.FromArgb(51, 104, 160);
+        btnLoad.HoverTextColor = Color.FromArgb(51, 104, 160);
         btnLoad.Cursor = Cursors.Hand;
         btnLoad.Dock = DockStyle.Left;
-        btnLoad.FlatAppearance.BorderSize = 0;
-        btnLoad.FlatStyle = FlatStyle.Flat;
-        btnLoad.ForeColor = Color.White;
-        btnLoad.Location = new Point(230, 8);
+        btnLoad.Font = new Font("Segoe UI", 9F, FontStyle.Bold);
+        btnLoad.Location = new Point(250, 8);
         btnLoad.Margin = new Padding(12, 0, 0, 0);
         btnLoad.Name = "btnLoad";
-        btnLoad.Size = new Size(130, 34);
+        btnLoad.Size = new Size(130, 36);
         btnLoad.TabIndex = 2;
-        btnLoad.Text = "🔄 Refresh Date";
-        btnLoad.UseVisualStyleBackColor = false;
+        btnLoad.Text = "Refresh Date";
         btnLoad.Click += btnLoad_Click;
         // 
         // dtpDate
@@ -413,18 +422,19 @@ partial class FrmExportReport
         dtpDate.Dock = DockStyle.Left;
         dtpDate.Font = new Font("Segoe UI", 10F);
         dtpDate.Format = DateTimePickerFormat.Short;
-        dtpDate.Location = new Point(90, 8);
+        dtpDate.Location = new Point(105, 8);
         dtpDate.Name = "dtpDate";
-        dtpDate.Size = new Size(140, 25);
+        dtpDate.Size = new Size(145, 25);
         dtpDate.TabIndex = 1;
         // 
         // lblSelectDate
         // 
         lblSelectDate.Dock = DockStyle.Left;
-        lblSelectDate.ForeColor = Color.FromArgb(148, 163, 184);
+        lblSelectDate.Font = new Font("Segoe UI", 9.5F, FontStyle.Bold);
+        lblSelectDate.ForeColor = Color.FromArgb(51, 104, 160);
         lblSelectDate.Location = new Point(16, 8);
         lblSelectDate.Name = "lblSelectDate";
-        lblSelectDate.Size = new Size(74, 34);
+        lblSelectDate.Size = new Size(89, 36);
         lblSelectDate.TabIndex = 0;
         lblSelectDate.Text = "Report Date:";
         lblSelectDate.TextAlign = ContentAlignment.MiddleLeft;
@@ -433,12 +443,12 @@ partial class FrmExportReport
         // 
         AutoScaleDimensions = new SizeF(7F, 17F);
         AutoScaleMode = AutoScaleMode.Font;
-        BackColor = Color.FromArgb(15, 23, 42);
+        BackColor = Color.FromArgb(242, 239, 231);
         ClientSize = new Size(950, 640);
         Controls.Add(pnlContainer);
         Controls.Add(pnlHeader);
         Font = new Font("Segoe UI", 9.5F);
-        ForeColor = Color.White;
+        ForeColor = Color.FromArgb(51, 104, 160);
         FormBorderStyle = FormBorderStyle.FixedDialog;
         MaximizeBox = false;
         Name = "FrmExportReport";
@@ -461,13 +471,13 @@ partial class FrmExportReport
 
     private Panel pnlHeader;
     private Label lblTitle;
-    private Button btnClose;
+    private HopeButton btnClose;
     private Panel pnlContainer;
     private Panel pnlFilterBar;
     private Label lblSelectDate;
     private DateTimePicker dtpDate;
-    private Button btnLoad;
-    private Button btnExportExcel;
+    private HopeButton btnLoad;
+    private HopeButton btnExportExcel;
     private FlowLayoutPanel flpStats;
     private Panel pnlStatOrders;
     private Panel pnlStripOrders;

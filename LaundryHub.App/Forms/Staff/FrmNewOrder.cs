@@ -8,13 +8,58 @@ public partial class FrmNewOrder : Form
 {
     private CustomerModel? _selectedCustomer;
     private List<ServiceType> _services = new();
+    private Panel? pnlCard;
 
     public FrmNewOrder()
     {
         InitializeComponent();
+        DoubleBuffered = true;
+        ResizeRedraw = true;
+
+        // Wrap the form contents in a white card so it matches the login surface,
+        // then grow the window so the card sits on the gradient with a margin.
+        const int pad = 30, margin = 24;
+        int minX = int.MaxValue, minY = int.MaxValue, maxX = 0, maxY = 0;
+        foreach (Control c in Controls)
+        {
+            minX = Math.Min(minX, c.Left);
+            minY = Math.Min(minY, c.Top);
+            maxX = Math.Max(maxX, c.Right);
+            maxY = Math.Max(maxY, c.Bottom);
+        }
+
+        pnlCard = new Panel { BackColor = Color.White };
+        while (Controls.Count > 0)
+            Controls[0].Parent = pnlCard;
+
+        int shiftX = pad - minX, shiftY = pad - minY;
+        foreach (Control c in pnlCard.Controls)
+        {
+            c.Left += shiftX;
+            c.Top += shiftY;
+        }
+
+        pnlCard.Bounds = new Rectangle(margin, margin, (maxX - minX) + pad * 2, (maxY - minY) + pad * 2);
+        Controls.Add(pnlCard);
+
+        UIThemeHelper.StyleStandardForm(this);
+        this.ClientSize = new Size(pnlCard.Right + margin, pnlCard.Bottom + margin);
+        UIThemeHelper.ApplyRoundedRegion(pnlCard, UIThemeHelper.LoginCardRadius);
+        pnlCard.SizeChanged += (s, e) => UIThemeHelper.ApplyRoundedRegion(pnlCard, UIThemeHelper.LoginCardRadius);
+
+        pnlPriceBox.BackColor = Color.FromArgb(242, 239, 231);
+        btnSave.PrimaryColor = Color.FromArgb(51, 104, 160);
+        btnSave.TextColor = UIThemeHelper.CardCream;
+        btnSave.HoverTextColor = Color.White;
         dtpPickup.MinDate = DateTime.Today;
         dtpPickup.Value = DateTime.Today.AddDays(1);
         LoadServices();
+    }
+
+    protected override void OnPaintBackground(PaintEventArgs e)
+    {
+        base.OnPaintBackground(e);
+        UIThemeHelper.PaintGradientBackground(this, e);
     }
 
     private void btnCancel_Click(object? sender, EventArgs e)
@@ -49,8 +94,8 @@ public partial class FrmNewOrder : Form
         {
             _selectedCustomer = c;
             txtSearch.Text = c.FullName;
-            lblSelectedCustomer.Text = $"✔  {c.FullName}  |  {c.Phone}";
-            lblSelectedCustomer.ForeColor = Color.FromArgb(52, 211, 153);
+            lblSelectedCustomer.Text = $"{c.FullName}  |  {c.Phone}";
+            lblSelectedCustomer.ForeColor = Color.FromArgb(37, 78, 122);
             lstCustomers.Visible = false;
         }
     }
@@ -62,8 +107,8 @@ public partial class FrmNewOrder : Form
         {
             _selectedCustomer = f.CreatedCustomer;
             txtSearch.Text = _selectedCustomer.FullName;
-            lblSelectedCustomer.Text = $"✔  {_selectedCustomer.FullName}  |  {_selectedCustomer.Phone}";
-            lblSelectedCustomer.ForeColor = Color.FromArgb(52, 211, 153);
+            lblSelectedCustomer.Text = $"{_selectedCustomer.FullName}  |  {_selectedCustomer.Phone}";
+            lblSelectedCustomer.ForeColor = Color.FromArgb(37, 78, 122);
         }
     }
 
@@ -128,7 +173,7 @@ public partial class FrmNewOrder : Form
             StartPosition = FormStartPosition.CenterParent,
             FormBorderStyle = FormBorderStyle.FixedDialog,
             MaximizeBox = false,
-            BackColor = Color.FromArgb(30, 41, 59)
+            BackColor = Color.FromArgb(102, 163, 191)
         };
 
         var pb = new PictureBox
@@ -154,7 +199,7 @@ public partial class FrmNewOrder : Form
             Location = new Point(50, 365),
             Size = new Size(260, 38),
             Font = new Font("Segoe UI", 10, FontStyle.Bold),
-            BackColor = Color.FromArgb(37, 99, 235),
+            BackColor = Color.FromArgb(37, 78, 122),
             ForeColor = Color.White,
             FlatStyle = FlatStyle.Flat,
             Cursor = Cursors.Hand

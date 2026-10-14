@@ -10,8 +10,30 @@ public partial class FrmOrderList : Form
     public FrmOrderList()
     {
         InitializeComponent();
+        UIThemeHelper.StyleStandardForm(this);
+        DoubleBuffered = true;
+        pnlTopBar.BackColor = Color.FromArgb(37, 78, 122);
+        lblTitle.BackColor = Color.FromArgb(37, 78, 122);
+
+        // Style the legend bar to match the gradient header, with cream text
+        pnlLegend.BackColor = Color.FromArgb(37, 78, 122);
+        pnlLegend.Padding = new Padding(16, 6, 0, 6);
+        foreach (Control c in pnlLegend.Controls)
+        {
+            // Keep the dot labels their status colour; make the text labels cream
+            if (c is Label lbl && !new[] { "lblDotWashing","lblDotDrying","lblDotReady","lblDotClaimed","lblDotCancelled" }.Contains(lbl.Name))
+                lbl.ForeColor = Color.FromArgb(220, 235, 245);
+        }
+
+        UIThemeHelper.StyleDataGridView(dgvOrders, 34);
         dtpFilter.Value = DateTime.Today;
         LoadOrders();
+    }
+
+    protected override void OnPaintBackground(PaintEventArgs e)
+    {
+        base.OnPaintBackground(e);
+        UIThemeHelper.PaintGradientBackground(this, e);
     }
 
     private void LoadOrders(string searchTerm = "")
@@ -102,12 +124,12 @@ public partial class FrmOrderList : Form
         if (dgvOrders.Columns[e.ColumnIndex].Name != "Status") return;
         e.CellStyle.ForeColor = e.Value?.ToString() switch
         {
-            "Washing" => Color.FromArgb(251, 191, 36),
-            "Drying" => Color.FromArgb(96, 165, 250),
-            "Ready for Pickup" => Color.FromArgb(52, 211, 153),
-            "Claimed" => Color.FromArgb(134, 239, 172),
-            "Cancelled" => Color.FromArgb(248, 113, 113),
-            _ => Color.White
+            "Washing"          => Color.FromArgb(51, 104, 160),
+            "Drying"           => Color.FromArgb(102, 163, 191),
+            "Ready for Pickup" => Color.FromArgb(40, 167, 69),
+            "Claimed"          => Color.FromArgb(108, 117, 125),
+            "Cancelled"        => Color.FromArgb(220, 53, 69),
+            _                  => Color.FromArgb(51, 104, 160)
         };
         e.CellStyle.Font = new Font("Segoe UI Semibold", 9, FontStyle.Bold);
     }

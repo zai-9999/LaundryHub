@@ -55,6 +55,7 @@ public partial class FrmLogin : Form
     private void btnGuestLookup_Click(object? sender, EventArgs e)
     {
         var guestForm = new Guest.FrmGuestLookup();
+        guestForm.FormClosed += (_, _) => this.Show();
         guestForm.Show();
         this.Hide();
     }
@@ -62,6 +63,7 @@ public partial class FrmLogin : Form
     private void btnCustomerRegister_Click(object? sender, EventArgs e)
     {
         var regForm = new Customer.FrmCustomerRegister();
+        regForm.FormClosed += (_, _) => this.Show();
         regForm.Show();
         this.Hide();
     }

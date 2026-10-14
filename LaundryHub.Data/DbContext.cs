@@ -10,6 +10,11 @@ namespace LaundryHub.Data;
 /// </summary>
 public class DbContext
 {
+    static DbContext()
+    {
+        Dapper.DefaultTypeMap.MatchNamesWithUnderscores = true;
+    }
+
     private readonly string _connectionString;
 
     public DbContext(IConfiguration config)

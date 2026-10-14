@@ -1,3 +1,9 @@
+using Panel = System.Windows.Forms.Panel;
+using CheckBox = System.Windows.Forms.CheckBox;
+using ReaLTaiizor;
+using ReaLTaiizor.Controls;
+using ReaLTaiizor.Util;
+
 namespace LaundryHub.App.Forms.Staff;
 
 partial class FrmOrderDetail
@@ -18,21 +24,21 @@ partial class FrmOrderDetail
     private void InitializeComponent()
     {
         pnlHeader = new Panel();
-        btnClose = new Button();
+        btnClose = new HopeButton();
         lblStatusBadge = new Label();
         lblOrderNumber = new Label();
         pnlContainer = new Panel();
         pnlRightWrapper = new Panel();
         pnlRightCard = new Panel();
-        btnResendEmail = new Button();
-        btnPrintQr = new Button();
+        btnResendEmail = new HopeButton();
+        btnPrintQr = new HopeButton();
         picQrCode = new PictureBox();
         lblQrTitle = new Label();
         pnlLeftCard = new Panel();
         flpActions = new FlowLayoutPanel();
-        btnAdvanceStatus = new Button();
-        btnClaimOrder = new Button();
-        btnCancelOrder = new Button();
+        btnAdvanceStatus = new HopeButton();
+        btnClaimOrder = new HopeButton();
+        btnCancelOrder = new HopeButton();
         tlpDetails = new TableLayoutPanel();
         lblHCustomer = new Label();
         lblCustomerInfo = new Label();
@@ -63,7 +69,7 @@ partial class FrmOrderDetail
         // 
         // pnlHeader
         // 
-        pnlHeader.BackColor = Color.FromArgb(30, 41, 59);
+        pnlHeader.BackColor = Color.FromArgb(102, 163, 191);
         pnlHeader.Controls.Add(btnClose);
         pnlHeader.Controls.Add(lblStatusBadge);
         pnlHeader.Controls.Add(lblOrderNumber);
@@ -76,22 +82,29 @@ partial class FrmOrderDetail
         // 
         // btnClose
         // 
-        btnClose.BackColor = Color.FromArgb(51, 65, 85);
+        btnClose.BorderColor = Color.FromArgb(102, 163, 191);
+        btnClose.ButtonType = HopeButtonType.Default;
         btnClose.Cursor = Cursors.Hand;
-        btnClose.FlatAppearance.BorderSize = 0;
-        btnClose.FlatStyle = FlatStyle.Flat;
-        btnClose.ForeColor = Color.White;
-        btnClose.Location = new Point(716, 19);
+        btnClose.DangerColor = Color.FromArgb(245, 108, 108);
+        btnClose.DefaultColor = Color.FromArgb(200, 223, 219);
+        btnClose.Font = new Font("Segoe UI", 9F);
+        btnClose.HoverTextColor = Color.FromArgb(51, 104, 160);
+        btnClose.InfoColor = Color.FromArgb(144, 147, 153);
+        btnClose.Location = new Point(716, 18);
         btnClose.Name = "btnClose";
-        btnClose.Size = new Size(80, 32);
+        btnClose.PrimaryColor = Color.FromArgb(64, 158, 255);
+        btnClose.Size = new Size(80, 34);
+        btnClose.SuccessColor = Color.FromArgb(103, 194, 58);
         btnClose.TabIndex = 2;
         btnClose.Text = "✕ Close";
-        btnClose.UseVisualStyleBackColor = false;
+        btnClose.TextColor = Color.FromArgb(51, 104, 160);
+        btnClose.WarningColor = Color.FromArgb(230, 162, 60);
         btnClose.Click += btnClose_Click;
         // 
         // lblStatusBadge
         // 
         lblStatusBadge.Font = new Font("Segoe UI", 10F, FontStyle.Bold);
+        lblStatusBadge.ForeColor = Color.White;
         lblStatusBadge.Location = new Point(480, 19);
         lblStatusBadge.Name = "lblStatusBadge";
         lblStatusBadge.Size = new Size(160, 32);
@@ -102,15 +115,16 @@ partial class FrmOrderDetail
         // 
         lblOrderNumber.AutoSize = true;
         lblOrderNumber.Font = new Font("Segoe UI", 16F, FontStyle.Bold);
-        lblOrderNumber.ForeColor = Color.FromArgb(96, 165, 250);
+        lblOrderNumber.ForeColor = Color.FromArgb(242, 239, 231);
         lblOrderNumber.Location = new Point(24, 18);
         lblOrderNumber.Name = "lblOrderNumber";
-        lblOrderNumber.Size = new Size(198, 30);
+        lblOrderNumber.Size = new Size(295, 37);
         lblOrderNumber.TabIndex = 0;
-        lblOrderNumber.Text = "🧾 LH-20261011-001";
+        lblOrderNumber.Text = "\U0001f9fe LH-20261011-001";
         // 
         // pnlContainer
         // 
+        pnlContainer.BackColor = Color.FromArgb(242, 239, 231);
         pnlContainer.Controls.Add(pnlRightWrapper);
         pnlContainer.Controls.Add(pnlLeftCard);
         pnlContainer.Dock = DockStyle.Fill;
@@ -132,7 +146,7 @@ partial class FrmOrderDetail
         // 
         // pnlRightCard
         // 
-        pnlRightCard.BackColor = Color.FromArgb(30, 41, 59);
+        pnlRightCard.BackColor = Color.White;
         pnlRightCard.Controls.Add(btnResendEmail);
         pnlRightCard.Controls.Add(btnPrintQr);
         pnlRightCard.Controls.Add(picQrCode);
@@ -146,32 +160,44 @@ partial class FrmOrderDetail
         // 
         // btnResendEmail
         // 
-        btnResendEmail.BackColor = Color.FromArgb(37, 99, 235);
+        btnResendEmail.BorderColor = Color.FromArgb(102, 163, 191);
+        btnResendEmail.ButtonType = HopeButtonType.Default;
         btnResendEmail.Cursor = Cursors.Hand;
-        btnResendEmail.FlatAppearance.BorderSize = 0;
-        btnResendEmail.FlatStyle = FlatStyle.Flat;
-        btnResendEmail.ForeColor = Color.White;
+        btnResendEmail.DangerColor = Color.FromArgb(245, 108, 108);
+        btnResendEmail.DefaultColor = Color.FromArgb(200, 223, 219);
+        btnResendEmail.Font = new Font("Segoe UI", 9F);
+        btnResendEmail.HoverTextColor = Color.FromArgb(51, 104, 160);
+        btnResendEmail.InfoColor = Color.FromArgb(144, 147, 153);
         btnResendEmail.Location = new Point(37, 320);
         btnResendEmail.Name = "btnResendEmail";
-        btnResendEmail.Size = new Size(220, 36);
+        btnResendEmail.PrimaryColor = Color.FromArgb(64, 158, 255);
+        btnResendEmail.Size = new Size(220, 38);
+        btnResendEmail.SuccessColor = Color.FromArgb(103, 194, 58);
         btnResendEmail.TabIndex = 3;
         btnResendEmail.Text = "✉ Resend Email Receipt";
-        btnResendEmail.UseVisualStyleBackColor = false;
+        btnResendEmail.TextColor = Color.FromArgb(51, 104, 160);
+        btnResendEmail.WarningColor = Color.FromArgb(230, 162, 60);
         btnResendEmail.Click += btnResendEmail_Click;
         // 
         // btnPrintQr
         // 
-        btnPrintQr.BackColor = Color.FromArgb(51, 65, 85);
+        btnPrintQr.BorderColor = Color.FromArgb(220, 223, 230);
+        btnPrintQr.ButtonType = HopeButtonType.Primary;
         btnPrintQr.Cursor = Cursors.Hand;
-        btnPrintQr.FlatAppearance.BorderSize = 0;
-        btnPrintQr.FlatStyle = FlatStyle.Flat;
-        btnPrintQr.ForeColor = Color.White;
+        btnPrintQr.DangerColor = Color.FromArgb(245, 108, 108);
+        btnPrintQr.DefaultColor = Color.FromArgb(255, 255, 255);
+        btnPrintQr.Font = new Font("Segoe UI", 9.5F, FontStyle.Bold);
+        btnPrintQr.HoverTextColor = Color.White;
+        btnPrintQr.InfoColor = Color.FromArgb(144, 147, 153);
         btnPrintQr.Location = new Point(37, 270);
         btnPrintQr.Name = "btnPrintQr";
-        btnPrintQr.Size = new Size(220, 36);
+        btnPrintQr.PrimaryColor = Color.FromArgb(51, 104, 160);
+        btnPrintQr.Size = new Size(220, 38);
+        btnPrintQr.SuccessColor = Color.FromArgb(103, 194, 58);
         btnPrintQr.TabIndex = 2;
         btnPrintQr.Text = "🖨 Print QR Ticket";
-        btnPrintQr.UseVisualStyleBackColor = false;
+        btnPrintQr.TextColor = Color.FromArgb(242, 239, 231);
+        btnPrintQr.WarningColor = Color.FromArgb(230, 162, 60);
         btnPrintQr.Click += btnPrintQr_Click;
         // 
         // picQrCode
@@ -189,7 +215,7 @@ partial class FrmOrderDetail
         // 
         lblQrTitle.Dock = DockStyle.Top;
         lblQrTitle.Font = new Font("Segoe UI", 12F, FontStyle.Bold);
-        lblQrTitle.ForeColor = Color.White;
+        lblQrTitle.ForeColor = Color.FromArgb(51, 104, 160);
         lblQrTitle.Location = new Point(20, 20);
         lblQrTitle.Name = "lblQrTitle";
         lblQrTitle.Size = new Size(254, 30);
@@ -199,7 +225,7 @@ partial class FrmOrderDetail
         // 
         // pnlLeftCard
         // 
-        pnlLeftCard.BackColor = Color.FromArgb(30, 41, 59);
+        pnlLeftCard.BackColor = Color.White;
         pnlLeftCard.Controls.Add(flpActions);
         pnlLeftCard.Controls.Add(tlpDetails);
         pnlLeftCard.Controls.Add(lblDetailsTitle);
@@ -216,58 +242,73 @@ partial class FrmOrderDetail
         flpActions.Controls.Add(btnClaimOrder);
         flpActions.Controls.Add(btnCancelOrder);
         flpActions.Dock = DockStyle.Bottom;
-        flpActions.Location = new Point(20, 400);
+        flpActions.Location = new Point(20, 431);
         flpActions.Name = "flpActions";
         flpActions.Padding = new Padding(0, 10, 0, 0);
-        flpActions.Size = new Size(430, 90);
+        flpActions.Size = new Size(430, 59);
         flpActions.TabIndex = 2;
         // 
         // btnAdvanceStatus
         // 
-        btnAdvanceStatus.BackColor = Color.FromArgb(37, 99, 235);
+        btnAdvanceStatus.BorderColor = Color.FromArgb(220, 223, 230);
+        btnAdvanceStatus.ButtonType = HopeButtonType.Primary;
         btnAdvanceStatus.Cursor = Cursors.Hand;
-        btnAdvanceStatus.FlatAppearance.BorderSize = 0;
-        btnAdvanceStatus.FlatStyle = FlatStyle.Flat;
+        btnAdvanceStatus.DangerColor = Color.FromArgb(245, 108, 108);
+        btnAdvanceStatus.DefaultColor = Color.FromArgb(255, 255, 255);
         btnAdvanceStatus.Font = new Font("Segoe UI", 9F, FontStyle.Bold);
-        btnAdvanceStatus.ForeColor = Color.White;
+        btnAdvanceStatus.HoverTextColor = Color.White;
+        btnAdvanceStatus.InfoColor = Color.FromArgb(144, 147, 153);
         btnAdvanceStatus.Location = new Point(3, 13);
         btnAdvanceStatus.Name = "btnAdvanceStatus";
-        btnAdvanceStatus.Size = new Size(135, 36);
+        btnAdvanceStatus.PrimaryColor = Color.FromArgb(51, 104, 160);
+        btnAdvanceStatus.Size = new Size(135, 38);
+        btnAdvanceStatus.SuccessColor = Color.FromArgb(103, 194, 58);
         btnAdvanceStatus.TabIndex = 0;
         btnAdvanceStatus.Text = "Advance Status";
-        btnAdvanceStatus.UseVisualStyleBackColor = false;
+        btnAdvanceStatus.TextColor = Color.FromArgb(242, 239, 231);
+        btnAdvanceStatus.WarningColor = Color.FromArgb(230, 162, 60);
         btnAdvanceStatus.Click += btnAdvanceStatus_Click;
         // 
         // btnClaimOrder
         // 
-        btnClaimOrder.BackColor = Color.FromArgb(16, 185, 129);
+        btnClaimOrder.BorderColor = Color.FromArgb(220, 223, 230);
+        btnClaimOrder.ButtonType = HopeButtonType.Primary;
         btnClaimOrder.Cursor = Cursors.Hand;
-        btnClaimOrder.FlatAppearance.BorderSize = 0;
-        btnClaimOrder.FlatStyle = FlatStyle.Flat;
+        btnClaimOrder.DangerColor = Color.FromArgb(245, 108, 108);
+        btnClaimOrder.DefaultColor = Color.FromArgb(255, 255, 255);
         btnClaimOrder.Font = new Font("Segoe UI", 9F, FontStyle.Bold);
-        btnClaimOrder.ForeColor = Color.White;
+        btnClaimOrder.HoverTextColor = Color.White;
+        btnClaimOrder.InfoColor = Color.FromArgb(144, 147, 153);
         btnClaimOrder.Location = new Point(144, 13);
         btnClaimOrder.Name = "btnClaimOrder";
-        btnClaimOrder.Size = new Size(135, 36);
+        btnClaimOrder.PrimaryColor = Color.FromArgb(102, 163, 191);
+        btnClaimOrder.Size = new Size(135, 38);
+        btnClaimOrder.SuccessColor = Color.FromArgb(103, 194, 58);
         btnClaimOrder.TabIndex = 1;
         btnClaimOrder.Text = "💰 Claim / Pay";
-        btnClaimOrder.UseVisualStyleBackColor = false;
+        btnClaimOrder.TextColor = Color.White;
+        btnClaimOrder.WarningColor = Color.FromArgb(230, 162, 60);
         btnClaimOrder.Click += btnClaimOrder_Click;
         // 
         // btnCancelOrder
         // 
-        btnCancelOrder.BackColor = Color.FromArgb(220, 38, 38);
+        btnCancelOrder.BorderColor = Color.FromArgb(220, 53, 69);
+        btnCancelOrder.ButtonType = HopeButtonType.Default;
         btnCancelOrder.Cursor = Cursors.Hand;
-        btnCancelOrder.FlatAppearance.BorderSize = 0;
-        btnCancelOrder.FlatStyle = FlatStyle.Flat;
+        btnCancelOrder.DangerColor = Color.FromArgb(245, 108, 108);
+        btnCancelOrder.DefaultColor = Color.FromArgb(200, 223, 219);
         btnCancelOrder.Font = new Font("Segoe UI", 9F);
-        btnCancelOrder.ForeColor = Color.White;
+        btnCancelOrder.HoverTextColor = Color.FromArgb(220, 53, 69);
+        btnCancelOrder.InfoColor = Color.FromArgb(144, 147, 153);
         btnCancelOrder.Location = new Point(285, 13);
         btnCancelOrder.Name = "btnCancelOrder";
-        btnCancelOrder.Size = new Size(135, 36);
+        btnCancelOrder.PrimaryColor = Color.FromArgb(64, 158, 255);
+        btnCancelOrder.Size = new Size(135, 38);
+        btnCancelOrder.SuccessColor = Color.FromArgb(103, 194, 58);
         btnCancelOrder.TabIndex = 2;
         btnCancelOrder.Text = "✕ Cancel Order";
-        btnCancelOrder.UseVisualStyleBackColor = false;
+        btnCancelOrder.TextColor = Color.FromArgb(220, 53, 69);
+        btnCancelOrder.WarningColor = Color.FromArgb(230, 162, 60);
         btnCancelOrder.Click += btnCancelOrder_Click;
         // 
         // tlpDetails
@@ -310,53 +351,81 @@ partial class FrmOrderDetail
         // lblHCustomer
         // 
         lblHCustomer.Dock = DockStyle.Fill;
-        lblHCustomer.Font = new Font("Segoe UI", 9F);
-        lblHCustomer.ForeColor = Color.FromArgb(148, 163, 184);
+        lblHCustomer.Font = new Font("Segoe UI", 9F, FontStyle.Bold);
+        lblHCustomer.ForeColor = Color.FromArgb(51, 104, 160);
+        lblHCustomer.Location = new Point(3, 10);
+        lblHCustomer.Name = "lblHCustomer";
+        lblHCustomer.Size = new Size(124, 53);
+        lblHCustomer.TabIndex = 0;
         lblHCustomer.Text = "Customer:";
         lblHCustomer.TextAlign = ContentAlignment.MiddleLeft;
         // 
         // lblCustomerInfo
         // 
         lblCustomerInfo.Dock = DockStyle.Fill;
-        lblCustomerInfo.Font = new Font("Segoe UI", 9.5F, FontStyle.Bold);
-        lblCustomerInfo.ForeColor = Color.White;
+        lblCustomerInfo.Font = new Font("Segoe UI", 9.5F);
+        lblCustomerInfo.ForeColor = Color.FromArgb(51, 104, 160);
+        lblCustomerInfo.Location = new Point(133, 10);
+        lblCustomerInfo.Name = "lblCustomerInfo";
+        lblCustomerInfo.Size = new Size(294, 53);
+        lblCustomerInfo.TabIndex = 1;
         lblCustomerInfo.TextAlign = ContentAlignment.MiddleLeft;
         // 
         // lblHService
         // 
         lblHService.Dock = DockStyle.Fill;
-        lblHService.Font = new Font("Segoe UI", 9F);
-        lblHService.ForeColor = Color.FromArgb(148, 163, 184);
+        lblHService.Font = new Font("Segoe UI", 9F, FontStyle.Bold);
+        lblHService.ForeColor = Color.FromArgb(51, 104, 160);
+        lblHService.Location = new Point(3, 63);
+        lblHService.Name = "lblHService";
+        lblHService.Size = new Size(124, 53);
+        lblHService.TabIndex = 2;
         lblHService.Text = "Service Type:";
         lblHService.TextAlign = ContentAlignment.MiddleLeft;
         // 
         // lblServiceInfo
         // 
         lblServiceInfo.Dock = DockStyle.Fill;
-        lblServiceInfo.Font = new Font("Segoe UI", 9.5F, FontStyle.Bold);
-        lblServiceInfo.ForeColor = Color.White;
+        lblServiceInfo.Font = new Font("Segoe UI", 9.5F);
+        lblServiceInfo.ForeColor = Color.FromArgb(51, 104, 160);
+        lblServiceInfo.Location = new Point(133, 63);
+        lblServiceInfo.Name = "lblServiceInfo";
+        lblServiceInfo.Size = new Size(294, 53);
+        lblServiceInfo.TabIndex = 3;
         lblServiceInfo.TextAlign = ContentAlignment.MiddleLeft;
         // 
         // lblHWeight
         // 
         lblHWeight.Dock = DockStyle.Fill;
-        lblHWeight.Font = new Font("Segoe UI", 9F);
-        lblHWeight.ForeColor = Color.FromArgb(148, 163, 184);
+        lblHWeight.Font = new Font("Segoe UI", 9F, FontStyle.Bold);
+        lblHWeight.ForeColor = Color.FromArgb(51, 104, 160);
+        lblHWeight.Location = new Point(3, 116);
+        lblHWeight.Name = "lblHWeight";
+        lblHWeight.Size = new Size(124, 53);
+        lblHWeight.TabIndex = 4;
         lblHWeight.Text = "Weight:";
         lblHWeight.TextAlign = ContentAlignment.MiddleLeft;
         // 
         // lblWeightInfo
         // 
         lblWeightInfo.Dock = DockStyle.Fill;
-        lblWeightInfo.Font = new Font("Segoe UI", 9.5F, FontStyle.Bold);
-        lblWeightInfo.ForeColor = Color.White;
+        lblWeightInfo.Font = new Font("Segoe UI", 9.5F);
+        lblWeightInfo.ForeColor = Color.FromArgb(51, 104, 160);
+        lblWeightInfo.Location = new Point(133, 116);
+        lblWeightInfo.Name = "lblWeightInfo";
+        lblWeightInfo.Size = new Size(294, 53);
+        lblWeightInfo.TabIndex = 5;
         lblWeightInfo.TextAlign = ContentAlignment.MiddleLeft;
         // 
         // lblHTotal
         // 
         lblHTotal.Dock = DockStyle.Fill;
-        lblHTotal.Font = new Font("Segoe UI", 9F);
-        lblHTotal.ForeColor = Color.FromArgb(148, 163, 184);
+        lblHTotal.Font = new Font("Segoe UI", 9F, FontStyle.Bold);
+        lblHTotal.ForeColor = Color.FromArgb(51, 104, 160);
+        lblHTotal.Location = new Point(3, 169);
+        lblHTotal.Name = "lblHTotal";
+        lblHTotal.Size = new Size(124, 53);
+        lblHTotal.TabIndex = 6;
         lblHTotal.Text = "Total Amount:";
         lblHTotal.TextAlign = ContentAlignment.MiddleLeft;
         // 
@@ -364,14 +433,22 @@ partial class FrmOrderDetail
         // 
         lblTotalAmount.Dock = DockStyle.Fill;
         lblTotalAmount.Font = new Font("Segoe UI", 9.5F, FontStyle.Bold);
-        lblTotalAmount.ForeColor = Color.White;
+        lblTotalAmount.ForeColor = Color.FromArgb(51, 104, 160);
+        lblTotalAmount.Location = new Point(133, 169);
+        lblTotalAmount.Name = "lblTotalAmount";
+        lblTotalAmount.Size = new Size(294, 53);
+        lblTotalAmount.TabIndex = 7;
         lblTotalAmount.TextAlign = ContentAlignment.MiddleLeft;
         // 
         // lblHPayment
         // 
         lblHPayment.Dock = DockStyle.Fill;
-        lblHPayment.Font = new Font("Segoe UI", 9F);
-        lblHPayment.ForeColor = Color.FromArgb(148, 163, 184);
+        lblHPayment.Font = new Font("Segoe UI", 9F, FontStyle.Bold);
+        lblHPayment.ForeColor = Color.FromArgb(51, 104, 160);
+        lblHPayment.Location = new Point(3, 222);
+        lblHPayment.Name = "lblHPayment";
+        lblHPayment.Size = new Size(124, 53);
+        lblHPayment.TabIndex = 8;
         lblHPayment.Text = "Payment:";
         lblHPayment.TextAlign = ContentAlignment.MiddleLeft;
         // 
@@ -379,59 +456,87 @@ partial class FrmOrderDetail
         // 
         lblPaymentStatus.Dock = DockStyle.Fill;
         lblPaymentStatus.Font = new Font("Segoe UI", 9.5F, FontStyle.Bold);
-        lblPaymentStatus.ForeColor = Color.White;
+        lblPaymentStatus.ForeColor = Color.FromArgb(51, 104, 160);
+        lblPaymentStatus.Location = new Point(133, 222);
+        lblPaymentStatus.Name = "lblPaymentStatus";
+        lblPaymentStatus.Size = new Size(294, 53);
+        lblPaymentStatus.TabIndex = 9;
         lblPaymentStatus.TextAlign = ContentAlignment.MiddleLeft;
         // 
         // lblHPickup
         // 
         lblHPickup.Dock = DockStyle.Fill;
-        lblHPickup.Font = new Font("Segoe UI", 9F);
-        lblHPickup.ForeColor = Color.FromArgb(148, 163, 184);
+        lblHPickup.Font = new Font("Segoe UI", 9F, FontStyle.Bold);
+        lblHPickup.ForeColor = Color.FromArgb(51, 104, 160);
+        lblHPickup.Location = new Point(3, 275);
+        lblHPickup.Name = "lblHPickup";
+        lblHPickup.Size = new Size(124, 53);
+        lblHPickup.TabIndex = 10;
         lblHPickup.Text = "Target Pickup:";
         lblHPickup.TextAlign = ContentAlignment.MiddleLeft;
         // 
         // lblPickupDate
         // 
         lblPickupDate.Dock = DockStyle.Fill;
-        lblPickupDate.Font = new Font("Segoe UI", 9.5F, FontStyle.Bold);
-        lblPickupDate.ForeColor = Color.White;
+        lblPickupDate.Font = new Font("Segoe UI", 9.5F);
+        lblPickupDate.ForeColor = Color.FromArgb(51, 104, 160);
+        lblPickupDate.Location = new Point(133, 275);
+        lblPickupDate.Name = "lblPickupDate";
+        lblPickupDate.Size = new Size(294, 53);
+        lblPickupDate.TabIndex = 11;
         lblPickupDate.TextAlign = ContentAlignment.MiddleLeft;
         // 
         // lblHCreated
         // 
         lblHCreated.Dock = DockStyle.Fill;
-        lblHCreated.Font = new Font("Segoe UI", 9F);
-        lblHCreated.ForeColor = Color.FromArgb(148, 163, 184);
+        lblHCreated.Font = new Font("Segoe UI", 9F, FontStyle.Bold);
+        lblHCreated.ForeColor = Color.FromArgb(51, 104, 160);
+        lblHCreated.Location = new Point(3, 328);
+        lblHCreated.Name = "lblHCreated";
+        lblHCreated.Size = new Size(124, 53);
+        lblHCreated.TabIndex = 12;
         lblHCreated.Text = "Order Date:";
         lblHCreated.TextAlign = ContentAlignment.MiddleLeft;
         // 
         // lblCreatedDate
         // 
         lblCreatedDate.Dock = DockStyle.Fill;
-        lblCreatedDate.Font = new Font("Segoe UI", 9.5F, FontStyle.Bold);
-        lblCreatedDate.ForeColor = Color.White;
+        lblCreatedDate.Font = new Font("Segoe UI", 9.5F);
+        lblCreatedDate.ForeColor = Color.FromArgb(51, 104, 160);
+        lblCreatedDate.Location = new Point(133, 328);
+        lblCreatedDate.Name = "lblCreatedDate";
+        lblCreatedDate.Size = new Size(294, 53);
+        lblCreatedDate.TabIndex = 13;
         lblCreatedDate.TextAlign = ContentAlignment.MiddleLeft;
         // 
         // lblHCancelReason
         // 
         lblHCancelReason.Dock = DockStyle.Fill;
-        lblHCancelReason.Font = new Font("Segoe UI", 9F);
-        lblHCancelReason.ForeColor = Color.FromArgb(148, 163, 184);
+        lblHCancelReason.Font = new Font("Segoe UI", 9F, FontStyle.Bold);
+        lblHCancelReason.ForeColor = Color.FromArgb(51, 104, 160);
+        lblHCancelReason.Location = new Point(3, 381);
+        lblHCancelReason.Name = "lblHCancelReason";
+        lblHCancelReason.Size = new Size(124, 59);
+        lblHCancelReason.TabIndex = 14;
         lblHCancelReason.Text = "Notes/Reason:";
         lblHCancelReason.TextAlign = ContentAlignment.MiddleLeft;
         // 
         // lblCancelReason
         // 
         lblCancelReason.Dock = DockStyle.Fill;
-        lblCancelReason.Font = new Font("Segoe UI", 9.5F, FontStyle.Bold);
-        lblCancelReason.ForeColor = Color.White;
+        lblCancelReason.Font = new Font("Segoe UI", 9.5F);
+        lblCancelReason.ForeColor = Color.FromArgb(51, 104, 160);
+        lblCancelReason.Location = new Point(133, 381);
+        lblCancelReason.Name = "lblCancelReason";
+        lblCancelReason.Size = new Size(294, 59);
+        lblCancelReason.TabIndex = 15;
         lblCancelReason.TextAlign = ContentAlignment.MiddleLeft;
         // 
         // lblDetailsTitle
         // 
         lblDetailsTitle.Dock = DockStyle.Top;
         lblDetailsTitle.Font = new Font("Segoe UI", 12F, FontStyle.Bold);
-        lblDetailsTitle.ForeColor = Color.White;
+        lblDetailsTitle.ForeColor = Color.FromArgb(51, 104, 160);
         lblDetailsTitle.Location = new Point(20, 20);
         lblDetailsTitle.Name = "lblDetailsTitle";
         lblDetailsTitle.Size = new Size(430, 30);
@@ -440,14 +545,14 @@ partial class FrmOrderDetail
         // 
         // FrmOrderDetail
         // 
-        AutoScaleDimensions = new SizeF(7F, 17F);
+        AutoScaleDimensions = new SizeF(9F, 21F);
         AutoScaleMode = AutoScaleMode.Font;
-        BackColor = Color.FromArgb(15, 23, 42);
+        BackColor = Color.FromArgb(242, 239, 231);
         ClientSize = new Size(820, 620);
         Controls.Add(pnlContainer);
         Controls.Add(pnlHeader);
         Font = new Font("Segoe UI", 9.5F);
-        ForeColor = Color.White;
+        ForeColor = Color.FromArgb(51, 104, 160);
         FormBorderStyle = FormBorderStyle.FixedDialog;
         MaximizeBox = false;
         Name = "FrmOrderDetail";
@@ -470,7 +575,7 @@ partial class FrmOrderDetail
     private Panel pnlHeader;
     private Label lblOrderNumber;
     private Label lblStatusBadge;
-    private Button btnClose;
+    private HopeButton btnClose;
     private Panel pnlContainer;
     private Panel pnlLeftCard;
     private Label lblDetailsTitle;
@@ -492,13 +597,13 @@ partial class FrmOrderDetail
     private Label lblHCancelReason;
     private Label lblCancelReason;
     private FlowLayoutPanel flpActions;
-    private Button btnAdvanceStatus;
-    private Button btnClaimOrder;
-    private Button btnCancelOrder;
+    private HopeButton btnAdvanceStatus;
+    private HopeButton btnClaimOrder;
+    private HopeButton btnCancelOrder;
     private Panel pnlRightWrapper;
     private Panel pnlRightCard;
     private Label lblQrTitle;
     private PictureBox picQrCode;
-    private Button btnPrintQr;
-    private Button btnResendEmail;
+    private HopeButton btnPrintQr;
+    private HopeButton btnResendEmail;
 }

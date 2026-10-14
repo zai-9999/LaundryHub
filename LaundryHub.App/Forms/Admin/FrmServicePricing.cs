@@ -11,7 +11,22 @@ public partial class FrmServicePricing : Form
     public FrmServicePricing()
     {
         InitializeComponent();
+        DoubleBuffered = true;
+        ResizeRedraw = true;
+        UIThemeHelper.StyleStandardForm(this, pnlLeftCard);
+        pnlHeader.BackColor = Color.FromArgb(37, 78, 122);
+        lblTitle.BackColor = Color.FromArgb(37, 78, 122);
+        pnlContainer.BackColor = Color.FromArgb(240, 244, 248);
+        pnlRight.BackColor = Color.FromArgb(240, 244, 248);
+        flpForm.BackColor = Color.White;
+        UIThemeHelper.StyleDataGridView(dgvServices);
         LoadServices();
+    }
+
+    protected override void OnPaintBackground(PaintEventArgs e)
+    {
+        base.OnPaintBackground(e);
+        UIThemeHelper.PaintGradientBackground(this, e);
     }
 
     private void btnClose_Click(object? sender, EventArgs e) => this.Close();
@@ -30,8 +45,8 @@ public partial class FrmServicePricing : Form
             Status = s.IsActive ? "Active" : "Disabled"
         }).ToList();
 
-        if (dgvServices.Columns["ServiceId"] != null)
-            dgvServices.Columns["ServiceId"].Visible = false;
+        if (dgvServices.Columns["ServiceId"] is { } col)
+            col.Visible = false;
     }
 
     private void dgvServices_SelectionChanged(object? sender, EventArgs e)
@@ -44,8 +59,8 @@ public partial class FrmServicePricing : Form
             if (_selectedService != null)
             {
                 _editingServiceId = _selectedService.ServiceId;
-                lblFormTitle.Text = $"✏ Edit Service #{_selectedService.ServiceId}";
-                btnSave.Text = "✔ Update Rate";
+                lblFormTitle.Text = $"Edit Service #{_selectedService.ServiceId}";
+                btnSave.Text = "Update Rate";
                 txtServiceName.Text = _selectedService.ServiceName;
                 txtPricePerKilo.Text = _selectedService.PricePerKilo.ToString("F2");
                 txtMinWeight.Text = _selectedService.MinimumWeight.ToString("F1");
@@ -108,8 +123,8 @@ public partial class FrmServicePricing : Form
     {
         _editingServiceId = 0;
         _selectedService = null;
-        lblFormTitle.Text = "➕ New Service Type";
-        btnSave.Text = "💾 Save Service";
+        lblFormTitle.Text = "New Service Type";
+        btnSave.Text = "Save Service";
         txtServiceName.Clear();
         txtPricePerKilo.Clear();
         txtMinWeight.Clear();

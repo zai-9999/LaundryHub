@@ -17,8 +17,20 @@ public partial class FrmOrderDetail : Form
     public FrmOrderDetail(Order order)
     {
         _order = order;
-        InitializeComponent();
+        DoubleBuffered = true;
+        ResizeRedraw = true;
+        UIThemeHelper.StyleStandardForm(this, pnlLeftCard, pnlRightCard);
+        pnlHeader.BackColor = Color.FromArgb(37, 78, 122);
+        lblOrderNumber.BackColor = Color.FromArgb(37, 78, 122);
+        pnlContainer.BackColor = Color.FromArgb(240, 244, 248);
+        pnlRightWrapper.BackColor = Color.FromArgb(240, 244, 248);
         RefreshOrderData();
+    }
+
+    protected override void OnPaintBackground(PaintEventArgs e)
+    {
+        base.OnPaintBackground(e);
+        UIThemeHelper.PaintGradientBackground(this, e);
     }
 
     private void btnClose_Click(object? sender, EventArgs e)
@@ -44,13 +56,13 @@ public partial class FrmOrderDetail : Form
 
         if (_order.PaymentRecorded)
         {
-            lblPaymentStatus.Text = $"✔ Paid (₱{_order.AmountPaid:N2})";
-            lblPaymentStatus.ForeColor = Color.FromArgb(52, 211, 153);
+            lblPaymentStatus.Text = $"Paid (₱{_order.AmountPaid:N2})";
+            lblPaymentStatus.ForeColor = Color.FromArgb(200, 223, 219);
         }
         else
         {
-            lblPaymentStatus.Text = "⏳ Unpaid";
-            lblPaymentStatus.ForeColor = Color.FromArgb(248, 113, 113);
+            lblPaymentStatus.Text = "Unpaid";
+            lblPaymentStatus.ForeColor = Color.FromArgb(51, 104, 160);
         }
 
         lblPickupDate.Text = _order.PickupDate?.ToString("MMMM dd, yyyy") ?? "—";
@@ -72,12 +84,12 @@ public partial class FrmOrderDetail : Form
         if (_order.Status == "Washing")
         {
             btnAdvanceStatus.Text = "🌀 Mark as Drying";
-            btnAdvanceStatus.BackColor = Color.FromArgb(14, 165, 233);
+            btnAdvanceStatus.BackColor = Color.FromArgb(102, 163, 191);
         }
         else if (_order.Status == "Drying")
         {
             btnAdvanceStatus.Text = "✨ Ready for Pickup";
-            btnAdvanceStatus.BackColor = Color.FromArgb(59, 130, 246);
+            btnAdvanceStatus.BackColor = Color.FromArgb(102, 163, 191);
         }
 
         btnClaimOrder.Visible = _order.Status == "Ready for Pickup" || (_order.Status is "Washing" or "Drying" && !_order.PaymentRecorded);
@@ -90,24 +102,28 @@ public partial class FrmOrderDetail : Form
         switch (_order.Status)
         {
             case "Washing":
-                lblStatusBadge.BackColor = Color.FromArgb(30, 58, 138);
-                lblStatusBadge.ForeColor = Color.FromArgb(147, 197, 253);
+                lblStatusBadge.BackColor = Color.FromArgb(51, 104, 160);
+                lblStatusBadge.ForeColor = Color.White;
                 break;
             case "Drying":
-                lblStatusBadge.BackColor = Color.FromArgb(12, 74, 96);
-                lblStatusBadge.ForeColor = Color.FromArgb(125, 211, 252);
+                lblStatusBadge.BackColor = Color.FromArgb(102, 163, 191);
+                lblStatusBadge.ForeColor = Color.White;
                 break;
             case "Ready for Pickup":
-                lblStatusBadge.BackColor = Color.FromArgb(120, 53, 15);
-                lblStatusBadge.ForeColor = Color.FromArgb(253, 224, 71);
+                lblStatusBadge.BackColor = Color.FromArgb(40, 167, 69);
+                lblStatusBadge.ForeColor = Color.White;
                 break;
             case "Claimed":
-                lblStatusBadge.BackColor = Color.FromArgb(6, 78, 59);
-                lblStatusBadge.ForeColor = Color.FromArgb(110, 231, 183);
+                lblStatusBadge.BackColor = Color.FromArgb(108, 117, 125);
+                lblStatusBadge.ForeColor = Color.White;
                 break;
             case "Cancelled":
-                lblStatusBadge.BackColor = Color.FromArgb(127, 29, 29);
-                lblStatusBadge.ForeColor = Color.FromArgb(252, 165, 165);
+                lblStatusBadge.BackColor = Color.FromArgb(220, 53, 69);
+                lblStatusBadge.ForeColor = Color.White;
+                break;
+            default:
+                lblStatusBadge.BackColor = Color.FromArgb(51, 104, 160);
+                lblStatusBadge.ForeColor = Color.White;
                 break;
         }
     }
@@ -123,7 +139,7 @@ public partial class FrmOrderDetail : Form
 
         if (nextStatus != _order.Status)
         {
-            AppServices.Orders.UpdateStatus(_order.OrderId, nextStatus);
+            AppServices.Orders.UpdateStatus(_order.OrderId, nextStatus, changedBy: SessionManager.CurrentUser?.UserId);
             RefreshOrderData();
             MessageBox.Show($"Order status moved to '{nextStatus}'.", "Status Updated", MessageBoxButtons.OK, MessageBoxIcon.Information);
         }
@@ -136,8 +152,8 @@ public partial class FrmOrderDetail : Form
             Text = $"Claim Order – {_order.OrderNumber}",
             Size = new Size(380, 280),
             StartPosition = FormStartPosition.CenterParent,
-            BackColor = Color.FromArgb(15, 23, 42),
-            ForeColor = Color.White,
+            BackColor = Color.White,
+            ForeColor = Color.FromArgb(30, 41, 59),
             FormBorderStyle = FormBorderStyle.FixedDialog,
             MaximizeBox = false,
             MinimizeBox = false
@@ -148,7 +164,8 @@ public partial class FrmOrderDetail : Form
             Text = $"Total Due: ₱{_order.TotalAmount:N2}\nEnter Amount Tendered / Paid:",
             Location = new Point(30, 20),
             Size = new Size(310, 40),
-            Font = new Font("Segoe UI", 10, FontStyle.Bold)
+            Font = new Font("Segoe UI", 10, FontStyle.Bold),
+            ForeColor = Color.FromArgb(37, 78, 122)
         };
         var txtAmount = new TextBox
         {
@@ -156,8 +173,9 @@ public partial class FrmOrderDetail : Form
             Location = new Point(30, 70),
             Size = new Size(300, 32),
             Font = new Font("Segoe UI", 12),
-            BackColor = Color.FromArgb(30, 41, 59),
-            ForeColor = Color.White
+            BackColor = Color.FromArgb(248, 250, 252),
+            ForeColor = Color.FromArgb(30, 41, 59),
+            BorderStyle = BorderStyle.FixedSingle
         };
         var lblChange = new Label
         {
@@ -165,7 +183,7 @@ public partial class FrmOrderDetail : Form
             Location = new Point(30, 115),
             Size = new Size(300, 25),
             Font = new Font("Segoe UI", 10, FontStyle.Bold),
-            ForeColor = Color.FromArgb(52, 211, 153)
+            ForeColor = Color.FromArgb(40, 167, 69)
         };
 
         txtAmount.TextChanged += (_, _) =>
@@ -174,19 +192,20 @@ public partial class FrmOrderDetail : Form
             {
                 var change = paid - _order.TotalAmount;
                 lblChange.Text = change >= 0 ? $"Change: ₱{change:N2}" : $"Short by: ₱{Math.Abs(change):N2}";
-                lblChange.ForeColor = change >= 0 ? Color.FromArgb(52, 211, 153) : Color.FromArgb(248, 113, 113);
+                lblChange.ForeColor = change >= 0 ? Color.FromArgb(40, 167, 69) : Color.FromArgb(220, 53, 69);
             }
         };
 
         var btnConfirm = new Button
         {
-            Text = "✔ Confirm Payment & Claim",
+            Text = "Confirm Payment & Claim",
             Location = new Point(30, 160),
             Size = new Size(300, 38),
-            BackColor = Color.FromArgb(16, 185, 129),
+            BackColor = Color.FromArgb(51, 104, 160),
             ForeColor = Color.White,
             FlatStyle = FlatStyle.Flat,
-            Font = new Font("Segoe UI", 10, FontStyle.Bold)
+            Font = new Font("Segoe UI", 10, FontStyle.Bold),
+            Cursor = Cursors.Hand
         };
         btnConfirm.FlatAppearance.BorderSize = 0;
         btnConfirm.Click += (_, _) =>
@@ -194,7 +213,7 @@ public partial class FrmOrderDetail : Form
             if (decimal.TryParse(txtAmount.Text, out var paid) && paid >= _order.TotalAmount)
             {
                 AppServices.Orders.RecordPayment(_order.OrderId, paid);
-                AppServices.Orders.UpdateStatus(_order.OrderId, "Claimed");
+                AppServices.Orders.UpdateStatus(_order.OrderId, "Claimed", changedBy: SessionManager.CurrentUser?.UserId, notes: $"Paid: ₱{paid:N2}");
                 dlg.DialogResult = DialogResult.OK;
                 dlg.Close();
             }
@@ -217,10 +236,10 @@ public partial class FrmOrderDetail : Form
         using var dlg = new Form
         {
             Text = "Cancel Order",
-            Size = new Size(400, 230),
+            Size = new Size(400, 240),
             StartPosition = FormStartPosition.CenterParent,
-            BackColor = Color.FromArgb(15, 23, 42),
-            ForeColor = Color.White,
+            BackColor = Color.White,
+            ForeColor = Color.FromArgb(30, 41, 59),
             FormBorderStyle = FormBorderStyle.FixedDialog,
             MaximizeBox = false,
             MinimizeBox = false
@@ -231,25 +250,29 @@ public partial class FrmOrderDetail : Form
             Text = "Reason for cancellation *:",
             Location = new Point(30, 20),
             Size = new Size(330, 25),
-            Font = new Font("Segoe UI", 9.5f)
+            Font = new Font("Segoe UI", 9.5f, FontStyle.Bold),
+            ForeColor = Color.FromArgb(37, 78, 122)
         };
         var txtReason = new TextBox
         {
             Location = new Point(30, 50),
-            Size = new Size(330, 50),
+            Size = new Size(330, 55),
             Multiline = true,
             Font = new Font("Segoe UI", 9.5f),
-            BackColor = Color.FromArgb(30, 41, 59),
-            ForeColor = Color.White
+            BackColor = Color.FromArgb(248, 250, 252),
+            ForeColor = Color.FromArgb(30, 41, 59),
+            BorderStyle = BorderStyle.FixedSingle
         };
         var btnConfirm = new Button
         {
             Text = "Confirm Cancel",
-            Location = new Point(30, 120),
+            Location = new Point(30, 125),
             Size = new Size(330, 36),
-            BackColor = Color.FromArgb(220, 38, 38),
+            BackColor = Color.FromArgb(220, 53, 69),
             ForeColor = Color.White,
-            FlatStyle = FlatStyle.Flat
+            FlatStyle = FlatStyle.Flat,
+            Font = new Font("Segoe UI", 9.5f, FontStyle.Bold),
+            Cursor = Cursors.Hand
         };
         btnConfirm.FlatAppearance.BorderSize = 0;
         btnConfirm.Click += (_, _) =>
@@ -259,7 +282,7 @@ public partial class FrmOrderDetail : Form
                 MessageBox.Show("Please provide a reason for cancellation.", "Reason Required", MessageBoxButtons.OK, MessageBoxIcon.Warning);
                 return;
             }
-            AppServices.Orders.UpdateStatus(_order.OrderId, "Cancelled", txtReason.Text.Trim());
+            AppServices.Orders.UpdateStatus(_order.OrderId, "Cancelled", txtReason.Text.Trim(), changedBy: SessionManager.CurrentUser?.UserId);
             dlg.DialogResult = DialogResult.OK;
             dlg.Close();
         };

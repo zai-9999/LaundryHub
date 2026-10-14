@@ -1,3 +1,9 @@
+using Panel = System.Windows.Forms.Panel;
+using CheckBox = System.Windows.Forms.CheckBox;
+using ReaLTaiizor;
+using ReaLTaiizor.Controls;
+using ReaLTaiizor.Util;
+
 namespace LaundryHub.App.Forms.Staff;
 
 partial class FrmNewOrder
@@ -20,15 +26,15 @@ partial class FrmNewOrder
         lblFormTitle = new Label();
         lblSecCustomer = new Label();
         lblSearchPrompt = new Label();
-        txtSearch = new TextBox();
-        btnNewCustomer = new Button();
+        txtSearch = new HopeTextBox();
+        btnNewCustomer = new HopeButton();
         lblSelectedCustomer = new Label();
         lstCustomers = new ListBox();
         lblSecService = new Label();
         lblServicePrompt = new Label();
         cmbService = new ComboBox();
         lblWeightPrompt = new Label();
-        txtWeight = new TextBox();
+        txtWeight = new HopeTextBox();
         pnlPriceBox = new Panel();
         lblPriceBreakdown = new Label();
         lblPrice = new Label();
@@ -36,8 +42,8 @@ partial class FrmNewOrder
         lblPickupPrompt = new Label();
         dtpPickup = new DateTimePicker();
         lblError = new Label();
-        btnSave = new Button();
-        btnCancel = new Button();
+        btnSave = new HopeButton();
+        btnCancel = new HopeButton();
         pnlPriceBox.SuspendLayout();
         SuspendLayout();
         // 
@@ -45,10 +51,10 @@ partial class FrmNewOrder
         // 
         lblFormTitle.AutoSize = true;
         lblFormTitle.Font = new Font("Segoe UI", 16F, FontStyle.Bold);
-        lblFormTitle.ForeColor = Color.White;
+        lblFormTitle.ForeColor = Color.FromArgb(51, 104, 160);
         lblFormTitle.Location = new Point(30, 18);
         lblFormTitle.Name = "lblFormTitle";
-        lblFormTitle.Size = new Size(128, 30);
+        lblFormTitle.Size = new Size(130, 30);
         lblFormTitle.TabIndex = 0;
         lblFormTitle.Text = "New Order";
         // 
@@ -56,8 +62,8 @@ partial class FrmNewOrder
         // 
         lblSecCustomer.AutoSize = true;
         lblSecCustomer.Font = new Font("Segoe UI Semibold", 9F, FontStyle.Bold);
-        lblSecCustomer.ForeColor = Color.FromArgb(96, 165, 250);
-        lblSecCustomer.Location = new Point(30, 58);
+        lblSecCustomer.ForeColor = Color.FromArgb(102, 163, 191);
+        lblSecCustomer.Location = new Point(30, 56);
         lblSecCustomer.Name = "lblSecCustomer";
         lblSecCustomer.Size = new Size(74, 15);
         lblSecCustomer.TabIndex = 1;
@@ -66,47 +72,50 @@ partial class FrmNewOrder
         // lblSearchPrompt
         // 
         lblSearchPrompt.AutoSize = true;
-        lblSearchPrompt.Font = new Font("Segoe UI", 8.5F);
-        lblSearchPrompt.ForeColor = Color.FromArgb(148, 163, 184);
-        lblSearchPrompt.Location = new Point(30, 80);
+        lblSearchPrompt.Font = new Font("Segoe UI", 8.5F, FontStyle.Bold);
+        lblSearchPrompt.ForeColor = Color.FromArgb(51, 104, 160);
+        lblSearchPrompt.Location = new Point(30, 76);
         lblSearchPrompt.Name = "lblSearchPrompt";
-        lblSearchPrompt.Size = new Size(134, 15);
+        lblSearchPrompt.Size = new Size(140, 15);
         lblSearchPrompt.TabIndex = 2;
         lblSearchPrompt.Text = "Search by name or phone:";
         // 
         // txtSearch
         // 
-        txtSearch.BackColor = Color.FromArgb(30, 41, 59);
-        txtSearch.BorderStyle = BorderStyle.FixedSingle;
-        txtSearch.Font = new Font("Segoe UI", 10F);
-        txtSearch.ForeColor = Color.White;
-        txtSearch.Location = new Point(30, 98);
+        txtSearch.BackColor = Color.White;
+        txtSearch.BaseColor = Color.White;
+        txtSearch.BorderColorA = Color.FromArgb(102, 163, 191);
+        txtSearch.BorderColorB = Color.FromArgb(200, 223, 219);
+        txtSearch.Font = new Font("Segoe UI", 9.5F);
+        txtSearch.ForeColor = Color.FromArgb(51, 104, 160);
+        txtSearch.Hint = "Search by name or phone...";
+        txtSearch.Location = new Point(30, 94);
         txtSearch.Name = "txtSearch";
-        txtSearch.Size = new Size(340, 25);
+        txtSearch.Size = new Size(335, 34);
         txtSearch.TabIndex = 3;
         txtSearch.TextChanged += txtSearch_TextChanged;
         // 
         // btnNewCustomer
         // 
-        btnNewCustomer.BackColor = Color.FromArgb(15, 118, 110);
+        btnNewCustomer.ButtonType = HopeButtonType.Default;
+        btnNewCustomer.DefaultColor = Color.FromArgb(200, 223, 219);
+        btnNewCustomer.BorderColor = Color.FromArgb(102, 163, 191);
+        btnNewCustomer.TextColor = Color.FromArgb(51, 104, 160);
+        btnNewCustomer.HoverTextColor = Color.FromArgb(51, 104, 160);
         btnNewCustomer.Cursor = Cursors.Hand;
-        btnNewCustomer.FlatAppearance.BorderSize = 0;
-        btnNewCustomer.FlatStyle = FlatStyle.Flat;
-        btnNewCustomer.Font = new Font("Segoe UI", 8.5F);
-        btnNewCustomer.ForeColor = Color.White;
-        btnNewCustomer.Location = new Point(378, 98);
+        btnNewCustomer.Font = new Font("Segoe UI", 9F);
+        btnNewCustomer.Location = new Point(375, 94);
         btnNewCustomer.Name = "btnNewCustomer";
-        btnNewCustomer.Size = new Size(92, 25);
+        btnNewCustomer.Size = new Size(95, 34);
         btnNewCustomer.TabIndex = 4;
         btnNewCustomer.Text = "+ New";
-        btnNewCustomer.UseVisualStyleBackColor = false;
         btnNewCustomer.Click += btnNewCustomer_Click;
         // 
         // lblSelectedCustomer
         // 
         lblSelectedCustomer.Font = new Font("Segoe UI", 8.5F, FontStyle.Italic);
-        lblSelectedCustomer.ForeColor = Color.FromArgb(100, 116, 139);
-        lblSelectedCustomer.Location = new Point(30, 132);
+        lblSelectedCustomer.ForeColor = Color.FromArgb(40, 167, 69);
+        lblSelectedCustomer.Location = new Point(30, 134);
         lblSelectedCustomer.Name = "lblSelectedCustomer";
         lblSelectedCustomer.Size = new Size(440, 20);
         lblSelectedCustomer.TabIndex = 5;
@@ -114,10 +123,10 @@ partial class FrmNewOrder
         // 
         // lstCustomers
         // 
-        lstCustomers.BackColor = Color.FromArgb(30, 41, 59);
+        lstCustomers.BackColor = Color.White;
         lstCustomers.BorderStyle = BorderStyle.FixedSingle;
         lstCustomers.Font = new Font("Segoe UI", 9F);
-        lstCustomers.ForeColor = Color.White;
+        lstCustomers.ForeColor = Color.FromArgb(51, 104, 160);
         lstCustomers.ItemHeight = 15;
         lstCustomers.Location = new Point(30, 130);
         lstCustomers.Name = "lstCustomers";
@@ -130,8 +139,8 @@ partial class FrmNewOrder
         // 
         lblSecService.AutoSize = true;
         lblSecService.Font = new Font("Segoe UI Semibold", 9F, FontStyle.Bold);
-        lblSecService.ForeColor = Color.FromArgb(96, 165, 250);
-        lblSecService.Location = new Point(30, 165);
+        lblSecService.ForeColor = Color.FromArgb(102, 163, 191);
+        lblSecService.Location = new Point(30, 162);
         lblSecService.Name = "lblSecService";
         lblSecService.Size = new Size(117, 15);
         lblSecService.TabIndex = 7;
@@ -140,23 +149,22 @@ partial class FrmNewOrder
         // lblServicePrompt
         // 
         lblServicePrompt.AutoSize = true;
-        lblServicePrompt.Font = new Font("Segoe UI", 8.5F);
-        lblServicePrompt.ForeColor = Color.FromArgb(148, 163, 184);
-        lblServicePrompt.Location = new Point(30, 187);
+        lblServicePrompt.Font = new Font("Segoe UI", 8.5F, FontStyle.Bold);
+        lblServicePrompt.ForeColor = Color.FromArgb(51, 104, 160);
+        lblServicePrompt.Location = new Point(30, 184);
         lblServicePrompt.Name = "lblServicePrompt";
-        lblServicePrompt.Size = new Size(74, 15);
+        lblServicePrompt.Size = new Size(76, 15);
         lblServicePrompt.TabIndex = 8;
         lblServicePrompt.Text = "Service Type:";
         // 
         // cmbService
         // 
-        cmbService.BackColor = Color.FromArgb(30, 41, 59);
+        cmbService.BackColor = Color.White;
         cmbService.DropDownStyle = ComboBoxStyle.DropDownList;
-        cmbService.FlatStyle = FlatStyle.Flat;
         cmbService.Font = new Font("Segoe UI", 10F);
-        cmbService.ForeColor = Color.White;
+        cmbService.ForeColor = Color.FromArgb(51, 104, 160);
         cmbService.FormattingEnabled = true;
-        cmbService.Location = new Point(30, 205);
+        cmbService.Location = new Point(30, 202);
         cmbService.Name = "cmbService";
         cmbService.Size = new Size(440, 25);
         cmbService.TabIndex = 9;
@@ -165,41 +173,45 @@ partial class FrmNewOrder
         // lblWeightPrompt
         // 
         lblWeightPrompt.AutoSize = true;
-        lblWeightPrompt.Font = new Font("Segoe UI", 8.5F);
-        lblWeightPrompt.ForeColor = Color.FromArgb(148, 163, 184);
-        lblWeightPrompt.Location = new Point(30, 245);
+        lblWeightPrompt.Font = new Font("Segoe UI", 8.5F, FontStyle.Bold);
+        lblWeightPrompt.ForeColor = Color.FromArgb(51, 104, 160);
+        lblWeightPrompt.Location = new Point(30, 238);
         lblWeightPrompt.Name = "lblWeightPrompt";
-        lblWeightPrompt.Size = new Size(73, 15);
+        lblWeightPrompt.Size = new Size(75, 15);
         lblWeightPrompt.TabIndex = 10;
         lblWeightPrompt.Text = "Weight (kg):";
         // 
         // txtWeight
         // 
-        txtWeight.BackColor = Color.FromArgb(30, 41, 59);
-        txtWeight.BorderStyle = BorderStyle.FixedSingle;
-        txtWeight.Font = new Font("Segoe UI", 10F);
-        txtWeight.ForeColor = Color.White;
-        txtWeight.Location = new Point(30, 263);
+        txtWeight.BackColor = Color.White;
+        txtWeight.BaseColor = Color.FromArgb(242, 239, 231);
+        txtWeight.BorderColorA = Color.FromArgb(102, 163, 191);
+        txtWeight.BorderColorB = Color.FromArgb(200, 223, 219);
+        txtWeight.Font = new Font("Segoe UI", 9.5F);
+        txtWeight.ForeColor = Color.FromArgb(51, 104, 160);
+        txtWeight.Hint = "e.g. 5.5";
+        txtWeight.Location = new Point(30, 256);
         txtWeight.Name = "txtWeight";
-        txtWeight.Size = new Size(440, 25);
+        txtWeight.Size = new Size(440, 34);
         txtWeight.TabIndex = 11;
         txtWeight.TextChanged += txtWeight_TextChanged;
         // 
         // pnlPriceBox
         // 
-        pnlPriceBox.BackColor = Color.FromArgb(30, 41, 59);
+        pnlPriceBox.BackColor = Color.FromArgb(245, 248, 252);
         pnlPriceBox.Controls.Add(lblPriceBreakdown);
         pnlPriceBox.Controls.Add(lblPrice);
-        pnlPriceBox.Location = new Point(30, 303);
+        pnlPriceBox.Location = new Point(30, 300);
         pnlPriceBox.Name = "pnlPriceBox";
-        pnlPriceBox.Size = new Size(440, 70);
+        pnlPriceBox.Size = new Size(440, 80);
         pnlPriceBox.TabIndex = 12;
+        pnlPriceBox.Region = new Region(RoundRectangle.CreateRoundRect(0, 0, 440, 80, 8));
         // 
         // lblPriceBreakdown
         // 
         lblPriceBreakdown.Font = new Font("Segoe UI", 8F);
-        lblPriceBreakdown.ForeColor = Color.FromArgb(100, 116, 139);
-        lblPriceBreakdown.Location = new Point(12, 45);
+        lblPriceBreakdown.ForeColor = Color.FromArgb(102, 163, 191);
+        lblPriceBreakdown.Location = new Point(12, 47);
         lblPriceBreakdown.Name = "lblPriceBreakdown";
         lblPriceBreakdown.Size = new Size(420, 20);
         lblPriceBreakdown.TabIndex = 1;
@@ -209,7 +221,7 @@ partial class FrmNewOrder
         // 
         lblPrice.AutoSize = true;
         lblPrice.Font = new Font("Segoe UI", 24F, FontStyle.Bold);
-        lblPrice.ForeColor = Color.FromArgb(52, 211, 153);
+        lblPrice.ForeColor = Color.FromArgb(51, 104, 160);
         lblPrice.Location = new Point(12, 5);
         lblPrice.Name = "lblPrice";
         lblPrice.Size = new Size(106, 45);
@@ -220,7 +232,7 @@ partial class FrmNewOrder
         // 
         lblSecPickup.AutoSize = true;
         lblSecPickup.Font = new Font("Segoe UI Semibold", 9F, FontStyle.Bold);
-        lblSecPickup.ForeColor = Color.FromArgb(96, 165, 250);
+        lblSecPickup.ForeColor = Color.FromArgb(102, 163, 191);
         lblSecPickup.Location = new Point(30, 382);
         lblSecPickup.Name = "lblSecPickup";
         lblSecPickup.Size = new Size(86, 15);
@@ -230,17 +242,16 @@ partial class FrmNewOrder
         // lblPickupPrompt
         // 
         lblPickupPrompt.AutoSize = true;
-        lblPickupPrompt.Font = new Font("Segoe UI", 8.5F);
-        lblPickupPrompt.ForeColor = Color.FromArgb(148, 163, 184);
+        lblPickupPrompt.Font = new Font("Segoe UI", 8.5F, FontStyle.Bold);
+        lblPickupPrompt.ForeColor = Color.FromArgb(51, 104, 160);
         lblPickupPrompt.Location = new Point(30, 404);
         lblPickupPrompt.Name = "lblPickupPrompt";
-        lblPickupPrompt.Size = new Size(120, 15);
+        lblPickupPrompt.Size = new Size(125, 15);
         lblPickupPrompt.TabIndex = 14;
         lblPickupPrompt.Text = "Expected pickup date:";
         // 
         // dtpPickup
         // 
-        dtpPickup.CalendarMonthBackground = Color.FromArgb(30, 41, 59);
         dtpPickup.Font = new Font("Segoe UI", 10F);
         dtpPickup.Location = new Point(30, 422);
         dtpPickup.Name = "dtpPickup";
@@ -250,8 +261,8 @@ partial class FrmNewOrder
         // lblError
         // 
         lblError.Font = new Font("Segoe UI", 8.5F);
-        lblError.ForeColor = Color.FromArgb(248, 113, 113);
-        lblError.Location = new Point(30, 458);
+        lblError.ForeColor = Color.FromArgb(220, 53, 69);
+        lblError.Location = new Point(30, 455);
         lblError.Name = "lblError";
         lblError.Size = new Size(440, 18);
         lblError.TabIndex = 16;
@@ -259,42 +270,41 @@ partial class FrmNewOrder
         // 
         // btnSave
         // 
-        btnSave.BackColor = Color.FromArgb(37, 99, 235);
+        btnSave.ButtonType = HopeButtonType.Primary;
+        btnSave.PrimaryColor = Color.FromArgb(51, 104, 160);
+        btnSave.TextColor = Color.FromArgb(242, 239, 231);
+        btnSave.HoverTextColor = Color.White;
         btnSave.Cursor = Cursors.Hand;
-        btnSave.FlatAppearance.BorderSize = 0;
-        btnSave.FlatStyle = FlatStyle.Flat;
         btnSave.Font = new Font("Segoe UI", 10F, FontStyle.Bold);
-        btnSave.ForeColor = Color.White;
-        btnSave.Location = new Point(30, 485);
+        btnSave.Location = new Point(30, 480);
         btnSave.Name = "btnSave";
-        btnSave.Size = new Size(440, 44);
+        btnSave.Size = new Size(440, 42);
         btnSave.TabIndex = 17;
-        btnSave.Text = "💾  Save Order & Generate QR Ticket";
-        btnSave.UseVisualStyleBackColor = false;
+        btnSave.Text = "Save Order & Generate QR Ticket";
         btnSave.Click += btnSave_Click;
         // 
         // btnCancel
         // 
-        btnCancel.BackColor = Color.Transparent;
+        btnCancel.ButtonType = HopeButtonType.Default;
+        btnCancel.DefaultColor = Color.FromArgb(200, 223, 219);
+        btnCancel.BorderColor = Color.FromArgb(102, 163, 191);
+        btnCancel.TextColor = Color.FromArgb(51, 104, 160);
+        btnCancel.HoverTextColor = Color.FromArgb(51, 104, 160);
         btnCancel.Cursor = Cursors.Hand;
-        btnCancel.FlatAppearance.BorderSize = 0;
-        btnCancel.FlatStyle = FlatStyle.Flat;
         btnCancel.Font = new Font("Segoe UI", 9F);
-        btnCancel.ForeColor = Color.FromArgb(100, 116, 139);
-        btnCancel.Location = new Point(30, 538);
+        btnCancel.Location = new Point(30, 528);
         btnCancel.Name = "btnCancel";
-        btnCancel.Size = new Size(440, 32);
+        btnCancel.Size = new Size(440, 34);
         btnCancel.TabIndex = 18;
         btnCancel.Text = "Cancel";
-        btnCancel.UseVisualStyleBackColor = false;
         btnCancel.Click += btnCancel_Click;
         // 
         // FrmNewOrder
         // 
         AutoScaleDimensions = new SizeF(7F, 17F);
         AutoScaleMode = AutoScaleMode.Font;
-        BackColor = Color.FromArgb(15, 23, 42);
-        ClientSize = new Size(520, 595);
+        BackColor = Color.FromArgb(242, 239, 231);
+        ClientSize = new Size(520, 585);
         Controls.Add(lstCustomers);
         Controls.Add(btnCancel);
         Controls.Add(btnSave);
@@ -315,7 +325,7 @@ partial class FrmNewOrder
         Controls.Add(lblSecCustomer);
         Controls.Add(lblFormTitle);
         Font = new Font("Segoe UI", 9.5F);
-        ForeColor = Color.White;
+        ForeColor = Color.FromArgb(51, 104, 160);
         FormBorderStyle = FormBorderStyle.FixedDialog;
         MaximizeBox = false;
         Name = "FrmNewOrder";
@@ -332,15 +342,15 @@ partial class FrmNewOrder
     private Label lblFormTitle;
     private Label lblSecCustomer;
     private Label lblSearchPrompt;
-    private TextBox txtSearch;
-    private Button btnNewCustomer;
+    private HopeTextBox txtSearch;
+    private HopeButton btnNewCustomer;
     private Label lblSelectedCustomer;
     private ListBox lstCustomers;
     private Label lblSecService;
     private Label lblServicePrompt;
     private ComboBox cmbService;
     private Label lblWeightPrompt;
-    private TextBox txtWeight;
+    private HopeTextBox txtWeight;
     private Panel pnlPriceBox;
     private Label lblPrice;
     private Label lblPriceBreakdown;
@@ -348,6 +358,6 @@ partial class FrmNewOrder
     private Label lblPickupPrompt;
     private DateTimePicker dtpPickup;
     private Label lblError;
-    private Button btnSave;
-    private Button btnCancel;
+    private HopeButton btnSave;
+    private HopeButton btnCancel;
 }
