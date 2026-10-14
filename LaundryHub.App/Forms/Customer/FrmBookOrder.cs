@@ -21,6 +21,7 @@ public partial class FrmBookOrder : Form
         ResizeRedraw = true;
 
         UIThemeHelper.StyleStandardForm(this, pnlMainCard);
+        pnlMainCard.SizeChanged += (s, e) => UIThemeHelper.ApplyRoundedRegion(pnlMainCard, UIThemeHelper.ContentCardRadius);
         pnlHeader.Paint += (s, e) => UIThemeHelper.PaintGradientHeaderBar(pnlHeader, e);
 
         dtpPickup.MinDate = DateTime.Today;

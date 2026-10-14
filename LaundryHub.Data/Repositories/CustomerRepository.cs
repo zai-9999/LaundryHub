@@ -69,6 +69,11 @@ public class CustomerRepository : ICustomerRepository
 
     public void Archive(int customerId)
     {
+        if (HasActiveOrders(customerId))
+        {
+            throw new InvalidOperationException("Cannot archive customer with active orders. Please complete or cancel all orders first.");
+        }
+
         using var conn = _db.CreateConnection();
         conn.Execute("UPDATE customers SET is_archived = TRUE WHERE customer_id = @CustomerId",
             new { CustomerId = customerId });
@@ -88,5 +93,15 @@ public class CustomerRepository : ICustomerRepository
             SELECT COUNT(1) FROM customers
             WHERE phone = @Phone AND customer_id != @ExcludeId",
             new { Phone = phone, ExcludeId = excludeCustomerId }) > 0;
+    }
+
+    public bool HasActiveOrders(int customerId)
+    {
+        using var conn = _db.CreateConnection();
+        return conn.ExecuteScalar<int>(@"
+            SELECT COUNT(1) FROM orders
+            WHERE customer_id = @CustomerId AND is_archived = FALSE
+              AND status NOT IN ('Claimed', 'Cancelled')",
+            new { CustomerId = customerId }) > 0;
     }
 }

@@ -86,11 +86,35 @@ public partial class FrmAdminDashboard : Form
 
     private void btnLogout_Click(object? sender, EventArgs e) => this.Close();
 
-    private void btnManageStaff_Click(object? sender, EventArgs e) => new FrmManageStaff().ShowDialog(this);
-    private void btnServicePricing_Click(object? sender, EventArgs e) => new FrmServicePricing().ShowDialog(this);
-    private void btnExportReport_Click(object? sender, EventArgs e) => new FrmExportReport().ShowDialog(this);
-    private void btnStaffDashboard_Click(object? sender, EventArgs e) => new Staff.FrmStaffDashboard().ShowDialog(this);
-    private void btnCustomerRegistration_Click(object? sender, EventArgs e) => new Staff.FrmCustomerRegistration().ShowDialog(this);
+    private void btnManageStaff_Click(object? sender, EventArgs e)
+    {
+        using var f = new FrmManageStaff();
+        f.ShowDialog(this);
+    }
+
+    private void btnServicePricing_Click(object? sender, EventArgs e)
+    {
+        using var f = new FrmServicePricing();
+        f.ShowDialog(this);
+    }
+
+    private void btnExportReport_Click(object? sender, EventArgs e)
+    {
+        using var f = new FrmExportReport();
+        f.ShowDialog(this);
+    }
+
+    private void btnStaffDashboard_Click(object? sender, EventArgs e)
+    {
+        using var f = new Staff.FrmStaffDashboard();
+        f.ShowDialog(this);
+    }
+
+    private void btnCustomerRegistration_Click(object? sender, EventArgs e)
+    {
+        using var f = new Staff.FrmCustomerRegistration();
+        f.ShowDialog(this);
+    }
 
     private void btnNewOrder_Click(object? sender, EventArgs e)
     {

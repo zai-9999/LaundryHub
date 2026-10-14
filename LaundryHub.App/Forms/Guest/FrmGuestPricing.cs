@@ -13,6 +13,7 @@ public partial class FrmGuestPricing : Form
         DoubleBuffered = true;
         ResizeRedraw = true;
         UIThemeHelper.StyleStandardForm(this, pnlBody);
+        pnlBody.SizeChanged += (s, e) => UIThemeHelper.ApplyRoundedRegion(pnlBody, UIThemeHelper.ContentCardRadius);
         pnlHeader.Paint += (s, e) => UIThemeHelper.PaintGradientHeaderBar(pnlHeader, e);
         UIThemeHelper.StyleDataGridView(dgvPricing);
         LoadServices();

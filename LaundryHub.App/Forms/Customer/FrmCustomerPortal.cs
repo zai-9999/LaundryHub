@@ -15,6 +15,7 @@ public partial class FrmCustomerPortal : Form
         DoubleBuffered = true;
         ResizeRedraw = true;
         UIThemeHelper.StyleStandardForm(this, pnlBody);
+        pnlBody.SizeChanged += (s, e) => UIThemeHelper.ApplyRoundedRegion(pnlBody, UIThemeHelper.ContentCardRadius);
         UIThemeHelper.StyleDataGridView(dgvOrders);
 
         if (SessionManager.CurrentUser != null)

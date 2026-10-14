@@ -246,6 +246,7 @@ partial class FrmCustomerRegistration
         flpForm.Controls.Add(lblAddress);
         flpForm.Controls.Add(txtAddress);
         flpForm.Controls.Add(lblError);
+        flpForm.Controls.Add(flpButtons); 
         flpForm.Controls.Add(flpButtons);
         flpForm.Dock = DockStyle.Fill;
         flpForm.FlowDirection = FlowDirection.TopDown;

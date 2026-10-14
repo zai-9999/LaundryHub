@@ -34,6 +34,7 @@ partial class FrmLogin
         lblSeparator = new Label();
         btnSwitchToCustomer = new HopeButton();
         pnlCard.SuspendLayout();
+        ((System.ComponentModel.ISupportInitialize)picLogo).BeginInit();
         SuspendLayout();
         // 
         // pnlCard
@@ -51,18 +52,17 @@ partial class FrmLogin
         pnlCard.Controls.Add(lnkForgotPassword);
         pnlCard.Controls.Add(lblSeparator);
         pnlCard.Controls.Add(btnSwitchToCustomer);
-        pnlCard.Location = new Point(399, 43);
+        pnlCard.Location = new Point(327, 42);
         pnlCard.Margin = new Padding(3, 4, 3, 4);
         pnlCard.Name = "pnlCard";
-        pnlCard.Size = new Size(445, 667);
+        pnlCard.Size = new Size(445, 715);
         pnlCard.TabIndex = 0;
-        pnlCard.Region = new Region(RoundRectangle.CreateRoundRect(0, 0, 445, 667, 40));
         pnlCard.Paint += pnlCard_Paint;
         // 
         // picLogo
         // 
         picLogo.BackgroundImageLayout = ImageLayout.Center;
-        picLogo.Location = new Point(0, 30);
+        picLogo.Location = new Point(0, 24);
         picLogo.Name = "picLogo";
         picLogo.Size = new Size(445, 69);
         picLogo.SizeMode = PictureBoxSizeMode.Zoom;
@@ -73,7 +73,7 @@ partial class FrmLogin
         // 
         lblTitle.Font = new Font("Segoe UI", 22F, FontStyle.Bold);
         lblTitle.ForeColor = Color.FromArgb(51, 104, 160);
-        lblTitle.Location = new Point(0, 99);
+        lblTitle.Location = new Point(0, 96);
         lblTitle.Name = "lblTitle";
         lblTitle.Size = new Size(445, 48);
         lblTitle.TabIndex = 1;
@@ -90,14 +90,13 @@ partial class FrmLogin
         lblSubtitle.TabIndex = 2;
         lblSubtitle.Text = "Staff & Admin Portal";
         lblSubtitle.TextAlign = ContentAlignment.MiddleCenter;
-        lblSubtitle.Click += lblSubtitle_Click;
         // 
         // lblUser
         // 
         lblUser.AutoSize = true;
         lblUser.Font = new Font("Segoe UI", 8.5F, FontStyle.Bold);
         lblUser.ForeColor = Color.FromArgb(51, 104, 160);
-        lblUser.Location = new Point(62, 212);
+        lblUser.Location = new Point(62, 195);
         lblUser.Name = "lblUser";
         lblUser.Size = new Size(80, 20);
         lblUser.TabIndex = 3;
@@ -112,7 +111,7 @@ partial class FrmLogin
         txtUsername.Font = new Font("Segoe UI", 10F);
         txtUsername.ForeColor = Color.FromArgb(51, 104, 160);
         txtUsername.Hint = "Enter username";
-        txtUsername.Location = new Point(62, 236);
+        txtUsername.Location = new Point(62, 221);
         txtUsername.Margin = new Padding(3, 4, 3, 4);
         txtUsername.MaxLength = 32767;
         txtUsername.Multiline = false;
@@ -132,7 +131,7 @@ partial class FrmLogin
         lblPass.AutoSize = true;
         lblPass.Font = new Font("Segoe UI", 8.5F, FontStyle.Bold);
         lblPass.ForeColor = Color.FromArgb(51, 104, 160);
-        lblPass.Location = new Point(62, 308);
+        lblPass.Location = new Point(62, 283);
         lblPass.Name = "lblPass";
         lblPass.Size = new Size(76, 20);
         lblPass.TabIndex = 4;
@@ -147,7 +146,7 @@ partial class FrmLogin
         txtPassword.Font = new Font("Segoe UI", 10F);
         txtPassword.ForeColor = Color.FromArgb(51, 104, 160);
         txtPassword.Hint = "Enter password";
-        txtPassword.Location = new Point(62, 332);
+        txtPassword.Location = new Point(62, 309);
         txtPassword.Margin = new Padding(3, 4, 3, 4);
         txtPassword.MaxLength = 32767;
         txtPassword.Multiline = false;
@@ -166,7 +165,7 @@ partial class FrmLogin
         // 
         lblError.Font = new Font("Segoe UI", 8.5F);
         lblError.ForeColor = Color.FromArgb(220, 53, 69);
-        lblError.Location = new Point(62, 365);
+        lblError.Location = new Point(62, 355);
         lblError.Name = "lblError";
         lblError.Size = new Size(320, 24);
         lblError.TabIndex = 5;
@@ -183,7 +182,7 @@ partial class FrmLogin
         btnLogin.Font = new Font("Segoe UI", 10F, FontStyle.Bold);
         btnLogin.HoverTextColor = Color.White;
         btnLogin.InfoColor = Color.FromArgb(144, 147, 153);
-        btnLogin.Location = new Point(62, 407);
+        btnLogin.Location = new Point(62, 387);
         btnLogin.Margin = new Padding(3, 4, 3, 4);
         btnLogin.Name = "btnLogin";
         btnLogin.PrimaryColor = Color.FromArgb(51, 104, 160);
@@ -199,7 +198,7 @@ partial class FrmLogin
         // 
         lnkForgotPassword.Font = new Font("Segoe UI", 8.5F);
         lnkForgotPassword.LinkColor = Color.FromArgb(102, 163, 191);
-        lnkForgotPassword.Location = new Point(62, 464);
+        lnkForgotPassword.Location = new Point(62, 450);
         lnkForgotPassword.Name = "lnkForgotPassword";
         lnkForgotPassword.Size = new Size(320, 27);
         lnkForgotPassword.TabIndex = 6;
@@ -212,13 +211,12 @@ partial class FrmLogin
         // 
         lblSeparator.Font = new Font("Segoe UI", 8F);
         lblSeparator.ForeColor = Color.FromArgb(51, 104, 160);
-        lblSeparator.Location = new Point(0, 508);
+        lblSeparator.Location = new Point(0, 485);
         lblSeparator.Name = "lblSeparator";
         lblSeparator.Size = new Size(445, 24);
         lblSeparator.TabIndex = 7;
         lblSeparator.Text = "──── Customer Access ────";
         lblSeparator.TextAlign = ContentAlignment.MiddleCenter;
-        lblSeparator.Click += lblSeparator_Click;
         // 
         // btnSwitchToCustomer
         // 
@@ -230,7 +228,7 @@ partial class FrmLogin
         btnSwitchToCustomer.Font = new Font("Segoe UI", 10F, FontStyle.Bold);
         btnSwitchToCustomer.HoverTextColor = Color.FromArgb(51, 104, 160);
         btnSwitchToCustomer.InfoColor = Color.FromArgb(144, 147, 153);
-        btnSwitchToCustomer.Location = new Point(62, 536);
+        btnSwitchToCustomer.Location = new Point(62, 516);
         btnSwitchToCustomer.Margin = new Padding(3, 4, 3, 4);
         btnSwitchToCustomer.Name = "btnSwitchToCustomer";
         btnSwitchToCustomer.PrimaryColor = Color.FromArgb(64, 158, 255);
@@ -258,6 +256,7 @@ partial class FrmLogin
         Load += FrmLogin_Load;
         pnlCard.ResumeLayout(false);
         pnlCard.PerformLayout();
+        ((System.ComponentModel.ISupportInitialize)picLogo).EndInit();
         ResumeLayout(false);
     }
 

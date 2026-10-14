@@ -14,6 +14,7 @@ public partial class FrmServicePricing : Form
         DoubleBuffered = true;
         ResizeRedraw = true;
         UIThemeHelper.StyleStandardForm(this, pnlLeftCard);
+        pnlLeftCard.SizeChanged += (s, e) => UIThemeHelper.ApplyRoundedRegion(pnlLeftCard, UIThemeHelper.ContentCardRadius);
         pnlHeader.BackColor = Color.FromArgb(37, 78, 122);
         lblTitle.BackColor = Color.FromArgb(37, 78, 122);
         pnlContainer.BackColor = Color.FromArgb(240, 244, 248);

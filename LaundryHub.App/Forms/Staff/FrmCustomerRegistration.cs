@@ -24,6 +24,7 @@ public partial class FrmCustomerRegistration : Form
         DoubleBuffered = true;
         ResizeRedraw = true;
         UIThemeHelper.StyleStandardForm(this, pnlLeftCard);
+        pnlLeftCard.SizeChanged += (s, e) => UIThemeHelper.ApplyRoundedRegion(pnlLeftCard, UIThemeHelper.ContentCardRadius);
         pnlHeader.BackColor = Color.FromArgb(37, 78, 122);
         lblTitle.BackColor = Color.FromArgb(37, 78, 122);
         pnlContainer.BackColor = Color.FromArgb(240, 244, 248);
@@ -193,9 +194,17 @@ public partial class FrmCustomerRegistration : Form
 
         if (confirm == DialogResult.Yes)
         {
-            AppServices.Customers.Archive(_selectedCustomer.CustomerId);
-            ResetForm();
-            LoadCustomers();
+            try
+            {
+                AppServices.Customers.Archive(_selectedCustomer.CustomerId);
+                ResetForm();
+                LoadCustomers();
+                MessageBox.Show("Customer archived successfully.", "Success", MessageBoxButtons.OK, MessageBoxIcon.Information);
+            }
+            catch (InvalidOperationException ex)
+            {
+                MessageBox.Show(ex.Message, "Cannot Archive", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+            }
         }
     }
 

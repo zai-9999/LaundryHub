@@ -9,6 +9,18 @@ public partial class FrmLogin : Form
     public FrmLogin()
     {
         InitializeComponent();
+        DoubleBuffered = true;
+        ResizeRedraw = true;
+        UIThemeHelper.StyleAuthForm(this, pnlCard, btnLogin, btnSwitchToCustomer);
+        UIThemeHelper.LoadAuthLogo(picLogo);
+        CenterCardContents();
+        pnlCard.SizeChanged += (_, _) => CenterCardContents();
+    }
+
+    protected override void OnPaintBackground(PaintEventArgs e)
+    {
+        base.OnPaintBackground(e);
+        UIThemeHelper.PaintGradientBackground(this, e);
     }
 
     private void FrmLogin_Load(object? sender, EventArgs e)
@@ -16,14 +28,33 @@ public partial class FrmLogin : Form
         txtUsername.Focus();
     }
 
-    private void pnlCard_Paint(object? sender, PaintEventArgs e)
+    protected override bool ProcessCmdKey(ref Message msg, Keys keyData)
     {
-        var g = e.Graphics;
-        using var pen = new Pen(Color.FromArgb(59, 130, 246), 1);
-        g.DrawRectangle(pen, 0, 0, pnlCard.Width - 1, pnlCard.Height - 1);
+        if (keyData == Keys.Enter)
+        {
+            btnLogin_Click(btnLogin, EventArgs.Empty);
+            return true;
+        }
+        return base.ProcessCmdKey(ref msg, keyData);
     }
 
-    // ─── Event Handlers ──────────────────────────────────────────────────────
+    private void pnlCard_Paint(object? sender, PaintEventArgs e)
+    {
+        UIThemeHelper.PaintRoundedSolidCard(pnlCard, e, Color.White, UIThemeHelper.LoginCardRadius);
+    }
+
+    private void CenterCardContents()
+    {
+        UIThemeHelper.CenterLoginFields(
+            pnlCard,
+            picLogo, lblTitle, lblSubtitle,
+            lblUser, txtUsername,
+            lblPass, txtPassword,
+            lblError, btnLogin,
+            lnkForgotPassword, lblSeparator,
+            btnSwitchToCustomer);
+        lblError.TextAlign = ContentAlignment.MiddleCenter;
+    }
 
     private void btnLogin_Click(object? sender, EventArgs e)
     {
@@ -34,7 +65,7 @@ public partial class FrmLogin : Form
 
         var user = AppServices.Users.GetByUsername(username);
 
-        if (user == null || !BCrypt.Net.BCrypt.Verify(password, user.PasswordHash))
+        if (user == null || string.IsNullOrWhiteSpace(user.PasswordHash) || !BCrypt.Net.BCrypt.Verify(password, user.PasswordHash))
         {
             ShowError("Invalid username or password.");
             txtPassword.Clear();
@@ -49,22 +80,23 @@ public partial class FrmLogin : Form
         }
 
         SessionManager.Login(user);
+
+        if (user.Role == UserRole.Customer.ToString())
+        {
+            SessionManager.Logout();
+            ShowError("This portal is for Staff & Admin only. Please use the Customer Portal.");
+            txtPassword.Clear();
+            return;
+        }
+
         OpenDashboard();
     }
 
-    private void btnGuestLookup_Click(object? sender, EventArgs e)
+    private void btnSwitchToCustomer_Click(object? sender, EventArgs e)
     {
-        var guestForm = new Guest.FrmGuestLookup();
-        guestForm.FormClosed += (_, _) => this.Show();
-        guestForm.Show();
-        this.Hide();
-    }
-
-    private void btnCustomerRegister_Click(object? sender, EventArgs e)
-    {
-        var regForm = new Customer.FrmCustomerRegister();
-        regForm.FormClosed += (_, _) => this.Show();
-        regForm.Show();
+        var customerLogin = new FrmCustomerLogin();
+        customerLogin.FormClosed += (_, _) => this.Show();
+        customerLogin.Show();
         this.Hide();
     }
 
@@ -74,16 +106,13 @@ public partial class FrmLogin : Form
             "Forgot Password", MessageBoxButtons.OK, MessageBoxIcon.Information);
     }
 
-    // ─── Navigation ───────────────────────────────────────────────────────────
-
     private void OpenDashboard()
     {
         Form dashboard = SessionManager.Role switch
         {
-            UserRole.Admin   => new Admin.FrmAdminDashboard(),
-            UserRole.Staff   => new Staff.FrmStaffDashboard(),
-            UserRole.Customer => new Customer.FrmCustomerPortal(),
-            _                => throw new InvalidOperationException("Unknown role")
+            UserRole.Admin => new Admin.FrmAdminDashboard(),
+            UserRole.Staff => new Staff.FrmStaffDashboard(),
+            _ => throw new InvalidOperationException("Unknown role")
         };
 
         dashboard.FormClosed += (_, _) =>
@@ -97,8 +126,6 @@ public partial class FrmLogin : Form
         this.Hide();
     }
 
-    // ─── Validation ───────────────────────────────────────────────────────────
-
     private new bool Validate()
     {
         lblError.Visible = false;
@@ -111,7 +138,7 @@ public partial class FrmLogin : Form
 
     private void ShowError(string msg)
     {
-        lblError.Text    = msg;
+        lblError.Text = msg;
         lblError.Visible = true;
     }
 

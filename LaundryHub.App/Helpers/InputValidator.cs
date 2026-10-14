@@ -1,4 +1,5 @@
-﻿using System.Text.RegularExpressions;
+using ReaLTaiizor.Controls;
+using System.Text.RegularExpressions;
 
 namespace LaundryHub.App.Helpers;
 
@@ -24,6 +25,7 @@ public static class InputValidator
         return true;
     }
 
+    /// <summary>Standard WinForms TextBox overload.</summary>
     public static void RestrictToPhoneInput(TextBox box)
     {
         box.MaxLength = 16;
@@ -34,4 +36,16 @@ public static class InputValidator
             e.Handled = true;
         };
     }
-}
+
+    /// <summary>ReaLTaiizor HopeTextBox overload.</summary>
+    public static void RestrictToPhoneInput(HopeTextBox box)
+    {
+        box.MaxLength = 16;
+        box.KeyPress += (_, e) =>
+        {
+            if (char.IsControl(e.KeyChar) || e.KeyChar is >= '0' and <= '9') return;
+            if (e.KeyChar == '+' && box.SelectionStart == 0 && !box.Text.Contains('+')) return;
+            e.Handled = true;
+        };
+    }
+}

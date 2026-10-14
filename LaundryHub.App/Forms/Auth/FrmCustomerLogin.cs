@@ -1,7 +1,6 @@
 using LaundryHub.App.Helpers;
 using LaundryHub.Core.Enums;
 using BCrypt.Net;
-using System.IO;
 
 namespace LaundryHub.App.Forms.Auth;
 
@@ -13,25 +12,9 @@ public partial class FrmCustomerLogin : Form
         DoubleBuffered = true;
         ResizeRedraw = true;
         UIThemeHelper.StyleAuthForm(this, pnlCard, btnLogin, btnRegister, btnPricing, btnGuestLookup, btnSwitchToStaff);
-        LoadLogo();
+        UIThemeHelper.LoadAuthLogo(picLogo);
         CenterCardContents();
         pnlCard.SizeChanged += (_, _) => CenterCardContents();
-    }
-
-    private void LoadLogo()
-    {
-        try
-        {
-            var logoPath = Path.Combine(Application.StartupPath, "Resources", "logo.png");
-            if (File.Exists(logoPath))
-            {
-                picLogo.Image = Image.FromFile(logoPath);
-            }
-        }
-        catch
-        {
-            // If logo fails to load, continue without it
-        }
     }
 
     protected override void OnPaintBackground(PaintEventArgs e)

@@ -56,7 +56,7 @@ partial class FrmCustomerLogin
         pnlCard.Controls.Add(btnPricing);
         pnlCard.Controls.Add(btnGuestLookup);
         pnlCard.Controls.Add(btnSwitchToStaff);
-        pnlCard.Location = new Point(327, 40);
+        pnlCard.Location = new Point(301, 34);
         pnlCard.Margin = new Padding(3, 4, 3, 4);
         pnlCard.Name = "pnlCard";
         pnlCard.Size = new Size(445, 715);
@@ -209,22 +209,26 @@ partial class FrmCustomerLogin
         lblSeparator.Text = "──── or ────";
         lblSeparator.TextAlign = ContentAlignment.MiddleCenter;
         // 
-        // 
         // btnRegister
         // 
         btnRegister.BorderColor = Color.FromArgb(102, 163, 191);
         btnRegister.ButtonType = HopeButtonType.Default;
         btnRegister.Cursor = Cursors.Hand;
+        btnRegister.DangerColor = Color.FromArgb(245, 108, 108);
         btnRegister.DefaultColor = Color.FromArgb(200, 223, 219);
         btnRegister.Font = new Font("Segoe UI", 9.5F, FontStyle.Bold);
         btnRegister.HoverTextColor = Color.FromArgb(51, 104, 160);
+        btnRegister.InfoColor = Color.FromArgb(144, 147, 153);
         btnRegister.Location = new Point(62, 475);
         btnRegister.Margin = new Padding(3, 4, 3, 4);
         btnRegister.Name = "btnRegister";
+        btnRegister.PrimaryColor = Color.FromArgb(64, 158, 255);
         btnRegister.Size = new Size(320, 48);
+        btnRegister.SuccessColor = Color.FromArgb(103, 194, 58);
         btnRegister.TabIndex = 4;
         btnRegister.Text = "Register as Customer";
         btnRegister.TextColor = Color.FromArgb(51, 104, 160);
+        btnRegister.WarningColor = Color.FromArgb(230, 162, 60);
         btnRegister.Click += btnRegister_Click;
         // 
         // btnPricing
@@ -232,16 +236,21 @@ partial class FrmCustomerLogin
         btnPricing.BorderColor = Color.FromArgb(102, 163, 191);
         btnPricing.ButtonType = HopeButtonType.Default;
         btnPricing.Cursor = Cursors.Hand;
+        btnPricing.DangerColor = Color.FromArgb(245, 108, 108);
         btnPricing.DefaultColor = Color.FromArgb(242, 239, 231);
         btnPricing.Font = new Font("Segoe UI", 9.5F, FontStyle.Bold);
         btnPricing.HoverTextColor = Color.FromArgb(51, 104, 160);
+        btnPricing.InfoColor = Color.FromArgb(144, 147, 153);
         btnPricing.Location = new Point(62, 530);
         btnPricing.Margin = new Padding(3, 4, 3, 4);
         btnPricing.Name = "btnPricing";
+        btnPricing.PrimaryColor = Color.FromArgb(64, 158, 255);
         btnPricing.Size = new Size(320, 48);
+        btnPricing.SuccessColor = Color.FromArgb(103, 194, 58);
         btnPricing.TabIndex = 5;
-        btnPricing.Text = "🏷️ View Services & Pricing";
+        btnPricing.Text = "View Services & Pricing";
         btnPricing.TextColor = Color.FromArgb(51, 104, 160);
+        btnPricing.WarningColor = Color.FromArgb(230, 162, 60);
         btnPricing.Click += btnPricing_Click;
         // 
         // btnGuestLookup
@@ -249,16 +258,21 @@ partial class FrmCustomerLogin
         btnGuestLookup.BorderColor = Color.FromArgb(102, 163, 191);
         btnGuestLookup.ButtonType = HopeButtonType.Default;
         btnGuestLookup.Cursor = Cursors.Hand;
+        btnGuestLookup.DangerColor = Color.FromArgb(245, 108, 108);
         btnGuestLookup.DefaultColor = Color.FromArgb(200, 223, 219);
         btnGuestLookup.Font = new Font("Segoe UI", 9.5F, FontStyle.Bold);
         btnGuestLookup.HoverTextColor = Color.FromArgb(51, 104, 160);
+        btnGuestLookup.InfoColor = Color.FromArgb(144, 147, 153);
         btnGuestLookup.Location = new Point(62, 585);
         btnGuestLookup.Margin = new Padding(3, 4, 3, 4);
         btnGuestLookup.Name = "btnGuestLookup";
+        btnGuestLookup.PrimaryColor = Color.FromArgb(64, 158, 255);
         btnGuestLookup.Size = new Size(320, 48);
+        btnGuestLookup.SuccessColor = Color.FromArgb(103, 194, 58);
         btnGuestLookup.TabIndex = 6;
         btnGuestLookup.Text = "Check Order Status (No Account)";
         btnGuestLookup.TextColor = Color.FromArgb(51, 104, 160);
+        btnGuestLookup.WarningColor = Color.FromArgb(230, 162, 60);
         btnGuestLookup.Click += btnGuestLookup_Click;
         // 
         // btnSwitchToStaff
@@ -266,16 +280,21 @@ partial class FrmCustomerLogin
         btnSwitchToStaff.BorderColor = Color.FromArgb(102, 163, 191);
         btnSwitchToStaff.ButtonType = HopeButtonType.Default;
         btnSwitchToStaff.Cursor = Cursors.Hand;
+        btnSwitchToStaff.DangerColor = Color.FromArgb(245, 108, 108);
         btnSwitchToStaff.DefaultColor = Color.FromArgb(200, 223, 219);
         btnSwitchToStaff.Font = new Font("Segoe UI", 9.5F, FontStyle.Bold);
         btnSwitchToStaff.HoverTextColor = Color.FromArgb(51, 104, 160);
+        btnSwitchToStaff.InfoColor = Color.FromArgb(144, 147, 153);
         btnSwitchToStaff.Location = new Point(62, 640);
         btnSwitchToStaff.Margin = new Padding(3, 4, 3, 4);
         btnSwitchToStaff.Name = "btnSwitchToStaff";
+        btnSwitchToStaff.PrimaryColor = Color.FromArgb(64, 158, 255);
         btnSwitchToStaff.Size = new Size(320, 48);
+        btnSwitchToStaff.SuccessColor = Color.FromArgb(103, 194, 58);
         btnSwitchToStaff.TabIndex = 7;
         btnSwitchToStaff.Text = "Switch to Staff / Admin Portal";
         btnSwitchToStaff.TextColor = Color.FromArgb(51, 104, 160);
+        btnSwitchToStaff.WarningColor = Color.FromArgb(230, 162, 60);
         btnSwitchToStaff.Click += btnSwitchToStaff_Click;
         // 
         // FrmCustomerLogin

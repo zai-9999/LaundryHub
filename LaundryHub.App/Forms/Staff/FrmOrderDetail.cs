@@ -20,6 +20,8 @@ public partial class FrmOrderDetail : Form
         DoubleBuffered = true;
         ResizeRedraw = true;
         UIThemeHelper.StyleStandardForm(this, pnlLeftCard, pnlRightCard);
+        pnlLeftCard.SizeChanged += (s, e) => UIThemeHelper.ApplyRoundedRegion(pnlLeftCard, UIThemeHelper.ContentCardRadius);
+        pnlRightCard.SizeChanged += (s, e) => UIThemeHelper.ApplyRoundedRegion(pnlRightCard, UIThemeHelper.ContentCardRadius);
         pnlHeader.BackColor = Color.FromArgb(37, 78, 122);
         lblOrderNumber.BackColor = Color.FromArgb(37, 78, 122);
         pnlContainer.BackColor = Color.FromArgb(240, 244, 248);

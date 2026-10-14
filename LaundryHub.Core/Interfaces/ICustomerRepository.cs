@@ -13,4 +13,5 @@ public interface ICustomerRepository
     void Archive(int customerId);
     void Restore(int customerId);
     bool PhoneExists(string phone, int excludeCustomerId = 0);
+    bool HasActiveOrders(int customerId);
 }

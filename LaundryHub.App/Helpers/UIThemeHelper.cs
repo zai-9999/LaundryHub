@@ -1,4 +1,5 @@
 using System.Drawing.Drawing2D;
+using System.IO;
 using System.Runtime.InteropServices;
 using ReaLTaiizor;
 using ReaLTaiizor.Controls;
@@ -139,6 +140,20 @@ public static class UIThemeHelper
         }
     }
 
+    public static void LoadAuthLogo(PictureBox pictureBox)
+    {
+        try
+        {
+            var logoPath = Path.Combine(Application.StartupPath, "Resources", "logo.png");
+            if (File.Exists(logoPath))
+                pictureBox.Image = Image.FromFile(logoPath);
+        }
+        catch
+        {
+            // Continue without a logo if the file is missing.
+        }
+    }
+
     public static void CenterCardOnForm(Form form, Control card)
     {
         int width = form.ClientSize.Width;
@@ -161,6 +176,8 @@ public static class UIThemeHelper
     /// Applies the login design language to a standard dashboard / dialog shell:
     /// rounded window chrome + the signature gradient backdrop. Pass the main
     /// white card (if any) so it keeps rounded corners on resize.
+    /// Note: If cards need to maintain rounded corners on resize, handle SizeChanged
+    /// in the form itself and call ApplyRoundedRegion.
     /// </summary>
     public static void StyleStandardForm(Form form, params Control[] contentCards)
     {
@@ -173,7 +190,6 @@ public static class UIThemeHelper
             {
                 card.BackColor = CardWhite;
                 ApplyRoundedRegion(card, ContentCardRadius);
-                card.SizeChanged += (_, _) => ApplyRoundedRegion(card, ContentCardRadius);
             }
         }
     }
@@ -239,9 +255,10 @@ public static class UIThemeHelper
 
         foreach (var control in fields)
         {
-            bool stretchFull = control is Label label
-                && !label.AutoSize
-                && (label.TextAlign is ContentAlignment.MiddleCenter or ContentAlignment.TopCenter or ContentAlignment.BottomCenter);
+            bool stretchFull = control is PictureBox
+                || (control is Label label
+                    && !label.AutoSize
+                    && (label.TextAlign is ContentAlignment.MiddleCenter or ContentAlignment.TopCenter or ContentAlignment.BottomCenter));
 
             if (stretchFull)
             {

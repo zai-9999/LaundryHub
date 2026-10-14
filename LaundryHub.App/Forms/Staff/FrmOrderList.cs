@@ -15,16 +15,6 @@ public partial class FrmOrderList : Form
         pnlTopBar.BackColor = Color.FromArgb(37, 78, 122);
         lblTitle.BackColor = Color.FromArgb(37, 78, 122);
 
-        // Style the legend bar to match the gradient header, with cream text
-        pnlLegend.BackColor = Color.FromArgb(37, 78, 122);
-        pnlLegend.Padding = new Padding(16, 6, 0, 6);
-        foreach (Control c in pnlLegend.Controls)
-        {
-            // Keep the dot labels their status colour; make the text labels cream
-            if (c is Label lbl && !new[] { "lblDotWashing","lblDotDrying","lblDotReady","lblDotClaimed","lblDotCancelled" }.Contains(lbl.Name))
-                lbl.ForeColor = Color.FromArgb(220, 235, 245);
-        }
-
         UIThemeHelper.StyleDataGridView(dgvOrders, 34);
         dtpFilter.Value = DateTime.Today;
         LoadOrders();

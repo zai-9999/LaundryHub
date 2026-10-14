@@ -11,18 +11,55 @@ public partial class FrmCustomerRegister : Form
     public FrmCustomerRegister()
     {
         InitializeComponent();
+        DoubleBuffered = true;
+        ResizeRedraw = true;
+        UIThemeHelper.StyleAuthForm(this, pnlCard, btnRegister, btnBack);
+        UIThemeHelper.LoadAuthLogo(picLogo);
+        CenterCardContents();
+        pnlCard.SizeChanged += (_, _) => CenterCardContents();
         InputValidator.RestrictToPhoneInput(txtPhone);
+    }
+
+    protected override void OnPaintBackground(PaintEventArgs e)
+    {
+        base.OnPaintBackground(e);
+        UIThemeHelper.PaintGradientBackground(this, e);
+    }
+
+    protected override bool ProcessCmdKey(ref Message msg, Keys keyData)
+    {
+        if (keyData == Keys.Enter)
+        {
+            btnRegister_Click(btnRegister, EventArgs.Empty);
+            return true;
+        }
+        return base.ProcessCmdKey(ref msg, keyData);
     }
 
     private void pnlCard_Paint(object? sender, PaintEventArgs e)
     {
-        using var pen = new Pen(Color.FromArgb(59, 130, 246), 1);
-        e.Graphics.DrawRectangle(pen, 0, 0, pnlCard.Width - 1, pnlCard.Height - 1);
+        UIThemeHelper.PaintRoundedSolidCard(pnlCard, e, Color.White, UIThemeHelper.LoginCardRadius);
+    }
+
+    private void CenterCardContents()
+    {
+        UIThemeHelper.CenterLoginFields(
+            pnlCard,
+            picLogo, lblTitle, lblSub,
+            lblFullName, txtFullName,
+            lblPhone, txtPhone,
+            lblUsername, txtUsername,
+            lblPassword, txtPassword,
+            lblConfirmPassword, txtConfirmPassword,
+            lblEmail, txtEmail,
+            lblAddress, txtAddress,
+            lblError, btnRegister, btnBack);
+        lblError.TextAlign = ContentAlignment.MiddleCenter;
     }
 
     private void btnBack_Click(object? sender, EventArgs e)
     {
-        this.Close();
+        Close();
     }
 
     private void btnRegister_Click(object? sender, EventArgs e)
@@ -37,7 +74,6 @@ public partial class FrmCustomerRegister : Form
 
         try
         {
-            // 1. Create User
             var user = new User
             {
                 Username = username,
@@ -52,7 +88,6 @@ public partial class FrmCustomerRegister : Form
             var createdUser = AppServices.Users.GetByUsername(username);
             int? userId = createdUser?.UserId;
 
-            // 2. Create Customer Profile
             var customer = new CustomerModel
             {
                 UserId = userId,
@@ -63,9 +98,13 @@ public partial class FrmCustomerRegister : Form
             };
             AppServices.Customers.Add(customer);
 
-            MessageBox.Show("Account successfully created! You may now log in to view your orders.", "Registration Complete", MessageBoxButtons.OK, MessageBoxIcon.Information);
+            MessageBox.Show(
+                "Account successfully created! You may now log in to view your orders.",
+                "Registration Complete",
+                MessageBoxButtons.OK,
+                MessageBoxIcon.Information);
 
-            this.Close();
+            Close();
         }
         catch (Exception ex)
         {
@@ -126,14 +165,12 @@ public partial class FrmCustomerRegister : Form
             return false;
         }
 
-        if (!string.IsNullOrWhiteSpace(txtEmail.Text))
+        if (!string.IsNullOrWhiteSpace(txtEmail.Text)
+            && !Regex.IsMatch(txtEmail.Text.Trim(), @"^[^@\s]+@[^@\s]+\.[^@\s]+$"))
         {
-            if (!Regex.IsMatch(txtEmail.Text.Trim(), @"^[^@\s]+@[^@\s]+\.[^@\s]+$"))
-            {
-                ShowError("Please enter a valid email address.");
-                txtEmail.Focus();
-                return false;
-            }
+            ShowError("Please enter a valid email address.");
+            txtEmail.Focus();
+            return false;
         }
 
         return true;
@@ -141,7 +178,7 @@ public partial class FrmCustomerRegister : Form
 
     private void ShowError(string msg)
     {
-        lblError.Text = $"⚠ {msg}";
+        lblError.Text = msg;
         lblError.Visible = true;
     }
 }

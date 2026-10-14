@@ -133,10 +133,10 @@ partial class FrmOrderList
         lblTitle.TabIndex = 0;
         lblTitle.Text = "All Orders";
         lblTitle.TextAlign = ContentAlignment.MiddleLeft;
-        // 
+        //
         // pnlLegend
-        // 
-        pnlLegend.BackColor = Color.FromArgb(242, 239, 231);
+        //
+        pnlLegend.BackColor = Color.FromArgb(37, 78, 122);
         pnlLegend.Controls.Add(lblDotCancelled);
         pnlLegend.Controls.Add(lblCancelled);
         pnlLegend.Controls.Add(lblDotClaimed);
@@ -150,7 +150,7 @@ partial class FrmOrderList
         pnlLegend.Dock = DockStyle.Top;
         pnlLegend.Location = new Point(0, 64);
         pnlLegend.Name = "pnlLegend";
-        pnlLegend.Padding = new Padding(16, 4, 0, 0);
+        pnlLegend.Padding = new Padding(16, 6, 0, 6);
         pnlLegend.Size = new Size(1050, 28);
         pnlLegend.TabIndex = 1;
         // 
@@ -164,12 +164,12 @@ partial class FrmOrderList
         lblDotCancelled.Size = new Size(15, 15);
         lblDotCancelled.TabIndex = 8;
         lblDotCancelled.Text = "●";
-        // 
+        //
         // lblCancelled
-        // 
+        //
         lblCancelled.AutoSize = true;
         lblCancelled.Font = new Font("Segoe UI", 8.5F);
-        lblCancelled.ForeColor = Color.FromArgb(51, 104, 160);
+        lblCancelled.ForeColor = Color.FromArgb(220, 235, 245);
         lblCancelled.Location = new Point(514, 4);
         lblCancelled.Name = "lblCancelled";
         lblCancelled.Size = new Size(59, 15);
@@ -186,12 +186,12 @@ partial class FrmOrderList
         lblDotClaimed.Size = new Size(15, 15);
         lblDotClaimed.TabIndex = 6;
         lblDotClaimed.Text = "●";
-        // 
+        //
         // lblClaimed
-        // 
+        //
         lblClaimed.AutoSize = true;
         lblClaimed.Font = new Font("Segoe UI", 8.5F);
-        lblClaimed.ForeColor = Color.FromArgb(51, 104, 160);
+        lblClaimed.ForeColor = Color.FromArgb(220, 235, 245);
         lblClaimed.Location = new Point(394, 4);
         lblClaimed.Name = "lblClaimed";
         lblClaimed.Size = new Size(51, 15);
@@ -208,12 +208,12 @@ partial class FrmOrderList
         lblDotReady.Size = new Size(15, 15);
         lblDotReady.TabIndex = 4;
         lblDotReady.Text = "●";
-        // 
+        //
         // lblReady
-        // 
+        //
         lblReady.AutoSize = true;
         lblReady.Font = new Font("Segoe UI", 8.5F);
-        lblReady.ForeColor = Color.FromArgb(51, 104, 160);
+        lblReady.ForeColor = Color.FromArgb(220, 235, 245);
         lblReady.Location = new Point(274, 4);
         lblReady.Name = "lblReady";
         lblReady.Size = new Size(96, 15);
@@ -230,12 +230,12 @@ partial class FrmOrderList
         lblDotDrying.Size = new Size(15, 15);
         lblDotDrying.TabIndex = 2;
         lblDotDrying.Text = "●";
-        // 
+        //
         // lblDrying
-        // 
+        //
         lblDrying.AutoSize = true;
         lblDrying.Font = new Font("Segoe UI", 8.5F);
-        lblDrying.ForeColor = Color.FromArgb(51, 104, 160);
+        lblDrying.ForeColor = Color.FromArgb(220, 235, 245);
         lblDrying.Location = new Point(154, 4);
         lblDrying.Name = "lblDrying";
         lblDrying.Size = new Size(42, 15);
@@ -252,12 +252,12 @@ partial class FrmOrderList
         lblDotWashing.Size = new Size(15, 15);
         lblDotWashing.TabIndex = 0;
         lblDotWashing.Text = "●";
-        // 
+        //
         // lblWashing
-        // 
+        //
         lblWashing.AutoSize = true;
         lblWashing.Font = new Font("Segoe UI", 8.5F);
-        lblWashing.ForeColor = Color.FromArgb(51, 104, 160);
+        lblWashing.ForeColor = Color.FromArgb(220, 235, 245);
         lblWashing.Location = new Point(34, 4);
         lblWashing.Name = "lblWashing";
         lblWashing.Size = new Size(54, 15);
