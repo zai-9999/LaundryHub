@@ -67,9 +67,23 @@ public partial class FrmGuestLookup : Form
             return;
         }
 
+        // Throttle guest lookup attempts per machine to reduce enumeration abuse
+        var key = "guestlookup:machine";
+        var limit = 8;
+        var window = TimeSpan.FromMinutes(5);
+        var lockout = TimeSpan.FromMinutes(10);
+
+        if (!ThrottleService.IsAllowed(key, limit, window, lockout))
+        {
+            var rem = ThrottleService.GetRemainingLockout(key);
+            ShowError($"Too many lookup attempts. Try again in {Math.Ceiling(rem.TotalMinutes)} minutes.");
+            return;
+        }
+
         var order = AppServices.Orders.GetByOrderNumber(orderNo);
         if (order == null)
         {
+            ThrottleService.RegisterAttempt(key, limit, window, lockout);
             ShowError("Order not found. Please verify the order number on your ticket.");
             return;
         }

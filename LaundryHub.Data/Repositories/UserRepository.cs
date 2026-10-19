@@ -26,6 +26,14 @@ public class UserRepository : IUserRepository
             new { UserId = userId });
     }
 
+    public User? GetByEmail(string email)
+    {
+        using var conn = _db.CreateConnection();
+        return conn.QueryFirstOrDefault<User>(
+            "SELECT * FROM users WHERE email = @Email AND is_active = TRUE",
+            new { Email = email });
+    }
+
     public IEnumerable<User> GetAllStaff()
     {
         using var conn = _db.CreateConnection();
@@ -72,5 +80,12 @@ public class UserRepository : IUserRepository
         return conn.ExecuteScalar<int>(
             "SELECT COUNT(1) FROM users WHERE email = @Email",
             new { Email = email }) > 0;
+    }
+
+    public void SetPasswordHash(int userId, string passwordHash)
+    {
+        using var conn = _db.CreateConnection();
+        conn.Execute("UPDATE users SET password_hash = @Hash WHERE user_id = @UserId",
+            new { Hash = passwordHash, UserId = userId });
     }
 }
