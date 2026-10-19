@@ -10,7 +10,7 @@ public partial class FrmOrderDetail : Form
     private Order _order;
     private CustomerModel? _customer;
 
-    public FrmOrderDetail() : this(new Order { OrderNumber = "LH-DEMO-001", Status = "Washing", TotalAmount = 260.00m, WeightKg = 4.0m })
+    public FrmOrderDetail() : this(new Order { OrderNumber = "LH-DEMO-001", Status = "Booked", TotalAmount = 260.00m, WeightKg = 4.0m })
     {
     }
 
@@ -68,8 +68,13 @@ public partial class FrmOrderDetail : Form
         catch { }
 
         // Update button states
-        btnAdvanceStatus.Visible = _order.Status is "Washing" or "Drying";
-        if (_order.Status == "Washing")
+        btnAdvanceStatus.Visible = _order.Status is "Booked" or "Washing" or "Drying";
+        if (_order.Status == "Booked")
+        {
+            btnAdvanceStatus.Text = "🧺 Start Washing";
+            btnAdvanceStatus.BackColor = Color.FromArgb(14, 165, 233);
+        }
+        else if (_order.Status == "Washing")
         {
             btnAdvanceStatus.Text = "🌀 Mark as Drying";
             btnAdvanceStatus.BackColor = Color.FromArgb(14, 165, 233);
@@ -89,6 +94,10 @@ public partial class FrmOrderDetail : Form
         lblStatusBadge.Text = _order.Status.ToUpper();
         switch (_order.Status)
         {
+            case "Booked":
+                lblStatusBadge.BackColor = Color.FromArgb(30, 41, 59);
+                lblStatusBadge.ForeColor = Color.FromArgb(203, 213, 225);
+                break;
             case "Washing":
                 lblStatusBadge.BackColor = Color.FromArgb(30, 58, 138);
                 lblStatusBadge.ForeColor = Color.FromArgb(147, 197, 253);
@@ -116,8 +125,9 @@ public partial class FrmOrderDetail : Form
     {
         string nextStatus = _order.Status switch
         {
+            "Booked"  => "Washing",
             "Washing" => "Drying",
-            "Drying" => "Ready for Pickup",
+            "Drying"  => "Ready for Pickup",
             _ => _order.Status
         };
 

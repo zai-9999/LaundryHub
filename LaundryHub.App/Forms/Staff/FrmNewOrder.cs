@@ -90,14 +90,14 @@ public partial class FrmNewOrder : Form
         var kg = decimal.Parse(txtWeight.Text);
         var total = svc.ComputePrice(kg);
 
-        var order = new Order
+            var order = new Order
         {
             OrderNumber = AppServices.Orders.GenerateOrderNumber(),
             CustomerId = _selectedCustomer!.CustomerId,
             ServiceId = svc.ServiceId,
             WeightKg = kg,
             TotalAmount = total,
-            Status = "Washing",
+            Status = "Booked",
             CreatedBy = SessionManager.CurrentUser?.UserId,
             PickupDate = dtpPickup.Value.Date,
             ServiceName = svc.ServiceName,

@@ -60,13 +60,13 @@ public partial class FrmCustomerPortal : Form
         var orders = AppServices.Orders.GetByCustomer(_customer.CustomerId).ToList();
 
         // Update stats
-        lblActiveStat.Text = orders.Count(o => o.Status is "Washing" or "Drying").ToString();
+        lblActiveStat.Text = orders.Count(o => o.Status is "Booked" or "Washing" or "Drying").ToString();
         lblReadyStat.Text = orders.Count(o => o.Status == "Ready for Pickup").ToString();
         lblTotalStat.Text = orders.Count.ToString();
 
         if (chkActiveOnly.Checked)
         {
-            orders = orders.Where(o => o.Status is "Washing" or "Drying" or "Ready for Pickup").ToList();
+            orders = orders.Where(o => o.Status is "Booked" or "Washing" or "Drying" or "Ready for Pickup").ToList();
         }
 
         dgvOrders.DataSource = orders.Select(o => new
