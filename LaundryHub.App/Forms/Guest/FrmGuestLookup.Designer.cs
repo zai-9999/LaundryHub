@@ -298,7 +298,7 @@ partial class FrmGuestLookup
         lblStep0.Name = "lblStep0";
         lblStep0.Size = new Size(118, 36);
         lblStep0.TabIndex = 0;
-        lblStep0.Text = "🧺 Washing";
+        lblStep0.Text = "📅 Booked";
         lblStep0.TextAlign = ContentAlignment.MiddleCenter;
         // 
         // lblTimelineHeader

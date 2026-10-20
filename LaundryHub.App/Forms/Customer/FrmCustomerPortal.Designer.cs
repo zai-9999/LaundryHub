@@ -203,7 +203,7 @@ partial class FrmCustomerPortal
         chkActiveOnly.Padding = new Padding(10, 0, 0, 0);
         chkActiveOnly.Size = new Size(302, 37);
         chkActiveOnly.TabIndex = 1;
-        chkActiveOnly.Text = "Show active only (Washing / Drying / Ready)";
+        chkActiveOnly.Text = "Show active only (Booked / Washing / Drying / Ready)";
         chkActiveOnly.UseVisualStyleBackColor = true;
         chkActiveOnly.CheckedChanged += chkActiveOnly_CheckedChanged;
         // 

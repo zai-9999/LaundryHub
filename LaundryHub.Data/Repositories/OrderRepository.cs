@@ -83,6 +83,16 @@ public class OrderRepository : IOrderRepository
             order);
     }
 
+    public bool ConfirmDropOff(int orderId)
+    {
+        using var conn = _db.CreateConnection();
+        return conn.Execute(@"
+            UPDATE orders
+            SET status = 'Washing', updated_at = NOW()
+            WHERE order_id = @OrderId AND status = 'Booked'",
+            new { OrderId = orderId }) > 0;
+    }
+
     public void UpdateStatus(int orderId, string newStatus, string? cancelReason = null)
     {
         using var conn = _db.CreateConnection();

@@ -123,9 +123,19 @@ public partial class FrmOrderDetail : Form
 
     private void btnAdvanceStatus_Click(object? sender, EventArgs e)
     {
+        if (_order.Status == "Booked")
+        {
+            if (AppServices.Orders.ConfirmDropOff(_order.OrderId))
+            {
+                RefreshOrderData();
+                MessageBox.Show("Customer drop-off confirmed. Order status is now 'Washing'.", "Drop-off Confirmed", MessageBoxButtons.OK, MessageBoxIcon.Information);
+            }
+
+            return;
+        }
+
         string nextStatus = _order.Status switch
         {
-            "Booked"  => "Washing",
             "Washing" => "Drying",
             "Drying"  => "Ready for Pickup",
             _ => _order.Status

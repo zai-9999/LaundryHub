@@ -103,6 +103,7 @@ public partial class FrmGuestLookup : Form
         lblResultPayment.Text = order.PaymentRecorded ? "✔ Paid" : "⏳ Unpaid";
         lblResultPayment.ForeColor = order.PaymentRecorded ? Color.FromArgb(52, 211, 153) : Color.FromArgb(248, 113, 113);
         lblResultPickup.Text = order.PickupDate?.ToString("MMMM dd, yyyy") ?? "Pending schedule";
+        lblTimelineHeader.Text = $"Order Progress Timeline — Status: {order.Status}";
 
         UpdateTimeline(order.Status);
         pnlResult.Visible = true;
@@ -110,6 +111,8 @@ public partial class FrmGuestLookup : Form
 
     private void UpdateTimeline(string status)
     {
+        lblStep0.Text = status == "Booked" ? "📅 Booked" : "🧺 Washing";
+
         int activeIdx = status switch
         {
             "Washing"          => 0,

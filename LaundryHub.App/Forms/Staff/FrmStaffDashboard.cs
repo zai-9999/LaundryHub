@@ -75,6 +75,7 @@ public partial class FrmStaffDashboard : Form
         if (dgvOrders.Columns[e.ColumnIndex].Name != "Status") return;
         e.CellStyle.ForeColor = e.Value?.ToString() switch
         {
+            "Booked" => Color.FromArgb(203, 213, 225),
             "Washing" => Color.FromArgb(251, 191, 36),
             "Drying" => Color.FromArgb(96, 165, 250),
             "Ready for Pickup" => Color.FromArgb(52, 211, 153),
