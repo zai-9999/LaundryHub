@@ -93,8 +93,8 @@ public partial class FrmServicePricing : Form
         try
         {
             var name = txtServiceName.Text.Trim();
-            var price = Math.Round(decimal.Parse(txtPricePerKilo.Text.Trim()), 2, MidpointRounding.AwayFromZero);
-            var minWeight = Math.Round(decimal.Parse(txtMinWeight.Text.Trim()), 2, MidpointRounding.AwayFromZero);
+            InputValidator.IsValidPrice(txtPricePerKilo.Text, out var price, out _, fieldName: "Price per kilo", min: 1.00m, max: 10000m);
+            InputValidator.IsValidWeight(txtMinWeight.Text, out var minWeight, out _, min: 0.5m, max: 50m);
 
             if (_editingServiceId > 0 && _selectedService != null)
             {

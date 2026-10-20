@@ -39,7 +39,7 @@ public partial class FrmCustomerPortal : Form
         {
             if (_customer != null)
             {
-                DataCache.Invalidate($"customer_orders_{_customer.CustomerId}");
+                DataCache.Invalidate($"portal_customer_orders_{_customer.CustomerId}");
                 await LoadOrdersAsync();
             }
         });
@@ -76,7 +76,7 @@ public partial class FrmCustomerPortal : Form
             var f = new FrmUpdateProfile(_customer, _user);
             if (f.ShowDialog(this) == DialogResult.OK)
             {
-                DataCache.Invalidate($"customer_{_user.UserId}");
+                DataCache.Invalidate($"portal_customer_{_user.UserId}");
                 await LoadCustomerDataAsync();
             }
         }
@@ -93,7 +93,7 @@ public partial class FrmCustomerPortal : Form
         var bookForm = new FrmBookOrder(_customer, _user);
         if (bookForm.ShowDialog(this) == DialogResult.OK && bookForm.CreatedOrder != null)
         {
-            DataCache.Invalidate($"customer_orders_{_customer.CustomerId}");
+            DataCache.Invalidate($"portal_customer_orders_{_customer.CustomerId}");
             await LoadOrdersAsync();
             ShowTicketModal(bookForm.CreatedOrder);
         }
@@ -124,7 +124,7 @@ public partial class FrmCustomerPortal : Form
 
         try
         {
-            var cacheKey = $"customer_{_user.UserId}";
+            var cacheKey = $"portal_customer_{_user.UserId}";
             _customer = await DataCache.GetOrAddAsync(cacheKey,
                 () => Task.Run(() => AppServices.Customers.GetByUserId(_user.UserId)),
                 TimeSpan.FromSeconds(30));
@@ -146,7 +146,7 @@ public partial class FrmCustomerPortal : Form
     {
         if (_customer == null) return;
 
-        var cacheKey = $"customer_orders_{_customer.CustomerId}";
+        var cacheKey = $"portal_customer_orders_{_customer.CustomerId}";
         var orders = await DataCache.GetOrAddAsync(cacheKey,
             () => Task.Run(() => AppServices.Orders.GetByCustomer(_customer.CustomerId).ToList()),
             TimeSpan.FromSeconds(30));
@@ -155,7 +155,7 @@ public partial class FrmCustomerPortal : Form
 
         this.SafeInvoke(() =>
         {
-            lblActiveStat.Text = orders.Count(o => o.Status is "Booked" or "Washing" or "Drying").ToString();
+            lblActiveStat.Text = orders.Count(o => o.Status is "Washing" or "Drying").ToString();
             lblReadyStat.Text = orders.Count(o => o.Status == "Ready for Pickup").ToString();
             lblTotalStat.Text = orders.Count.ToString();
 
@@ -171,7 +171,7 @@ public partial class FrmCustomerPortal : Form
 
         if (chkActiveOnly.Checked)
         {
-            filtered = filtered.Where(o => o.Status is "Booked" or "Washing" or "Drying" or "Ready for Pickup");
+            filtered = filtered.Where(o => o.Status is "Washing" or "Drying" or "Ready for Pickup");
         }
 
         var query = pnlHeader.SearchBox.Text.Trim();

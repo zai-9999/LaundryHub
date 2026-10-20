@@ -109,7 +109,7 @@ public partial class FrmGuestLookup : Form
 
         try
         {
-            var orderCacheKey = $"order_lookup_{orderNo}";
+            var orderCacheKey = $"guest_order_{orderNo}";
             var order = await DataCache.GetOrAddAsync(orderCacheKey,
                 () => Task.Run(() => AppServices.Orders.GetByOrderNumber(orderNo)),
                 TimeSpan.FromSeconds(30));
@@ -121,7 +121,7 @@ public partial class FrmGuestLookup : Form
                 return;
             }
 
-            var customerCacheKey = $"customer_{order.CustomerId}";
+            var customerCacheKey = $"guest_customer_{order.CustomerId}";
             var customer = await DataCache.GetOrAddAsync(customerCacheKey,
                 () => Task.Run(() => AppServices.Customers.GetById(order.CustomerId)),
                 TimeSpan.FromSeconds(30));
@@ -147,7 +147,7 @@ public partial class FrmGuestLookup : Form
                 lblResultPayment.ForeColor = order.PaymentRecorded ? UIThemeHelper.Success : UIThemeHelper.Danger;
                 lblResultPickup.Text = order.PickupDate?.ToString("MMMM dd, yyyy") ?? "Pending schedule";
 
-                UpdateTimeline(order.Status);
+                UpdateTimeline(order.Status, order.CancelReason);
                 pnlResult.Visible = true;
             });
         }
@@ -162,13 +162,33 @@ public partial class FrmGuestLookup : Form
         }
     }
 
-    private void UpdateTimeline(string status)
+    private void UpdateTimeline(string status, string? cancelReason = null)
     {
-        lblStep0.Text = status == "Booked" ? "📅 Booked" : "🧺 Washing";
+        // Handle Cancelled status specially
+        if (status == "Cancelled")
+        {
+            for (int i = 0; i < 4; i++)
+            {
+                progressSteps[i].BackColor = UIThemeHelper.Danger;
+                progressLabels[i].ForeColor = Color.White;
+            }
+            lblStep0.Text = "❌ Cancelled";
+            lblStep1.Text = "";
+            lblStep2.Text = "";
+            lblStep3.Text = string.IsNullOrWhiteSpace(cancelReason) ? "" : $"Reason: {cancelReason}";
+            lblStep3.ForeColor = Color.White;
+            return;
+        }
+
+        // Reset labels for normal statuses
+        lblStep1.Text = "🌀 Drying";
+        lblStep2.Text = "✨ Ready";
+        lblStep3.Text = "📦 Claimed";
+
+        lblStep0.Text = "🧺 Washing";
 
         int activeIdx = status switch
         {
-            "Booked"           => 0,
             "Washing"          => 0,
             "Drying"           => 1,
             "Ready for Pickup" => 2,

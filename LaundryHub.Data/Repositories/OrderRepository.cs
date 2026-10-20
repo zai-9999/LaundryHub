@@ -276,10 +276,10 @@ public class OrderRepository : IOrderRepository
         {
             ReportDate = date.Date,
             TotalOrders = orders.Count,
-            PendingOrders = orders.Count(o => o.Status is "Booked" or "Washing" or "Drying" or "Ready for Pickup"),
+            PendingOrders = orders.Count(o => o.Status is "Washing" or "Drying" or "Ready for Pickup"),
             ClaimedOrders = orders.Count(o => o.Status == "Claimed"),
             CancelledOrders = orders.Count(o => o.Status == "Cancelled"),
-            TotalSales = orders.Where(o => o.Status != "Cancelled" && (o.Status == "Claimed" || o.PaymentRecorded)).Sum(o => o.AmountPaid ?? o.TotalAmount),
+            TotalSales = orders.Where(o => o.Status == "Claimed").Sum(o => o.TotalAmount),
             Orders = orders
         };
     }

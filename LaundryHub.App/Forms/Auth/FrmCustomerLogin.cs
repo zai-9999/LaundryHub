@@ -49,17 +49,34 @@ public partial class FrmCustomerLogin : Form
         var username = txtUsername.Text.Trim();
         var password = txtPassword.Text;
 
+        // Throttle login attempts per username to mitigate brute force
+        var key = $"customer_login:{username}";
+        var limit = 5;
+        var window = TimeSpan.FromMinutes(15);
+        var lockout = TimeSpan.FromMinutes(15);
+
+        if (!ThrottleService.IsAllowed(key, limit, window, lockout))
+        {
+            var rem = ThrottleService.GetRemainingLockout(key);
+            ShowError($"Too many login attempts. Try again in {Math.Ceiling(rem.TotalMinutes)} minutes.");
+            return;
+        }
+
         try
         {
             var user = AppServices.Users.GetByUsername(username);
 
             if (user == null || string.IsNullOrWhiteSpace(user.PasswordHash) || !BCrypt.Net.BCrypt.Verify(password, user.PasswordHash))
             {
+                ThrottleService.RegisterAttempt(key, limit, window, lockout);
                 ShowError("Invalid username or password.");
                 txtPassword.Clear();
                 txtPassword.Focus();
                 return;
             }
+
+            // Successful login - reset throttle counter
+            ThrottleService.Reset(key);
 
             if (!user.IsActive)
             {

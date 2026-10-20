@@ -149,7 +149,7 @@ public partial class FrmNewOrder : Form
         try
         {
             var svc = (ServiceType)cmbService.SelectedItem!;
-            var kg = Math.Round(decimal.Parse(txtWeight.Text), 2, MidpointRounding.AwayFromZero);
+            InputValidator.IsValidWeight(txtWeight.Text, out decimal kg, out _, min: 0.1m, max: 200m);
             var total = svc.ComputePrice(kg);
 
             var order = new Order
@@ -159,7 +159,7 @@ public partial class FrmNewOrder : Form
                 ServiceId = svc.ServiceId,
                 WeightKg = kg,
                 TotalAmount = total,
-                Status = "Booked",
+                Status = "Washing",
                 CreatedBy = SessionManager.CurrentUser?.UserId,
                 PickupDate = dtpPickup.Value.Date,
                 ServiceName = svc.ServiceName,
