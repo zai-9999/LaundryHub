@@ -15,6 +15,8 @@ public partial class FrmLogin : Form
         UIThemeHelper.LoadAuthLogo(picLogo);
         CenterCardContents();
         pnlCard.SizeChanged += (_, _) => CenterCardContents();
+        txtUsername.TextChanged += (_, _) => lblError.Visible = false;
+        txtPassword.TextChanged += (_, _) => lblError.Visible = false;
     }
 
     protected override void OnPaintBackground(PaintEventArgs e)
@@ -154,10 +156,21 @@ public partial class FrmLogin : Form
     private new bool Validate()
     {
         lblError.Visible = false;
-        if (string.IsNullOrWhiteSpace(txtUsername.Text))
-        { ShowError("Username is required."); txtUsername.Focus(); return false; }
+        var username = txtUsername.Text.Trim();
+        if (string.IsNullOrWhiteSpace(username))
+        {
+            ShowError("Please enter your username.");
+            txtUsername.Focus();
+            return false;
+        }
+
         if (string.IsNullOrWhiteSpace(txtPassword.Text))
-        { ShowError("Password is required."); txtPassword.Focus(); return false; }
+        {
+            ShowError("Please enter your password.");
+            txtPassword.Focus();
+            return false;
+        }
+
         return true;
     }
 

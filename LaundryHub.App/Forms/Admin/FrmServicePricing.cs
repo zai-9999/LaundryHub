@@ -23,6 +23,12 @@ public partial class FrmServicePricing : Form
         UIThemeHelper.StyleDataGridView(dgvServices);
         UIThemeHelper.EnableStatusPills(dgvServices);
 
+        InputValidator.RestrictToDecimalInput(txtPricePerKilo);
+        InputValidator.RestrictToDecimalInput(txtMinWeight);
+        txtServiceName.TextChanged += (_, _) => lblError.Visible = false;
+        txtPricePerKilo.TextChanged += (_, _) => lblError.Visible = false;
+        txtMinWeight.TextChanged += (_, _) => lblError.Visible = false;
+
         // Ensure all service pricing entries are active
         try
         {
@@ -143,24 +149,39 @@ public partial class FrmServicePricing : Form
     private bool ValidateForm()
     {
         lblError.Visible = false;
+        var name = txtServiceName.Text.Trim();
 
-        if (string.IsNullOrWhiteSpace(txtServiceName.Text))
+        if (string.IsNullOrWhiteSpace(name) || name.Length < 2)
         {
-            ShowError("Please enter a service name.");
+            ShowError("Please enter a valid service name (at least 2 characters).");
             txtServiceName.Focus();
             return false;
         }
 
-        if (!decimal.TryParse(txtPricePerKilo.Text.Trim(), out var p) || p <= 0)
+        if (name.Length > 60)
         {
-            ShowError("Price per kilo must be a positive number.");
+            ShowError("Service name cannot exceed 60 characters.");
+            txtServiceName.Focus();
+            return false;
+        }
+
+        if (AppServices.ServiceTypes.NameExists(name, _editingServiceId))
+        {
+            ShowError("A service with this name already exists.");
+            txtServiceName.Focus();
+            return false;
+        }
+
+        if (!InputValidator.IsValidPrice(txtPricePerKilo.Text, out _, out var priceErr, fieldName: "Price per kilo", min: 1.00m, max: 10000m))
+        {
+            ShowError(priceErr);
             txtPricePerKilo.Focus();
             return false;
         }
 
-        if (!decimal.TryParse(txtMinWeight.Text.Trim(), out var w) || w <= 0)
+        if (!InputValidator.IsValidWeight(txtMinWeight.Text, out _, out var weightErr, min: 0.5m, max: 50m))
         {
-            ShowError("Minimum weight must be a positive number.");
+            ShowError($"Minimum weight: {weightErr}");
             txtMinWeight.Focus();
             return false;
         }

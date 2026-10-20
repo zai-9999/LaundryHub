@@ -27,6 +27,11 @@ public partial class FrmBookOrder : Form
         dtpPickup.MinDate = DateTime.Today;
         dtpPickup.Value = DateTime.Today.AddDays(1);
 
+        InputValidator.RestrictToDecimalInput(txtWeight);
+        txtWeight.TextChanged += (_, _) => lblError.Visible = false;
+        cmbServices.SelectedIndexChanged += (_, _) => lblError.Visible = false;
+        dtpPickup.ValueChanged += (_, _) => lblError.Visible = false;
+
         PopulateCustomerInfo();
         LoadServices();
     }
@@ -67,14 +72,13 @@ public partial class FrmBookOrder : Form
         lblServiceRateBadge.Text = $"Rate: ₱{svc.PricePerKilo:N2} / kg  (Min. {svc.MinimumWeight:F1} kg)";
         lblPriceRate.Text = $"Rate: ₱{svc.PricePerKilo:N2} per kilo";
 
-        if (!decimal.TryParse(txtWeight.Text.Trim(), out var rawKg) || rawKg <= 0)
+        if (!InputValidator.IsValidWeight(txtWeight.Text, out decimal kg, out _, min: 0.1m, max: 200m))
         {
             lblBillableWeight.Text = "Billed weight: 0.0 kg";
             lblTotalAmount.Text = "₱0.00";
             return;
         }
 
-        decimal kg = Math.Round(rawKg, 2, MidpointRounding.AwayFromZero);
         decimal billable = Math.Max(kg, Math.Round(svc.MinimumWeight, 2, MidpointRounding.AwayFromZero));
         decimal total = svc.ComputePrice(kg);
 
@@ -112,18 +116,9 @@ public partial class FrmBookOrder : Form
             return;
         }
 
-        if (!decimal.TryParse(txtWeight.Text.Trim(), out var rawKg) || rawKg <= 0)
+        if (!InputValidator.IsValidWeight(txtWeight.Text, out decimal kg, out string weightErr, min: 0.1m, max: 200m))
         {
-            ShowError("Please enter a valid estimated weight in kilograms.");
-            txtWeight.Focus();
-            return;
-        }
-
-        var kg = Math.Round(rawKg, 2, MidpointRounding.AwayFromZero);
-
-        if (kg > 100)
-        {
-            ShowError("Estimated weight seems too high (max 100 kg). Please verify.");
+            ShowError(weightErr);
             txtWeight.Focus();
             return;
         }
@@ -132,6 +127,20 @@ public partial class FrmBookOrder : Form
         {
             ShowError("Target pickup date cannot be in the past.");
             dtpPickup.Focus();
+            return;
+        }
+
+        if (dtpPickup.Value.Date > DateTime.Today.AddYears(1))
+        {
+            ShowError("Target pickup date cannot be more than 1 year in advance.");
+            dtpPickup.Focus();
+            return;
+        }
+
+        if (!string.IsNullOrWhiteSpace(txtNotes.Text) && txtNotes.Text.Trim().Length > 500)
+        {
+            ShowError("Notes cannot exceed 500 characters.");
+            txtNotes.Focus();
             return;
         }
 

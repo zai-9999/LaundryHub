@@ -18,6 +18,14 @@ public partial class FrmManageStaff : Form
         UIThemeHelper.EnableStatusPills(dgvStaff);
         pnlHeader.BackColor = UIThemeHelper.Navy;
         cmbRole.SelectedIndex = 0;
+
+        InputValidator.RestrictToUsernameInput(txtUsername, 30);
+        txtFullName.TextChanged += (_, _) => lblError.Visible = false;
+        txtUsername.TextChanged += (_, _) => lblError.Visible = false;
+        txtEmail.TextChanged += (_, _) => lblError.Visible = false;
+        txtPassword.TextChanged += (_, _) => lblError.Visible = false;
+        cmbRole.SelectedIndexChanged += (_, _) => lblError.Visible = false;
+
         LoadStaff();
     }
 
@@ -193,24 +201,31 @@ public partial class FrmManageStaff : Form
     {
         lblError.Visible = false;
 
-        if (string.IsNullOrWhiteSpace(txtFullName.Text))
+        if (!InputValidator.IsValidFullName(txtFullName.Text, out var nameErr))
         {
-            ShowError("Please enter staff member's full name.");
+            ShowError(nameErr);
             txtFullName.Focus();
+            return false;
+        }
+
+        if (cmbRole.SelectedItem == null)
+        {
+            ShowError("Please select a valid role (Admin or Staff).");
+            cmbRole.Focus();
             return false;
         }
 
         if (_editingUserId == 0)
         {
-            if (string.IsNullOrWhiteSpace(txtUsername.Text) || txtUsername.Text.Trim().Length < 3)
+            if (!InputValidator.IsValidUsername(txtUsername.Text, out var userErr))
             {
-                ShowError("Username must be at least 3 characters.");
+                ShowError(userErr);
                 txtUsername.Focus();
                 return false;
             }
             if (AppServices.Users.UsernameExists(txtUsername.Text.Trim()))
             {
-                ShowError("Username is already in use.");
+                ShowError("Username is already in use by another user.");
                 txtUsername.Focus();
                 return false;
             }
@@ -231,9 +246,9 @@ public partial class FrmManageStaff : Form
         }
 
         var email = txtEmail.Text.Trim();
-        if (string.IsNullOrWhiteSpace(email) || !Regex.IsMatch(email, @"^[^@\s]+@[^@\s]+\.[^@\s]+$"))
+        if (!InputValidator.IsValidEmail(email, out var emailErr))
         {
-            ShowError("Please enter a valid email address.");
+            ShowError(emailErr);
             txtEmail.Focus();
             return false;
         }

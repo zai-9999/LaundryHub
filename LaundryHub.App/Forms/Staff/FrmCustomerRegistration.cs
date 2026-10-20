@@ -35,6 +35,11 @@ public partial class FrmCustomerRegistration : Form
 
         InputValidator.RestrictToPhoneInput(txtPhone);
 
+        txtFullName.TextChanged += (_, _) => lblError.Visible = false;
+        txtPhone.TextChanged += (_, _) => lblError.Visible = false;
+        txtEmail.TextChanged += (_, _) => lblError.Visible = false;
+        txtAddress.TextChanged += (_, _) => lblError.Visible = false;
+
         this.Text = _returnCustomer ? "Select / Register Customer" : "Customer Management";
         lblTitle.Text = _returnCustomer ? "Select or Register Customer" : "Customer Directory & Registration";
         btnSelect.Visible = _returnCustomer;
@@ -236,9 +241,9 @@ public partial class FrmCustomerRegistration : Form
         var phone = txtPhone.Text.Trim();
         var email = txtEmail.Text.Trim();
 
-        if (string.IsNullOrWhiteSpace(name) || name.Length < 2)
+        if (!InputValidator.IsValidFullName(name, out var nameErr))
         {
-            ShowError("Please enter a valid customer full name.");
+            ShowError(nameErr);
             txtFullName.Focus();
             return false;
         }
@@ -259,9 +264,9 @@ public partial class FrmCustomerRegistration : Form
 
         if (!string.IsNullOrWhiteSpace(email))
         {
-            if (!Regex.IsMatch(email, @"^[^@\s]+@[^@\s]+\.[^@\s]+$"))
+            if (!InputValidator.IsValidEmail(email, out var emailErr))
             {
-                ShowError("Please enter a valid email address.");
+                ShowError(emailErr);
                 txtEmail.Focus();
                 return false;
             }
@@ -273,6 +278,13 @@ public partial class FrmCustomerRegistration : Form
                 txtEmail.Focus();
                 return false;
             }
+        }
+
+        if (!string.IsNullOrWhiteSpace(txtAddress.Text) && txtAddress.Text.Trim().Length > 255)
+        {
+            ShowError("Address cannot exceed 255 characters.");
+            txtAddress.Focus();
+            return false;
         }
 
         return true;

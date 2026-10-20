@@ -197,13 +197,20 @@ public partial class FrmOrderDetail : Form
             ForeColor = UIThemeHelper.Success
         };
 
+        InputValidator.RestrictToDecimalInput(txtAmount);
+
         txtAmount.TextChanged += (_, _) =>
         {
-            if (decimal.TryParse(txtAmount.Text, out var paid))
+            if (decimal.TryParse(txtAmount.Text.Trim().Replace(',', '.'), System.Globalization.NumberStyles.AllowDecimalPoint, System.Globalization.CultureInfo.InvariantCulture, out var paid))
             {
                 var change = paid - _order.TotalAmount;
                 lblChange.Text = change >= 0 ? $"Change: ₱{change:N2}" : $"Short by: ₱{Math.Abs(change):N2}";
                 lblChange.ForeColor = change >= 0 ? UIThemeHelper.Success : UIThemeHelper.Danger;
+            }
+            else
+            {
+                lblChange.Text = "Enter a valid payment amount.";
+                lblChange.ForeColor = UIThemeHelper.Warning;
             }
         };
 
@@ -221,22 +228,22 @@ public partial class FrmOrderDetail : Form
         btnConfirm.FlatAppearance.BorderSize = 0;
         btnConfirm.Click += (_, _) =>
         {
-            if (decimal.TryParse(txtAmount.Text, out var paid) && paid >= _order.TotalAmount)
+            if (!InputValidator.IsValidPrice(txtAmount.Text, out var paid, out var priceErr, fieldName: "Payment amount", min: _order.TotalAmount, max: 1000000m))
             {
-                try
-                {
-                    AppServices.Orders.ClaimOrderWithPayment(_order.OrderId, paid, changedBy: SessionManager.CurrentUser?.UserId, notes: $"Paid: ₱{paid:N2}");
-                    dlg.DialogResult = DialogResult.OK;
-                    dlg.Close();
-                }
-                catch (Exception ex)
-                {
-                    MessageBox.Show($"Failed to record payment and claim order: {ex.Message}", "Database Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                }
+                MessageBox.Show(priceErr, "Invalid Payment", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                txtAmount.Focus();
+                return;
             }
-            else
+
+            try
             {
-                MessageBox.Show("Payment amount must be greater than or equal to total amount.", "Invalid Payment", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                AppServices.Orders.ClaimOrderWithPayment(_order.OrderId, paid, changedBy: SessionManager.CurrentUser?.UserId, notes: $"Paid: ₱{paid:N2}");
+                dlg.DialogResult = DialogResult.OK;
+                dlg.Close();
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"Failed to record payment and claim order: {ex.Message}", "Database Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         };
 
@@ -275,6 +282,7 @@ public partial class FrmOrderDetail : Form
             Location = new Point(30, 50),
             Size = new Size(330, 55),
             Multiline = true,
+            MaxLength = 250,
             Font = new Font("Segoe UI", 9.5f),
             BackColor = UIThemeHelper.Surface,
             ForeColor = UIThemeHelper.Navy,
@@ -294,9 +302,11 @@ public partial class FrmOrderDetail : Form
         btnConfirm.FlatAppearance.BorderSize = 0;
         btnConfirm.Click += (_, _) =>
         {
-            if (string.IsNullOrWhiteSpace(txtReason.Text))
+            var reason = txtReason.Text.Trim();
+            if (string.IsNullOrWhiteSpace(reason) || reason.Length < 3)
             {
-                MessageBox.Show("Please provide a reason for cancellation.", "Reason Required", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                MessageBox.Show("Please provide a valid cancellation reason (at least 3 characters).", "Reason Required", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                txtReason.Focus();
                 return;
             }
 

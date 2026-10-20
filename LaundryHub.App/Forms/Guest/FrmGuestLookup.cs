@@ -1,4 +1,4 @@
-﻿using LaundryHub.App.Helpers;
+using LaundryHub.App.Helpers;
 using LaundryHub.Core.Models;
 using System.Threading.Tasks;
 
@@ -18,6 +18,10 @@ public partial class FrmGuestLookup : Form
         InitProgressArrays();
         UIThemeHelper.StyleAuthForm(this, pnlCard, btnLookup, btnBack);
         pnlCard.Paint += (_, e) => UIThemeHelper.PaintRoundedSolidCard(pnlCard, e, Color.White, UIThemeHelper.LoginCardRadius);
+
+        InputValidator.RestrictToDigitsOnly(txtPhoneLast4, 4);
+        txtOrderNumber.TextChanged += (_, _) => lblError.Visible = false;
+        txtPhoneLast4.TextChanged += (_, _) => lblError.Visible = false;
 
         this.FormClosing += (_, _) => isLoading = false;
     }
@@ -72,16 +76,16 @@ public partial class FrmGuestLookup : Form
         var orderNo = txtOrderNumber.Text.Trim();
         var phone4 = txtPhoneLast4.Text.Trim();
 
-        if (string.IsNullOrWhiteSpace(orderNo))
+        if (string.IsNullOrWhiteSpace(orderNo) || orderNo.Length < 3)
         {
-            ShowError("Please enter your Order Number.");
+            ShowError("Please enter your Order Number (e.g. LH-20261021-001).");
             txtOrderNumber.Focus();
             return;
         }
 
-        if (phone4.Length != 4 || !phone4.All(c => c is >= '0' and <= '9'))
+        if (phone4.Length != 4 || !phone4.All(char.IsDigit))
         {
-            ShowError("Please enter exactly 4 digits of your phone number.");
+            ShowError("Please enter exactly 4 digits of your registered phone number.");
             txtPhoneLast4.Focus();
             return;
         }
