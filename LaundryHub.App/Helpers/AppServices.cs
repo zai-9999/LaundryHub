@@ -28,6 +28,7 @@ public static class AppServices
         Configuration = new ConfigurationBuilder()
             .SetBasePath(AppContext.BaseDirectory)
             .AddJsonFile("appsettings.json", optional: false, reloadOnChange: true)
+            .AddEnvironmentVariables()
             .Build();
 
         DbContext    = new DbContext(Configuration);
