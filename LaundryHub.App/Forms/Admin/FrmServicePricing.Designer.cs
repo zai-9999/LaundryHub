@@ -1,4 +1,4 @@
-﻿using Panel = System.Windows.Forms.Panel;
+using Panel = System.Windows.Forms.Panel;
 using CheckBox = System.Windows.Forms.CheckBox;
 using Button = System.Windows.Forms.Button;
 using ReaLTaiizor;
@@ -176,7 +176,6 @@ partial class FrmServicePricing
         // pnlToolBar
         // 
         pnlToolBar.BackColor = Color.Transparent;
-        pnlToolBar.Controls.Add(btnToggleActive);
         pnlToolBar.Controls.Add(lblGridTitle);
         pnlToolBar.Dock = DockStyle.Top;
         pnlToolBar.Location = new Point(16, 0);
@@ -236,7 +235,6 @@ partial class FrmServicePricing
         flpForm.Controls.Add(txtPricePerKilo);
         flpForm.Controls.Add(lblMinWeight);
         flpForm.Controls.Add(txtMinWeight);
-        flpForm.Controls.Add(chkActive);
         flpForm.Controls.Add(lblError);
         flpForm.Controls.Add(flpButtons);
         flpForm.Dock = DockStyle.Fill;

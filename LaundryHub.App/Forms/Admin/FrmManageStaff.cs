@@ -132,13 +132,13 @@ public partial class FrmManageStaff : Form
     {
         if (_selectedUser == null)
         {
-            MessageBox.Show("Please select a staff member first.", "Notice", MessageBoxButtons.OK, MessageBoxIcon.Information);
+            ShowError("Please select a staff member first.");
             return;
         }
 
         if (_selectedUser.UserId == SessionManager.CurrentUser?.UserId)
         {
-            MessageBox.Show("You cannot disable your own admin account.", "Action Blocked", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+            ShowError("You cannot disable your own admin account.");
             return;
         }
 
@@ -148,12 +148,27 @@ public partial class FrmManageStaff : Form
             AppServices.Users.SetActive(_selectedUser.UserId, newStatus);
             _selectedUser.IsActive = newStatus;
             chkActive.Checked = newStatus;
+
+            int currentSelectedId = _selectedUser.UserId;
             LoadStaff();
-            MessageBox.Show($"User {_selectedUser.Username} is now {(newStatus ? "Active" : "Disabled")}.", "Status Changed", MessageBoxButtons.OK, MessageBoxIcon.Information);
+
+            // Re-select the same staff member in the grid
+            foreach (DataGridViewRow row in dgvStaff.Rows)
+            {
+                if (row.Cells["UserId"].Value is int id && id == currentSelectedId)
+                {
+                    row.Selected = true;
+                    break;
+                }
+            }
+
+            lblError.ForeColor = newStatus ? UIThemeHelper.Success : UIThemeHelper.Warning;
+            lblError.Text = $"✓ {_selectedUser.Username} is now {(newStatus ? "Active" : "Disabled")}.";
+            lblError.Visible = true;
         }
         catch (Exception ex)
         {
-            MessageBox.Show($"Failed to update status: {ex.Message}", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            ShowError($"Failed to update status: {ex.Message}");
         }
     }
 

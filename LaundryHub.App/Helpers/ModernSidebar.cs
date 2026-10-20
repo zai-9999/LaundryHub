@@ -19,7 +19,7 @@ public class ModernSidebar : System.Windows.Forms.Panel
                | ControlStyles.OptimizedDoubleBuffer
                | ControlStyles.ResizeRedraw, true);
 
-        Width = 250;
+        Width = 265;
         Dock = DockStyle.Left;
         BackColor = UIThemeHelper.Navy;
 
@@ -90,7 +90,7 @@ public class ModernSidebar : System.Windows.Forms.Panel
     /// <summary>Adds a section header to the nav flow.</summary>
     public NavSection AddSection(string title)
     {
-        var section = new NavSection { Text = title.ToUpperInvariant(), Width = Width - 10 };
+        var section = new NavSection { Text = title.ToUpperInvariant(), Width = Width - 8 };
         _navFlow.Controls.Add(section);
         return section;
     }
@@ -102,8 +102,8 @@ public class ModernSidebar : System.Windows.Forms.Panel
         {
             Icon = icon,
             Caption = caption,
-            Width = Width - 10,
-            Height = 42
+            Width = Width - 8,
+            Height = 44
         };
         if (onClick != null)
             btn.NavClick += onClick;

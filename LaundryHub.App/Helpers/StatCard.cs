@@ -107,6 +107,12 @@ public static class StatRow
         old.Dispose();
         parent.Controls.Add(table);
         parent.Controls.SetChildIndex(table, zIndex);
+        // Ensure sibling DockStyle.Fill controls (e.g. cardOrders) remain in front so they expand to fill
+        foreach (Control sibling in parent.Controls)
+        {
+            if (sibling != table && sibling.Dock == DockStyle.Fill)
+                sibling.BringToFront();
+        }
         parent.ResumeLayout(true);
 
         return cards;

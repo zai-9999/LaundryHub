@@ -63,15 +63,15 @@ partial class FrmAdminDashboard
         pnlSidebar.Dock = DockStyle.Left;
         pnlSidebar.Location = new Point(0, 0);
         pnlSidebar.Name = "pnlSidebar";
-        pnlSidebar.Size = new Size(240, 740);
+        pnlSidebar.Size = new Size(265, 740);
         pnlSidebar.TabIndex = 1;
         // 
         // pnlHeader
         // 
         pnlHeader.Dock = DockStyle.Top;
-        pnlHeader.Location = new Point(240, 0);
+        pnlHeader.Location = new Point(265, 0);
         pnlHeader.Name = "pnlHeader";
-        pnlHeader.Size = new Size(940, 72);
+        pnlHeader.Size = new Size(915, 72);
         pnlHeader.TabIndex = 0;
         // 
         // pnlMain
@@ -80,10 +80,10 @@ partial class FrmAdminDashboard
         pnlMain.Controls.Add(cardOrders);
         pnlMain.Controls.Add(flpStats);
         pnlMain.Dock = DockStyle.Fill;
-        pnlMain.Location = new Point(240, 72);
+        pnlMain.Location = new Point(265, 72);
         pnlMain.Name = "pnlMain";
         pnlMain.Padding = new Padding(20);
-        pnlMain.Size = new Size(940, 668);
+        pnlMain.Size = new Size(915, 668);
         pnlMain.TabIndex = 2;
         // 
         // cardOrders

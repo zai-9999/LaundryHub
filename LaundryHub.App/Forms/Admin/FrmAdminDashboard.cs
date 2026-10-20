@@ -32,7 +32,6 @@ public partial class FrmAdminDashboard : Form
         pnlSidebar.AddSection("OPERATIONS");
         pnlSidebar.AddNavButton("➕", "New Laundry Order", btnNewOrder_Click);
         pnlSidebar.AddNavButton("👥", "Customer Management", btnCustomerRegistration_Click);
-        pnlSidebar.AddNavButton("📋", "Staff Operations View", btnStaffDashboard_Click);
 
         pnlSidebar.AddSection("ADMINISTRATION");
         pnlSidebar.AddNavButton("👔", "Manage Staff", btnManageStaff_Click);
@@ -73,6 +72,9 @@ public partial class FrmAdminDashboard : Form
         lblPending.Text = "—";
         lblClaimed.Text = "—";
 
+        cardOrders.BringToFront();
+        dgvTodayOrders.BringToFront();
+
         this.Shown += async (_, _) =>
         {
             await LoadDashboardDataAsync();
@@ -112,12 +114,6 @@ public partial class FrmAdminDashboard : Form
     private void btnExportReport_Click(object? sender, EventArgs e)
     {
         using var f = new FrmExportReport();
-        f.ShowDialog(this);
-    }
-
-    private void btnStaffDashboard_Click(object? sender, EventArgs e)
-    {
-        using var f = new Staff.FrmStaffDashboard();
         f.ShowDialog(this);
     }
 

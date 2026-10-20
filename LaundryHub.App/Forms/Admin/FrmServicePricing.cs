@@ -22,6 +22,15 @@ public partial class FrmServicePricing : Form
         flpForm.BackColor = Color.White;
         UIThemeHelper.StyleDataGridView(dgvServices);
         UIThemeHelper.EnableStatusPills(dgvServices);
+
+        // Ensure all service pricing entries are active
+        try
+        {
+            using var conn = AppServices.DbContext.CreateConnection();
+            Dapper.SqlMapper.Execute(conn, "UPDATE service_types SET is_active = TRUE WHERE is_active = FALSE");
+        }
+        catch { }
+
         LoadServices();
     }
 
@@ -43,8 +52,7 @@ public partial class FrmServicePricing : Form
             s.ServiceId,
             Service = s.ServiceName,
             Rate = $"₱{s.PricePerKilo:N2} / kg",
-            Min_Weight = $"{s.MinimumWeight:F1} kg",
-            Status = s.IsActive ? "Active" : "Disabled"
+            Min_Weight = $"{s.MinimumWeight:F1} kg"
         }).ToList();
 
         if (dgvServices.Columns["ServiceId"] is { } col)
@@ -87,7 +95,7 @@ public partial class FrmServicePricing : Form
                 _selectedService.ServiceName = name;
                 _selectedService.PricePerKilo = price;
                 _selectedService.MinimumWeight = minWeight;
-                _selectedService.IsActive = chkActive.Checked;
+                _selectedService.IsActive = true;
 
                 AppServices.ServiceTypes.Update(_selectedService);
                 MessageBox.Show("Service type updated successfully!", "Success", MessageBoxButtons.OK, MessageBoxIcon.Information);
@@ -99,7 +107,7 @@ public partial class FrmServicePricing : Form
                     ServiceName = name,
                     PricePerKilo = price,
                     MinimumWeight = minWeight,
-                    IsActive = chkActive.Checked
+                    IsActive = true
                 };
                 AppServices.ServiceTypes.Add(newService);
                 MessageBox.Show($"New service '{name}' created!", "Success", MessageBoxButtons.OK, MessageBoxIcon.Information);
@@ -116,23 +124,6 @@ public partial class FrmServicePricing : Form
 
     private void btnToggleActive_Click(object? sender, EventArgs e)
     {
-        if (_selectedService == null)
-        {
-            MessageBox.Show("Please select a service type first.", "Notice", MessageBoxButtons.OK, MessageBoxIcon.Information);
-            return;
-        }
-
-        try
-        {
-            bool newStatus = !_selectedService.IsActive;
-            AppServices.ServiceTypes.SetActive(_selectedService.ServiceId, newStatus);
-            LoadServices();
-            MessageBox.Show($"Service '{_selectedService.ServiceName}' is now {(newStatus ? "Active" : "Disabled")}.", "Status Changed", MessageBoxButtons.OK, MessageBoxIcon.Information);
-        }
-        catch (Exception ex)
-        {
-            MessageBox.Show($"Failed to change service status: {ex.Message}", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
-        }
     }
 
     private void ResetForm()
