@@ -103,7 +103,7 @@ public partial class FrmGuestLookup : Form
                 return;
             }
 
-            var customerCacheKey = $"customer_{order.CustomerId}";
+            var customerCacheKey = $"customer_by_id_{order.CustomerId}";
             var customer = await DataCache.GetOrAddAsync(customerCacheKey,
                 () => Task.Run(() => AppServices.Customers.GetById(order.CustomerId)),
                 TimeSpan.FromSeconds(30));
