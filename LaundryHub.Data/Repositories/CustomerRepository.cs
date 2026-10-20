@@ -78,9 +78,6 @@ public class CustomerRepository : ICustomerRepository
         conn.Execute("UPDATE customers SET is_archived = TRUE WHERE customer_id = @CustomerId",
             new { CustomerId = customerId });
 
-        // Archive all orders for this customer
-        conn.Execute("UPDATE orders SET is_archived = TRUE WHERE customer_id = @CustomerId",
-            new { CustomerId = customerId });
     }
 
     public void Restore(int customerId)
