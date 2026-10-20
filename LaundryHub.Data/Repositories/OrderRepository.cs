@@ -128,6 +128,14 @@ public class OrderRepository : IOrderRepository
         }
     }
 
+    private static bool IsValidTransition(string? from, string to) => (from, to) switch
+    {
+        ("Washing", "Drying") => true,
+        ("Drying", "Ready for Pickup") => true,
+        ("Ready for Pickup", "Claimed") => true,
+        ("Washing" or "Drying" or "Ready for Pickup", "Cancelled") => true,
+        _ => false
+    };
     public void UpdateStatus(int orderId, string newStatus, string? cancelReason = null, int? changedBy = null, string? notes = null)
     {
         using var conn = _db.CreateConnection();
@@ -136,6 +144,9 @@ public class OrderRepository : IOrderRepository
         try
         {
             var oldStatus = conn.ExecuteScalar<string?>("SELECT status FROM orders WHERE order_id = @OrderId FOR UPDATE", new { OrderId = orderId }, transaction: tran);
+
+            if (!IsValidTransition(oldStatus, newStatus))
+                throw new InvalidOperationException($"An order cannot move from '{oldStatus}' to '{newStatus}'.");
 
             conn.Execute(@"
                 UPDATE orders
@@ -188,6 +199,15 @@ public class OrderRepository : IOrderRepository
             var oldStatus = conn.ExecuteScalar<string?>(
                 "SELECT status FROM orders WHERE order_id = @OrderId FOR UPDATE",
                 new { OrderId = orderId }, transaction: tran);
+
+            if (oldStatus != "Ready for Pickup")
+                throw new InvalidOperationException($"Only orders that are Ready for Pickup can be claimed (this one is '{oldStatus}').");
+
+            var total = conn.ExecuteScalar<decimal>(
+                "SELECT total_amount FROM orders WHERE order_id = @OrderId",
+                new { OrderId = orderId }, transaction: tran);
+            if (amountPaid < total)
+                throw new InvalidOperationException("Payment is less than the total due.");
 
             conn.Execute(@"
                 UPDATE orders
