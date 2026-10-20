@@ -1,4 +1,4 @@
-using System.Drawing.Drawing2D;
+﻿using System.Drawing.Drawing2D;
 using ReaLTaiizor.Controls;
 using ReaLTaiizor.Util;
 
@@ -8,7 +8,7 @@ public enum ButtonRole { Primary, Accent, Success, Danger, Soft, Nav }
 
 public static class ModernUI
 {
-    // ── Palette ──
+    //  Palette 
     public static readonly Color Navy      = Color.FromArgb(17, 24, 68);
     public static readonly Color Ocean     = Color.FromArgb(75, 86, 148);
     public static readonly Color Teal      = Color.FromArgb(114, 136, 174);
@@ -28,7 +28,7 @@ public static class ModernUI
 
     public const string FontFamily = "Segoe UI";
 
-    // ── Buttons ──
+    //  Buttons 
     public static void StyleButton(HopeButton button, ButtonRole role)
     {
         button.Cursor = Cursors.Hand;
@@ -61,7 +61,7 @@ public static class ModernUI
         foreach (var b in buttons) StyleButton(b, role);
     }
 
-    // ── Status pills ──
+    //  Status pills 
     public static (Color Fore, Color Back) StatusColors(string? text)
     {
         switch ((text ?? string.Empty).Trim().ToLowerInvariant())
@@ -127,7 +127,7 @@ public static class ModernUI
         e.Handled = true;
     }
 
-    // ── Cards ──
+    //  Cards 
     public static void StyleStatCard(System.Windows.Forms.Panel card, Color accent, int radius = 12)
     {
         card.BackColor = SurfaceHi;
@@ -140,7 +140,7 @@ public static class ModernUI
         };
     }
 
-    // ── Soap-bubble backdrop ──
+    //  Soap-bubble backdrop 
     public static void PaintBubbles(Graphics g, Rectangle area)
     {
         if (area.Width < 200 || area.Height < 200) return;
@@ -182,7 +182,7 @@ public static class ModernUI
         g.SmoothingMode = previous;
     }
 
-    // ── Inputs ──
+    //  Inputs 
     public static void StyleInput(HopeTextBox box)
     {
         box.BackColor = Color.White;

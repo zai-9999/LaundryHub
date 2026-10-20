@@ -90,7 +90,7 @@ partial class FrmManageStaff
         btnClose.Name = "btnClose";
         btnClose.Size = new Size(90, 34);
         btnClose.TabIndex = 1;
-        btnClose.Text = "✕ Close";
+        btnClose.Text = " Close";
         btnClose.Click += btnClose_Click;
         // 
         // lblTitle
@@ -382,7 +382,7 @@ partial class FrmManageStaff
         txtPassword.Location = new Point(0, 269);
         txtPassword.Margin = new Padding(0, 2, 0, 4);
         txtPassword.Name = "txtPassword";
-        txtPassword.PasswordChar = '●';
+        txtPassword.PasswordChar = '';
         txtPassword.Size = new Size(310, 34);
         txtPassword.TabIndex = 9;
         txtPassword.UseSystemPasswordChar = true;
@@ -448,7 +448,7 @@ partial class FrmManageStaff
         btnClear.Name = "btnClear";
         btnClear.Size = new Size(145, 40);
         btnClear.TabIndex = 1;
-        btnClear.Text = "↺ Clear";
+        btnClear.Text = " Clear";
         btnClear.Click += btnClear_Click;
         // 
         // lblFormTitle
@@ -476,7 +476,7 @@ partial class FrmManageStaff
         MaximizeBox = false;
         Name = "FrmManageStaff";
         StartPosition = FormStartPosition.CenterParent;
-        Text = "LaundryHub – Staff & User Management";
+        Text = "LaundryHub  Staff & User Management";
         pnlHeader.ResumeLayout(false);
         pnlContainer.ResumeLayout(false);
         pnlRight.ResumeLayout(false);

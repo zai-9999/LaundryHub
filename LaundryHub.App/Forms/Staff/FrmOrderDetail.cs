@@ -1,4 +1,4 @@
-using LaundryHub.App.Helpers;
+﻿using LaundryHub.App.Helpers;
 using LaundryHub.Core.Models;
 using System.Drawing.Printing;
 using CustomerModel = LaundryHub.Core.Models.Customer;
@@ -49,16 +49,16 @@ public partial class FrmOrderDetail : Form
             _customer = AppServices.Customers.GetById(_order.CustomerId);
         }
 
-        this.Text = $"Order Details – {_order.OrderNumber}";
-        lblOrderNumber.Text = $"🧾 {_order.OrderNumber}";
+        this.Text = $"Order Details  {_order.OrderNumber}";
+        lblOrderNumber.Text = $" {_order.OrderNumber}";
         lblCustomerInfo.Text = $"{_customer?.FullName ?? _order.CustomerName} ({_customer?.Phone ?? _order.CustomerPhone})";
         lblServiceInfo.Text = _order.ServiceName ?? "Standard Laundry";
         lblWeightInfo.Text = $"{_order.WeightKg:F2} kg";
-        lblTotalAmount.Text = $"₱{_order.TotalAmount:N2}";
+        lblTotalAmount.Text = $"{_order.TotalAmount:N2}";
 
         if (_order.PaymentRecorded)
         {
-            lblPaymentStatus.Text = $"Paid (₱{_order.AmountPaid:N2})";
+            lblPaymentStatus.Text = $"Paid ({_order.AmountPaid:N2})";
             lblPaymentStatus.ForeColor = UIThemeHelper.Sand;
         }
         else
@@ -67,9 +67,9 @@ public partial class FrmOrderDetail : Form
             lblPaymentStatus.ForeColor = UIThemeHelper.Indigo;
         }
 
-        lblPickupDate.Text = _order.PickupDate?.ToString("MMMM dd, yyyy") ?? "—";
+        lblPickupDate.Text = _order.PickupDate?.ToString("MMMM dd, yyyy") ?? "";
         lblCreatedDate.Text = _order.CreatedAt.ToString("MMM dd, yyyy hh:mm tt");
-        lblCancelReason.Text = string.IsNullOrWhiteSpace(_order.CancelReason) ? "—" : _order.CancelReason;
+        lblCancelReason.Text = string.IsNullOrWhiteSpace(_order.CancelReason) ? "" : _order.CancelReason;
 
         // Status badge styling
         UpdateStatusBadge();
@@ -87,12 +87,12 @@ public partial class FrmOrderDetail : Form
         btnAdvanceStatus.Visible = _order.Status is "Washing" or "Drying";
         if (_order.Status == "Washing")
         {
-            btnAdvanceStatus.Text = "🌀 Mark as Drying";
+            btnAdvanceStatus.Text = " Mark as Drying";
             btnAdvanceStatus.BackColor = UIThemeHelper.Slate;
         }
         else if (_order.Status == "Drying")
         {
-            btnAdvanceStatus.Text = "✨ Ready for Pickup";
+            btnAdvanceStatus.Text = " Ready for Pickup";
             btnAdvanceStatus.BackColor = UIThemeHelper.Slate;
         }
 
@@ -199,7 +199,7 @@ public partial class FrmOrderDetail : Form
 
         using var dlg = new Form
         {
-            Text = $"Confirm Actual Weight – {_order.OrderNumber}",
+            Text = $"Confirm Actual Weight  {_order.OrderNumber}",
             Size = new Size(410, 300),
             StartPosition = FormStartPosition.CenterParent,
             BackColor = Color.FromArgb(15, 23, 42),
@@ -234,7 +234,7 @@ public partial class FrmOrderDetail : Form
         };
         var btnConfirm = new Button
         {
-            Text = "✔ Save Confirmed Weight",
+            Text = " Save Confirmed Weight",
             Location = new Point(30, 165),
             Size = new Size(340, 38),
             BackColor = Color.FromArgb(37, 99, 235),
@@ -253,7 +253,7 @@ public partial class FrmOrderDetail : Form
         {
             var weight = GetWeight();
             lblTotal.Text = weight.HasValue
-                ? $"New total: ₱{service.ComputePrice(weight.Value):N2} (minimum {service.MinimumWeight:N2} kg)"
+                ? $"New total: {service.ComputePrice(weight.Value):N2} (minimum {service.MinimumWeight:N2} kg)"
                 : "Enter a Valid Weight.";
             lblTotal.ForeColor = weight.HasValue ? Color.FromArgb(52, 211, 153) : Color.FromArgb(248, 113, 113);
         }
@@ -294,7 +294,7 @@ public partial class FrmOrderDetail : Form
     {
         using var dlg = new Form
         {
-            Text = $"Claim Order – {_order.OrderNumber}",
+            Text = $"Claim Order  {_order.OrderNumber}",
             Size = new Size(380, 280),
             StartPosition = FormStartPosition.CenterParent,
             BackColor = Color.White,
@@ -306,7 +306,7 @@ public partial class FrmOrderDetail : Form
 
         var lblPrompt = new Label
         {
-            Text = $"Total Due: ₱{_order.TotalAmount:N2}\nEnter Amount Tendered / Paid:",
+            Text = $"Total Due: {_order.TotalAmount:N2}\nEnter Amount Tendered / Paid:",
             Location = new Point(30, 20),
             Size = new Size(310, 40),
             Font = new Font("Segoe UI", 10, FontStyle.Bold),
@@ -324,7 +324,7 @@ public partial class FrmOrderDetail : Form
         };
         var lblChange = new Label
         {
-            Text = "Change: ₱0.00",
+            Text = "Change: 0.00",
             Location = new Point(30, 115),
             Size = new Size(300, 25),
             Font = new Font("Segoe UI", 10, FontStyle.Bold),
@@ -338,7 +338,7 @@ public partial class FrmOrderDetail : Form
             if (decimal.TryParse(txtAmount.Text.Trim().Replace(',', '.'), System.Globalization.NumberStyles.AllowDecimalPoint, System.Globalization.CultureInfo.InvariantCulture, out var paid))
             {
                 var change = paid - _order.TotalAmount;
-                lblChange.Text = change >= 0 ? $"Change: ₱{change:N2}" : $"Short by: ₱{Math.Abs(change):N2}";
+                lblChange.Text = change >= 0 ? $"Change: {change:N2}" : $"Short by: {Math.Abs(change):N2}";
                 lblChange.ForeColor = change >= 0 ? UIThemeHelper.Success : UIThemeHelper.Danger;
             }
             else
@@ -374,7 +374,7 @@ public partial class FrmOrderDetail : Form
 
             try
             {
-                AppServices.Orders.ClaimOrderWithPayment(_order.OrderId, paid, changedBy: SessionManager.CurrentUser?.UserId, notes: $"Paid: ₱{paid:N2}");
+                AppServices.Orders.ClaimOrderWithPayment(_order.OrderId, paid, changedBy: SessionManager.CurrentUser?.UserId, notes: $"Paid: {paid:N2}");
                 dlg.DialogResult = DialogResult.OK;
                 dlg.Close();
             }
@@ -480,7 +480,7 @@ public partial class FrmOrderDetail : Form
                 ev.Graphics?.DrawString($"Order E-Ticket: {_order.OrderNumber}", fontSub, Brushes.Black, 60, 75);
                 ev.Graphics?.DrawString($"Customer: {_order.CustomerName}", fontSub, Brushes.Black, 60, 95);
                 ev.Graphics?.DrawString($"Service: {_order.ServiceName} | {_order.WeightKg} kg", fontSub, Brushes.Black, 60, 115);
-                ev.Graphics?.DrawString($"Amount Due: ₱{_order.TotalAmount:N2}", fontSub, Brushes.Black, 60, 135);
+                ev.Graphics?.DrawString($"Amount Due: {_order.TotalAmount:N2}", fontSub, Brushes.Black, 60, 135);
                 if (picQrCode.Image != null)
                 {
                     ev.Graphics?.DrawImage(picQrCode.Image, 60, 165, 180, 180);

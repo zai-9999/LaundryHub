@@ -1,4 +1,4 @@
-using LaundryHub.App.Helpers;
+﻿using LaundryHub.App.Helpers;
 using LaundryHub.Core.Enums;
 using LaundryHub.Core.Models;
 using System.Text.RegularExpressions;
@@ -61,8 +61,8 @@ public partial class FrmManageStaff : Form
             if (_selectedUser != null)
             {
                 _editingUserId = _selectedUser.UserId;
-                lblFormTitle.Text = $"✏ Edit Staff Member #{_selectedUser.UserId}";
-                btnSave.Text = "✔ Update Info";
+                lblFormTitle.Text = $" Edit Staff Member #{_selectedUser.UserId}";
+                btnSave.Text = " Update Info";
                 txtFullName.Text = _selectedUser.FullName;
                 txtUsername.Text = _selectedUser.Username;
                 txtUsername.Enabled = false; // keep username immutable
@@ -171,7 +171,7 @@ public partial class FrmManageStaff : Form
             }
 
             lblError.ForeColor = newStatus ? UIThemeHelper.Success : UIThemeHelper.Warning;
-            lblError.Text = $"✓ {_selectedUser.Username} is now {(newStatus ? "Active" : "Disabled")}.";
+            lblError.Text = $" {_selectedUser.Username} is now {(newStatus ? "Active" : "Disabled")}.";
             lblError.Visible = true;
         }
         catch (Exception ex)
@@ -184,8 +184,8 @@ public partial class FrmManageStaff : Form
     {
         _editingUserId = 0;
         _selectedUser = null;
-        lblFormTitle.Text = "➕ New Staff Member";
-        btnSave.Text = "💾 Save Account";
+        lblFormTitle.Text = " New Staff Member";
+        btnSave.Text = " Save Account";
         txtFullName.Clear();
         txtUsername.Clear();
         txtUsername.Enabled = true;
@@ -265,7 +265,7 @@ public partial class FrmManageStaff : Form
 
     private void ShowError(string msg)
     {
-        lblError.Text = $"⚠ {msg}";
+        lblError.Text = $" {msg}";
         lblError.Visible = true;
     }
 }

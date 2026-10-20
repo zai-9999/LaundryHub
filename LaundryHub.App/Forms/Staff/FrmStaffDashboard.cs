@@ -1,4 +1,4 @@
-using LaundryHub.App.Helpers;
+﻿using LaundryHub.App.Helpers;
 using LaundryHub.Core.Models;
 using System.Drawing.Drawing2D;
 using System.Threading.Tasks;
@@ -20,35 +20,35 @@ public partial class FrmStaffDashboard : Form
         UIThemeHelper.EnableStatusPills(dgvOrders);
 
         // Sidebar Setup
-        pnlSidebar.BrandLabel.Text = "🧺 LaundryHub";
+        pnlSidebar.BrandLabel.Text = " LaundryHub";
         pnlSidebar.BrandSubtitle.Text = "STAFF OPERATIONS";
 
         pnlSidebar.AddSection("GENERAL");
-        var btnNavDash = pnlSidebar.AddNavButton("📊", "Operations Dashboard");
+        var btnNavDash = pnlSidebar.AddNavButton("", "Operations Dashboard");
         btnNavDash.IsActive = true;
 
         pnlSidebar.AddSection("LAUNDRY WORKFLOW");
-        pnlSidebar.AddNavButton("➕", "New Laundry Order", btnNewOrder_Click);
-        pnlSidebar.AddNavButton("📋", "Order Management", btnOrders_Click);
-        pnlSidebar.AddNavButton("👥", "Customer Directory", btnCustomers_Click);
+        pnlSidebar.AddNavButton("", "New Laundry Order", btnNewOrder_Click);
+        pnlSidebar.AddNavButton("", "Order Management", btnOrders_Click);
+        pnlSidebar.AddNavButton("", "Customer Directory", btnCustomers_Click);
 
         pnlSidebar.AddSection("SYSTEM");
-        pnlSidebar.AddNavButton("🔄", "Refresh Queue", btnRefresh_Click);
-        pnlSidebar.AddNavButton("🚪", "Logout", btnLogout_Click);
+        pnlSidebar.AddNavButton("", "Refresh Queue", btnRefresh_Click);
+        pnlSidebar.AddNavButton("", "Logout", btnLogout_Click);
 
         // Header Setup
         pnlHeader.Title = "Laundry Operations & Order Hub";
         pnlHeader.Subtitle = "REAL-TIME SERVICE QUEUE, ORDERS & CUSTOMER INTAKE";
         pnlHeader.SearchBox.Hint = "Quick search orders...";
         pnlHeader.SearchBox.TextChanged += (s, e) => FilterOrders();
-        pnlHeader.ActionButton.Text = "🚪 Logout";
+        pnlHeader.ActionButton.Text = " Logout";
         pnlHeader.ActionButton.Click += btnLogout_Click;
 
         if (SessionManager.CurrentUser != null)
         {
             pnlHeader.UserName = SessionManager.CurrentUser.FullName;
             pnlHeader.UserRole = SessionManager.CurrentUser.Role;
-            this.Text = $"LaundryHub – Staff Dashboard ({SessionManager.CurrentUser.FullName})";
+            this.Text = $"LaundryHub  Staff Dashboard ({SessionManager.CurrentUser.FullName})";
         }
 
         var stats = StatRow.Replace(flpCards,
@@ -62,10 +62,10 @@ public partial class FrmStaffDashboard : Form
         lblSales   = stats[3].ValueLabel;
         lblSales.Font = new Font("Segoe UI", 17F, FontStyle.Bold);
 
-        lblPending.Text = "—";
-        lblTotal.Text = "—";
-        lblClaimed.Text = "—";
-        lblSales.Text = "—";
+        lblPending.Text = "";
+        lblTotal.Text = "";
+        lblClaimed.Text = "";
+        lblSales.Text = "";
 
         dgvOrders.CellDoubleClick += DgvOrders_CellDoubleClick;
 
@@ -97,9 +97,9 @@ public partial class FrmStaffDashboard : Form
                 lblPending.Text = report.PendingOrders.ToString();
                 lblTotal.Text = report.TotalOrders.ToString();
                 lblClaimed.Text = report.ClaimedOrders.ToString();
-                lblSales.Text = $"₱{report.TotalSales:N2}";
+                lblSales.Text = $"{report.TotalSales:N2}";
 
-                lblLiveBadge.Text = $"● {orders.Count} In Queue";
+                lblLiveBadge.Text = $" {orders.Count} In Queue";
 
                 FilterOrders();
             });
@@ -134,7 +134,7 @@ public partial class FrmStaffDashboard : Form
             Customer = o.CustomerName,
             Service = o.ServiceName,
             Weight = $"{o.WeightKg} kg",
-            Total = $"₱{o.TotalAmount:N2}",
+            Total = $"{o.TotalAmount:N2}",
             Status = o.Status,
             Payment = o.PaymentRecorded ? "Paid" : "Unpaid",
             Date = o.CreatedAt.ToString("MM/dd hh:mm tt")

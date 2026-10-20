@@ -1,4 +1,4 @@
-using LaundryHub.App.Helpers;
+﻿using LaundryHub.App.Helpers;
 using LaundryHub.Core.Models;
 
 namespace LaundryHub.App.Forms.Guest;
@@ -32,9 +32,9 @@ public partial class FrmGuestPricing : Form
         dgvPricing.DataSource = _services.Select(s => new
         {
             Service = s.ServiceName,
-            Rate = $"₱{s.PricePerKilo:N2} / kg",
+            Rate = $"{s.PricePerKilo:N2} / kg",
             Min_Weight = $"{s.MinimumWeight:F1} kg",
-            Minimum_Charge = $"₱{(s.MinimumWeight * s.PricePerKilo):N2}"
+            Minimum_Charge = $"{(s.MinimumWeight * s.PricePerKilo):N2}"
         }).ToList();
 
         cmbService.DataSource = _services;
@@ -52,12 +52,12 @@ public partial class FrmGuestPricing : Form
         if (cmbService.SelectedItem is not ServiceType svc) return;
         if (!decimal.TryParse(txtWeight.Text.Trim(), out var kg) || kg <= 0)
         {
-            lblEstimateValue.Text = "₱0.00";
+            lblEstimateValue.Text = "0.00";
             return;
         }
 
         var total = svc.ComputePrice(kg);
-        lblEstimateValue.Text = $"₱{total:N2}";
+        lblEstimateValue.Text = $"{total:N2}";
     }
 
     private void cmbService_SelectedIndexChanged(object? sender, EventArgs e) => ComputeEstimate();

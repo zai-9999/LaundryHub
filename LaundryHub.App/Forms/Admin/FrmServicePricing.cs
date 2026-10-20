@@ -1,4 +1,4 @@
-using LaundryHub.App.Helpers;
+﻿using LaundryHub.App.Helpers;
 using LaundryHub.Core.Models;
 
 namespace LaundryHub.App.Forms.Admin;
@@ -57,7 +57,7 @@ public partial class FrmServicePricing : Form
         {
             s.ServiceId,
             Service = s.ServiceName,
-            Rate = $"₱{s.PricePerKilo:N2} / kg",
+            Rate = $"{s.PricePerKilo:N2} / kg",
             Min_Weight = $"{s.MinimumWeight:F1} kg"
         }).ToList();
 
@@ -191,7 +191,7 @@ public partial class FrmServicePricing : Form
 
     private void ShowError(string msg)
     {
-        lblError.Text = $"⚠ {msg}";
+        lblError.Text = $" {msg}";
         lblError.Visible = true;
     }
 }

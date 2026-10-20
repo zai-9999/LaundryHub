@@ -1,4 +1,4 @@
-using LaundryHub.App.Helpers;
+﻿using LaundryHub.App.Helpers;
 using LaundryHub.Core.Enums;
 using BCrypt.Net;
 
@@ -40,7 +40,7 @@ public partial class FrmCustomerLogin : Form
         return base.ProcessCmdKey(ref msg, keyData);
     }
 
-    // ─── Event Handlers ──────────────────────────────────────────────────────
+    //  Event Handlers 
 
     private void btnLogin_Click(object? sender, EventArgs e)
     {
@@ -128,7 +128,7 @@ public partial class FrmCustomerLogin : Form
         this.Close(); // Returns to the Staff/Admin login (which re-shows via FormClosed)
     }
 
-    // ─── Navigation ───────────────────────────────────────────────────────────
+    //  Navigation 
 
     private void OpenCustomerPortal()
     {
@@ -145,7 +145,7 @@ public partial class FrmCustomerLogin : Form
         this.Hide();
     }
 
-    // ─── Validation ───────────────────────────────────────────────────────────
+    //  Validation 
 
     private new bool Validate()
     {
@@ -187,13 +187,13 @@ public partial class FrmCustomerLogin : Form
         {
             txtPassword.UseSystemPasswordChar = false;
             txtPassword.PasswordChar = '\0';
-            btnTogglePassword.Text = "🙈";
+            btnTogglePassword.Text = "";
         }
         else
         {
             txtPassword.UseSystemPasswordChar = true;
-            txtPassword.PasswordChar = '●';
-            btnTogglePassword.Text = "👁";
+            txtPassword.PasswordChar = '';
+            btnTogglePassword.Text = "";
         }
     }
 

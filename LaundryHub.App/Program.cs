@@ -1,4 +1,4 @@
-using LaundryHub.App.Forms.Auth;
+﻿using LaundryHub.App.Forms.Auth;
 using LaundryHub.App.Helpers;
 
 namespace LaundryHub.App;
@@ -39,9 +39,9 @@ static class Program
             {
                 var result = MessageBox.Show(
                     "LaundryHub can't reach its database.\n\n" +
-                    "• Make sure PostgreSQL is running.\n" +
-                    "• Make sure the 'laundryhub' database exists (run Scripts/schema.sql).\n" +
-                    "• Check the connection string in appsettings.json.\n\n" +
+                    " Make sure PostgreSQL is running.\n" +
+                    " Make sure the 'laundryhub' database exists (run Scripts/schema.sql).\n" +
+                    " Check the connection string in appsettings.json.\n\n" +
                     $"Details: {ex.Message}",
                     "LaundryHub - Database Unavailable",
                     MessageBoxButtons.RetryCancel,

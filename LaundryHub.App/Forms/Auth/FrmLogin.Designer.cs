@@ -154,7 +154,7 @@ partial class FrmLogin
         txtPassword.MaxLength = 32767;
         txtPassword.Multiline = false;
         txtPassword.Name = "txtPassword";
-        txtPassword.PasswordChar = '●';
+        txtPassword.PasswordChar = '';
         txtPassword.ScrollBars = ScrollBars.None;
         txtPassword.SelectedText = "";
         txtPassword.SelectionLength = 0;
@@ -175,7 +175,7 @@ partial class FrmLogin
         btnTogglePassword.Name = "btnTogglePassword";
         btnTogglePassword.Size = new Size(34, 33);
         btnTogglePassword.TabIndex = 8;
-        btnTogglePassword.Text = "👁";
+        btnTogglePassword.Text = "";
         btnTogglePassword.UseVisualStyleBackColor = false;
         btnTogglePassword.Click += btnTogglePassword_Click;
         //
@@ -233,7 +233,7 @@ partial class FrmLogin
         lblSeparator.Name = "lblSeparator";
         lblSeparator.Size = new Size(445, 24);
         lblSeparator.TabIndex = 7;
-        lblSeparator.Text = "──── Customer Access ────";
+        lblSeparator.Text = " Customer Access ";
         lblSeparator.TextAlign = ContentAlignment.MiddleCenter;
         // 
         // btnSwitchToCustomer
@@ -270,7 +270,7 @@ partial class FrmLogin
         MaximizeBox = false;
         Name = "FrmLogin";
         StartPosition = FormStartPosition.CenterScreen;
-        Text = "LaundryHub – Staff & Admin Login";
+        Text = "LaundryHub  Staff & Admin Login";
         Load += FrmLogin_Load;
         pnlCard.ResumeLayout(false);
         pnlCard.PerformLayout();

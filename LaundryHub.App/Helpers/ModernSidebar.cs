@@ -1,4 +1,4 @@
-using System.Drawing.Drawing2D;
+﻿using System.Drawing.Drawing2D;
 
 namespace LaundryHub.App.Helpers;
 
@@ -34,7 +34,7 @@ public class ModernSidebar : System.Windows.Forms.Panel
 
         _brandLabel = new Label
         {
-            Text = "🧺 LaundryHub",
+            Text = " LaundryHub",
             Dock = DockStyle.Top,
             Height = 32,
             Font = new Font("Segoe UI", 14F, FontStyle.Bold),

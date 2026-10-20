@@ -110,7 +110,7 @@ partial class FrmBookOrder
         btnCloseTop.Name = "btnCloseTop";
         btnCloseTop.Size = new Size(35, 35);
         btnCloseTop.TabIndex = 2;
-        btnCloseTop.Text = "✕";
+        btnCloseTop.Text = "";
         btnCloseTop.UseVisualStyleBackColor = false;
         btnCloseTop.Click += btnCancel_Click;
         // 
@@ -173,7 +173,7 @@ partial class FrmBookOrder
         lblPriceRate.Name = "lblPriceRate";
         lblPriceRate.Size = new Size(135, 20);
         lblPriceRate.TabIndex = 1;
-        lblPriceRate.Text = "Rate: ₱0.00 per kilo";
+        lblPriceRate.Text = "Rate: 0.00 per kilo";
         // 
         // lblBillableWeight
         // 
@@ -195,7 +195,7 @@ partial class FrmBookOrder
         lblTotalAmount.Name = "lblTotalAmount";
         lblTotalAmount.Size = new Size(215, 50);
         lblTotalAmount.TabIndex = 3;
-        lblTotalAmount.Text = "₱0.00";
+        lblTotalAmount.Text = "0.00";
         lblTotalAmount.TextAlign = ContentAlignment.MiddleRight;
         // 
         // btnBookNow
@@ -387,7 +387,7 @@ partial class FrmBookOrder
         lblServiceRateBadge.Name = "lblServiceRateBadge";
         lblServiceRateBadge.Size = new Size(185, 20);
         lblServiceRateBadge.TabIndex = 2;
-        lblServiceRateBadge.Text = "Rate: ₱65.00/kg (Min 4 kg)";
+        lblServiceRateBadge.Text = "Rate: 65.00/kg (Min 4 kg)";
         // 
         // cmbServices
         // 
@@ -433,7 +433,7 @@ partial class FrmBookOrder
         lblCustAddress.Name = "lblCustAddress";
         lblCustAddress.Size = new Size(540, 28);
         lblCustAddress.TabIndex = 3;
-        lblCustAddress.Text = "📍 Address: Not specified";
+        lblCustAddress.Text = " Address: Not specified";
         // 
         // lblCustPhone
         // 
@@ -444,7 +444,7 @@ partial class FrmBookOrder
         lblCustPhone.Name = "lblCustPhone";
         lblCustPhone.Size = new Size(116, 20);
         lblCustPhone.TabIndex = 2;
-        lblCustPhone.Text = "📞 Phone: —";
+        lblCustPhone.Text = " Phone: ";
         // 
         // lblCustName
         // 
@@ -455,7 +455,7 @@ partial class FrmBookOrder
         lblCustName.Name = "lblCustName";
         lblCustName.Size = new Size(147, 21);
         lblCustName.TabIndex = 1;
-        lblCustName.Text = "👤 Customer Name";
+        lblCustName.Text = " Customer Name";
         // 
         // lblCustInfoTitle
         // 
@@ -480,7 +480,7 @@ partial class FrmBookOrder
         MinimizeBox = false;
         Name = "FrmBookOrder";
         StartPosition = FormStartPosition.CenterParent;
-        Text = "LaundryHub – Book Laundry Service";
+        Text = "LaundryHub  Book Laundry Service";
         pnlHeader.ResumeLayout(false);
         pnlHeader.PerformLayout();
         pnlMainCard.ResumeLayout(false);

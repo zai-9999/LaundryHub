@@ -1,4 +1,4 @@
-using LaundryHub.App.Helpers;
+﻿using LaundryHub.App.Helpers;
 using LaundryHub.Core.Models;
 using CustomerModel = LaundryHub.Core.Models.Customer;
 
@@ -44,11 +44,11 @@ public partial class FrmBookOrder : Form
 
     private void PopulateCustomerInfo()
     {
-        lblCustName.Text = $"👤 {_customer.FullName}";
-        lblCustPhone.Text = $"📞 Phone: {_customer.Phone}";
+        lblCustName.Text = $" {_customer.FullName}";
+        lblCustPhone.Text = $" Phone: {_customer.Phone}";
         lblCustAddress.Text = string.IsNullOrWhiteSpace(_customer.Address)
-            ? "📍 Address: Shop Drop-Off"
-            : $"📍 Address: {_customer.Address}";
+            ? " Address: Shop Drop-Off"
+            : $" Address: {_customer.Address}";
     }
 
     private void LoadServices()
@@ -69,13 +69,13 @@ public partial class FrmBookOrder : Form
     {
         if (cmbServices.SelectedItem is not ServiceType svc) return;
 
-        lblServiceRateBadge.Text = $"Rate: ₱{svc.PricePerKilo:N2} / kg  (Min. {svc.MinimumWeight:F1} kg)";
-        lblPriceRate.Text = $"Rate: ₱{svc.PricePerKilo:N2} per kilo";
+        lblServiceRateBadge.Text = $"Rate: {svc.PricePerKilo:N2} / kg  (Min. {svc.MinimumWeight:F1} kg)";
+        lblPriceRate.Text = $"Rate: {svc.PricePerKilo:N2} per kilo";
 
         if (!InputValidator.IsValidWeight(txtWeight.Text, out decimal kg, out _, min: 0.1m, max: 200m))
         {
             lblBillableWeight.Text = "Billed weight: 0.0 kg";
-            lblTotalAmount.Text = "₱0.00";
+            lblTotalAmount.Text = "0.00";
             return;
         }
 
@@ -83,7 +83,7 @@ public partial class FrmBookOrder : Form
         decimal total = svc.ComputePrice(kg);
 
         lblBillableWeight.Text = $"Billed weight: {billable:F1} kg {(kg < svc.MinimumWeight ? "(minimum load applied)" : "")}";
-        lblTotalAmount.Text = $"₱{total:N2}";
+        lblTotalAmount.Text = $"{total:N2}";
     }
 
     private void cmbServices_SelectedIndexChanged(object? sender, EventArgs e) => ComputePrice();
@@ -173,7 +173,7 @@ public partial class FrmBookOrder : Form
             EmailHelper.SendReceiptAsync(order, _customer);
 
             MessageBox.Show(
-                $"Your laundry order has been successfully booked!\n\nOrder Number: {order.OrderNumber}\nTotal Due: ₱{order.TotalAmount:N2}\nPickup Target: {order.PickupDate:MMMM dd, yyyy}\n\nPresent your digital QR E-Ticket upon claiming.",
+                $"Your laundry order has been successfully booked!\n\nOrder Number: {order.OrderNumber}\nTotal Due: {order.TotalAmount:N2}\nPickup Target: {order.PickupDate:MMMM dd, yyyy}\n\nPresent your digital QR E-Ticket upon claiming.",
                 "Order Confirmed!",
                 MessageBoxButtons.OK,
                 MessageBoxIcon.Information);
@@ -189,7 +189,7 @@ public partial class FrmBookOrder : Form
 
     private void ShowError(string message)
     {
-        lblError.Text = $"⚠ {message}";
+        lblError.Text = $" {message}";
         lblError.Visible = true;
     }
 }

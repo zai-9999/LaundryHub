@@ -1,4 +1,4 @@
-using Panel = System.Windows.Forms.Panel;
+﻿using Panel = System.Windows.Forms.Panel;
 using ReaLTaiizor.Controls;
 using LaundryHub.App.Helpers;
 
@@ -141,7 +141,7 @@ partial class FrmStaffDashboard
         lblLiveBadge.Name = "lblLiveBadge";
         lblLiveBadge.Size = new Size(100, 26);
         lblLiveBadge.TabIndex = 2;
-        lblLiveBadge.Text = "● Active Queue";
+        lblLiveBadge.Text = " Active Queue";
         lblLiveBadge.TextAlign = ContentAlignment.MiddleCenter;
         // 
         // lblTableSubtitle
@@ -299,7 +299,7 @@ partial class FrmStaffDashboard
         lblSales.Name = "lblSales";
         lblSales.Size = new Size(65, 30);
         lblSales.TabIndex = 1;
-        lblSales.Text = "₱0.00";
+        lblSales.Text = "0.00";
         // 
         // lblSalesTitle
         // 
@@ -325,7 +325,7 @@ partial class FrmStaffDashboard
         MinimumSize = new Size(980, 600);
         Name = "FrmStaffDashboard";
         StartPosition = FormStartPosition.CenterScreen;
-        Text = "LaundryHub – Staff Dashboard";
+        Text = "LaundryHub  Staff Dashboard";
         pnlContent.ResumeLayout(false);
         cardOrders.ResumeLayout(false);
         ((System.ComponentModel.ISupportInitialize)dgvOrders).EndInit();

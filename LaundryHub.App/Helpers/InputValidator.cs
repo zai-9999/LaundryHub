@@ -1,4 +1,4 @@
-using ReaLTaiizor.Controls;
+﻿using ReaLTaiizor.Controls;
 using System.Globalization;
 using System.Text.RegularExpressions;
 
@@ -182,13 +182,13 @@ public static class InputValidator
 
         if (price < min)
         {
-            error = $"{fieldName} must be at least ₱{min:N2}.";
+            error = $"{fieldName} must be at least {min:N2}.";
             return false;
         }
 
         if (price > max)
         {
-            error = $"{fieldName} cannot exceed ₱{max:N2}.";
+            error = $"{fieldName} cannot exceed {max:N2}.";
             return false;
         }
 

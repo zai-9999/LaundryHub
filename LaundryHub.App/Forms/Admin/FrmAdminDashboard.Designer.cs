@@ -1,4 +1,4 @@
-using Panel = System.Windows.Forms.Panel;
+﻿using Panel = System.Windows.Forms.Panel;
 using ReaLTaiizor.Controls;
 using LaundryHub.App.Helpers;
 
@@ -145,7 +145,7 @@ partial class FrmAdminDashboard
         lblLiveBadge.Name = "lblLiveBadge";
         lblLiveBadge.Size = new Size(100, 26);
         lblLiveBadge.TabIndex = 2;
-        lblLiveBadge.Text = "● Live Activity";
+        lblLiveBadge.Text = " Live Activity";
         lblLiveBadge.TextAlign = ContentAlignment.MiddleCenter;
         // 
         // lblTableSubtitle
@@ -250,7 +250,7 @@ partial class FrmAdminDashboard
         lblSalesToday.Name = "lblSalesToday";
         lblSalesToday.Size = new Size(173, 47);
         lblSalesToday.TabIndex = 2;
-        lblSalesToday.Text = "₱0.00";
+        lblSalesToday.Text = "0.00";
         // 
         // lblRevenueTitle
         // 
@@ -373,7 +373,7 @@ partial class FrmAdminDashboard
         ForeColor = Color.FromArgb(17, 24, 68);
         Name = "FrmAdminDashboard";
         StartPosition = FormStartPosition.CenterScreen;
-        Text = "LaundryHub – Owner & Administrator Dashboard";
+        Text = "LaundryHub  Owner & Administrator Dashboard";
         pnlMain.ResumeLayout(false);
         cardOrders.ResumeLayout(false);
         ((System.ComponentModel.ISupportInitialize)dgvTodayOrders).EndInit();

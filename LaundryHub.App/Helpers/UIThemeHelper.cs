@@ -1,4 +1,4 @@
-using System.Drawing.Drawing2D;
+﻿using System.Drawing.Drawing2D;
 using System.IO;
 using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
@@ -495,7 +495,7 @@ public static class UIThemeHelper
         catch (InvalidOperationException) { }
     }
 
-    // ── Status pills ──────────────────────────────────────────────────────────
+    //  Status pills 
     private static readonly Font StatusPillFont = new("Segoe UI Semibold", 8.5F);
 
     private static bool TryGetPillColors(string status, out Color back, out Color fore)

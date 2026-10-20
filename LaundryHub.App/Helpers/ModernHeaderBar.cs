@@ -1,4 +1,4 @@
-using System.Drawing.Drawing2D;
+﻿using System.Drawing.Drawing2D;
 using ReaLTaiizor.Controls;
 
 namespace LaundryHub.App.Helpers;
@@ -32,7 +32,7 @@ public class ModernHeaderBar : System.Windows.Forms.Panel
         BackColor = Color.White;
         Padding = new Padding(24, 12, 24, 12);
 
-        // ── Right-side Container Panel ──
+        //  Right-side Container Panel 
         // Avoids DockStyle.Right height stretching on individual controls
         var pnlRight = new System.Windows.Forms.Panel
         {
@@ -41,7 +41,7 @@ public class ModernHeaderBar : System.Windows.Forms.Panel
             BackColor = Color.Transparent
         };
 
-        // ── Right-side User Profile ──
+        //  Right-side User Profile 
         _pnlUserProfile = new System.Windows.Forms.Panel
         {
             Location = new Point(370, 4),
@@ -97,7 +97,7 @@ public class ModernHeaderBar : System.Windows.Forms.Panel
         _pnlUserProfile.Controls.Add(_lblRole);
         _pnlUserProfile.Controls.Add(_lblAvatar);
 
-        // ── Action Button (e.g. Logout / Refresh) ──
+        //  Action Button (e.g. Logout / Refresh) 
         _btnAction = new HopeButton
         {
             Location = new Point(260, 6),
@@ -108,11 +108,11 @@ public class ModernHeaderBar : System.Windows.Forms.Panel
             BorderColor = UIThemeHelper.Danger,
             TextColor = Color.White,
             HoverTextColor = Color.White,
-            Text = "🚪 Logout",
+            Text = " Logout",
             Cursor = Cursors.Hand
         };
 
-        // ── Search Box ──
+        //  Search Box 
         _txtSearch = new HopeTextBox
         {
             Location = new Point(0, 6),
@@ -129,7 +129,7 @@ public class ModernHeaderBar : System.Windows.Forms.Panel
         pnlRight.Controls.Add(_btnAction);
         pnlRight.Controls.Add(_txtSearch);
 
-        // ── Left Side: Title & Subtitle ──
+        //  Left Side: Title & Subtitle 
         var pnlTitles = new System.Windows.Forms.Panel
         {
             Dock = DockStyle.Fill,

@@ -202,7 +202,7 @@ partial class FrmCustomerRegister
         txtPassword.Hint = "Min 6 characters";
         txtPassword.Location = new Point(62, 338);
         txtPassword.Name = "txtPassword";
-        txtPassword.PasswordChar = '●';
+        txtPassword.PasswordChar = '';
         txtPassword.Size = new Size(320, 36);
         txtPassword.TabIndex = 4;
         txtPassword.UseSystemPasswordChar = true;
@@ -229,7 +229,7 @@ partial class FrmCustomerRegister
         txtConfirmPassword.Hint = "Re-enter password";
         txtConfirmPassword.Location = new Point(62, 398);
         txtConfirmPassword.Name = "txtConfirmPassword";
-        txtConfirmPassword.PasswordChar = '●';
+        txtConfirmPassword.PasswordChar = '';
         txtConfirmPassword.Size = new Size(320, 36);
         txtConfirmPassword.TabIndex = 5;
         txtConfirmPassword.UseSystemPasswordChar = true;
@@ -338,7 +338,7 @@ partial class FrmCustomerRegister
         MaximizeBox = false;
         Name = "FrmCustomerRegister";
         StartPosition = FormStartPosition.CenterScreen;
-        Text = "LaundryHub – Create Customer Account";
+        Text = "LaundryHub  Create Customer Account";
         pnlCard.ResumeLayout(false);
         pnlCard.PerformLayout();
         ((System.ComponentModel.ISupportInitialize)picLogo).EndInit();

@@ -1,4 +1,4 @@
-using LaundryHub.App.Helpers;
+﻿using LaundryHub.App.Helpers;
 using LaundryHub.Core.Models;
 using CustomerModel = LaundryHub.Core.Models.Customer;
 
@@ -120,22 +120,22 @@ public partial class FrmNewOrder : Form
     {
         if (cmbService.SelectedItem is not ServiceType svc)
         {
-            lblPrice.Text = "₱0.00";
+            lblPrice.Text = "0.00";
             lblPriceBreakdown.Text = "Select a service";
             return;
         }
 
         if (!InputValidator.IsValidWeight(txtWeight.Text, out decimal kg, out _, min: 0.1m, max: 200m))
         {
-            lblPrice.Text = "₱0.00";
-            lblPriceBreakdown.Text = $"Rate: ₱{svc.PricePerKilo:N2}/kg | Min: {svc.MinimumWeight:F1} kg";
+            lblPrice.Text = "0.00";
+            lblPriceBreakdown.Text = $"Rate: {svc.PricePerKilo:N2}/kg | Min: {svc.MinimumWeight:F1} kg";
             return;
         }
 
         decimal total = svc.ComputePrice(kg);
-        lblPrice.Text = $"₱{total:N2}";
+        lblPrice.Text = $"{total:N2}";
         lblPriceBreakdown.Text =
-            $"Rate: ₱{svc.PricePerKilo:N2}/kg  |  Min: {svc.MinimumWeight:F1} kg  " +
+            $"Rate: {svc.PricePerKilo:N2}/kg  |  Min: {svc.MinimumWeight:F1} kg  " +
             $"|  Billed: {Math.Max(kg, svc.MinimumWeight):F1} kg";
     }
 
@@ -190,7 +190,7 @@ public partial class FrmNewOrder : Form
 
         using var ticketForm = new Form
         {
-            Text = $"QR Ticket – {order.OrderNumber}",
+            Text = $"QR Ticket  {order.OrderNumber}",
             Size = new Size(380, 480),
             StartPosition = FormStartPosition.CenterParent,
             FormBorderStyle = FormBorderStyle.FixedDialog,
@@ -208,7 +208,7 @@ public partial class FrmNewOrder : Form
         };
         var info = new Label
         {
-            Text = $"{order.OrderNumber}\n{_selectedCustomer!.FullName}\n{order.ServiceName}  |  {order.WeightKg} kg\n₱{order.TotalAmount:N2}  |  {order.PickupDate:MMM dd, yyyy}",
+            Text = $"{order.OrderNumber}\n{_selectedCustomer!.FullName}\n{order.ServiceName}  |  {order.WeightKg} kg\n{order.TotalAmount:N2}  |  {order.PickupDate:MMM dd, yyyy}",
             ForeColor = Color.White,
             Font = new Font("Segoe UI", 9.5f),
             Location = new Point(20, 255),
@@ -217,7 +217,7 @@ public partial class FrmNewOrder : Form
         };
         var btnPrint = new Button
         {
-            Text = "🖨  Print Ticket",
+            Text = "  Print Ticket",
             Location = new Point(50, 365),
             Size = new Size(260, 38),
             Font = new Font("Segoe UI", 10, FontStyle.Bold),

@@ -1,4 +1,4 @@
-using LaundryHub.App.Helpers;
+﻿using LaundryHub.App.Helpers;
 using LaundryHub.Core.Models;
 using System.Text.RegularExpressions;
 using CustomerModel = LaundryHub.Core.Models.Customer;
@@ -81,8 +81,8 @@ public partial class FrmCustomerRegistration : Form
             c.CustomerId,
             Name = c.FullName,
             Phone = c.Phone,
-            Email = string.IsNullOrWhiteSpace(c.Email) ? "—" : c.Email,
-            Address = string.IsNullOrWhiteSpace(c.Address) ? "—" : c.Address,
+            Email = string.IsNullOrWhiteSpace(c.Email) ? "" : c.Email,
+            Address = string.IsNullOrWhiteSpace(c.Address) ? "" : c.Address,
             Joined = c.CreatedAt.ToString("MM/dd/yyyy")
         }).ToList();
 
@@ -292,7 +292,7 @@ public partial class FrmCustomerRegistration : Form
 
     private void ShowError(string msg)
     {
-        lblError.Text = $"⚠ {msg}";
+        lblError.Text = $" {msg}";
         lblError.Visible = true;
     }
 }

@@ -92,7 +92,7 @@ partial class FrmExportReport
         btnClose.Name = "btnClose";
         btnClose.Size = new Size(90, 34);
         btnClose.TabIndex = 1;
-        btnClose.Text = "✕ Close";
+        btnClose.Text = " Close";
         btnClose.Click += btnClose_Click;
         // 
         // lblTitle
@@ -347,7 +347,7 @@ partial class FrmExportReport
         lblSales.Name = "lblSales";
         lblSales.Size = new Size(178, 42);
         lblSales.TabIndex = 2;
-        lblSales.Text = "₱0.00";
+        lblSales.Text = "0.00";
         // 
         // lblSalesTitle
         // 
@@ -396,7 +396,7 @@ partial class FrmExportReport
         btnExportExcel.Name = "btnExportExcel";
         btnExportExcel.Size = new Size(200, 36);
         btnExportExcel.TabIndex = 3;
-        btnExportExcel.Text = "📥 Export to Excel (.xlsx)";
+        btnExportExcel.Text = " Export to Excel (.xlsx)";
         btnExportExcel.Click += btnExportExcel_Click;
         // 
         // btnLoad
@@ -453,7 +453,7 @@ partial class FrmExportReport
         MaximizeBox = false;
         Name = "FrmExportReport";
         StartPosition = FormStartPosition.CenterParent;
-        Text = "LaundryHub – Daily Reports & Excel Export";
+        Text = "LaundryHub  Daily Reports & Excel Export";
         pnlHeader.ResumeLayout(false);
         pnlContainer.ResumeLayout(false);
         pnlGridWrap.ResumeLayout(false);

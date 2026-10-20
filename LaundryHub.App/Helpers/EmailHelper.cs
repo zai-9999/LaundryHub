@@ -1,4 +1,4 @@
-using MailKit.Net.Smtp;
+﻿using MailKit.Net.Smtp;
 using MailKit.Security;
 using MimeKit;
 using MimeKit.Utils;
@@ -89,7 +89,7 @@ public static class EmailHelper
         var message   = new MimeMessage();
         message.From.Add(new MailboxAddress(senderName, sender));
         message.To.Add(new MailboxAddress(customer.FullName, customer.Email!));
-        message.Subject = $"[{shopName}] Order Receipt – {order.OrderNumber}";
+        message.Subject = $"[{shopName}] Order Receipt  {order.OrderNumber}";
 
         // Attach QR code image
         var qrPath    = QrCodeHelper.SaveToTempFile(order.OrderNumber);
@@ -114,7 +114,7 @@ public static class EmailHelper
       <tr><td style='padding:8px;background:#f3f4f6'><strong>Weight</strong></td>
           <td style='padding:8px'>{order.WeightKg} kg</td></tr>
       <tr><td style='padding:8px;background:#f3f4f6'><strong>Total</strong></td>
-          <td style='padding:8px;font-size:18px;color:#1e40af'><strong>₱{order.TotalAmount:N2}</strong></td></tr>
+          <td style='padding:8px;font-size:18px;color:#1e40af'><strong>{order.TotalAmount:N2}</strong></td></tr>
       <tr><td style='padding:8px;background:#f3f4f6'><strong>Pickup Date</strong></td>
           <td style='padding:8px'>{order.PickupDate:MMMM dd, yyyy}</td></tr>
       <tr><td style='padding:8px;background:#f3f4f6'><strong>Status</strong></td>

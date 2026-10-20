@@ -1,4 +1,4 @@
-using LaundryHub.App.Helpers;
+﻿using LaundryHub.App.Helpers;
 using LaundryHub.Core.Models;
 using LaundryHub.Core.Enums;
 using Customer = LaundryHub.Core.Models.Customer;
@@ -40,9 +40,9 @@ public partial class FrmOrderList : Form
             Customer = o.CustomerName,
             Service = o.ServiceName,
             Weight = $"{o.WeightKg} kg",
-            Total = $"₱{o.TotalAmount:N2}",
+            Total = $"{o.TotalAmount:N2}",
             o.Status,
-            Pickup = o.PickupDate?.ToString("MM/dd/yyyy") ?? "—",
+            Pickup = o.PickupDate?.ToString("MM/dd/yyyy") ?? "",
             Date = o.CreatedAt.ToString("MM/dd hh:mm tt")
         }).ToList();
 
@@ -91,9 +91,9 @@ public partial class FrmOrderList : Form
                 Customer = o.CustomerName,
                 Service = o.ServiceName,
                 Weight = $"{o.WeightKg} kg",
-                Total = $"₱{o.TotalAmount:N2}",
+                Total = $"{o.TotalAmount:N2}",
                 o.Status,
-                Pickup = o.PickupDate?.ToString("MM/dd/yyyy") ?? "—",
+                Pickup = o.PickupDate?.ToString("MM/dd/yyyy") ?? "",
                 Date = o.CreatedAt.ToString("MM/dd hh:mm tt")
             }).ToList();
             if (dgvOrders.Columns["OrderId"] is { } col) col.Visible = false;

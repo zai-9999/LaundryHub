@@ -1,4 +1,4 @@
-using LaundryHub.App.Helpers;
+﻿using LaundryHub.App.Helpers;
 using LaundryHub.Core.Models;
 using System.Threading.Tasks;
 
@@ -142,7 +142,7 @@ public partial class FrmGuestLookup : Form
                 lblResultOrder.Text = order.OrderNumber;
                 lblResultCustomer.Text = customer.FullName;
                 lblResultService.Text = $"{order.ServiceName ?? "Standard Laundry"} ({order.WeightKg} kg)";
-                lblResultTotal.Text = $"₱{order.TotalAmount:N2}";
+                lblResultTotal.Text = $"{order.TotalAmount:N2}";
                 lblResultPayment.Text = order.PaymentRecorded ? "Paid" : "Unpaid";
                 lblResultPayment.ForeColor = order.PaymentRecorded ? UIThemeHelper.Success : UIThemeHelper.Danger;
                 lblResultPickup.Text = order.PickupDate?.ToString("MMMM dd, yyyy") ?? "Pending schedule";
@@ -172,7 +172,7 @@ public partial class FrmGuestLookup : Form
                 progressSteps[i].BackColor = UIThemeHelper.Danger;
                 progressLabels[i].ForeColor = Color.White;
             }
-            lblStep0.Text = "❌ Cancelled";
+            lblStep0.Text = " Cancelled";
             lblStep1.Text = "";
             lblStep2.Text = "";
             lblStep3.Text = string.IsNullOrWhiteSpace(cancelReason) ? "" : $"Reason: {cancelReason}";
@@ -181,11 +181,11 @@ public partial class FrmGuestLookup : Form
         }
 
         // Reset labels for normal statuses
-        lblStep1.Text = "🌀 Drying";
-        lblStep2.Text = "✨ Ready";
-        lblStep3.Text = "📦 Claimed";
+        lblStep1.Text = " Drying";
+        lblStep2.Text = " Ready";
+        lblStep3.Text = " Claimed";
 
-        lblStep0.Text = "🧺 Washing";
+        lblStep0.Text = " Washing";
 
         int activeIdx = status switch
         {
@@ -221,7 +221,7 @@ public partial class FrmGuestLookup : Form
 
     private void ShowError(string msg)
     {
-        lblError.Text = $"⚠ {msg}";
+        lblError.Text = $" {msg}";
         lblError.Visible = true;
     }
 }

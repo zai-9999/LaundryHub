@@ -1,4 +1,4 @@
-using LaundryHub.App.Helpers;
+﻿using LaundryHub.App.Helpers;
 using LaundryHub.Core.Models;
 using System.Drawing.Drawing2D;
 using ReaLTaiizor.Util;
@@ -22,32 +22,32 @@ public partial class FrmAdminDashboard : Form
         UIThemeHelper.EnableStatusPills(dgvTodayOrders);
 
         // Sidebar Branding & Navigation
-        pnlSidebar.BrandLabel.Text = "🧺 LaundryHub";
+        pnlSidebar.BrandLabel.Text = " LaundryHub";
         pnlSidebar.BrandSubtitle.Text = "ADMIN & OPERATIONS";
 
         pnlSidebar.AddSection("GENERAL");
-        var btnNavDash = pnlSidebar.AddNavButton("📊", "Overview & Analytics");
+        var btnNavDash = pnlSidebar.AddNavButton("", "Overview & Analytics");
         btnNavDash.IsActive = true;
 
         pnlSidebar.AddSection("OPERATIONS");
-        pnlSidebar.AddNavButton("➕", "New Laundry Order", btnNewOrder_Click);
-        pnlSidebar.AddNavButton("👥", "Customer Management", btnCustomerRegistration_Click);
+        pnlSidebar.AddNavButton("", "New Laundry Order", btnNewOrder_Click);
+        pnlSidebar.AddNavButton("", "Customer Management", btnCustomerRegistration_Click);
 
         pnlSidebar.AddSection("ADMINISTRATION");
-        pnlSidebar.AddNavButton("👔", "Manage Staff", btnManageStaff_Click);
-        pnlSidebar.AddNavButton("🏷️", "Services & Rates", btnServicePricing_Click);
-        pnlSidebar.AddNavButton("📈", "Daily Reports & Excel", btnExportReport_Click);
+        pnlSidebar.AddNavButton("", "Manage Staff", btnManageStaff_Click);
+        pnlSidebar.AddNavButton("", "Services & Rates", btnServicePricing_Click);
+        pnlSidebar.AddNavButton("", "Daily Reports & Excel", btnExportReport_Click);
 
         pnlSidebar.AddSection("SYSTEM");
-        pnlSidebar.AddNavButton("🔄", "Refresh Dashboard", btnRefresh_Click);
-        pnlSidebar.AddNavButton("🚪", "Logout", btnLogout_Click);
+        pnlSidebar.AddNavButton("", "Refresh Dashboard", btnRefresh_Click);
+        pnlSidebar.AddNavButton("", "Logout", btnLogout_Click);
 
         // Header Bar Setup
         pnlHeader.Title = "Platform Overview & Analytics";
         pnlHeader.Subtitle = "REAL-TIME LAUNDRY WORKFLOW, PERFORMANCE & REVENUE MONITORING";
         pnlHeader.SearchBox.Hint = "Search order #, customer, status...";
         pnlHeader.SearchBox.TextChanged += txtSearch_TextChanged;
-        pnlHeader.ActionButton.Text = "🚪 Logout";
+        pnlHeader.ActionButton.Text = " Logout";
         pnlHeader.ActionButton.Click += btnLogout_Click;
 
         if (SessionManager.CurrentUser != null)
@@ -67,10 +67,10 @@ public partial class FrmAdminDashboard : Form
         lblClaimed    = stats[3].ValueLabel;
         lblSalesToday.Font = new Font("Segoe UI", 17F, FontStyle.Bold);
 
-        lblTotalToday.Text = "—";
-        lblSalesToday.Text = "—";
-        lblPending.Text = "—";
-        lblClaimed.Text = "—";
+        lblTotalToday.Text = "";
+        lblSalesToday.Text = "";
+        lblPending.Text = "";
+        lblClaimed.Text = "";
 
         cardOrders.BringToFront();
         dgvTodayOrders.BringToFront();
@@ -171,11 +171,11 @@ public partial class FrmAdminDashboard : Form
             this.SafeInvoke(() =>
             {
                 lblTotalToday.Text = report.TotalOrders.ToString();
-                lblSalesToday.Text = $"₱{report.TotalSales:N2}";
+                lblSalesToday.Text = $"{report.TotalSales:N2}";
                 lblPending.Text = report.PendingOrders.ToString();
                 lblClaimed.Text = report.ClaimedOrders.ToString();
 
-                lblLiveBadge.Text = $"● {report.TotalOrders} Live";
+                lblLiveBadge.Text = $" {report.TotalOrders} Live";
 
                 PopulateGrid(report.Orders);
             });
@@ -214,7 +214,7 @@ public partial class FrmAdminDashboard : Form
             Customer = o.CustomerName,
             Service = o.ServiceName,
             Weight = $"{o.WeightKg} kg",
-            Total = $"₱{o.TotalAmount:N2}",
+            Total = $"{o.TotalAmount:N2}",
             Payment = o.PaymentRecorded ? "Paid" : "Unpaid",
             o.Status,
             Time = o.CreatedAt.ToString("hh:mm tt")
