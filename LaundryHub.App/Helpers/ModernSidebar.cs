@@ -1,16 +1,17 @@
-﻿using System.Drawing.Drawing2D;
+using System.Drawing.Drawing2D;
 
 namespace LaundryHub.App.Helpers;
 
 /// <summary>
 /// A modern sidebar panel that paints a smooth Navy gradient background,
-/// hosts a branding area at the top and a scrollable navigation panel below.
+/// hosts a branding area (logo + text) at the top and a scrollable navigation panel below.
 /// </summary>
 public class ModernSidebar : System.Windows.Forms.Panel
 {
     private readonly Label _brandLabel;
     private readonly Label _brandSubtitle;
     private readonly FlowLayoutPanel _navFlow;
+    private readonly PictureBox _picLogo;
 
     public ModernSidebar()
     {
@@ -23,21 +24,30 @@ public class ModernSidebar : System.Windows.Forms.Panel
         Dock = DockStyle.Left;
         BackColor = UIThemeHelper.Navy;
 
-        // Branding area
+        // Branding area — logo + text stacked vertically
         var pnlBrand = new System.Windows.Forms.Panel
         {
             Dock = DockStyle.Top,
-            Height = 80,
-            BackColor = Color.Transparent,
-            Padding = new Padding(20, 16, 20, 0)
+            Height = 130,
+            BackColor = Color.Transparent
         };
+
+        // Logo image (shown at the top of the brand area)
+        _picLogo = new PictureBox
+        {
+            Size = new Size(160, 60),
+            Location = new Point(20, 10),
+            SizeMode = PictureBoxSizeMode.Zoom,
+            BackColor = Color.Transparent
+        };
+        LoadSidebarLogo(_picLogo);
 
         _brandLabel = new Label
         {
             Text = " LaundryHub",
-            Dock = DockStyle.Top,
-            Height = 32,
-            Font = new Font("Segoe UI", 14F, FontStyle.Bold),
+            Location = new Point(16, 76),
+            Size = new Size(225, 28),
+            Font = new Font("Segoe UI", 13F, FontStyle.Bold),
             ForeColor = UIThemeHelper.Sand,
             BackColor = Color.Transparent,
             TextAlign = ContentAlignment.MiddleLeft
@@ -46,17 +56,17 @@ public class ModernSidebar : System.Windows.Forms.Panel
         _brandSubtitle = new Label
         {
             Text = "MANAGEMENT SYSTEM",
-            Dock = DockStyle.Top,
-            Height = 20,
+            Location = new Point(20, 104),
+            Size = new Size(225, 18),
             Font = new Font("Segoe UI", 7.5F, FontStyle.Bold),
             ForeColor = Color.FromArgb(140, 155, 190),
             BackColor = Color.Transparent,
-            Padding = new Padding(2, 0, 0, 0),
             TextAlign = ContentAlignment.TopLeft
         };
 
-        pnlBrand.Controls.Add(_brandSubtitle);
+        pnlBrand.Controls.Add(_picLogo);
         pnlBrand.Controls.Add(_brandLabel);
+        pnlBrand.Controls.Add(_brandSubtitle);
 
         // Separator
         var sep = new System.Windows.Forms.Panel
@@ -86,6 +96,18 @@ public class ModernSidebar : System.Windows.Forms.Panel
     public Label BrandLabel => _brandLabel;
     public Label BrandSubtitle => _brandSubtitle;
     public FlowLayoutPanel NavFlow => _navFlow;
+
+    /// <summary>Loads the logo.png from the Resources folder into the given PictureBox.</summary>
+    public static void LoadSidebarLogo(PictureBox pic)
+    {
+        try
+        {
+            var path = Path.Combine(Application.StartupPath, "Resources", "logo.png");
+            if (File.Exists(path))
+                pic.Image = Image.FromFile(path);
+        }
+        catch { }
+    }
 
     /// <summary>Adds a section header to the nav flow.</summary>
     public NavSection AddSection(string title)
