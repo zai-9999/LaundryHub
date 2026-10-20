@@ -93,6 +93,20 @@ public class OrderRepository : IOrderRepository
             new { OrderId = orderId }) > 0;
     }
 
+    public bool UpdateConfirmedWeight(int orderId, decimal weightKg, decimal totalAmount)
+    {
+        using var conn = _db.CreateConnection();
+        return conn.Execute(@"
+            UPDATE orders
+            SET weight_kg = @WeightKg,
+                total_amount = @TotalAmount,
+                updated_at = NOW()
+            WHERE order_id = @OrderId
+              AND status IN ('Washing', 'Drying', 'Ready for Pickup')
+              AND payment_recorded = FALSE",
+            new { OrderId = orderId, WeightKg = weightKg, TotalAmount = totalAmount }) > 0;
+    }
+
     public void UpdateStatus(int orderId, string newStatus, string? cancelReason = null)
     {
         using var conn = _db.CreateConnection();

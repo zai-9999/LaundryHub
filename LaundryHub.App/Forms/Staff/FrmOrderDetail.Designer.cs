@@ -33,6 +33,7 @@ partial class FrmOrderDetail
         btnAdvanceStatus = new Button();
         btnClaimOrder = new Button();
         btnCancelOrder = new Button();
+        btnEditWeight = new Button();
         tlpDetails = new TableLayoutPanel();
         lblHCustomer = new Label();
         lblCustomerInfo = new Label();
@@ -215,6 +216,7 @@ partial class FrmOrderDetail
         flpActions.Controls.Add(btnAdvanceStatus);
         flpActions.Controls.Add(btnClaimOrder);
         flpActions.Controls.Add(btnCancelOrder);
+        flpActions.Controls.Add(btnEditWeight);
         flpActions.Dock = DockStyle.Bottom;
         flpActions.Location = new Point(20, 400);
         flpActions.Name = "flpActions";
@@ -269,6 +271,22 @@ partial class FrmOrderDetail
         btnCancelOrder.Text = "✕ Cancel Order";
         btnCancelOrder.UseVisualStyleBackColor = false;
         btnCancelOrder.Click += btnCancelOrder_Click;
+        // 
+        // btnEditWeight
+        // 
+        btnEditWeight.BackColor = Color.FromArgb(124, 58, 237);
+        btnEditWeight.Cursor = Cursors.Hand;
+        btnEditWeight.FlatAppearance.BorderSize = 0;
+        btnEditWeight.FlatStyle = FlatStyle.Flat;
+        btnEditWeight.Font = new Font("Segoe UI", 9F, FontStyle.Bold);
+        btnEditWeight.ForeColor = Color.White;
+        btnEditWeight.Location = new Point(3, 55);
+        btnEditWeight.Name = "btnEditWeight";
+        btnEditWeight.Size = new Size(135, 36);
+        btnEditWeight.TabIndex = 3;
+        btnEditWeight.Text = "⚖ Edit Weight";
+        btnEditWeight.UseVisualStyleBackColor = false;
+        btnEditWeight.Click += btnEditWeight_Click;
         // 
         // tlpDetails
         // 
@@ -495,6 +513,7 @@ partial class FrmOrderDetail
     private Button btnAdvanceStatus;
     private Button btnClaimOrder;
     private Button btnCancelOrder;
+    private Button btnEditWeight;
     private Panel pnlRightWrapper;
     private Panel pnlRightCard;
     private Label lblQrTitle;

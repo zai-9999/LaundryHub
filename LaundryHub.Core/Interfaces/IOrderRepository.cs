@@ -12,6 +12,7 @@ public interface IOrderRepository
     IEnumerable<Order> Search(string term);
     int Add(Order order);
     bool ConfirmDropOff(int orderId);
+    bool UpdateConfirmedWeight(int orderId, decimal weightKg, decimal totalAmount);
     void UpdateStatus(int orderId, string newStatus, string? cancelReason = null);
     void RecordPayment(int orderId, decimal amountPaid);
     void Archive(int orderId);
