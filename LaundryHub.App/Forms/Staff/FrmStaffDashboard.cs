@@ -202,4 +202,28 @@ public partial class FrmStaffDashboard : Form
     {
         // Status pills handled by UIThemeHelper.EnableStatusPills
     }
+
+    private void pnlStatPending_Paint(object? sender, PaintEventArgs e)
+    {
+        using var pen = new Pen(Color.FromArgb(245, 158, 11), 2);
+        e.Graphics.DrawLine(pen, 0, 0, 0, pnlStatPending.Height);
+    }
+
+    private void pnlStatTotal_Paint(object? sender, PaintEventArgs e)
+    {
+        using var pen = new Pen(Color.FromArgb(59, 130, 246), 2);
+        e.Graphics.DrawLine(pen, 0, 0, 0, pnlStatTotal.Height);
+    }
+
+    private void pnlStatClaimed_Paint(object? sender, PaintEventArgs e)
+    {
+        using var pen = new Pen(Color.FromArgb(16, 185, 129), 2);
+        e.Graphics.DrawLine(pen, 0, 0, 0, pnlStatClaimed.Height);
+    }
+
+    private void pnlStatSales_Paint(object? sender, PaintEventArgs e)
+    {
+        using var pen = new Pen(Color.FromArgb(139, 92, 246), 2);
+        e.Graphics.DrawLine(pen, 0, 0, 0, pnlStatSales.Height);
+    }
 }

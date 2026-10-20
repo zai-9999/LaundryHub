@@ -8,7 +8,7 @@ public class Order
     public int ServiceId { get; set; }
     public decimal WeightKg { get; set; }
     public decimal TotalAmount { get; set; }
-    public string Status { get; set; } = "Washing";
+    public string Status { get; set; } = "Booked";
     public string? CancelReason { get; set; }
     public bool PaymentRecorded { get; set; } = false;
     public decimal? AmountPaid { get; set; }

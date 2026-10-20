@@ -159,7 +159,7 @@ public partial class FrmNewOrder : Form
                 ServiceId = svc.ServiceId,
                 WeightKg = kg,
                 TotalAmount = total,
-                Status = "Washing",
+                Status = "Booked",
                 CreatedBy = SessionManager.CurrentUser?.UserId,
                 PickupDate = dtpPickup.Value.Date,
                 ServiceName = svc.ServiceName,

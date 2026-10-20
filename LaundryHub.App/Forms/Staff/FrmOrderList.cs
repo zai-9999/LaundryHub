@@ -115,6 +115,7 @@ public partial class FrmOrderList : Form
         if (dgvOrders.Columns[e.ColumnIndex].Name != "Status") return;
         e.CellStyle.ForeColor = e.Value?.ToString() switch
         {
+            "Booked"           => UIThemeHelper.Slate,
             "Washing"          => UIThemeHelper.Indigo,
             "Drying"           => UIThemeHelper.Slate,
             "Ready for Pickup" => UIThemeHelper.Success,

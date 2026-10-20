@@ -2,6 +2,7 @@ namespace LaundryHub.Core.Enums;
 
 public enum OrderStatus
 {
+    Booked,
     Washing,
     Drying,
     ReadyForPickup,
@@ -13,6 +14,7 @@ public static class OrderStatusExtensions
 {
     public static string ToDisplayString(this OrderStatus status) => status switch
     {
+        OrderStatus.Booked         => "Booked",
         OrderStatus.Washing        => "Washing",
         OrderStatus.Drying         => "Drying",
         OrderStatus.ReadyForPickup => "Ready for Pickup",
@@ -23,6 +25,7 @@ public static class OrderStatusExtensions
 
     public static OrderStatus? Next(this OrderStatus status) => status switch
     {
+        OrderStatus.Booked         => OrderStatus.Washing,
         OrderStatus.Washing        => OrderStatus.Drying,
         OrderStatus.Drying         => OrderStatus.ReadyForPickup,
         OrderStatus.ReadyForPickup => OrderStatus.Claimed,

@@ -1,6 +1,5 @@
 using MailKit.Net.Smtp;
 using MailKit.Security;
-using Microsoft.Extensions.Configuration;
 using MimeKit;
 using MimeKit.Utils;
 using LaundryHub.Core.Models;
@@ -9,9 +8,52 @@ namespace LaundryHub.App.Helpers;
 
 public static class EmailHelper
 {
-    /// <summary>
-    /// Sends a digital receipt email to the customer in a background thread.
-    /// </summary>
+    public static async Task<bool> SendReadyForPickupAsync(Order order, Customer customer)
+    {
+        if (string.IsNullOrWhiteSpace(customer.Email))
+            return false;
+
+        var configuration = AppServices.Configuration;
+        var host = configuration["Email:SmtpHost"];
+        var senderEmail = configuration["Email:SenderEmail"];
+        var appPassword = configuration["Email:AppPassword"];
+
+        if (string.IsNullOrWhiteSpace(host) ||
+            string.IsNullOrWhiteSpace(senderEmail) ||
+            string.IsNullOrWhiteSpace(appPassword) ||
+            !int.TryParse(configuration["Email:SmtpPort"], out var port))
+        {
+            return false;
+        }
+
+        try
+        {
+            var shopName = configuration["App:ShopName"] ?? "LaundryHub";
+            var message = new MimeMessage();
+            message.From.Add(new MailboxAddress(configuration["Email:SenderName"] ?? shopName, senderEmail));
+            message.To.Add(MailboxAddress.Parse(customer.Email));
+            message.Subject = $"[{shopName}] Your order {order.OrderNumber} is ready for pickup";
+            message.Body = new BodyBuilder
+            {
+                TextBody = $"Hello {customer.FullName},\n\nYour order {order.OrderNumber} is ready for pickup at {shopName}.\n\nThank you for choosing {shopName}.",
+                HtmlBody = $"<p>Hello {System.Net.WebUtility.HtmlEncode(customer.FullName)},</p>" +
+                           $"<p>Your order <strong>{System.Net.WebUtility.HtmlEncode(order.OrderNumber)}</strong> is ready for pickup at {System.Net.WebUtility.HtmlEncode(shopName)}.</p>" +
+                           $"<p>Thank you for choosing {System.Net.WebUtility.HtmlEncode(shopName)}.</p>"
+            }.ToMessageBody();
+
+            using var smtp = new SmtpClient();
+            await smtp.ConnectAsync(host, port, SecureSocketOptions.StartTls);
+            await smtp.AuthenticateAsync(senderEmail, appPassword);
+            await smtp.SendAsync(message);
+            await smtp.DisconnectAsync(true);
+            return true;
+        }
+        catch
+        {
+            return false;
+        }
+    }
+
     public static void SendReceiptAsync(Order order, Customer customer)
     {
         if (string.IsNullOrWhiteSpace(customer.Email)) return;
@@ -24,8 +66,7 @@ public static class EmailHelper
             }
             catch (Exception ex)
             {
-                // Log silently; email failure should not break the app
-                System.Diagnostics.Debug.WriteLine($"Email send failed: {ex.Message}");
+                System.Diagnostics.Debug.WriteLine($"Failed to send receipt email: {ex.Message}");
             }
         });
     }
@@ -36,11 +77,11 @@ public static class EmailHelper
         var smtpHost  = cfg["Email:SmtpHost"]!;
         var smtpPort  = int.Parse(cfg["Email:SmtpPort"]!);
         var sender    = cfg["Email:SenderEmail"]!;
-        var senderName = cfg["Email:SenderName"]!;
+        var senderName = cfg["Email:SenderName"] ?? "LaundryHub";
         var appPwd    = cfg["Email:AppPassword"];
         if (string.IsNullOrWhiteSpace(appPwd) || appPwd.Equals("SET_IN_ENV", StringComparison.OrdinalIgnoreCase))
         {
-            System.Diagnostics.Debug.WriteLine("Email:AppPassword is not configured or still SET_IN_ENV. Skipping receipt email.");
+            System.Diagnostics.Debug.WriteLine("Email:AppPassword is not configured. Skipping receipt email.");
             return;
         }
         var shopName  = AppServices.ShopName;
@@ -95,5 +136,49 @@ public static class EmailHelper
         client.Authenticate(sender, appPwd);
         client.Send(message);
         client.Disconnect(true);
+    }
+
+    public static void SendPasswordReset(User user, string temporaryPassword)
+    {
+        if (string.IsNullOrWhiteSpace(user.Email)) return;
+
+        Task.Run(() =>
+        {
+            try
+            {
+                var cfg = AppServices.Configuration;
+                var host = cfg["Email:SmtpHost"];
+                var senderEmail = cfg["Email:SenderEmail"];
+                var appPassword = cfg["Email:AppPassword"];
+                if (string.IsNullOrWhiteSpace(host) || string.IsNullOrWhiteSpace(senderEmail) || string.IsNullOrWhiteSpace(appPassword) ||
+                    !int.TryParse(cfg["Email:SmtpPort"], out var port))
+                {
+                    return;
+                }
+
+                var shopName = cfg["App:ShopName"] ?? "LaundryHub";
+                var message = new MimeMessage();
+                message.From.Add(new MailboxAddress(cfg["Email:SenderName"] ?? shopName, senderEmail));
+                message.To.Add(MailboxAddress.Parse(user.Email));
+                message.Subject = $"[{shopName}] Temporary Password Reset";
+                message.Body = new BodyBuilder
+                {
+                    TextBody = $"Hello {user.FullName},\n\nYour temporary password is: {temporaryPassword}\n\nPlease log in and update your password immediately.",
+                    HtmlBody = $"<p>Hello <strong>{System.Net.WebUtility.HtmlEncode(user.FullName)}</strong>,</p>" +
+                               $"<p>Your temporary password is: <code style='font-size:16px;background:#f3f4f6;padding:4px 8px;border-radius:4px;'>{System.Net.WebUtility.HtmlEncode(temporaryPassword)}</code></p>" +
+                               $"<p>Please log in and update your password immediately.</p>"
+                }.ToMessageBody();
+
+                using var smtp = new SmtpClient();
+                smtp.Connect(host, port, SecureSocketOptions.StartTls);
+                smtp.Authenticate(senderEmail, appPassword);
+                smtp.Send(message);
+                smtp.Disconnect(true);
+            }
+            catch (Exception ex)
+            {
+                System.Diagnostics.Debug.WriteLine($"Failed to send password reset email: {ex.Message}");
+            }
+        });
     }
 }

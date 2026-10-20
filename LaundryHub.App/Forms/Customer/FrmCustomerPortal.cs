@@ -155,7 +155,7 @@ public partial class FrmCustomerPortal : Form
 
         this.SafeInvoke(() =>
         {
-            lblActiveStat.Text = orders.Count(o => o.Status is "Washing" or "Drying").ToString();
+            lblActiveStat.Text = orders.Count(o => o.Status is "Booked" or "Washing" or "Drying").ToString();
             lblReadyStat.Text = orders.Count(o => o.Status == "Ready for Pickup").ToString();
             lblTotalStat.Text = orders.Count.ToString();
 
@@ -171,7 +171,7 @@ public partial class FrmCustomerPortal : Form
 
         if (chkActiveOnly.Checked)
         {
-            filtered = filtered.Where(o => o.Status is "Washing" or "Drying" or "Ready for Pickup");
+            filtered = filtered.Where(o => o.Status is "Booked" or "Washing" or "Drying" or "Ready for Pickup");
         }
 
         var query = pnlHeader.SearchBox.Text.Trim();

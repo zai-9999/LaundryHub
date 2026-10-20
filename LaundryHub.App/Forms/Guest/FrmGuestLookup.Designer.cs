@@ -1,4 +1,4 @@
-﻿using Panel = System.Windows.Forms.Panel;
+using Panel = System.Windows.Forms.Panel;
 using CheckBox = System.Windows.Forms.CheckBox;
 using ReaLTaiizor;
 using ReaLTaiizor.Controls;

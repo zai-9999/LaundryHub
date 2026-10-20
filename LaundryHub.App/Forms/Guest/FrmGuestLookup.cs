@@ -90,6 +90,19 @@ public partial class FrmGuestLookup : Form
             return;
         }
 
+        // Throttle guest lookup attempts per machine to reduce enumeration abuse
+        var key = "guestlookup:machine";
+        var limit = 8;
+        var window = TimeSpan.FromMinutes(5);
+        var lockout = TimeSpan.FromMinutes(10);
+
+        if (!ThrottleService.IsAllowed(key, limit, window, lockout))
+        {
+            var rem = ThrottleService.GetRemainingLockout(key);
+            ShowError($"Too many lookup attempts. Try again in {Math.Ceiling(rem.TotalMinutes)} minutes.");
+            return;
+        }
+
         isLoading = true;
         btnLookup.Enabled = false;
         btnLookup.Text = "Looking up...";
@@ -103,6 +116,7 @@ public partial class FrmGuestLookup : Form
 
             if (order == null)
             {
+                ThrottleService.RegisterAttempt(key, limit, window, lockout);
                 ShowError("Order not found. Please verify the order number on your ticket.");
                 return;
             }
@@ -114,9 +128,13 @@ public partial class FrmGuestLookup : Form
 
             if (customer == null || !customer.Phone.EndsWith(phone4))
             {
+                ThrottleService.RegisterAttempt(key, limit, window, lockout);
                 ShowError("Order number and phone verification do not match our records.");
                 return;
             }
+
+            // Successful verification - reset throttle
+            ThrottleService.Reset(key);
 
             // Found & Verified! Populate result
             this.SafeInvoke(() =>
@@ -146,8 +164,11 @@ public partial class FrmGuestLookup : Form
 
     private void UpdateTimeline(string status)
     {
+        lblStep0.Text = status == "Booked" ? "📅 Booked" : "🧺 Washing";
+
         int activeIdx = status switch
         {
+            "Booked"           => 0,
             "Washing"          => 0,
             "Drying"           => 1,
             "Ready for Pickup" => 2,
