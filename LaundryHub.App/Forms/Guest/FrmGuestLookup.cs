@@ -1,5 +1,6 @@
-using LaundryHub.App.Helpers;
+﻿using LaundryHub.App.Helpers;
 using LaundryHub.Core.Models;
+using System.Threading.Tasks;
 
 namespace LaundryHub.App.Forms.Guest;
 
@@ -7,6 +8,7 @@ public partial class FrmGuestLookup : Form
 {
     private Panel[] progressSteps = new Panel[4];
     private Label[] progressLabels = new Label[4];
+    private bool isLoading = false;
 
     public FrmGuestLookup()
     {
@@ -16,6 +18,8 @@ public partial class FrmGuestLookup : Form
         InitProgressArrays();
         UIThemeHelper.StyleAuthForm(this, pnlCard, btnLookup, btnBack);
         pnlCard.Paint += (_, e) => UIThemeHelper.PaintRoundedSolidCard(pnlCard, e, Color.White, UIThemeHelper.LoginCardRadius);
+
+        this.FormClosing += (_, _) => isLoading = false;
     }
 
     protected override void OnPaintBackground(PaintEventArgs e)
@@ -58,8 +62,10 @@ public partial class FrmGuestLookup : Form
         pricing.ShowDialog(this);
     }
 
-    private void btnLookup_Click(object? sender, EventArgs e)
+    private async void btnLookup_Click(object? sender, EventArgs e)
     {
+        if (isLoading) return;
+
         lblError.Visible = false;
         pnlResult.Visible = false;
 
@@ -80,31 +86,58 @@ public partial class FrmGuestLookup : Form
             return;
         }
 
-        var order = AppServices.Orders.GetByOrderNumber(orderNo);
-        if (order == null)
+        isLoading = true;
+        btnLookup.Enabled = false;
+        btnLookup.Text = "Looking up...";
+
+        try
         {
-            ShowError("Order not found. Please verify the order number on your ticket.");
-            return;
-        }
+            var orderCacheKey = $"order_lookup_{orderNo}";
+            var order = await DataCache.GetOrAddAsync(orderCacheKey,
+                () => Task.Run(() => AppServices.Orders.GetByOrderNumber(orderNo)),
+                TimeSpan.FromSeconds(30));
 
-        var customer = AppServices.Customers.GetById(order.CustomerId);
-        if (customer == null || !customer.Phone.EndsWith(phone4))
+            if (order == null)
+            {
+                ShowError("Order not found. Please verify the order number on your ticket.");
+                return;
+            }
+
+            var customerCacheKey = $"customer_{order.CustomerId}";
+            var customer = await DataCache.GetOrAddAsync(customerCacheKey,
+                () => Task.Run(() => AppServices.Customers.GetById(order.CustomerId)),
+                TimeSpan.FromSeconds(30));
+
+            if (customer == null || !customer.Phone.EndsWith(phone4))
+            {
+                ShowError("Order number and phone verification do not match our records.");
+                return;
+            }
+
+            // Found & Verified! Populate result
+            this.SafeInvoke(() =>
+            {
+                lblResultOrder.Text = order.OrderNumber;
+                lblResultCustomer.Text = customer.FullName;
+                lblResultService.Text = $"{order.ServiceName ?? "Standard Laundry"} ({order.WeightKg} kg)";
+                lblResultTotal.Text = $"₱{order.TotalAmount:N2}";
+                lblResultPayment.Text = order.PaymentRecorded ? "Paid" : "Unpaid";
+                lblResultPayment.ForeColor = order.PaymentRecorded ? UIThemeHelper.Success : UIThemeHelper.Danger;
+                lblResultPickup.Text = order.PickupDate?.ToString("MMMM dd, yyyy") ?? "Pending schedule";
+
+                UpdateTimeline(order.Status);
+                pnlResult.Visible = true;
+            });
+        }
+        finally
         {
-            ShowError("Order number and phone verification do not match our records.");
-            return;
+            isLoading = false;
+            this.SafeInvoke(() =>
+            {
+                btnLookup.Enabled = true;
+                btnLookup.Text = "Lookup Order";
+            });
         }
-
-        // Found & Verified! Populate result
-        lblResultOrder.Text = order.OrderNumber;
-        lblResultCustomer.Text = customer.FullName;
-        lblResultService.Text = $"{order.ServiceName ?? "Standard Laundry"} ({order.WeightKg} kg)";
-        lblResultTotal.Text = $"₱{order.TotalAmount:N2}";
-        lblResultPayment.Text = order.PaymentRecorded ? "Paid" : "Unpaid";
-        lblResultPayment.ForeColor = order.PaymentRecorded ? Color.FromArgb(40, 167, 69) : Color.FromArgb(220, 53, 69);
-        lblResultPickup.Text = order.PickupDate?.ToString("MMMM dd, yyyy") ?? "Pending schedule";
-
-        UpdateTimeline(order.Status);
-        pnlResult.Visible = true;
     }
 
     private void UpdateTimeline(string status)
@@ -123,20 +156,20 @@ public partial class FrmGuestLookup : Form
             if (i == activeIdx)
             {
                 // Current active stage
-                progressSteps[i].BackColor = Color.FromArgb(51, 104, 160);
+                progressSteps[i].BackColor = UIThemeHelper.Indigo;
                 progressLabels[i].ForeColor = Color.White;
             }
             else if (i < activeIdx)
             {
                 // Completed past stage
-                progressSteps[i].BackColor = Color.FromArgb(102, 163, 191);
+                progressSteps[i].BackColor = UIThemeHelper.Slate;
                 progressLabels[i].ForeColor = Color.White;
             }
             else
             {
                 // Upcoming stage
-                progressSteps[i].BackColor = Color.FromArgb(200, 223, 219);
-                progressLabels[i].ForeColor = Color.FromArgb(51, 104, 160);
+                progressSteps[i].BackColor = UIThemeHelper.Sand;
+                progressLabels[i].ForeColor = UIThemeHelper.Indigo;
             }
         }
     }

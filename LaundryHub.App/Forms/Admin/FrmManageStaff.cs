@@ -13,6 +13,10 @@ public partial class FrmManageStaff : Form
     public FrmManageStaff()
     {
         InitializeComponent();
+        UIThemeHelper.ApplyTheme(this);
+        UIThemeHelper.StyleDataGridView(dgvStaff);
+        UIThemeHelper.EnableStatusPills(dgvStaff);
+        pnlHeader.BackColor = UIThemeHelper.Navy;
         cmbRole.SelectedIndex = 0;
         LoadStaff();
     }
@@ -35,8 +39,8 @@ public partial class FrmManageStaff : Form
             Created = u.CreatedAt.ToString("MM/dd/yyyy")
         }).ToList();
 
-        if (dgvStaff.Columns["UserId"] != null)
-            dgvStaff.Columns["UserId"].Visible = false;
+        if (dgvStaff.Columns["UserId"] is { } col)
+            col.Visible = false;
     }
 
     private void dgvStaff_SelectionChanged(object? sender, EventArgs e)
@@ -45,7 +49,7 @@ public partial class FrmManageStaff : Form
         var row = dgvStaff.SelectedRows[0];
         if (row.Cells["UserId"].Value is int id)
         {
-            _selectedUser = AppServices.Users.GetById(id);
+                _selectedUser = AppServices.Users.GetById(id);
             if (_selectedUser != null)
             {
                 _editingUserId = _selectedUser.UserId;
@@ -57,6 +61,9 @@ public partial class FrmManageStaff : Form
                 txtEmail.Text = _selectedUser.Email;
                 cmbRole.SelectedItem = _selectedUser.Role;
                 chkActive.Checked = _selectedUser.IsActive;
+                bool isSelf = _selectedUser.UserId == SessionManager.CurrentUser?.UserId;
+                chkActive.Enabled = !isSelf;
+                btnToggleStatus.Enabled = !isSelf;
                 txtPassword.Clear();
                 lblError.Visible = false;
             }
@@ -72,39 +79,53 @@ public partial class FrmManageStaff : Form
         var role = cmbRole.SelectedItem?.ToString() ?? "Staff";
         var pwd = txtPassword.Text;
 
-        if (_editingUserId > 0 && _selectedUser != null)
+        try
         {
-            _selectedUser.FullName = name;
-            _selectedUser.Email = email;
-            _selectedUser.Role = role;
-            _selectedUser.IsActive = chkActive.Checked;
-
-            if (!string.IsNullOrWhiteSpace(pwd))
+            if (_editingUserId > 0 && _selectedUser != null)
             {
-                _selectedUser.PasswordHash = BCrypt.Net.BCrypt.HashPassword(pwd);
+                if (_selectedUser.UserId == SessionManager.CurrentUser?.UserId && !chkActive.Checked)
+                {
+                    ShowError("You cannot deactivate your own admin account.");
+                    chkActive.Checked = true;
+                    return;
+                }
+
+                _selectedUser.FullName = name;
+                _selectedUser.Email = email;
+                _selectedUser.Role = role;
+                _selectedUser.IsActive = chkActive.Checked;
+
+                if (!string.IsNullOrWhiteSpace(pwd))
+                {
+                    _selectedUser.PasswordHash = BCrypt.Net.BCrypt.HashPassword(pwd);
+                }
+
+                AppServices.Users.Update(_selectedUser);
+                MessageBox.Show("Staff member updated successfully!", "Success", MessageBoxButtons.OK, MessageBoxIcon.Information);
+            }
+            else
+            {
+                var username = txtUsername.Text.Trim();
+                var newUser = new User
+                {
+                    Username = username,
+                    PasswordHash = BCrypt.Net.BCrypt.HashPassword(pwd),
+                    FullName = name,
+                    Email = email,
+                    Role = role,
+                    IsActive = chkActive.Checked
+                };
+                AppServices.Users.Add(newUser);
+                MessageBox.Show($"New staff member '{username}' created!", "Success", MessageBoxButtons.OK, MessageBoxIcon.Information);
             }
 
-            AppServices.Users.Update(_selectedUser);
-            MessageBox.Show("Staff member updated successfully!", "Success", MessageBoxButtons.OK, MessageBoxIcon.Information);
+            LoadStaff();
+            ResetForm();
         }
-        else
+        catch (Exception ex)
         {
-            var username = txtUsername.Text.Trim();
-            var newUser = new User
-            {
-                Username = username,
-                PasswordHash = BCrypt.Net.BCrypt.HashPassword(pwd),
-                FullName = name,
-                Email = email,
-                Role = role,
-                IsActive = chkActive.Checked
-            };
-            AppServices.Users.Add(newUser);
-            MessageBox.Show($"New staff member '{username}' created!", "Success", MessageBoxButtons.OK, MessageBoxIcon.Information);
+            ShowError($"Database error: {ex.Message}");
         }
-
-        LoadStaff();
-        ResetForm();
     }
 
     private void btnToggleStatus_Click(object? sender, EventArgs e)
@@ -115,10 +136,23 @@ public partial class FrmManageStaff : Form
             return;
         }
 
-        bool newStatus = !_selectedUser.IsActive;
-        AppServices.Users.SetActive(_selectedUser.UserId, newStatus);
-        LoadStaff();
-        MessageBox.Show($"User {_selectedUser.Username} is now {(newStatus ? "Active" : "Disabled")}.", "Status Changed", MessageBoxButtons.OK, MessageBoxIcon.Information);
+        if (_selectedUser.UserId == SessionManager.CurrentUser?.UserId)
+        {
+            MessageBox.Show("You cannot disable your own admin account.", "Action Blocked", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+            return;
+        }
+
+        try
+        {
+            bool newStatus = !_selectedUser.IsActive;
+            AppServices.Users.SetActive(_selectedUser.UserId, newStatus);
+            LoadStaff();
+            MessageBox.Show($"User {_selectedUser.Username} is now {(newStatus ? "Active" : "Disabled")}.", "Status Changed", MessageBoxButtons.OK, MessageBoxIcon.Information);
+        }
+        catch (Exception ex)
+        {
+            MessageBox.Show($"Failed to update status: {ex.Message}", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+        }
     }
 
     private void ResetForm()
@@ -179,9 +213,17 @@ public partial class FrmManageStaff : Form
             return false;
         }
 
-        if (string.IsNullOrWhiteSpace(txtEmail.Text) || !Regex.IsMatch(txtEmail.Text.Trim(), @"^[^@\s]+@[^@\s]+\.[^@\s]+$"))
+        var email = txtEmail.Text.Trim();
+        if (string.IsNullOrWhiteSpace(email) || !Regex.IsMatch(email, @"^[^@\s]+@[^@\s]+\.[^@\s]+$"))
         {
             ShowError("Please enter a valid email address.");
+            txtEmail.Focus();
+            return false;
+        }
+
+        if (AppServices.Users.EmailExists(email, _editingUserId))
+        {
+            ShowError("This email address is already in use by another account.");
             txtEmail.Focus();
             return false;
         }

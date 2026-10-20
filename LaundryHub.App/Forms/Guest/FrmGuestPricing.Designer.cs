@@ -1,4 +1,4 @@
-using Panel = System.Windows.Forms.Panel;
+﻿using Panel = System.Windows.Forms.Panel;
 using Button = System.Windows.Forms.Button;
 using ReaLTaiizor;
 using ReaLTaiizor.Controls;
@@ -51,7 +51,7 @@ partial class FrmGuestPricing
         // 
         // pnlHeader
         // 
-        pnlHeader.BackColor = Color.FromArgb(37, 78, 122);
+        pnlHeader.BackColor = Color.FromArgb(17, 24, 68);
         pnlHeader.Controls.Add(lblTitle);
         pnlHeader.Controls.Add(lblSubtitle);
         pnlHeader.Controls.Add(btnCloseTop);
@@ -77,7 +77,7 @@ partial class FrmGuestPricing
         // 
         lblSubtitle.AutoSize = true;
         lblSubtitle.Font = new Font("Segoe UI", 9F);
-        lblSubtitle.ForeColor = Color.FromArgb(200, 223, 219);
+        lblSubtitle.ForeColor = Color.FromArgb(234, 224, 207);
         lblSubtitle.Location = new Point(22, 44);
         lblSubtitle.Name = "lblSubtitle";
         lblSubtitle.Size = new Size(330, 20);
@@ -134,7 +134,7 @@ partial class FrmGuestPricing
         // 
         // pnlCalculator
         // 
-        pnlCalculator.BackColor = Color.FromArgb(248, 250, 252);
+        pnlCalculator.BackColor = Color.FromArgb(248, 245, 239);
         pnlCalculator.BorderStyle = BorderStyle.FixedSingle;
         pnlCalculator.Controls.Add(lblCalcTitle);
         pnlCalculator.Controls.Add(lblServiceSelect);
@@ -155,7 +155,7 @@ partial class FrmGuestPricing
         // 
         lblCalcTitle.AutoSize = true;
         lblCalcTitle.Font = new Font("Segoe UI", 10.5F, FontStyle.Bold);
-        lblCalcTitle.ForeColor = Color.FromArgb(37, 78, 122);
+        lblCalcTitle.ForeColor = Color.FromArgb(17, 24, 68);
         lblCalcTitle.Location = new Point(14, 12);
         lblCalcTitle.Name = "lblCalcTitle";
         lblCalcTitle.Size = new Size(205, 25);
@@ -166,7 +166,7 @@ partial class FrmGuestPricing
         // 
         lblServiceSelect.AutoSize = true;
         lblServiceSelect.Font = new Font("Segoe UI", 9F, FontStyle.Bold);
-        lblServiceSelect.ForeColor = Color.FromArgb(51, 104, 160);
+        lblServiceSelect.ForeColor = Color.FromArgb(75, 86, 148);
         lblServiceSelect.Location = new Point(16, 48);
         lblServiceSelect.Name = "lblServiceSelect";
         lblServiceSelect.Size = new Size(61, 20);
@@ -188,7 +188,7 @@ partial class FrmGuestPricing
         // 
         lblWeightInput.AutoSize = true;
         lblWeightInput.Font = new Font("Segoe UI", 9F, FontStyle.Bold);
-        lblWeightInput.ForeColor = Color.FromArgb(51, 104, 160);
+        lblWeightInput.ForeColor = Color.FromArgb(75, 86, 148);
         lblWeightInput.Location = new Point(255, 48);
         lblWeightInput.Name = "lblWeightInput";
         lblWeightInput.Size = new Size(130, 20);
@@ -209,7 +209,7 @@ partial class FrmGuestPricing
         // 
         lblEstimatedTotal.AutoSize = true;
         lblEstimatedTotal.Font = new Font("Segoe UI", 9F, FontStyle.Bold);
-        lblEstimatedTotal.ForeColor = Color.FromArgb(51, 104, 160);
+        lblEstimatedTotal.ForeColor = Color.FromArgb(75, 86, 148);
         lblEstimatedTotal.Location = new Point(415, 48);
         lblEstimatedTotal.Name = "lblEstimatedTotal";
         lblEstimatedTotal.Size = new Size(120, 20);
@@ -220,7 +220,7 @@ partial class FrmGuestPricing
         // 
         lblEstimateValue.AutoSize = true;
         lblEstimateValue.Font = new Font("Segoe UI", 16F, FontStyle.Bold);
-        lblEstimateValue.ForeColor = Color.FromArgb(40, 167, 69);
+        lblEstimateValue.ForeColor = Color.FromArgb(74, 160, 120);
         lblEstimateValue.Location = new Point(415, 68);
         lblEstimateValue.Name = "lblEstimateValue";
         lblEstimateValue.Size = new Size(92, 37);
@@ -240,7 +240,7 @@ partial class FrmGuestPricing
         // 
         // pnlBanner
         // 
-        pnlBanner.BackColor = Color.FromArgb(238, 246, 252);
+        pnlBanner.BackColor = Color.FromArgb(248, 245, 239);
         pnlBanner.Controls.Add(lblBannerText);
         pnlBanner.Controls.Add(btnRegister);
         pnlBanner.Controls.Add(btnClose);
@@ -254,7 +254,7 @@ partial class FrmGuestPricing
         // lblBannerText
         // 
         lblBannerText.Font = new Font("Segoe UI", 9F);
-        lblBannerText.ForeColor = Color.FromArgb(37, 78, 122);
+        lblBannerText.ForeColor = Color.FromArgb(17, 24, 68);
         lblBannerText.Location = new Point(14, 10);
         lblBannerText.Name = "lblBannerText";
         lblBannerText.Size = new Size(604, 42);
@@ -263,14 +263,14 @@ partial class FrmGuestPricing
         // 
         // btnRegister
         // 
-        btnRegister.BorderColor = Color.FromArgb(51, 104, 160);
+        btnRegister.BorderColor = Color.FromArgb(75, 86, 148);
         btnRegister.ButtonType = HopeButtonType.Primary;
         btnRegister.Cursor = Cursors.Hand;
         btnRegister.Font = new Font("Segoe UI", 9.5F, FontStyle.Bold);
         btnRegister.HoverTextColor = Color.White;
         btnRegister.Location = new Point(14, 60);
         btnRegister.Name = "btnRegister";
-        btnRegister.PrimaryColor = Color.FromArgb(51, 104, 160);
+        btnRegister.PrimaryColor = Color.FromArgb(75, 86, 148);
         btnRegister.Size = new Size(230, 40);
         btnRegister.TabIndex = 1;
         btnRegister.Text = "Register Account to Order";
@@ -279,18 +279,18 @@ partial class FrmGuestPricing
         // 
         // btnClose
         // 
-        btnClose.BorderColor = Color.FromArgb(102, 163, 191);
+        btnClose.BorderColor = Color.FromArgb(114, 136, 174);
         btnClose.ButtonType = HopeButtonType.Default;
         btnClose.Cursor = Cursors.Hand;
-        btnClose.DefaultColor = Color.FromArgb(242, 239, 231);
+        btnClose.DefaultColor = Color.FromArgb(246, 242, 234);
         btnClose.Font = new Font("Segoe UI", 9.5F);
-        btnClose.HoverTextColor = Color.FromArgb(51, 104, 160);
+        btnClose.HoverTextColor = Color.FromArgb(75, 86, 148);
         btnClose.Location = new Point(255, 60);
         btnClose.Name = "btnClose";
         btnClose.Size = new Size(130, 40);
         btnClose.TabIndex = 2;
         btnClose.Text = "Close";
-        btnClose.TextColor = Color.FromArgb(51, 104, 160);
+        btnClose.TextColor = Color.FromArgb(75, 86, 148);
         btnClose.Click += btnClose_Click;
         // 
         // FrmGuestPricing

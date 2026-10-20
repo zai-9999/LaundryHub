@@ -77,6 +77,10 @@ public class CustomerRepository : ICustomerRepository
         using var conn = _db.CreateConnection();
         conn.Execute("UPDATE customers SET is_archived = TRUE WHERE customer_id = @CustomerId",
             new { CustomerId = customerId });
+
+        // Archive all orders for this customer
+        conn.Execute("UPDATE orders SET is_archived = TRUE WHERE customer_id = @CustomerId",
+            new { CustomerId = customerId });
     }
 
     public void Restore(int customerId)
@@ -84,6 +88,24 @@ public class CustomerRepository : ICustomerRepository
         using var conn = _db.CreateConnection();
         conn.Execute("UPDATE customers SET is_archived = FALSE WHERE customer_id = @CustomerId",
             new { CustomerId = customerId });
+
+        // Restore all orders for this customer
+        conn.Execute("UPDATE orders SET is_archived = FALSE WHERE customer_id = @CustomerId",
+            new { CustomerId = customerId });
+    }
+
+    /// <summary>
+    /// Archives all orders for customers that are already archived but have active orders.
+    /// Use this to clean up data after changing the archive behavior.
+    /// </summary>
+    public void CleanupArchivedCustomerOrders()
+    {
+        using var conn = _db.CreateConnection();
+        conn.Execute(@"
+            UPDATE orders
+            SET is_archived = TRUE
+            WHERE customer_id IN (SELECT customer_id FROM customers WHERE is_archived = TRUE)
+              AND is_archived = FALSE");
     }
 
     public bool PhoneExists(string phone, int excludeCustomerId = 0)
@@ -103,5 +125,82 @@ public class CustomerRepository : ICustomerRepository
             WHERE customer_id = @CustomerId AND is_archived = FALSE
               AND status NOT IN ('Claimed', 'Cancelled')",
             new { CustomerId = customerId }) > 0;
+    }
+
+    public Customer? GetByPhone(string phone)
+    {
+        using var conn = _db.CreateConnection();
+        return conn.QueryFirstOrDefault<Customer>(
+            "SELECT * FROM customers WHERE phone = @Phone AND is_archived = FALSE",
+            new { Phone = phone });
+    }
+
+    public int RegisterCustomerWithUser(User user, Customer customer)
+    {
+        using var conn = _db.CreateConnection();
+        conn.Open();
+        using var tran = conn.BeginTransaction();
+        try
+        {
+            int userId = conn.ExecuteScalar<int>(@"
+                INSERT INTO users (username, password_hash, full_name, email, role, is_active)
+                VALUES (@Username, @PasswordHash, @FullName, @Email, @Role, @IsActive)
+                RETURNING user_id",
+                user, transaction: tran);
+
+            customer.UserId = userId;
+
+            // Check if walk-in customer already exists with this phone without a linked user account
+            var existing = conn.QueryFirstOrDefault<Customer>(@"
+                SELECT * FROM customers
+                WHERE phone = @Phone AND is_archived = FALSE
+                FOR UPDATE",
+                new { Phone = customer.Phone }, transaction: tran);
+
+            int customerId;
+            if (existing != null)
+            {
+                if (existing.UserId != null)
+                {
+                    throw new InvalidOperationException("This phone number is already registered to another account.");
+                }
+
+                // Link existing customer profile
+                conn.Execute(@"
+                    UPDATE customers
+                    SET user_id = @UserId,
+                        full_name = @FullName,
+                        email = COALESCE(@Email, email),
+                        address = COALESCE(@Address, address)
+                    WHERE customer_id = @CustomerId",
+                    new
+                    {
+                        UserId = userId,
+                        FullName = customer.FullName,
+                        Email = customer.Email,
+                        Address = customer.Address,
+                        CustomerId = existing.CustomerId
+                    }, transaction: tran);
+
+                customerId = existing.CustomerId;
+            }
+            else
+            {
+                customerId = conn.ExecuteScalar<int>(@"
+                    INSERT INTO customers (user_id, full_name, phone, email, address)
+                    VALUES (@UserId, @FullName, @Phone, @Email, @Address)
+                    RETURNING customer_id",
+                    customer, transaction: tran);
+            }
+
+            customer.CustomerId = customerId;
+            tran.Commit();
+            return customerId;
+        }
+        catch
+        {
+            tran.Rollback();
+            throw;
+        }
     }
 }

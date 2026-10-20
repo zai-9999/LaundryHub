@@ -52,7 +52,7 @@ public static class ExcelHelper
             var cell = ws.Cell(row, c + 1);
             cell.Value = headers[c];
             cell.Style.Font.SetBold(true)
-                      .Fill.SetBackgroundColor(XLColor.FromHtml("#1e40af"))
+                      .Fill.SetBackgroundColor(XLColor.FromHtml("#111844"))
                       .Font.SetFontColor(XLColor.White);
         }
         row++;
@@ -69,7 +69,7 @@ public static class ExcelHelper
             ws.Cell(row, 7).Value = o.Status;
             ws.Cell(row, 8).Value = o.CreatedAt.ToString("hh:mm tt");
             if (row % 2 == 0)
-                ws.Range(row, 1, row, 8).Style.Fill.SetBackgroundColor(XLColor.FromHtml("#f0f4ff"));
+                ws.Range(row, 1, row, 8).Style.Fill.SetBackgroundColor(XLColor.FromHtml("#F6F2EA"));
             row++;
         }
 

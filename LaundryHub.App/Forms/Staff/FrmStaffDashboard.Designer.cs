@@ -1,9 +1,6 @@
 using Panel = System.Windows.Forms.Panel;
-using CheckBox = System.Windows.Forms.CheckBox;
-using Button = System.Windows.Forms.Button;
-using ReaLTaiizor;
 using ReaLTaiizor.Controls;
-using ReaLTaiizor.Util;
+using LaundryHub.App.Helpers;
 
 namespace LaundryHub.App.Forms.Staff;
 
@@ -24,19 +21,15 @@ partial class FrmStaffDashboard
 
     private void InitializeComponent()
     {
-        DataGridViewCellStyle dataGridViewCellStyle1 = new DataGridViewCellStyle();
-        DataGridViewCellStyle dataGridViewCellStyle2 = new DataGridViewCellStyle();
-        pnlSidebar = new Panel();
-        btnLogout = new HopeButton();
-        btnRefresh = new Button();
-        btnCustomers = new Button();
-        btnOrders = new Button();
-        btnNewOrder = new HopeButton();
-        lblUser = new Label();
-        lblAppName = new Label();
+        pnlSidebar = new ModernSidebar();
+        pnlHeader = new ModernHeaderBar();
         pnlContent = new Panel();
+        cardOrders = new RoundedCard();
         dgvOrders = new DataGridView();
-        lblRecent = new Label();
+        pnlTableBar = new Panel();
+        lblLiveBadge = new Label();
+        lblTableSubtitle = new Label();
+        lblTableTitle = new Label();
         flpCards = new FlowLayoutPanel();
         pnlStatPending = new Panel();
         lblPending = new Label();
@@ -50,10 +43,10 @@ partial class FrmStaffDashboard
         pnlStatSales = new Panel();
         lblSales = new Label();
         lblSalesTitle = new Label();
-        lblDashboard = new Label();
-        pnlSidebar.SuspendLayout();
         pnlContent.SuspendLayout();
+        cardOrders.SuspendLayout();
         ((System.ComponentModel.ISupportInitialize)dgvOrders).BeginInit();
+        pnlTableBar.SuspendLayout();
         flpCards.SuspendLayout();
         pnlStatPending.SuspendLayout();
         pnlStatTotal.SuspendLayout();
@@ -63,155 +56,47 @@ partial class FrmStaffDashboard
         // 
         // pnlSidebar
         // 
-        pnlSidebar.BackColor = Color.FromArgb(51, 104, 160);
-        pnlSidebar.Controls.Add(btnLogout);
-        pnlSidebar.Controls.Add(btnRefresh);
-        pnlSidebar.Controls.Add(btnCustomers);
-        pnlSidebar.Controls.Add(btnOrders);
-        pnlSidebar.Controls.Add(btnNewOrder);
-        pnlSidebar.Controls.Add(lblUser);
-        pnlSidebar.Controls.Add(lblAppName);
         pnlSidebar.Dock = DockStyle.Left;
         pnlSidebar.Location = new Point(0, 0);
         pnlSidebar.Name = "pnlSidebar";
-        pnlSidebar.Size = new Size(220, 680);
+        pnlSidebar.Size = new Size(240, 720);
         pnlSidebar.TabIndex = 0;
         // 
-        // btnLogout
+        // pnlHeader
         // 
-        btnLogout.ButtonType = HopeButtonType.Default;
-        btnLogout.DefaultColor = Color.FromArgb(200, 223, 219);
-        btnLogout.BorderColor = Color.FromArgb(102, 163, 191);
-        btnLogout.TextColor = Color.FromArgb(51, 104, 160);
-        btnLogout.HoverTextColor = Color.FromArgb(51, 104, 160);
-        btnLogout.Cursor = Cursors.Hand;
-        btnLogout.Dock = DockStyle.Top;
-        btnLogout.Font = new Font("Segoe UI", 9.5F);
-        btnLogout.Location = new Point(0, 290);
-        btnLogout.Name = "btnLogout";
-        btnLogout.Size = new Size(220, 44);
-        btnLogout.TabIndex = 6;
-        btnLogout.Text = "Logout";
-        btnLogout.Click += btnLogout_Click;
-        // 
-        // btnRefresh
-        // 
-        btnRefresh.BackColor = Color.FromArgb(37, 78, 122);
-        btnRefresh.Cursor = Cursors.Hand;
-        btnRefresh.Dock = DockStyle.Top;
-        btnRefresh.FlatAppearance.BorderSize = 0;
-        btnRefresh.FlatAppearance.MouseOverBackColor = Color.FromArgb(51, 104, 160);
-        btnRefresh.FlatAppearance.MouseDownBackColor = Color.FromArgb(20, 55, 90);
-        btnRefresh.FlatStyle = FlatStyle.Flat;
-        btnRefresh.Font = new Font("Segoe UI", 9.5F);
-        btnRefresh.ForeColor = Color.FromArgb(242, 239, 231);
-        btnRefresh.Location = new Point(0, 246);
-        btnRefresh.Name = "btnRefresh";
-        btnRefresh.Padding = new Padding(16, 0, 0, 0);
-        btnRefresh.Size = new Size(220, 44);
-        btnRefresh.TabIndex = 5;
-        btnRefresh.Text = "🔄  Refresh";
-        btnRefresh.TextAlign = ContentAlignment.MiddleLeft;
-        btnRefresh.UseVisualStyleBackColor = false;
-        btnRefresh.Click += btnRefresh_Click;
-        // 
-        // btnCustomers
-        // 
-        btnCustomers.BackColor = Color.FromArgb(37, 78, 122);
-        btnCustomers.Cursor = Cursors.Hand;
-        btnCustomers.Dock = DockStyle.Top;
-        btnCustomers.FlatAppearance.BorderSize = 0;
-        btnCustomers.FlatAppearance.MouseOverBackColor = Color.FromArgb(51, 104, 160);
-        btnCustomers.FlatAppearance.MouseDownBackColor = Color.FromArgb(20, 55, 90);
-        btnCustomers.FlatStyle = FlatStyle.Flat;
-        btnCustomers.Font = new Font("Segoe UI", 9.5F);
-        btnCustomers.ForeColor = Color.FromArgb(242, 239, 231);
-        btnCustomers.Location = new Point(0, 202);
-        btnCustomers.Name = "btnCustomers";
-        btnCustomers.Padding = new Padding(16, 0, 0, 0);
-        btnCustomers.Size = new Size(220, 44);
-        btnCustomers.TabIndex = 4;
-        btnCustomers.Text = "👤  Customers";
-        btnCustomers.TextAlign = ContentAlignment.MiddleLeft;
-        btnCustomers.UseVisualStyleBackColor = false;
-        btnCustomers.Click += btnCustomers_Click;
-        // 
-        // btnOrders
-        // 
-        btnOrders.BackColor = Color.FromArgb(37, 78, 122);
-        btnOrders.Cursor = Cursors.Hand;
-        btnOrders.Dock = DockStyle.Top;
-        btnOrders.FlatAppearance.BorderSize = 0;
-        btnOrders.FlatAppearance.MouseOverBackColor = Color.FromArgb(51, 104, 160);
-        btnOrders.FlatAppearance.MouseDownBackColor = Color.FromArgb(20, 55, 90);
-        btnOrders.FlatStyle = FlatStyle.Flat;
-        btnOrders.Font = new Font("Segoe UI", 9.5F);
-        btnOrders.ForeColor = Color.FromArgb(242, 239, 231);
-        btnOrders.Location = new Point(0, 158);
-        btnOrders.Name = "btnOrders";
-        btnOrders.Padding = new Padding(16, 0, 0, 0);
-        btnOrders.Size = new Size(220, 44);
-        btnOrders.TabIndex = 3;
-        btnOrders.Text = "📋  View Orders";
-        btnOrders.TextAlign = ContentAlignment.MiddleLeft;
-        btnOrders.UseVisualStyleBackColor = false;
-        btnOrders.Click += btnOrders_Click;
-        // 
-        // btnNewOrder
-        // 
-        btnNewOrder.ButtonType = HopeButtonType.Primary;
-        btnNewOrder.PrimaryColor = Color.FromArgb(102, 163, 191);
-        btnNewOrder.TextColor = Color.White;
-        btnNewOrder.HoverTextColor = Color.White;
-        btnNewOrder.Cursor = Cursors.Hand;
-        btnNewOrder.Dock = DockStyle.Top;
-        btnNewOrder.Font = new Font("Segoe UI", 9.5F, FontStyle.Bold);
-        btnNewOrder.Location = new Point(0, 110);
-        btnNewOrder.Name = "btnNewOrder";
-        btnNewOrder.Size = new Size(220, 48);
-        btnNewOrder.TabIndex = 2;
-        btnNewOrder.Text = "New Order";
-        btnNewOrder.Click += btnNewOrder_Click;
-        // 
-        // lblUser
-        // 
-        lblUser.Dock = DockStyle.Top;
-        lblUser.Font = new Font("Segoe UI", 8.5F);
-        lblUser.ForeColor = Color.FromArgb(200, 223, 219);
-        lblUser.Location = new Point(0, 60);
-        lblUser.Name = "lblUser";
-        lblUser.Size = new Size(220, 50);
-        lblUser.TabIndex = 1;
-        lblUser.Text = "Staff User";
-        lblUser.TextAlign = ContentAlignment.MiddleCenter;
-        // 
-        // lblAppName
-        // 
-        lblAppName.Dock = DockStyle.Top;
-        lblAppName.Font = new Font("Segoe UI", 13F, FontStyle.Bold);
-        lblAppName.ForeColor = Color.FromArgb(242, 239, 231);
-        lblAppName.Location = new Point(0, 0);
-        lblAppName.Name = "lblAppName";
-        lblAppName.Padding = new Padding(12, 16, 0, 0);
-        lblAppName.Size = new Size(220, 60);
-        lblAppName.TabIndex = 0;
-        lblAppName.Text = "LaundryHub";
-        lblAppName.TextAlign = ContentAlignment.MiddleLeft;
+        pnlHeader.Dock = DockStyle.Top;
+        pnlHeader.Location = new Point(240, 0);
+        pnlHeader.Name = "pnlHeader";
+        pnlHeader.Size = new Size(940, 72);
+        pnlHeader.TabIndex = 1;
         // 
         // pnlContent
         // 
-        pnlContent.BackColor = Color.White;
-        pnlContent.Controls.Add(dgvOrders);
-        pnlContent.Controls.Add(lblRecent);
+        pnlContent.BackColor = Color.FromArgb(245, 247, 250);
+        pnlContent.Controls.Add(cardOrders);
         pnlContent.Controls.Add(flpCards);
-        pnlContent.Controls.Add(lblDashboard);
         pnlContent.Dock = DockStyle.Fill;
-        pnlContent.Location = new Point(220, 0);
+        pnlContent.Location = new Point(240, 72);
         pnlContent.Name = "pnlContent";
         pnlContent.Padding = new Padding(20);
-        pnlContent.Size = new Size(880, 680);
-        pnlContent.TabIndex = 1;
-        pnlContent.Paint += pnlContent_Paint;
+        pnlContent.Size = new Size(940, 648);
+        pnlContent.TabIndex = 2;
+        // 
+        // cardOrders
+        // 
+        cardOrders.BackColor = Color.Transparent;
+        cardOrders.BorderColor = Color.FromArgb(226, 230, 240);
+        cardOrders.Controls.Add(dgvOrders);
+        cardOrders.Controls.Add(pnlTableBar);
+        cardOrders.Dock = DockStyle.Fill;
+        cardOrders.FillColor = Color.White;
+        cardOrders.Location = new Point(20, 134);
+        cardOrders.Name = "cardOrders";
+        cardOrders.Padding = new Padding(16, 12, 16, 14);
+        cardOrders.Radius = 14;
+        cardOrders.Shadow = true;
+        cardOrders.Size = new Size(900, 494);
+        cardOrders.TabIndex = 2;
         // 
         // dgvOrders
         // 
@@ -220,47 +105,68 @@ partial class FrmStaffDashboard
         dgvOrders.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.Fill;
         dgvOrders.BackgroundColor = Color.White;
         dgvOrders.BorderStyle = BorderStyle.None;
-        dataGridViewCellStyle1.Alignment = DataGridViewContentAlignment.MiddleLeft;
-        dataGridViewCellStyle1.BackColor = Color.FromArgb(200, 223, 219);
-        dataGridViewCellStyle1.Font = new Font("Segoe UI Semibold", 9F, FontStyle.Bold);
-        dataGridViewCellStyle1.ForeColor = Color.FromArgb(51, 104, 160);
-        dataGridViewCellStyle1.SelectionBackColor = Color.FromArgb(200, 223, 219);
-        dataGridViewCellStyle1.SelectionForeColor = Color.FromArgb(51, 104, 160);
-        dataGridViewCellStyle1.WrapMode = DataGridViewTriState.True;
-        dgvOrders.ColumnHeadersDefaultCellStyle = dataGridViewCellStyle1;
-        dgvOrders.ColumnHeadersHeight = 34;
-        dgvOrders.ColumnHeadersHeightSizeMode = DataGridViewColumnHeadersHeightSizeMode.DisableResizing;
-        dataGridViewCellStyle2.Alignment = DataGridViewContentAlignment.MiddleLeft;
-        dataGridViewCellStyle2.BackColor = Color.White;
-        dataGridViewCellStyle2.Font = new Font("Segoe UI", 9F);
-        dataGridViewCellStyle2.ForeColor = Color.FromArgb(51, 104, 160);
-        dataGridViewCellStyle2.SelectionBackColor = Color.FromArgb(102, 163, 191);
-        dataGridViewCellStyle2.SelectionForeColor = Color.White;
-        dataGridViewCellStyle2.WrapMode = DataGridViewTriState.False;
-        dgvOrders.DefaultCellStyle = dataGridViewCellStyle2;
+        dgvOrders.ColumnHeadersHeightSizeMode = DataGridViewColumnHeadersHeightSizeMode.AutoSize;
         dgvOrders.Dock = DockStyle.Fill;
-        dgvOrders.EnableHeadersVisualStyles = false;
-        dgvOrders.GridColor = Color.FromArgb(200, 223, 219);
-        dgvOrders.Location = new Point(20, 200);
+        dgvOrders.GridColor = Color.FromArgb(234, 224, 207);
+        dgvOrders.Location = new Point(16, 60);
         dgvOrders.Name = "dgvOrders";
         dgvOrders.ReadOnly = true;
         dgvOrders.RowHeadersVisible = false;
+        dgvOrders.RowHeadersWidth = 51;
+        dgvOrders.RowTemplate.Height = 38;
         dgvOrders.SelectionMode = DataGridViewSelectionMode.FullRowSelect;
-        dgvOrders.Size = new Size(840, 460);
-        dgvOrders.TabIndex = 3;
+        dgvOrders.Size = new Size(868, 420);
+        dgvOrders.TabIndex = 0;
         dgvOrders.CellFormatting += DgvOrders_CellFormatting;
         // 
-        // lblRecent
+        // pnlTableBar
         // 
-        lblRecent.Dock = DockStyle.Top;
-        lblRecent.Font = new Font("Segoe UI", 11F, FontStyle.Bold);
-        lblRecent.ForeColor = Color.FromArgb(51, 104, 160);
-        lblRecent.Location = new Point(20, 170);
-        lblRecent.Name = "lblRecent";
-        lblRecent.Size = new Size(840, 30);
-        lblRecent.TabIndex = 2;
-        lblRecent.Text = "Recent Orders";
-        lblRecent.TextAlign = ContentAlignment.MiddleLeft;
+        pnlTableBar.BackColor = Color.White;
+        pnlTableBar.Controls.Add(lblLiveBadge);
+        pnlTableBar.Controls.Add(lblTableSubtitle);
+        pnlTableBar.Controls.Add(lblTableTitle);
+        pnlTableBar.Dock = DockStyle.Top;
+        pnlTableBar.Location = new Point(16, 12);
+        pnlTableBar.Name = "pnlTableBar";
+        pnlTableBar.Size = new Size(868, 48);
+        pnlTableBar.TabIndex = 1;
+        // 
+        // lblLiveBadge
+        // 
+        lblLiveBadge.Anchor = AnchorStyles.Top | AnchorStyles.Right;
+        lblLiveBadge.BackColor = Color.FromArgb(228, 246, 235);
+        lblLiveBadge.Font = new Font("Segoe UI", 8F, FontStyle.Bold);
+        lblLiveBadge.ForeColor = Color.FromArgb(22, 163, 74);
+        lblLiveBadge.Location = new Point(768, 8);
+        lblLiveBadge.Name = "lblLiveBadge";
+        lblLiveBadge.Size = new Size(100, 26);
+        lblLiveBadge.TabIndex = 2;
+        lblLiveBadge.Text = "● Active Queue";
+        lblLiveBadge.TextAlign = ContentAlignment.MiddleCenter;
+        // 
+        // lblTableSubtitle
+        // 
+        lblTableSubtitle.Dock = DockStyle.Top;
+        lblTableSubtitle.Font = new Font("Segoe UI", 8.5F);
+        lblTableSubtitle.ForeColor = Color.FromArgb(114, 136, 174);
+        lblTableSubtitle.Location = new Point(0, 24);
+        lblTableSubtitle.Name = "lblTableSubtitle";
+        lblTableSubtitle.Size = new Size(868, 20);
+        lblTableSubtitle.TabIndex = 1;
+        lblTableSubtitle.Text = "Track customer orders through washing, drying, and pickup stages";
+        lblTableSubtitle.TextAlign = ContentAlignment.MiddleLeft;
+        // 
+        // lblTableTitle
+        // 
+        lblTableTitle.Dock = DockStyle.Top;
+        lblTableTitle.Font = new Font("Segoe UI", 12F, FontStyle.Bold);
+        lblTableTitle.ForeColor = Color.FromArgb(17, 24, 68);
+        lblTableTitle.Location = new Point(0, 0);
+        lblTableTitle.Name = "lblTableTitle";
+        lblTableTitle.Size = new Size(868, 24);
+        lblTableTitle.TabIndex = 0;
+        lblTableTitle.Text = "Recent Orders Queue";
+        lblTableTitle.TextAlign = ContentAlignment.MiddleLeft;
         // 
         // flpCards
         // 
@@ -269,29 +175,27 @@ partial class FrmStaffDashboard
         flpCards.Controls.Add(pnlStatClaimed);
         flpCards.Controls.Add(pnlStatSales);
         flpCards.Dock = DockStyle.Top;
-        flpCards.Location = new Point(20, 60);
+        flpCards.Location = new Point(20, 20);
         flpCards.Name = "flpCards";
-        flpCards.Padding = new Padding(0, 8, 0, 8);
-        flpCards.Size = new Size(840, 110);
+        flpCards.Size = new Size(900, 114);
         flpCards.TabIndex = 1;
         // 
         // pnlStatPending
         // 
-        pnlStatPending.BackColor = Color.FromArgb(245, 248, 252);
+        pnlStatPending.BackColor = Color.FromArgb(248, 245, 239);
         pnlStatPending.Controls.Add(lblPending);
         pnlStatPending.Controls.Add(lblPendingTitle);
-        pnlStatPending.Location = new Point(0, 8);
+        pnlStatPending.Location = new Point(0, 0);
         pnlStatPending.Margin = new Padding(0, 0, 12, 0);
         pnlStatPending.Name = "pnlStatPending";
         pnlStatPending.Size = new Size(185, 90);
         pnlStatPending.TabIndex = 0;
-        pnlStatPending.Region = new Region(RoundRectangle.CreateRoundRect(0, 0, 185, 90, 10));
         // 
         // lblPending
         // 
         lblPending.AutoSize = true;
         lblPending.Font = new Font("Segoe UI", 20F, FontStyle.Bold);
-        lblPending.ForeColor = Color.FromArgb(51, 104, 160);
+        lblPending.ForeColor = Color.FromArgb(75, 86, 148);
         lblPending.Location = new Point(12, 30);
         lblPending.Name = "lblPending";
         lblPending.Size = new Size(33, 37);
@@ -302,7 +206,7 @@ partial class FrmStaffDashboard
         // 
         lblPendingTitle.AutoSize = true;
         lblPendingTitle.Font = new Font("Segoe UI", 8.5F);
-        lblPendingTitle.ForeColor = Color.FromArgb(102, 163, 191);
+        lblPendingTitle.ForeColor = Color.FromArgb(114, 136, 174);
         lblPendingTitle.Location = new Point(12, 10);
         lblPendingTitle.Name = "lblPendingTitle";
         lblPendingTitle.Size = new Size(51, 15);
@@ -311,21 +215,20 @@ partial class FrmStaffDashboard
         // 
         // pnlStatTotal
         // 
-        pnlStatTotal.BackColor = Color.FromArgb(245, 248, 252);
+        pnlStatTotal.BackColor = Color.FromArgb(248, 245, 239);
         pnlStatTotal.Controls.Add(lblTotal);
         pnlStatTotal.Controls.Add(lblTotalTitle);
-        pnlStatTotal.Location = new Point(197, 8);
+        pnlStatTotal.Location = new Point(197, 0);
         pnlStatTotal.Margin = new Padding(0, 0, 12, 0);
         pnlStatTotal.Name = "pnlStatTotal";
         pnlStatTotal.Size = new Size(185, 90);
         pnlStatTotal.TabIndex = 1;
-        pnlStatTotal.Region = new Region(RoundRectangle.CreateRoundRect(0, 0, 185, 90, 10));
         // 
         // lblTotal
         // 
         lblTotal.AutoSize = true;
         lblTotal.Font = new Font("Segoe UI", 20F, FontStyle.Bold);
-        lblTotal.ForeColor = Color.FromArgb(51, 104, 160);
+        lblTotal.ForeColor = Color.FromArgb(75, 86, 148);
         lblTotal.Location = new Point(12, 30);
         lblTotal.Name = "lblTotal";
         lblTotal.Size = new Size(33, 37);
@@ -336,7 +239,7 @@ partial class FrmStaffDashboard
         // 
         lblTotalTitle.AutoSize = true;
         lblTotalTitle.Font = new Font("Segoe UI", 8.5F);
-        lblTotalTitle.ForeColor = Color.FromArgb(102, 163, 191);
+        lblTotalTitle.ForeColor = Color.FromArgb(114, 136, 174);
         lblTotalTitle.Location = new Point(12, 10);
         lblTotalTitle.Name = "lblTotalTitle";
         lblTotalTitle.Size = new Size(67, 15);
@@ -345,21 +248,20 @@ partial class FrmStaffDashboard
         // 
         // pnlStatClaimed
         // 
-        pnlStatClaimed.BackColor = Color.FromArgb(245, 248, 252);
+        pnlStatClaimed.BackColor = Color.FromArgb(248, 245, 239);
         pnlStatClaimed.Controls.Add(lblClaimed);
         pnlStatClaimed.Controls.Add(lblClaimedTitle);
-        pnlStatClaimed.Location = new Point(394, 8);
+        pnlStatClaimed.Location = new Point(394, 0);
         pnlStatClaimed.Margin = new Padding(0, 0, 12, 0);
         pnlStatClaimed.Name = "pnlStatClaimed";
         pnlStatClaimed.Size = new Size(185, 90);
         pnlStatClaimed.TabIndex = 2;
-        pnlStatClaimed.Region = new Region(RoundRectangle.CreateRoundRect(0, 0, 185, 90, 10));
         // 
         // lblClaimed
         // 
         lblClaimed.AutoSize = true;
         lblClaimed.Font = new Font("Segoe UI", 20F, FontStyle.Bold);
-        lblClaimed.ForeColor = Color.FromArgb(51, 104, 160);
+        lblClaimed.ForeColor = Color.FromArgb(75, 86, 148);
         lblClaimed.Location = new Point(12, 30);
         lblClaimed.Name = "lblClaimed";
         lblClaimed.Size = new Size(33, 37);
@@ -370,7 +272,7 @@ partial class FrmStaffDashboard
         // 
         lblClaimedTitle.AutoSize = true;
         lblClaimedTitle.Font = new Font("Segoe UI", 8.5F);
-        lblClaimedTitle.ForeColor = Color.FromArgb(102, 163, 191);
+        lblClaimedTitle.ForeColor = Color.FromArgb(114, 136, 174);
         lblClaimedTitle.Location = new Point(12, 10);
         lblClaimedTitle.Name = "lblClaimedTitle";
         lblClaimedTitle.Size = new Size(51, 15);
@@ -379,21 +281,20 @@ partial class FrmStaffDashboard
         // 
         // pnlStatSales
         // 
-        pnlStatSales.BackColor = Color.FromArgb(245, 248, 252);
+        pnlStatSales.BackColor = Color.FromArgb(248, 245, 239);
         pnlStatSales.Controls.Add(lblSales);
         pnlStatSales.Controls.Add(lblSalesTitle);
-        pnlStatSales.Location = new Point(591, 8);
+        pnlStatSales.Location = new Point(591, 0);
         pnlStatSales.Margin = new Padding(0, 0, 12, 0);
         pnlStatSales.Name = "pnlStatSales";
         pnlStatSales.Size = new Size(185, 90);
         pnlStatSales.TabIndex = 3;
-        pnlStatSales.Region = new Region(RoundRectangle.CreateRoundRect(0, 0, 185, 90, 10));
         // 
         // lblSales
         // 
         lblSales.AutoSize = true;
         lblSales.Font = new Font("Segoe UI", 16F, FontStyle.Bold);
-        lblSales.ForeColor = Color.FromArgb(51, 104, 160);
+        lblSales.ForeColor = Color.FromArgb(75, 86, 148);
         lblSales.Location = new Point(12, 34);
         lblSales.Name = "lblSales";
         lblSales.Size = new Size(65, 30);
@@ -404,40 +305,31 @@ partial class FrmStaffDashboard
         // 
         lblSalesTitle.AutoSize = true;
         lblSalesTitle.Font = new Font("Segoe UI", 8.5F);
-        lblSalesTitle.ForeColor = Color.FromArgb(102, 163, 191);
+        lblSalesTitle.ForeColor = Color.FromArgb(114, 136, 174);
         lblSalesTitle.Location = new Point(12, 10);
         lblSalesTitle.Name = "lblSalesTitle";
         lblSalesTitle.Size = new Size(74, 15);
         lblSalesTitle.TabIndex = 0;
         lblSalesTitle.Text = "Today's Sales";
         // 
-        // lblDashboard
-        // 
-        lblDashboard.Dock = DockStyle.Top;
-        lblDashboard.Font = new Font("Segoe UI", 14F, FontStyle.Bold);
-        lblDashboard.ForeColor = Color.FromArgb(51, 104, 160);
-        lblDashboard.Location = new Point(20, 20);
-        lblDashboard.Name = "lblDashboard";
-        lblDashboard.Size = new Size(840, 40);
-        lblDashboard.TabIndex = 0;
-        lblDashboard.Text = "Dashboard";
-        // 
         // FrmStaffDashboard
         // 
-        AutoScaleDimensions = new SizeF(7F, 17F);
+        AutoScaleDimensions = new SizeF(9F, 21F);
         AutoScaleMode = AutoScaleMode.Font;
-        BackColor = Color.FromArgb(102, 163, 191);
-        ClientSize = new Size(1100, 680);
+        BackColor = Color.FromArgb(245, 247, 250);
+        ClientSize = new Size(1180, 720);
         Controls.Add(pnlContent);
+        Controls.Add(pnlHeader);
         Controls.Add(pnlSidebar);
         Font = new Font("Segoe UI", 9.5F);
-        MinimumSize = new Size(900, 580);
+        MinimumSize = new Size(980, 600);
         Name = "FrmStaffDashboard";
         StartPosition = FormStartPosition.CenterScreen;
         Text = "LaundryHub – Staff Dashboard";
-        pnlSidebar.ResumeLayout(false);
         pnlContent.ResumeLayout(false);
+        cardOrders.ResumeLayout(false);
         ((System.ComponentModel.ISupportInitialize)dgvOrders).EndInit();
+        pnlTableBar.ResumeLayout(false);
         flpCards.ResumeLayout(false);
         pnlStatPending.ResumeLayout(false);
         pnlStatPending.PerformLayout();
@@ -452,16 +344,15 @@ partial class FrmStaffDashboard
 
     #endregion
 
-    private Panel pnlSidebar;
-    private Label lblAppName;
-    private Label lblUser;
-    private HopeButton btnNewOrder;
-    private Button btnOrders;
-    private Button btnCustomers;
-    private Button btnRefresh;
-    private HopeButton btnLogout;
+    private ModernSidebar pnlSidebar;
+    private ModernHeaderBar pnlHeader;
     private Panel pnlContent;
-    private Label lblDashboard;
+    private RoundedCard cardOrders;
+    private Panel pnlTableBar;
+    private Label lblTableTitle;
+    private Label lblTableSubtitle;
+    private Label lblLiveBadge;
+    private DataGridView dgvOrders;
     private FlowLayoutPanel flpCards;
     private Panel pnlStatPending;
     private Label lblPendingTitle;
@@ -475,6 +366,4 @@ partial class FrmStaffDashboard
     private Panel pnlStatSales;
     private Label lblSalesTitle;
     private Label lblSales;
-    private Label lblRecent;
-    private DataGridView dgvOrders;
 }

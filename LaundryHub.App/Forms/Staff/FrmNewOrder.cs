@@ -47,8 +47,8 @@ public partial class FrmNewOrder : Form
         UIThemeHelper.ApplyRoundedRegion(pnlCard, UIThemeHelper.LoginCardRadius);
         pnlCard.SizeChanged += (s, e) => UIThemeHelper.ApplyRoundedRegion(pnlCard, UIThemeHelper.LoginCardRadius);
 
-        pnlPriceBox.BackColor = Color.FromArgb(242, 239, 231);
-        btnSave.PrimaryColor = Color.FromArgb(51, 104, 160);
+        pnlPriceBox.BackColor = UIThemeHelper.SandLight;
+        btnSave.PrimaryColor = UIThemeHelper.Indigo;
         btnSave.TextColor = UIThemeHelper.CardCream;
         btnSave.HoverTextColor = Color.White;
         dtpPickup.MinDate = DateTime.Today;
@@ -95,7 +95,7 @@ public partial class FrmNewOrder : Form
             _selectedCustomer = c;
             txtSearch.Text = c.FullName;
             lblSelectedCustomer.Text = $"{c.FullName}  |  {c.Phone}";
-            lblSelectedCustomer.ForeColor = Color.FromArgb(37, 78, 122);
+            lblSelectedCustomer.ForeColor = UIThemeHelper.Navy;
             lstCustomers.Visible = false;
         }
     }
@@ -108,15 +108,16 @@ public partial class FrmNewOrder : Form
             _selectedCustomer = f.CreatedCustomer;
             txtSearch.Text = _selectedCustomer.FullName;
             lblSelectedCustomer.Text = $"{_selectedCustomer.FullName}  |  {_selectedCustomer.Phone}";
-            lblSelectedCustomer.ForeColor = Color.FromArgb(37, 78, 122);
+            lblSelectedCustomer.ForeColor = UIThemeHelper.Navy;
         }
     }
 
     private void ComputePrice()
     {
         if (cmbService.SelectedItem is not ServiceType svc) return;
-        if (!decimal.TryParse(txtWeight.Text, out decimal kg) || kg <= 0) return;
+        if (!decimal.TryParse(txtWeight.Text, out decimal rawKg) || rawKg <= 0) return;
 
+        decimal kg = Math.Round(rawKg, 2, MidpointRounding.AwayFromZero);
         decimal total = svc.ComputePrice(kg);
         lblPrice.Text = $"₱{total:N2}";
         lblPriceBreakdown.Text =
@@ -131,35 +132,42 @@ public partial class FrmNewOrder : Form
     {
         if (!ValidateOrder()) return;
 
-        var svc = (ServiceType)cmbService.SelectedItem!;
-        var kg = decimal.Parse(txtWeight.Text);
-        var total = svc.ComputePrice(kg);
-
-        var order = new Order
+        try
         {
-            OrderNumber = AppServices.Orders.GenerateOrderNumber(),
-            CustomerId = _selectedCustomer!.CustomerId,
-            ServiceId = svc.ServiceId,
-            WeightKg = kg,
-            TotalAmount = total,
-            Status = "Washing",
-            CreatedBy = SessionManager.CurrentUser?.UserId,
-            PickupDate = dtpPickup.Value.Date,
-            ServiceName = svc.ServiceName,
-            CustomerName = _selectedCustomer.FullName
-        };
+            var svc = (ServiceType)cmbService.SelectedItem!;
+            var kg = Math.Round(decimal.Parse(txtWeight.Text), 2, MidpointRounding.AwayFromZero);
+            var total = svc.ComputePrice(kg);
 
-        int orderId = AppServices.Orders.Add(order);
-        order.OrderId = orderId;
+            var order = new Order
+            {
+                OrderNumber = AppServices.Orders.GenerateOrderNumber(),
+                CustomerId = _selectedCustomer!.CustomerId,
+                ServiceId = svc.ServiceId,
+                WeightKg = kg,
+                TotalAmount = total,
+                Status = "Washing",
+                CreatedBy = SessionManager.CurrentUser?.UserId,
+                PickupDate = dtpPickup.Value.Date,
+                ServiceName = svc.ServiceName,
+                CustomerName = _selectedCustomer.FullName
+            };
 
-        // Show QR ticket
-        ShowQrTicket(order);
+            int orderId = AppServices.Orders.Add(order);
+            order.OrderId = orderId;
 
-        // Send email receipt in background
-        EmailHelper.SendReceiptAsync(order, _selectedCustomer);
+            // Show QR ticket
+            ShowQrTicket(order);
 
-        this.DialogResult = DialogResult.OK;
-        this.Close();
+            // Send email receipt in background
+            EmailHelper.SendReceiptAsync(order, _selectedCustomer);
+
+            this.DialogResult = DialogResult.OK;
+            this.Close();
+        }
+        catch (Exception ex)
+        {
+            ShowErr($"Failed to create order: {ex.Message}");
+        }
     }
 
     private void ShowQrTicket(Order order)
@@ -173,7 +181,7 @@ public partial class FrmNewOrder : Form
             StartPosition = FormStartPosition.CenterParent,
             FormBorderStyle = FormBorderStyle.FixedDialog,
             MaximizeBox = false,
-            BackColor = Color.FromArgb(102, 163, 191)
+            BackColor = UIThemeHelper.Slate
         };
 
         var pb = new PictureBox
@@ -199,7 +207,7 @@ public partial class FrmNewOrder : Form
             Location = new Point(50, 365),
             Size = new Size(260, 38),
             Font = new Font("Segoe UI", 10, FontStyle.Bold),
-            BackColor = Color.FromArgb(37, 78, 122),
+            BackColor = UIThemeHelper.Navy,
             ForeColor = Color.White,
             FlatStyle = FlatStyle.Flat,
             Cursor = Cursors.Hand

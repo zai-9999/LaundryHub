@@ -1,4 +1,4 @@
-using Panel = System.Windows.Forms.Panel;
+﻿using Panel = System.Windows.Forms.Panel;
 using CheckBox = System.Windows.Forms.CheckBox;
 using ReaLTaiizor;
 using ReaLTaiizor.Controls;
@@ -43,7 +43,7 @@ partial class FrmUpdateProfile
         // 
         // pnlMain
         // 
-        pnlMain.BackColor = Color.FromArgb(242, 239, 231);
+        pnlMain.BackColor = Color.FromArgb(246, 242, 234);
         pnlMain.Controls.Add(btnCancel);
         pnlMain.Controls.Add(btnSave);
         pnlMain.Controls.Add(lblError);
@@ -68,7 +68,7 @@ partial class FrmUpdateProfile
         // lblTitle
         // 
         lblTitle.Font = new Font("Segoe UI", 14F, FontStyle.Bold);
-        lblTitle.ForeColor = Color.FromArgb(37, 78, 122);
+        lblTitle.ForeColor = Color.FromArgb(17, 24, 68);
         lblTitle.Location = new Point(24, 20);
         lblTitle.Name = "lblTitle";
         lblTitle.Size = new Size(424, 32);
@@ -78,7 +78,7 @@ partial class FrmUpdateProfile
         // lblFullName
         // 
         lblFullName.Font = new Font("Segoe UI", 8.5F, FontStyle.Bold);
-        lblFullName.ForeColor = Color.FromArgb(51, 104, 160);
+        lblFullName.ForeColor = Color.FromArgb(75, 86, 148);
         lblFullName.Location = new Point(24, 62);
         lblFullName.Name = "lblFullName";
         lblFullName.Size = new Size(390, 16);
@@ -88,11 +88,11 @@ partial class FrmUpdateProfile
         // txtFullName
         // 
         txtFullName.BackColor = Color.White;
-        txtFullName.BaseColor = Color.FromArgb(242, 239, 231);
-        txtFullName.BorderColorA = Color.FromArgb(102, 163, 191);
-        txtFullName.BorderColorB = Color.FromArgb(200, 223, 219);
+        txtFullName.BaseColor = Color.FromArgb(246, 242, 234);
+        txtFullName.BorderColorA = Color.FromArgb(75, 86, 148);
+        txtFullName.BorderColorB = Color.FromArgb(190, 196, 220);
         txtFullName.Font = new Font("Segoe UI", 9.5F);
-        txtFullName.ForeColor = Color.FromArgb(51, 104, 160);
+        txtFullName.ForeColor = Color.FromArgb(75, 86, 148);
         txtFullName.Location = new Point(24, 80);
         txtFullName.Name = "txtFullName";
         txtFullName.Size = new Size(390, 32);
@@ -101,7 +101,7 @@ partial class FrmUpdateProfile
         // lblPhone
         // 
         lblPhone.Font = new Font("Segoe UI", 8.5F, FontStyle.Bold);
-        lblPhone.ForeColor = Color.FromArgb(51, 104, 160);
+        lblPhone.ForeColor = Color.FromArgb(75, 86, 148);
         lblPhone.Location = new Point(24, 118);
         lblPhone.Name = "lblPhone";
         lblPhone.Size = new Size(390, 16);
@@ -111,11 +111,11 @@ partial class FrmUpdateProfile
         // txtPhone
         // 
         txtPhone.BackColor = Color.White;
-        txtPhone.BaseColor = Color.FromArgb(242, 239, 231);
-        txtPhone.BorderColorA = Color.FromArgb(102, 163, 191);
-        txtPhone.BorderColorB = Color.FromArgb(200, 223, 219);
+        txtPhone.BaseColor = Color.FromArgb(246, 242, 234);
+        txtPhone.BorderColorA = Color.FromArgb(75, 86, 148);
+        txtPhone.BorderColorB = Color.FromArgb(190, 196, 220);
         txtPhone.Font = new Font("Segoe UI", 9.5F);
-        txtPhone.ForeColor = Color.FromArgb(51, 104, 160);
+        txtPhone.ForeColor = Color.FromArgb(75, 86, 148);
         txtPhone.Location = new Point(24, 136);
         txtPhone.Name = "txtPhone";
         txtPhone.Size = new Size(390, 32);
@@ -124,7 +124,7 @@ partial class FrmUpdateProfile
         // lblEmail
         // 
         lblEmail.Font = new Font("Segoe UI", 8.5F, FontStyle.Bold);
-        lblEmail.ForeColor = Color.FromArgb(51, 104, 160);
+        lblEmail.ForeColor = Color.FromArgb(75, 86, 148);
         lblEmail.Location = new Point(24, 174);
         lblEmail.Name = "lblEmail";
         lblEmail.Size = new Size(390, 16);
@@ -134,11 +134,11 @@ partial class FrmUpdateProfile
         // txtEmail
         // 
         txtEmail.BackColor = Color.White;
-        txtEmail.BaseColor = Color.FromArgb(242, 239, 231);
-        txtEmail.BorderColorA = Color.FromArgb(102, 163, 191);
-        txtEmail.BorderColorB = Color.FromArgb(200, 223, 219);
+        txtEmail.BaseColor = Color.FromArgb(246, 242, 234);
+        txtEmail.BorderColorA = Color.FromArgb(75, 86, 148);
+        txtEmail.BorderColorB = Color.FromArgb(190, 196, 220);
         txtEmail.Font = new Font("Segoe UI", 9.5F);
-        txtEmail.ForeColor = Color.FromArgb(51, 104, 160);
+        txtEmail.ForeColor = Color.FromArgb(75, 86, 148);
         txtEmail.Location = new Point(24, 192);
         txtEmail.Name = "txtEmail";
         txtEmail.Size = new Size(390, 32);
@@ -147,7 +147,7 @@ partial class FrmUpdateProfile
         // lblAddress
         // 
         lblAddress.Font = new Font("Segoe UI", 8.5F, FontStyle.Bold);
-        lblAddress.ForeColor = Color.FromArgb(51, 104, 160);
+        lblAddress.ForeColor = Color.FromArgb(75, 86, 148);
         lblAddress.Location = new Point(24, 230);
         lblAddress.Name = "lblAddress";
         lblAddress.Size = new Size(390, 16);
@@ -157,11 +157,11 @@ partial class FrmUpdateProfile
         // txtAddress
         // 
         txtAddress.BackColor = Color.White;
-        txtAddress.BaseColor = Color.FromArgb(242, 239, 231);
-        txtAddress.BorderColorA = Color.FromArgb(102, 163, 191);
-        txtAddress.BorderColorB = Color.FromArgb(200, 223, 219);
+        txtAddress.BaseColor = Color.FromArgb(246, 242, 234);
+        txtAddress.BorderColorA = Color.FromArgb(75, 86, 148);
+        txtAddress.BorderColorB = Color.FromArgb(190, 196, 220);
         txtAddress.Font = new Font("Segoe UI", 9.5F);
-        txtAddress.ForeColor = Color.FromArgb(51, 104, 160);
+        txtAddress.ForeColor = Color.FromArgb(75, 86, 148);
         txtAddress.Location = new Point(24, 248);
         txtAddress.Name = "txtAddress";
         txtAddress.Size = new Size(390, 32);
@@ -170,7 +170,7 @@ partial class FrmUpdateProfile
         // lblNewPassword
         // 
         lblNewPassword.Font = new Font("Segoe UI", 8.5F, FontStyle.Bold);
-        lblNewPassword.ForeColor = Color.FromArgb(51, 104, 160);
+        lblNewPassword.ForeColor = Color.FromArgb(75, 86, 148);
         lblNewPassword.Location = new Point(24, 286);
         lblNewPassword.Name = "lblNewPassword";
         lblNewPassword.Size = new Size(390, 16);
@@ -180,11 +180,11 @@ partial class FrmUpdateProfile
         // txtNewPassword
         // 
         txtNewPassword.BackColor = Color.White;
-        txtNewPassword.BaseColor = Color.FromArgb(242, 239, 231);
-        txtNewPassword.BorderColorA = Color.FromArgb(102, 163, 191);
-        txtNewPassword.BorderColorB = Color.FromArgb(200, 223, 219);
+        txtNewPassword.BaseColor = Color.FromArgb(246, 242, 234);
+        txtNewPassword.BorderColorA = Color.FromArgb(75, 86, 148);
+        txtNewPassword.BorderColorB = Color.FromArgb(190, 196, 220);
         txtNewPassword.Font = new Font("Segoe UI", 9.5F);
-        txtNewPassword.ForeColor = Color.FromArgb(51, 104, 160);
+        txtNewPassword.ForeColor = Color.FromArgb(75, 86, 148);
         txtNewPassword.Location = new Point(24, 304);
         txtNewPassword.Name = "txtNewPassword";
         txtNewPassword.PasswordChar = '●';
@@ -195,7 +195,7 @@ partial class FrmUpdateProfile
         // lblError
         // 
         lblError.Font = new Font("Segoe UI", 8.5F);
-        lblError.ForeColor = Color.FromArgb(220, 53, 69);
+        lblError.ForeColor = Color.FromArgb(184, 72, 88);
         lblError.Location = new Point(24, 344);
         lblError.Name = "lblError";
         lblError.Size = new Size(390, 26);
@@ -205,7 +205,7 @@ partial class FrmUpdateProfile
         // btnSave
         // 
         btnSave.ButtonType = HopeButtonType.Primary;
-        btnSave.PrimaryColor = Color.FromArgb(37, 78, 122);
+        btnSave.PrimaryColor = Color.FromArgb(17, 24, 68);
         btnSave.TextColor = Color.White;
         btnSave.HoverTextColor = Color.White;
         btnSave.Cursor = Cursors.Hand;
@@ -220,8 +220,8 @@ partial class FrmUpdateProfile
         // btnCancel
         // 
         btnCancel.ButtonType = HopeButtonType.Primary;
-        btnCancel.PrimaryColor = Color.FromArgb(108, 117, 125);
-        btnCancel.BorderColor = Color.FromArgb(108, 117, 125);
+        btnCancel.PrimaryColor = Color.FromArgb(130, 138, 165);
+        btnCancel.BorderColor = Color.FromArgb(130, 138, 165);
         btnCancel.TextColor = Color.White;
         btnCancel.HoverTextColor = Color.White;
         btnCancel.Cursor = Cursors.Hand;
@@ -237,11 +237,11 @@ partial class FrmUpdateProfile
         // 
         AutoScaleDimensions = new SizeF(7F, 17F);
         AutoScaleMode = AutoScaleMode.Font;
-        BackColor = Color.FromArgb(37, 78, 122);
+        BackColor = Color.FromArgb(17, 24, 68);
         ClientSize = new Size(520, 560);
         Controls.Add(pnlMain);
         Font = new Font("Segoe UI", 9.5F);
-        ForeColor = Color.FromArgb(51, 104, 160);
+        ForeColor = Color.FromArgb(75, 86, 148);
         FormBorderStyle = FormBorderStyle.FixedDialog;
         MaximizeBox = false;
         Name = "FrmUpdateProfile";

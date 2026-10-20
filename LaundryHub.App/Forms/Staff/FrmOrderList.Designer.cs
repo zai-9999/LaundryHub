@@ -1,4 +1,4 @@
-using Panel = System.Windows.Forms.Panel;
+﻿using Panel = System.Windows.Forms.Panel;
 using CheckBox = System.Windows.Forms.CheckBox;
 using ReaLTaiizor;
 using ReaLTaiizor.Controls;
@@ -50,7 +50,7 @@ partial class FrmOrderList
         // 
         // pnlTopBar
         // 
-        pnlTopBar.BackColor = Color.FromArgb(102, 163, 191);
+        pnlTopBar.BackColor = Color.FromArgb(114, 136, 174);
         pnlTopBar.Controls.Add(btnViewDetail);
         pnlTopBar.Controls.Add(dtpFilter);
         pnlTopBar.Controls.Add(chkFilterDate);
@@ -66,8 +66,8 @@ partial class FrmOrderList
         // btnViewDetail
         // 
         btnViewDetail.ButtonType = HopeButtonType.Primary;
-        btnViewDetail.PrimaryColor = Color.FromArgb(51, 104, 160);
-        btnViewDetail.TextColor = Color.FromArgb(242, 239, 231);
+        btnViewDetail.PrimaryColor = Color.FromArgb(75, 86, 148);
+        btnViewDetail.TextColor = Color.FromArgb(246, 242, 234);
         btnViewDetail.HoverTextColor = Color.White;
         btnViewDetail.Cursor = Cursors.Hand;
         btnViewDetail.Dock = DockStyle.Right;
@@ -96,7 +96,7 @@ partial class FrmOrderList
         // 
         chkFilterDate.Dock = DockStyle.Right;
         chkFilterDate.Font = new Font("Segoe UI", 8.5F);
-        chkFilterDate.ForeColor = Color.FromArgb(242, 239, 231);
+        chkFilterDate.ForeColor = Color.FromArgb(246, 242, 234);
         chkFilterDate.Location = new Point(694, 12);
         chkFilterDate.Name = "chkFilterDate";
         chkFilterDate.Size = new Size(120, 40);
@@ -110,11 +110,11 @@ partial class FrmOrderList
         // 
         txtSearch.BackColor = Color.White;
         txtSearch.BaseColor = Color.White;
-        txtSearch.BorderColorA = Color.FromArgb(51, 104, 160);
-        txtSearch.BorderColorB = Color.FromArgb(200, 223, 219);
+        txtSearch.BorderColorA = Color.FromArgb(75, 86, 148);
+        txtSearch.BorderColorB = Color.FromArgb(190, 196, 220);
         txtSearch.Dock = DockStyle.Fill;
         txtSearch.Font = new Font("Segoe UI", 10F);
-        txtSearch.ForeColor = Color.FromArgb(51, 104, 160);
+        txtSearch.ForeColor = Color.FromArgb(75, 86, 148);
         txtSearch.Hint = "Search by order # or customer name...";
         txtSearch.Location = new Point(196, 12);
         txtSearch.Name = "txtSearch";
@@ -126,7 +126,7 @@ partial class FrmOrderList
         // 
         lblTitle.Dock = DockStyle.Left;
         lblTitle.Font = new Font("Segoe UI", 13F, FontStyle.Bold);
-        lblTitle.ForeColor = Color.FromArgb(242, 239, 231);
+        lblTitle.ForeColor = Color.FromArgb(246, 242, 234);
         lblTitle.Location = new Point(16, 12);
         lblTitle.Name = "lblTitle";
         lblTitle.Size = new Size(180, 40);
@@ -136,7 +136,7 @@ partial class FrmOrderList
         //
         // pnlLegend
         //
-        pnlLegend.BackColor = Color.FromArgb(37, 78, 122);
+        pnlLegend.BackColor = Color.FromArgb(17, 24, 68);
         pnlLegend.Controls.Add(lblDotCancelled);
         pnlLegend.Controls.Add(lblCancelled);
         pnlLegend.Controls.Add(lblDotClaimed);
@@ -158,7 +158,7 @@ partial class FrmOrderList
         // 
         lblDotCancelled.AutoSize = true;
         lblDotCancelled.Font = new Font("Segoe UI", 9F);
-        lblDotCancelled.ForeColor = Color.FromArgb(220, 53, 69);
+        lblDotCancelled.ForeColor = Color.FromArgb(184, 72, 88);
         lblDotCancelled.Location = new Point(496, 4);
         lblDotCancelled.Name = "lblDotCancelled";
         lblDotCancelled.Size = new Size(15, 15);
@@ -169,7 +169,7 @@ partial class FrmOrderList
         //
         lblCancelled.AutoSize = true;
         lblCancelled.Font = new Font("Segoe UI", 8.5F);
-        lblCancelled.ForeColor = Color.FromArgb(220, 235, 245);
+        lblCancelled.ForeColor = Color.FromArgb(226, 230, 242);
         lblCancelled.Location = new Point(514, 4);
         lblCancelled.Name = "lblCancelled";
         lblCancelled.Size = new Size(59, 15);
@@ -180,7 +180,7 @@ partial class FrmOrderList
         // 
         lblDotClaimed.AutoSize = true;
         lblDotClaimed.Font = new Font("Segoe UI", 9F);
-        lblDotClaimed.ForeColor = Color.FromArgb(108, 117, 125);
+        lblDotClaimed.ForeColor = Color.FromArgb(130, 138, 165);
         lblDotClaimed.Location = new Point(376, 4);
         lblDotClaimed.Name = "lblDotClaimed";
         lblDotClaimed.Size = new Size(15, 15);
@@ -191,7 +191,7 @@ partial class FrmOrderList
         //
         lblClaimed.AutoSize = true;
         lblClaimed.Font = new Font("Segoe UI", 8.5F);
-        lblClaimed.ForeColor = Color.FromArgb(220, 235, 245);
+        lblClaimed.ForeColor = Color.FromArgb(226, 230, 242);
         lblClaimed.Location = new Point(394, 4);
         lblClaimed.Name = "lblClaimed";
         lblClaimed.Size = new Size(51, 15);
@@ -202,7 +202,7 @@ partial class FrmOrderList
         // 
         lblDotReady.AutoSize = true;
         lblDotReady.Font = new Font("Segoe UI", 9F);
-        lblDotReady.ForeColor = Color.FromArgb(40, 167, 69);
+        lblDotReady.ForeColor = Color.FromArgb(74, 160, 120);
         lblDotReady.Location = new Point(256, 4);
         lblDotReady.Name = "lblDotReady";
         lblDotReady.Size = new Size(15, 15);
@@ -213,7 +213,7 @@ partial class FrmOrderList
         //
         lblReady.AutoSize = true;
         lblReady.Font = new Font("Segoe UI", 8.5F);
-        lblReady.ForeColor = Color.FromArgb(220, 235, 245);
+        lblReady.ForeColor = Color.FromArgb(226, 230, 242);
         lblReady.Location = new Point(274, 4);
         lblReady.Name = "lblReady";
         lblReady.Size = new Size(96, 15);
@@ -224,7 +224,7 @@ partial class FrmOrderList
         // 
         lblDotDrying.AutoSize = true;
         lblDotDrying.Font = new Font("Segoe UI", 9F);
-        lblDotDrying.ForeColor = Color.FromArgb(102, 163, 191);
+        lblDotDrying.ForeColor = Color.FromArgb(114, 136, 174);
         lblDotDrying.Location = new Point(136, 4);
         lblDotDrying.Name = "lblDotDrying";
         lblDotDrying.Size = new Size(15, 15);
@@ -235,7 +235,7 @@ partial class FrmOrderList
         //
         lblDrying.AutoSize = true;
         lblDrying.Font = new Font("Segoe UI", 8.5F);
-        lblDrying.ForeColor = Color.FromArgb(220, 235, 245);
+        lblDrying.ForeColor = Color.FromArgb(226, 230, 242);
         lblDrying.Location = new Point(154, 4);
         lblDrying.Name = "lblDrying";
         lblDrying.Size = new Size(42, 15);
@@ -246,7 +246,7 @@ partial class FrmOrderList
         // 
         lblDotWashing.AutoSize = true;
         lblDotWashing.Font = new Font("Segoe UI", 9F);
-        lblDotWashing.ForeColor = Color.FromArgb(51, 104, 160);
+        lblDotWashing.ForeColor = Color.FromArgb(75, 86, 148);
         lblDotWashing.Location = new Point(16, 4);
         lblDotWashing.Name = "lblDotWashing";
         lblDotWashing.Size = new Size(15, 15);
@@ -257,7 +257,7 @@ partial class FrmOrderList
         //
         lblWashing.AutoSize = true;
         lblWashing.Font = new Font("Segoe UI", 8.5F);
-        lblWashing.ForeColor = Color.FromArgb(220, 235, 245);
+        lblWashing.ForeColor = Color.FromArgb(226, 230, 242);
         lblWashing.Location = new Point(34, 4);
         lblWashing.Name = "lblWashing";
         lblWashing.Size = new Size(54, 15);
@@ -272,11 +272,11 @@ partial class FrmOrderList
         dgvOrders.BackgroundColor = Color.White;
         dgvOrders.BorderStyle = BorderStyle.None;
         dataGridViewCellStyle1.Alignment = DataGridViewContentAlignment.MiddleLeft;
-        dataGridViewCellStyle1.BackColor = Color.FromArgb(200, 223, 219);
+        dataGridViewCellStyle1.BackColor = Color.FromArgb(234, 224, 207);
         dataGridViewCellStyle1.Font = new Font("Segoe UI Semibold", 9F, FontStyle.Bold);
-        dataGridViewCellStyle1.ForeColor = Color.FromArgb(51, 104, 160);
-        dataGridViewCellStyle1.SelectionBackColor = Color.FromArgb(200, 223, 219);
-        dataGridViewCellStyle1.SelectionForeColor = Color.FromArgb(51, 104, 160);
+        dataGridViewCellStyle1.ForeColor = Color.FromArgb(75, 86, 148);
+        dataGridViewCellStyle1.SelectionBackColor = Color.FromArgb(234, 224, 207);
+        dataGridViewCellStyle1.SelectionForeColor = Color.FromArgb(75, 86, 148);
         dataGridViewCellStyle1.WrapMode = DataGridViewTriState.True;
         dgvOrders.ColumnHeadersDefaultCellStyle = dataGridViewCellStyle1;
         dgvOrders.ColumnHeadersHeight = 34;
@@ -284,15 +284,15 @@ partial class FrmOrderList
         dataGridViewCellStyle2.Alignment = DataGridViewContentAlignment.MiddleLeft;
         dataGridViewCellStyle2.BackColor = Color.White;
         dataGridViewCellStyle2.Font = new Font("Segoe UI", 9F);
-        dataGridViewCellStyle2.ForeColor = Color.FromArgb(51, 104, 160);
+        dataGridViewCellStyle2.ForeColor = Color.FromArgb(75, 86, 148);
         dataGridViewCellStyle2.Padding = new Padding(4);
-        dataGridViewCellStyle2.SelectionBackColor = Color.FromArgb(102, 163, 191);
+        dataGridViewCellStyle2.SelectionBackColor = Color.FromArgb(114, 136, 174);
         dataGridViewCellStyle2.SelectionForeColor = Color.White;
         dataGridViewCellStyle2.WrapMode = DataGridViewTriState.False;
         dgvOrders.DefaultCellStyle = dataGridViewCellStyle2;
         dgvOrders.Dock = DockStyle.Fill;
         dgvOrders.EnableHeadersVisualStyles = false;
-        dgvOrders.GridColor = Color.FromArgb(200, 223, 219);
+        dgvOrders.GridColor = Color.FromArgb(234, 224, 207);
         dgvOrders.Location = new Point(0, 92);
         dgvOrders.Name = "dgvOrders";
         dgvOrders.ReadOnly = true;
@@ -308,13 +308,13 @@ partial class FrmOrderList
         // 
         AutoScaleDimensions = new SizeF(7F, 17F);
         AutoScaleMode = AutoScaleMode.Font;
-        BackColor = Color.FromArgb(242, 239, 231);
+        BackColor = Color.FromArgb(246, 242, 234);
         ClientSize = new Size(1050, 640);
         Controls.Add(dgvOrders);
         Controls.Add(pnlLegend);
         Controls.Add(pnlTopBar);
         Font = new Font("Segoe UI", 9.5F);
-        ForeColor = Color.FromArgb(51, 104, 160);
+        ForeColor = Color.FromArgb(75, 86, 148);
         MinimumSize = new Size(800, 500);
         Name = "FrmOrderList";
         StartPosition = FormStartPosition.CenterParent;

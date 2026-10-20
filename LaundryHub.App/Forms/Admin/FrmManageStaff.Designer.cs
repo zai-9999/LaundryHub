@@ -1,4 +1,4 @@
-using Panel = System.Windows.Forms.Panel;
+﻿using Panel = System.Windows.Forms.Panel;
 using CheckBox = System.Windows.Forms.CheckBox;
 using Button = System.Windows.Forms.Button;
 using ReaLTaiizor;
@@ -67,7 +67,7 @@ partial class FrmManageStaff
         // 
         // pnlHeader
         // 
-        pnlHeader.BackColor = Color.FromArgb(51, 104, 160);
+        pnlHeader.BackColor = Color.FromArgb(75, 86, 148);
         pnlHeader.Controls.Add(btnClose);
         pnlHeader.Controls.Add(lblTitle);
         pnlHeader.Dock = DockStyle.Top;
@@ -80,9 +80,9 @@ partial class FrmManageStaff
         // btnClose
         // 
         btnClose.ButtonType = HopeButtonType.Default;
-        btnClose.DefaultColor = Color.FromArgb(102, 163, 191);
-        btnClose.BorderColor = Color.FromArgb(200, 223, 219);
-        btnClose.TextColor = Color.FromArgb(242, 239, 231);
+        btnClose.DefaultColor = Color.FromArgb(114, 136, 174);
+        btnClose.BorderColor = Color.FromArgb(234, 224, 207);
+        btnClose.TextColor = Color.FromArgb(246, 242, 234);
         btnClose.HoverTextColor = Color.White;
         btnClose.Cursor = Cursors.Hand;
         btnClose.Font = new Font("Segoe UI", 9.5F, FontStyle.Bold);
@@ -97,7 +97,7 @@ partial class FrmManageStaff
         // 
         lblTitle.Dock = DockStyle.Left;
         lblTitle.Font = new Font("Segoe UI", 16F, FontStyle.Bold);
-        lblTitle.ForeColor = Color.FromArgb(242, 239, 231);
+        lblTitle.ForeColor = Color.FromArgb(246, 242, 234);
         lblTitle.Location = new Point(24, 0);
         lblTitle.Name = "lblTitle";
         lblTitle.Size = new Size(400, 65);
@@ -107,7 +107,7 @@ partial class FrmManageStaff
         // 
         // pnlContainer
         // 
-        pnlContainer.BackColor = Color.FromArgb(242, 239, 231);
+        pnlContainer.BackColor = Color.FromArgb(246, 242, 234);
         pnlContainer.Controls.Add(pnlRight);
         pnlContainer.Controls.Add(pnlLeftCard);
         pnlContainer.Dock = DockStyle.Fill;
@@ -147,26 +147,26 @@ partial class FrmManageStaff
         dgvStaff.BackgroundColor = Color.White;
         dgvStaff.BorderStyle = BorderStyle.None;
         dataGridViewCellStyle1.Alignment = DataGridViewContentAlignment.MiddleLeft;
-        dataGridViewCellStyle1.BackColor = Color.FromArgb(51, 104, 160);
+        dataGridViewCellStyle1.BackColor = Color.FromArgb(75, 86, 148);
         dataGridViewCellStyle1.Font = new Font("Segoe UI", 9.5F, FontStyle.Bold);
-        dataGridViewCellStyle1.ForeColor = Color.FromArgb(242, 239, 231);
+        dataGridViewCellStyle1.ForeColor = Color.FromArgb(246, 242, 234);
         dataGridViewCellStyle1.Padding = new Padding(6);
-        dataGridViewCellStyle1.SelectionBackColor = Color.FromArgb(51, 104, 160);
-        dataGridViewCellStyle1.SelectionForeColor = Color.FromArgb(242, 239, 231);
+        dataGridViewCellStyle1.SelectionBackColor = Color.FromArgb(75, 86, 148);
+        dataGridViewCellStyle1.SelectionForeColor = Color.FromArgb(246, 242, 234);
         dataGridViewCellStyle1.WrapMode = DataGridViewTriState.True;
         dgvStaff.ColumnHeadersDefaultCellStyle = dataGridViewCellStyle1;
         dgvStaff.ColumnHeadersHeightSizeMode = DataGridViewColumnHeadersHeightSizeMode.AutoSize;
         dataGridViewCellStyle2.Alignment = DataGridViewContentAlignment.MiddleLeft;
         dataGridViewCellStyle2.BackColor = Color.White;
         dataGridViewCellStyle2.Font = new Font("Segoe UI", 9.5F);
-        dataGridViewCellStyle2.ForeColor = Color.FromArgb(51, 104, 160);
-        dataGridViewCellStyle2.SelectionBackColor = Color.FromArgb(200, 223, 219);
-        dataGridViewCellStyle2.SelectionForeColor = Color.FromArgb(51, 104, 160);
+        dataGridViewCellStyle2.ForeColor = Color.FromArgb(75, 86, 148);
+        dataGridViewCellStyle2.SelectionBackColor = Color.FromArgb(234, 224, 207);
+        dataGridViewCellStyle2.SelectionForeColor = Color.FromArgb(75, 86, 148);
         dataGridViewCellStyle2.WrapMode = DataGridViewTriState.False;
         dgvStaff.DefaultCellStyle = dataGridViewCellStyle2;
         dgvStaff.Dock = DockStyle.Fill;
         dgvStaff.EnableHeadersVisualStyles = false;
-        dgvStaff.GridColor = Color.FromArgb(200, 223, 219);
+        dgvStaff.GridColor = Color.FromArgb(234, 224, 207);
         dgvStaff.Location = new Point(0, 10);
         dgvStaff.Name = "dgvStaff";
         dgvStaff.ReadOnly = true;
@@ -192,10 +192,10 @@ partial class FrmManageStaff
         // btnToggleStatus
         // 
         btnToggleStatus.ButtonType = HopeButtonType.Default;
-        btnToggleStatus.DefaultColor = Color.FromArgb(200, 223, 219);
-        btnToggleStatus.BorderColor = Color.FromArgb(102, 163, 191);
-        btnToggleStatus.TextColor = Color.FromArgb(51, 104, 160);
-        btnToggleStatus.HoverTextColor = Color.FromArgb(51, 104, 160);
+        btnToggleStatus.DefaultColor = Color.FromArgb(234, 224, 207);
+        btnToggleStatus.BorderColor = Color.FromArgb(114, 136, 174);
+        btnToggleStatus.TextColor = Color.FromArgb(75, 86, 148);
+        btnToggleStatus.HoverTextColor = Color.FromArgb(75, 86, 148);
         btnToggleStatus.Cursor = Cursors.Hand;
         btnToggleStatus.Dock = DockStyle.Right;
         btnToggleStatus.Font = new Font("Segoe UI", 9F, FontStyle.Bold);
@@ -210,7 +210,7 @@ partial class FrmManageStaff
         // 
         lblGridTitle.Dock = DockStyle.Left;
         lblGridTitle.Font = new Font("Segoe UI", 12F, FontStyle.Bold);
-        lblGridTitle.ForeColor = Color.FromArgb(51, 104, 160);
+        lblGridTitle.ForeColor = Color.FromArgb(75, 86, 148);
         lblGridTitle.Location = new Point(0, 4);
         lblGridTitle.Name = "lblGridTitle";
         lblGridTitle.Size = new Size(200, 36);
@@ -258,7 +258,7 @@ partial class FrmManageStaff
         // lblFullName
         // 
         lblFullName.Font = new Font("Segoe UI", 9F, FontStyle.Bold);
-        lblFullName.ForeColor = Color.FromArgb(51, 104, 160);
+        lblFullName.ForeColor = Color.FromArgb(75, 86, 148);
         lblFullName.Location = new Point(0, 4);
         lblFullName.Margin = new Padding(0, 4, 0, 2);
         lblFullName.Name = "lblFullName";
@@ -270,10 +270,10 @@ partial class FrmManageStaff
         // 
         txtFullName.BackColor = Color.White;
         txtFullName.BaseColor = Color.White;
-        txtFullName.BorderColorA = Color.FromArgb(102, 163, 191);
-        txtFullName.BorderColorB = Color.FromArgb(200, 223, 219);
+        txtFullName.BorderColorA = Color.FromArgb(75, 86, 148);
+        txtFullName.BorderColorB = Color.FromArgb(190, 196, 220);
         txtFullName.Font = new Font("Segoe UI", 9.5F);
-        txtFullName.ForeColor = Color.FromArgb(51, 104, 160);
+        txtFullName.ForeColor = Color.FromArgb(75, 86, 148);
         txtFullName.Hint = "Enter full name";
         txtFullName.Location = new Point(0, 26);
         txtFullName.Margin = new Padding(0, 2, 0, 4);
@@ -284,7 +284,7 @@ partial class FrmManageStaff
         // lblUsername
         // 
         lblUsername.Font = new Font("Segoe UI", 9F, FontStyle.Bold);
-        lblUsername.ForeColor = Color.FromArgb(51, 104, 160);
+        lblUsername.ForeColor = Color.FromArgb(75, 86, 148);
         lblUsername.Location = new Point(0, 66);
         lblUsername.Margin = new Padding(0, 4, 0, 2);
         lblUsername.Name = "lblUsername";
@@ -296,10 +296,10 @@ partial class FrmManageStaff
         // 
         txtUsername.BackColor = Color.White;
         txtUsername.BaseColor = Color.White;
-        txtUsername.BorderColorA = Color.FromArgb(102, 163, 191);
-        txtUsername.BorderColorB = Color.FromArgb(200, 223, 219);
+        txtUsername.BorderColorA = Color.FromArgb(75, 86, 148);
+        txtUsername.BorderColorB = Color.FromArgb(190, 196, 220);
         txtUsername.Font = new Font("Segoe UI", 9.5F);
-        txtUsername.ForeColor = Color.FromArgb(51, 104, 160);
+        txtUsername.ForeColor = Color.FromArgb(75, 86, 148);
         txtUsername.Hint = "Enter username";
         txtUsername.Location = new Point(0, 88);
         txtUsername.Margin = new Padding(0, 2, 0, 4);
@@ -310,7 +310,7 @@ partial class FrmManageStaff
         // lblEmail
         // 
         lblEmail.Font = new Font("Segoe UI", 9F, FontStyle.Bold);
-        lblEmail.ForeColor = Color.FromArgb(51, 104, 160);
+        lblEmail.ForeColor = Color.FromArgb(75, 86, 148);
         lblEmail.Location = new Point(0, 128);
         lblEmail.Margin = new Padding(0, 4, 0, 2);
         lblEmail.Name = "lblEmail";
@@ -322,10 +322,10 @@ partial class FrmManageStaff
         // 
         txtEmail.BackColor = Color.White;
         txtEmail.BaseColor = Color.White;
-        txtEmail.BorderColorA = Color.FromArgb(102, 163, 191);
-        txtEmail.BorderColorB = Color.FromArgb(200, 223, 219);
+        txtEmail.BorderColorA = Color.FromArgb(75, 86, 148);
+        txtEmail.BorderColorB = Color.FromArgb(190, 196, 220);
         txtEmail.Font = new Font("Segoe UI", 9.5F);
-        txtEmail.ForeColor = Color.FromArgb(51, 104, 160);
+        txtEmail.ForeColor = Color.FromArgb(75, 86, 148);
         txtEmail.Hint = "staff@example.com";
         txtEmail.Location = new Point(0, 150);
         txtEmail.Margin = new Padding(0, 2, 0, 4);
@@ -336,7 +336,7 @@ partial class FrmManageStaff
         // lblRole
         // 
         lblRole.Font = new Font("Segoe UI", 9F, FontStyle.Bold);
-        lblRole.ForeColor = Color.FromArgb(51, 104, 160);
+        lblRole.ForeColor = Color.FromArgb(75, 86, 148);
         lblRole.Location = new Point(0, 190);
         lblRole.Margin = new Padding(0, 4, 0, 2);
         lblRole.Name = "lblRole";
@@ -350,7 +350,7 @@ partial class FrmManageStaff
         cmbRole.DropDownStyle = ComboBoxStyle.DropDownList;
         cmbRole.FlatStyle = FlatStyle.Flat;
         cmbRole.Font = new Font("Segoe UI", 9.5F);
-        cmbRole.ForeColor = Color.FromArgb(51, 104, 160);
+        cmbRole.ForeColor = Color.FromArgb(75, 86, 148);
         cmbRole.FormattingEnabled = true;
         cmbRole.Items.AddRange(new object[] { "Staff", "Admin" });
         cmbRole.Location = new Point(0, 212);
@@ -362,7 +362,7 @@ partial class FrmManageStaff
         // lblPassword
         // 
         lblPassword.Font = new Font("Segoe UI", 9F, FontStyle.Bold);
-        lblPassword.ForeColor = Color.FromArgb(51, 104, 160);
+        lblPassword.ForeColor = Color.FromArgb(75, 86, 148);
         lblPassword.Location = new Point(0, 247);
         lblPassword.Margin = new Padding(0, 4, 0, 2);
         lblPassword.Name = "lblPassword";
@@ -374,10 +374,10 @@ partial class FrmManageStaff
         // 
         txtPassword.BackColor = Color.White;
         txtPassword.BaseColor = Color.White;
-        txtPassword.BorderColorA = Color.FromArgb(102, 163, 191);
-        txtPassword.BorderColorB = Color.FromArgb(200, 223, 219);
+        txtPassword.BorderColorA = Color.FromArgb(75, 86, 148);
+        txtPassword.BorderColorB = Color.FromArgb(190, 196, 220);
         txtPassword.Font = new Font("Segoe UI", 9.5F);
-        txtPassword.ForeColor = Color.FromArgb(51, 104, 160);
+        txtPassword.ForeColor = Color.FromArgb(75, 86, 148);
         txtPassword.Hint = "Enter password";
         txtPassword.Location = new Point(0, 269);
         txtPassword.Margin = new Padding(0, 2, 0, 4);
@@ -392,7 +392,7 @@ partial class FrmManageStaff
         chkActive.Checked = true;
         chkActive.CheckState = CheckState.Checked;
         chkActive.Font = new Font("Segoe UI", 9F, FontStyle.Bold);
-        chkActive.ForeColor = Color.FromArgb(51, 104, 160);
+        chkActive.ForeColor = Color.FromArgb(75, 86, 148);
         chkActive.Location = new Point(0, 309);
         chkActive.Name = "chkActive";
         chkActive.Padding = new Padding(0, 4, 0, 4);
@@ -404,7 +404,7 @@ partial class FrmManageStaff
         // lblError
         // 
         lblError.Font = new Font("Segoe UI", 9F);
-        lblError.ForeColor = Color.FromArgb(200, 50, 50);
+        lblError.ForeColor = Color.FromArgb(184, 72, 88);
         lblError.Location = new Point(0, 344);
         lblError.Name = "lblError";
         lblError.Size = new Size(310, 28);
@@ -423,8 +423,8 @@ partial class FrmManageStaff
         // btnSave
         // 
         btnSave.ButtonType = HopeButtonType.Primary;
-        btnSave.PrimaryColor = Color.FromArgb(51, 104, 160);
-        btnSave.TextColor = Color.FromArgb(242, 239, 231);
+        btnSave.PrimaryColor = Color.FromArgb(75, 86, 148);
+        btnSave.TextColor = Color.FromArgb(246, 242, 234);
         btnSave.HoverTextColor = Color.White;
         btnSave.Cursor = Cursors.Hand;
         btnSave.Font = new Font("Segoe UI", 9.5F, FontStyle.Bold);
@@ -438,10 +438,10 @@ partial class FrmManageStaff
         // btnClear
         // 
         btnClear.ButtonType = HopeButtonType.Default;
-        btnClear.DefaultColor = Color.FromArgb(200, 223, 219);
-        btnClear.BorderColor = Color.FromArgb(102, 163, 191);
-        btnClear.TextColor = Color.FromArgb(51, 104, 160);
-        btnClear.HoverTextColor = Color.FromArgb(51, 104, 160);
+        btnClear.DefaultColor = Color.FromArgb(234, 224, 207);
+        btnClear.BorderColor = Color.FromArgb(114, 136, 174);
+        btnClear.TextColor = Color.FromArgb(75, 86, 148);
+        btnClear.HoverTextColor = Color.FromArgb(75, 86, 148);
         btnClear.Cursor = Cursors.Hand;
         btnClear.Font = new Font("Segoe UI", 9.5F);
         btnClear.Location = new Point(154, 3);
@@ -455,7 +455,7 @@ partial class FrmManageStaff
         // 
         lblFormTitle.Dock = DockStyle.Top;
         lblFormTitle.Font = new Font("Segoe UI", 13F, FontStyle.Bold);
-        lblFormTitle.ForeColor = Color.FromArgb(51, 104, 160);
+        lblFormTitle.ForeColor = Color.FromArgb(75, 86, 148);
         lblFormTitle.Location = new Point(20, 20);
         lblFormTitle.Name = "lblFormTitle";
         lblFormTitle.Size = new Size(320, 35);
@@ -466,12 +466,12 @@ partial class FrmManageStaff
         // 
         AutoScaleDimensions = new SizeF(7F, 17F);
         AutoScaleMode = AutoScaleMode.Font;
-        BackColor = Color.FromArgb(242, 239, 231);
+        BackColor = Color.FromArgb(246, 242, 234);
         ClientSize = new Size(950, 620);
         Controls.Add(pnlContainer);
         Controls.Add(pnlHeader);
         Font = new Font("Segoe UI", 9.5F);
-        ForeColor = Color.FromArgb(51, 104, 160);
+        ForeColor = Color.FromArgb(75, 86, 148);
         FormBorderStyle = FormBorderStyle.FixedDialog;
         MaximizeBox = false;
         Name = "FrmManageStaff";

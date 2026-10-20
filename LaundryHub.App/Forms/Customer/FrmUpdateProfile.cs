@@ -18,6 +18,7 @@ public partial class FrmUpdateProfile : Form
         _customer = customer;
         _user = user;
         InitializeComponent();
+        UIThemeHelper.ApplyTheme(this);
 
         InputValidator.RestrictToPhoneInput(txtPhone);
 
@@ -62,10 +63,19 @@ public partial class FrmUpdateProfile : Form
             return;
         }
 
-        if (!string.IsNullOrWhiteSpace(email) && !Regex.IsMatch(email, @"^[^@\s]+@[^@\s]+\.[^@\s]+$"))
+        if (!string.IsNullOrWhiteSpace(email))
         {
-            ShowError("Please enter a valid email format.");
-            return;
+            if (!Regex.IsMatch(email, @"^[^@\s]+@[^@\s]+\.[^@\s]+$"))
+            {
+                ShowError("Please enter a valid email format.");
+                return;
+            }
+
+            if (AppServices.Users.EmailExists(email, _user.UserId))
+            {
+                ShowError("Email address is already used by another account.");
+                return;
+            }
         }
 
         if (!string.IsNullOrWhiteSpace(newPwd) && !InputValidator.IsValidPassword(newPwd, out var pwdError))
@@ -74,25 +84,32 @@ public partial class FrmUpdateProfile : Form
             return;
         }
 
-        // Update customer
-        _customer.FullName = name;
-        _customer.Phone = phone;
-        _customer.Email = string.IsNullOrWhiteSpace(email) ? null : email;
-        _customer.Address = string.IsNullOrWhiteSpace(address) ? null : address;
-        AppServices.Customers.Update(_customer);
-
-        // Update user
-        _user.FullName = name;
-        if (!string.IsNullOrWhiteSpace(email)) _user.Email = email;
-        if (!string.IsNullOrWhiteSpace(newPwd))
+        try
         {
-            _user.PasswordHash = BCrypt.Net.BCrypt.HashPassword(newPwd);
-        }
-        AppServices.Users.Update(_user);
+            // Update customer
+            _customer.FullName = name;
+            _customer.Phone = phone;
+            _customer.Email = string.IsNullOrWhiteSpace(email) ? null : email;
+            _customer.Address = string.IsNullOrWhiteSpace(address) ? null : address;
+            AppServices.Customers.Update(_customer);
 
-        MessageBox.Show("Profile successfully updated!", "Success", MessageBoxButtons.OK, MessageBoxIcon.Information);
-        this.DialogResult = DialogResult.OK;
-        this.Close();
+            // Update user
+            _user.FullName = name;
+            if (!string.IsNullOrWhiteSpace(email)) _user.Email = email;
+            if (!string.IsNullOrWhiteSpace(newPwd))
+            {
+                _user.PasswordHash = BCrypt.Net.BCrypt.HashPassword(newPwd);
+            }
+            AppServices.Users.Update(_user);
+
+            MessageBox.Show("Profile successfully updated!", "Success", MessageBoxButtons.OK, MessageBoxIcon.Information);
+            this.DialogResult = DialogResult.OK;
+            this.Close();
+        }
+        catch (Exception ex)
+        {
+            ShowError($"Database error: {ex.Message}");
+        }
     }
 
     private void ShowError(string msg)

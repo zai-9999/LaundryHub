@@ -1,4 +1,4 @@
-using Panel = System.Windows.Forms.Panel;
+﻿using Panel = System.Windows.Forms.Panel;
 using CheckBox = System.Windows.Forms.CheckBox;
 using ReaLTaiizor;
 using ReaLTaiizor.Controls;
@@ -139,7 +139,7 @@ partial class FrmGuestLookup
         // 
         lblHOrder.Dock = DockStyle.Fill;
         lblHOrder.Font = new Font("Segoe UI", 9F, FontStyle.Bold);
-        lblHOrder.ForeColor = Color.FromArgb(51, 104, 160);
+        lblHOrder.ForeColor = Color.FromArgb(75, 86, 148);
         lblHOrder.Text = "Order #:";
         lblHOrder.TextAlign = ContentAlignment.MiddleLeft;
         // 
@@ -147,14 +147,14 @@ partial class FrmGuestLookup
         // 
         lblResultOrder.Dock = DockStyle.Fill;
         lblResultOrder.Font = new Font("Segoe UI", 9.5F, FontStyle.Bold);
-        lblResultOrder.ForeColor = Color.FromArgb(51, 104, 160);
+        lblResultOrder.ForeColor = Color.FromArgb(75, 86, 148);
         lblResultOrder.TextAlign = ContentAlignment.MiddleLeft;
         // 
         // lblHCustomer
         // 
         lblHCustomer.Dock = DockStyle.Fill;
         lblHCustomer.Font = new Font("Segoe UI", 9F, FontStyle.Bold);
-        lblHCustomer.ForeColor = Color.FromArgb(51, 104, 160);
+        lblHCustomer.ForeColor = Color.FromArgb(75, 86, 148);
         lblHCustomer.Text = "Customer:";
         lblHCustomer.TextAlign = ContentAlignment.MiddleLeft;
         // 
@@ -162,14 +162,14 @@ partial class FrmGuestLookup
         // 
         lblResultCustomer.Dock = DockStyle.Fill;
         lblResultCustomer.Font = new Font("Segoe UI", 9.5F);
-        lblResultCustomer.ForeColor = Color.FromArgb(51, 104, 160);
+        lblResultCustomer.ForeColor = Color.FromArgb(75, 86, 148);
         lblResultCustomer.TextAlign = ContentAlignment.MiddleLeft;
         // 
         // lblHService
         // 
         lblHService.Dock = DockStyle.Fill;
         lblHService.Font = new Font("Segoe UI", 9F, FontStyle.Bold);
-        lblHService.ForeColor = Color.FromArgb(51, 104, 160);
+        lblHService.ForeColor = Color.FromArgb(75, 86, 148);
         lblHService.Text = "Service:";
         lblHService.TextAlign = ContentAlignment.MiddleLeft;
         // 
@@ -177,14 +177,14 @@ partial class FrmGuestLookup
         // 
         lblResultService.Dock = DockStyle.Fill;
         lblResultService.Font = new Font("Segoe UI", 9.5F);
-        lblResultService.ForeColor = Color.FromArgb(51, 104, 160);
+        lblResultService.ForeColor = Color.FromArgb(75, 86, 148);
         lblResultService.TextAlign = ContentAlignment.MiddleLeft;
         // 
         // lblHAmount
         // 
         lblHAmount.Dock = DockStyle.Fill;
         lblHAmount.Font = new Font("Segoe UI", 9F, FontStyle.Bold);
-        lblHAmount.ForeColor = Color.FromArgb(51, 104, 160);
+        lblHAmount.ForeColor = Color.FromArgb(75, 86, 148);
         lblHAmount.Text = "Total Amount:";
         lblHAmount.TextAlign = ContentAlignment.MiddleLeft;
         // 
@@ -192,14 +192,14 @@ partial class FrmGuestLookup
         // 
         lblResultTotal.Dock = DockStyle.Fill;
         lblResultTotal.Font = new Font("Segoe UI", 9.5F, FontStyle.Bold);
-        lblResultTotal.ForeColor = Color.FromArgb(51, 104, 160);
+        lblResultTotal.ForeColor = Color.FromArgb(75, 86, 148);
         lblResultTotal.TextAlign = ContentAlignment.MiddleLeft;
         // 
         // lblHPayment
         // 
         lblHPayment.Dock = DockStyle.Fill;
         lblHPayment.Font = new Font("Segoe UI", 9F, FontStyle.Bold);
-        lblHPayment.ForeColor = Color.FromArgb(51, 104, 160);
+        lblHPayment.ForeColor = Color.FromArgb(75, 86, 148);
         lblHPayment.Text = "Payment:";
         lblHPayment.TextAlign = ContentAlignment.MiddleLeft;
         // 
@@ -207,14 +207,14 @@ partial class FrmGuestLookup
         // 
         lblResultPayment.Dock = DockStyle.Fill;
         lblResultPayment.Font = new Font("Segoe UI", 9.5F, FontStyle.Bold);
-        lblResultPayment.ForeColor = Color.FromArgb(51, 104, 160);
+        lblResultPayment.ForeColor = Color.FromArgb(75, 86, 148);
         lblResultPayment.TextAlign = ContentAlignment.MiddleLeft;
         // 
         // lblHPickup
         // 
         lblHPickup.Dock = DockStyle.Fill;
         lblHPickup.Font = new Font("Segoe UI", 9F, FontStyle.Bold);
-        lblHPickup.ForeColor = Color.FromArgb(51, 104, 160);
+        lblHPickup.ForeColor = Color.FromArgb(75, 86, 148);
         lblHPickup.Text = "Estimated Pickup:";
         lblHPickup.TextAlign = ContentAlignment.MiddleLeft;
         // 
@@ -222,12 +222,12 @@ partial class FrmGuestLookup
         // 
         lblResultPickup.Dock = DockStyle.Fill;
         lblResultPickup.Font = new Font("Segoe UI", 9.5F);
-        lblResultPickup.ForeColor = Color.FromArgb(51, 104, 160);
+        lblResultPickup.ForeColor = Color.FromArgb(75, 86, 148);
         lblResultPickup.TextAlign = ContentAlignment.MiddleLeft;
         // 
         // pnlStep3
         // 
-        pnlStep3.BackColor = Color.FromArgb(200, 223, 219);
+        pnlStep3.BackColor = Color.FromArgb(234, 224, 207);
         pnlStep3.Controls.Add(lblStep3);
         pnlStep3.Location = new Point(384, 35);
         pnlStep3.Name = "pnlStep3";
@@ -239,7 +239,7 @@ partial class FrmGuestLookup
         // 
         lblStep3.Dock = DockStyle.Fill;
         lblStep3.Font = new Font("Segoe UI", 8F, FontStyle.Bold);
-        lblStep3.ForeColor = Color.FromArgb(51, 104, 160);
+        lblStep3.ForeColor = Color.FromArgb(75, 86, 148);
         lblStep3.Location = new Point(0, 0);
         lblStep3.Name = "lblStep3";
         lblStep3.Size = new Size(118, 36);
@@ -249,7 +249,7 @@ partial class FrmGuestLookup
         // 
         // pnlStep2
         // 
-        pnlStep2.BackColor = Color.FromArgb(200, 223, 219);
+        pnlStep2.BackColor = Color.FromArgb(234, 224, 207);
         pnlStep2.Controls.Add(lblStep2);
         pnlStep2.Location = new Point(261, 35);
         pnlStep2.Name = "pnlStep2";
@@ -261,7 +261,7 @@ partial class FrmGuestLookup
         // 
         lblStep2.Dock = DockStyle.Fill;
         lblStep2.Font = new Font("Segoe UI", 8F, FontStyle.Bold);
-        lblStep2.ForeColor = Color.FromArgb(51, 104, 160);
+        lblStep2.ForeColor = Color.FromArgb(75, 86, 148);
         lblStep2.Location = new Point(0, 0);
         lblStep2.Name = "lblStep2";
         lblStep2.Size = new Size(118, 36);
@@ -271,7 +271,7 @@ partial class FrmGuestLookup
         // 
         // pnlStep1
         // 
-        pnlStep1.BackColor = Color.FromArgb(200, 223, 219);
+        pnlStep1.BackColor = Color.FromArgb(234, 224, 207);
         pnlStep1.Controls.Add(lblStep1);
         pnlStep1.Location = new Point(138, 35);
         pnlStep1.Name = "pnlStep1";
@@ -283,7 +283,7 @@ partial class FrmGuestLookup
         // 
         lblStep1.Dock = DockStyle.Fill;
         lblStep1.Font = new Font("Segoe UI", 8F, FontStyle.Bold);
-        lblStep1.ForeColor = Color.FromArgb(51, 104, 160);
+        lblStep1.ForeColor = Color.FromArgb(75, 86, 148);
         lblStep1.Location = new Point(0, 0);
         lblStep1.Name = "lblStep1";
         lblStep1.Size = new Size(118, 36);
@@ -293,7 +293,7 @@ partial class FrmGuestLookup
         // 
         // pnlStep0
         // 
-        pnlStep0.BackColor = Color.FromArgb(200, 223, 219);
+        pnlStep0.BackColor = Color.FromArgb(234, 224, 207);
         pnlStep0.Controls.Add(lblStep0);
         pnlStep0.Location = new Point(15, 35);
         pnlStep0.Name = "pnlStep0";
@@ -305,7 +305,7 @@ partial class FrmGuestLookup
         // 
         lblStep0.Dock = DockStyle.Fill;
         lblStep0.Font = new Font("Segoe UI", 8F, FontStyle.Bold);
-        lblStep0.ForeColor = Color.FromArgb(51, 104, 160);
+        lblStep0.ForeColor = Color.FromArgb(75, 86, 148);
         lblStep0.Location = new Point(0, 0);
         lblStep0.Name = "lblStep0";
         lblStep0.Size = new Size(118, 36);
@@ -316,7 +316,7 @@ partial class FrmGuestLookup
         // lblTimelineHeader
         // 
         lblTimelineHeader.Font = new Font("Segoe UI", 9.5F, FontStyle.Bold);
-        lblTimelineHeader.ForeColor = Color.FromArgb(51, 104, 160);
+        lblTimelineHeader.ForeColor = Color.FromArgb(75, 86, 148);
         lblTimelineHeader.Location = new Point(15, 10);
         lblTimelineHeader.Name = "lblTimelineHeader";
         lblTimelineHeader.Size = new Size(490, 20);
@@ -326,10 +326,10 @@ partial class FrmGuestLookup
         // btnBack
         // 
         btnBack.ButtonType = HopeButtonType.Default;
-        btnBack.DefaultColor = Color.FromArgb(200, 223, 219);
-        btnBack.BorderColor = Color.FromArgb(102, 163, 191);
-        btnBack.TextColor = Color.FromArgb(51, 104, 160);
-        btnBack.HoverTextColor = Color.FromArgb(51, 104, 160);
+        btnBack.DefaultColor = Color.FromArgb(234, 224, 207);
+        btnBack.BorderColor = Color.FromArgb(114, 136, 174);
+        btnBack.TextColor = Color.FromArgb(75, 86, 148);
+        btnBack.HoverTextColor = Color.FromArgb(75, 86, 148);
         btnBack.Cursor = Cursors.Hand;
         btnBack.Font = new Font("Segoe UI", 9.5F);
         btnBack.Location = new Point(295, 285);
@@ -342,8 +342,8 @@ partial class FrmGuestLookup
         // btnLookup
         // 
         btnLookup.ButtonType = HopeButtonType.Primary;
-        btnLookup.PrimaryColor = Color.FromArgb(51, 104, 160);
-        btnLookup.TextColor = Color.FromArgb(242, 239, 231);
+        btnLookup.PrimaryColor = Color.FromArgb(75, 86, 148);
+        btnLookup.TextColor = Color.FromArgb(246, 242, 234);
         btnLookup.HoverTextColor = Color.White;
         btnLookup.Cursor = Cursors.Hand;
         btnLookup.Font = new Font("Segoe UI", 10F, FontStyle.Bold);
@@ -357,7 +357,7 @@ partial class FrmGuestLookup
         // lnkPricing
         // 
         lnkPricing.Font = new Font("Segoe UI", 9.5F, FontStyle.Bold);
-        lnkPricing.LinkColor = Color.FromArgb(51, 104, 160);
+        lnkPricing.LinkColor = Color.FromArgb(75, 86, 148);
         lnkPricing.Location = new Point(50, 332);
         lnkPricing.Name = "lnkPricing";
         lnkPricing.Size = new Size(420, 24);
@@ -370,7 +370,7 @@ partial class FrmGuestLookup
         // lblError
         // 
         lblError.Font = new Font("Segoe UI", 8.5F);
-        lblError.ForeColor = Color.FromArgb(220, 53, 69);
+        lblError.ForeColor = Color.FromArgb(184, 72, 88);
         lblError.Location = new Point(50, 260);
         lblError.Name = "lblError";
         lblError.Size = new Size(420, 22);
@@ -380,11 +380,11 @@ partial class FrmGuestLookup
         // txtPhoneLast4
         // 
         txtPhoneLast4.BackColor = Color.White;
-        txtPhoneLast4.BaseColor = Color.FromArgb(242, 239, 231);
-        txtPhoneLast4.BorderColorA = Color.FromArgb(102, 163, 191);
-        txtPhoneLast4.BorderColorB = Color.FromArgb(200, 223, 219);
+        txtPhoneLast4.BaseColor = Color.FromArgb(246, 242, 234);
+        txtPhoneLast4.BorderColorA = Color.FromArgb(75, 86, 148);
+        txtPhoneLast4.BorderColorB = Color.FromArgb(190, 196, 220);
         txtPhoneLast4.Font = new Font("Segoe UI", 10F);
-        txtPhoneLast4.ForeColor = Color.FromArgb(51, 104, 160);
+        txtPhoneLast4.ForeColor = Color.FromArgb(75, 86, 148);
         txtPhoneLast4.Hint = "e.g. 4567";
         txtPhoneLast4.Location = new Point(50, 220);
         txtPhoneLast4.MaxLength = 4;
@@ -395,7 +395,7 @@ partial class FrmGuestLookup
         // lblPhone
         // 
         lblPhone.Font = new Font("Segoe UI", 9F, FontStyle.Bold);
-        lblPhone.ForeColor = Color.FromArgb(51, 104, 160);
+        lblPhone.ForeColor = Color.FromArgb(75, 86, 148);
         lblPhone.Location = new Point(50, 198);
         lblPhone.Name = "lblPhone";
         lblPhone.Size = new Size(420, 20);
@@ -405,11 +405,11 @@ partial class FrmGuestLookup
         // txtOrderNumber
         // 
         txtOrderNumber.BackColor = Color.White;
-        txtOrderNumber.BaseColor = Color.FromArgb(242, 239, 231);
-        txtOrderNumber.BorderColorA = Color.FromArgb(102, 163, 191);
-        txtOrderNumber.BorderColorB = Color.FromArgb(200, 223, 219);
+        txtOrderNumber.BaseColor = Color.FromArgb(246, 242, 234);
+        txtOrderNumber.BorderColorA = Color.FromArgb(75, 86, 148);
+        txtOrderNumber.BorderColorB = Color.FromArgb(190, 196, 220);
         txtOrderNumber.Font = new Font("Segoe UI", 10F);
-        txtOrderNumber.ForeColor = Color.FromArgb(51, 104, 160);
+        txtOrderNumber.ForeColor = Color.FromArgb(75, 86, 148);
         txtOrderNumber.Hint = "LH-YYYYMMDD-XXX";
         txtOrderNumber.Location = new Point(50, 155);
         txtOrderNumber.Name = "txtOrderNumber";
@@ -419,7 +419,7 @@ partial class FrmGuestLookup
         // lblOrder
         // 
         lblOrder.Font = new Font("Segoe UI", 9F, FontStyle.Bold);
-        lblOrder.ForeColor = Color.FromArgb(51, 104, 160);
+        lblOrder.ForeColor = Color.FromArgb(75, 86, 148);
         lblOrder.Location = new Point(50, 132);
         lblOrder.Name = "lblOrder";
         lblOrder.Size = new Size(420, 20);
@@ -429,7 +429,7 @@ partial class FrmGuestLookup
         // lblSub
         // 
         lblSub.Font = new Font("Segoe UI", 9F);
-        lblSub.ForeColor = Color.FromArgb(102, 163, 191);
+        lblSub.ForeColor = Color.FromArgb(114, 136, 174);
         lblSub.Location = new Point(30, 98);
         lblSub.Name = "lblSub";
         lblSub.Size = new Size(520, 22);
@@ -440,7 +440,7 @@ partial class FrmGuestLookup
         // lblTitle
         // 
         lblTitle.Font = new Font("Segoe UI", 18F, FontStyle.Bold);
-        lblTitle.ForeColor = Color.FromArgb(51, 104, 160);
+        lblTitle.ForeColor = Color.FromArgb(75, 86, 148);
         lblTitle.Location = new Point(30, 62);
         lblTitle.Name = "lblTitle";
         lblTitle.Size = new Size(520, 32);
@@ -451,7 +451,7 @@ partial class FrmGuestLookup
         // lblIcon
         // 
         lblIcon.Font = new Font("Segoe UI Emoji", 28F);
-        lblIcon.ForeColor = Color.FromArgb(51, 104, 160);
+        lblIcon.ForeColor = Color.FromArgb(75, 86, 148);
         lblIcon.Location = new Point(30, 16);
         lblIcon.Name = "lblIcon";
         lblIcon.Size = new Size(520, 45);
@@ -463,11 +463,11 @@ partial class FrmGuestLookup
         // 
         AutoScaleDimensions = new SizeF(7F, 17F);
         AutoScaleMode = AutoScaleMode.Font;
-        BackColor = Color.FromArgb(102, 163, 191);
+        BackColor = Color.FromArgb(114, 136, 174);
         ClientSize = new Size(1100, 800);
         Controls.Add(pnlCard);
         Font = new Font("Segoe UI", 9.5F);
-        ForeColor = Color.FromArgb(51, 104, 160);
+        ForeColor = Color.FromArgb(75, 86, 148);
         FormBorderStyle = FormBorderStyle.FixedSingle;
         MaximizeBox = false;
         Name = "FrmGuestLookup";

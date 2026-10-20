@@ -1,4 +1,4 @@
-using Panel = System.Windows.Forms.Panel;
+﻿using Panel = System.Windows.Forms.Panel;
 using Button = System.Windows.Forms.Button;
 using ReaLTaiizor;
 using ReaLTaiizor.Controls;
@@ -64,7 +64,7 @@ partial class FrmBookOrder
         // 
         // pnlHeader
         // 
-        pnlHeader.BackColor = Color.FromArgb(37, 78, 122);
+        pnlHeader.BackColor = Color.FromArgb(17, 24, 68);
         pnlHeader.Controls.Add(lblTitle);
         pnlHeader.Controls.Add(lblSubtitle);
         pnlHeader.Controls.Add(btnCloseTop);
@@ -90,7 +90,7 @@ partial class FrmBookOrder
         // 
         lblSubtitle.AutoSize = true;
         lblSubtitle.Font = new Font("Segoe UI", 9F);
-        lblSubtitle.ForeColor = Color.FromArgb(200, 223, 219);
+        lblSubtitle.ForeColor = Color.FromArgb(234, 224, 207);
         lblSubtitle.Location = new Point(22, 44);
         lblSubtitle.Name = "lblSubtitle";
         lblSubtitle.Size = new Size(335, 20);
@@ -141,7 +141,7 @@ partial class FrmBookOrder
         // 
         // pnlPriceSummary
         // 
-        pnlPriceSummary.BackColor = Color.FromArgb(240, 248, 255);
+        pnlPriceSummary.BackColor = Color.FromArgb(248, 245, 239);
         pnlPriceSummary.BorderStyle = BorderStyle.FixedSingle;
         pnlPriceSummary.Controls.Add(lblPriceTitle);
         pnlPriceSummary.Controls.Add(lblPriceRate);
@@ -157,7 +157,7 @@ partial class FrmBookOrder
         // 
         lblPriceTitle.AutoSize = true;
         lblPriceTitle.Font = new Font("Segoe UI", 9.5F, FontStyle.Bold);
-        lblPriceTitle.ForeColor = Color.FromArgb(37, 78, 122);
+        lblPriceTitle.ForeColor = Color.FromArgb(17, 24, 68);
         lblPriceTitle.Location = new Point(12, 10);
         lblPriceTitle.Name = "lblPriceTitle";
         lblPriceTitle.Size = new Size(130, 21);
@@ -168,7 +168,7 @@ partial class FrmBookOrder
         // 
         lblPriceRate.AutoSize = true;
         lblPriceRate.Font = new Font("Segoe UI", 8.5F);
-        lblPriceRate.ForeColor = Color.FromArgb(71, 85, 105);
+        lblPriceRate.ForeColor = Color.FromArgb(75, 86, 148);
         lblPriceRate.Location = new Point(14, 34);
         lblPriceRate.Name = "lblPriceRate";
         lblPriceRate.Size = new Size(135, 20);
@@ -179,7 +179,7 @@ partial class FrmBookOrder
         // 
         lblBillableWeight.AutoSize = true;
         lblBillableWeight.Font = new Font("Segoe UI", 8.5F);
-        lblBillableWeight.ForeColor = Color.FromArgb(71, 85, 105);
+        lblBillableWeight.ForeColor = Color.FromArgb(75, 86, 148);
         lblBillableWeight.Location = new Point(14, 55);
         lblBillableWeight.Name = "lblBillableWeight";
         lblBillableWeight.Size = new Size(140, 20);
@@ -190,7 +190,7 @@ partial class FrmBookOrder
         // 
         lblTotalAmount.Anchor = AnchorStyles.Top | AnchorStyles.Right;
         lblTotalAmount.Font = new Font("Segoe UI", 20F, FontStyle.Bold);
-        lblTotalAmount.ForeColor = Color.FromArgb(40, 167, 69);
+        lblTotalAmount.ForeColor = Color.FromArgb(74, 160, 120);
         lblTotalAmount.Location = new Point(340, 15);
         lblTotalAmount.Name = "lblTotalAmount";
         lblTotalAmount.Size = new Size(215, 50);
@@ -200,14 +200,14 @@ partial class FrmBookOrder
         // 
         // btnBookNow
         // 
-        btnBookNow.BorderColor = Color.FromArgb(51, 104, 160);
+        btnBookNow.BorderColor = Color.FromArgb(75, 86, 148);
         btnBookNow.ButtonType = HopeButtonType.Primary;
         btnBookNow.Cursor = Cursors.Hand;
         btnBookNow.Font = new Font("Segoe UI", 10.5F, FontStyle.Bold);
         btnBookNow.HoverTextColor = Color.White;
         btnBookNow.Location = new Point(24, 615);
         btnBookNow.Name = "btnBookNow";
-        btnBookNow.PrimaryColor = Color.FromArgb(51, 104, 160);
+        btnBookNow.PrimaryColor = Color.FromArgb(75, 86, 148);
         btnBookNow.Size = new Size(380, 46);
         btnBookNow.TabIndex = 11;
         btnBookNow.Text = "Confirm & Book Laundry";
@@ -216,24 +216,24 @@ partial class FrmBookOrder
         // 
         // btnCancel
         // 
-        btnCancel.BorderColor = Color.FromArgb(102, 163, 191);
+        btnCancel.BorderColor = Color.FromArgb(114, 136, 174);
         btnCancel.ButtonType = HopeButtonType.Default;
         btnCancel.Cursor = Cursors.Hand;
-        btnCancel.DefaultColor = Color.FromArgb(242, 239, 231);
+        btnCancel.DefaultColor = Color.FromArgb(246, 242, 234);
         btnCancel.Font = new Font("Segoe UI", 10F);
-        btnCancel.HoverTextColor = Color.FromArgb(51, 104, 160);
+        btnCancel.HoverTextColor = Color.FromArgb(75, 86, 148);
         btnCancel.Location = new Point(415, 615);
         btnCancel.Name = "btnCancel";
         btnCancel.Size = new Size(181, 46);
         btnCancel.TabIndex = 12;
         btnCancel.Text = "Cancel";
-        btnCancel.TextColor = Color.FromArgb(51, 104, 160);
+        btnCancel.TextColor = Color.FromArgb(75, 86, 148);
         btnCancel.Click += btnCancel_Click;
         // 
         // lblError
         // 
         lblError.Font = new Font("Segoe UI", 9F);
-        lblError.ForeColor = Color.FromArgb(220, 53, 69);
+        lblError.ForeColor = Color.FromArgb(184, 72, 88);
         lblError.Location = new Point(24, 584);
         lblError.Name = "lblError";
         lblError.Size = new Size(572, 24);
@@ -255,7 +255,7 @@ partial class FrmBookOrder
         // 
         lblNotes.AutoSize = true;
         lblNotes.Font = new Font("Segoe UI", 9F, FontStyle.Bold);
-        lblNotes.ForeColor = Color.FromArgb(51, 104, 160);
+        lblNotes.ForeColor = Color.FromArgb(75, 86, 148);
         lblNotes.Location = new Point(24, 405);
         lblNotes.Name = "lblNotes";
         lblNotes.Size = new Size(244, 20);
@@ -275,7 +275,7 @@ partial class FrmBookOrder
         // 
         lblPickup.AutoSize = true;
         lblPickup.Font = new Font("Segoe UI", 9F, FontStyle.Bold);
-        lblPickup.ForeColor = Color.FromArgb(51, 104, 160);
+        lblPickup.ForeColor = Color.FromArgb(75, 86, 148);
         lblPickup.Location = new Point(24, 335);
         lblPickup.Name = "lblPickup";
         lblPickup.Size = new Size(215, 20);
@@ -295,12 +295,12 @@ partial class FrmBookOrder
         // 
         // btnWeight4
         // 
-        btnWeight4.BackColor = Color.FromArgb(240, 244, 248);
+        btnWeight4.BackColor = Color.FromArgb(248, 245, 239);
         btnWeight4.Cursor = Cursors.Hand;
-        btnWeight4.FlatAppearance.BorderColor = Color.FromArgb(200, 223, 219);
+        btnWeight4.FlatAppearance.BorderColor = Color.FromArgb(234, 224, 207);
         btnWeight4.FlatStyle = FlatStyle.Flat;
         btnWeight4.Font = new Font("Segoe UI", 8.5F);
-        btnWeight4.ForeColor = Color.FromArgb(37, 78, 122);
+        btnWeight4.ForeColor = Color.FromArgb(17, 24, 68);
         btnWeight4.Location = new Point(3, 3);
         btnWeight4.Name = "btnWeight4";
         btnWeight4.Size = new Size(80, 32);
@@ -311,12 +311,12 @@ partial class FrmBookOrder
         // 
         // btnWeight6
         // 
-        btnWeight6.BackColor = Color.FromArgb(240, 244, 248);
+        btnWeight6.BackColor = Color.FromArgb(248, 245, 239);
         btnWeight6.Cursor = Cursors.Hand;
-        btnWeight6.FlatAppearance.BorderColor = Color.FromArgb(200, 223, 219);
+        btnWeight6.FlatAppearance.BorderColor = Color.FromArgb(234, 224, 207);
         btnWeight6.FlatStyle = FlatStyle.Flat;
         btnWeight6.Font = new Font("Segoe UI", 8.5F);
-        btnWeight6.ForeColor = Color.FromArgb(37, 78, 122);
+        btnWeight6.ForeColor = Color.FromArgb(17, 24, 68);
         btnWeight6.Location = new Point(89, 3);
         btnWeight6.Name = "btnWeight6";
         btnWeight6.Size = new Size(80, 32);
@@ -327,12 +327,12 @@ partial class FrmBookOrder
         // 
         // btnWeight8
         // 
-        btnWeight8.BackColor = Color.FromArgb(240, 244, 248);
+        btnWeight8.BackColor = Color.FromArgb(248, 245, 239);
         btnWeight8.Cursor = Cursors.Hand;
-        btnWeight8.FlatAppearance.BorderColor = Color.FromArgb(200, 223, 219);
+        btnWeight8.FlatAppearance.BorderColor = Color.FromArgb(234, 224, 207);
         btnWeight8.FlatStyle = FlatStyle.Flat;
         btnWeight8.Font = new Font("Segoe UI", 8.5F);
-        btnWeight8.ForeColor = Color.FromArgb(37, 78, 122);
+        btnWeight8.ForeColor = Color.FromArgb(17, 24, 68);
         btnWeight8.Location = new Point(175, 3);
         btnWeight8.Name = "btnWeight8";
         btnWeight8.Size = new Size(80, 32);
@@ -343,12 +343,12 @@ partial class FrmBookOrder
         // 
         // btnWeight10
         // 
-        btnWeight10.BackColor = Color.FromArgb(240, 244, 248);
+        btnWeight10.BackColor = Color.FromArgb(248, 245, 239);
         btnWeight10.Cursor = Cursors.Hand;
-        btnWeight10.FlatAppearance.BorderColor = Color.FromArgb(200, 223, 219);
+        btnWeight10.FlatAppearance.BorderColor = Color.FromArgb(234, 224, 207);
         btnWeight10.FlatStyle = FlatStyle.Flat;
         btnWeight10.Font = new Font("Segoe UI", 8.5F);
-        btnWeight10.ForeColor = Color.FromArgb(37, 78, 122);
+        btnWeight10.ForeColor = Color.FromArgb(17, 24, 68);
         btnWeight10.Location = new Point(261, 3);
         btnWeight10.Name = "btnWeight10";
         btnWeight10.Size = new Size(80, 32);
@@ -371,7 +371,7 @@ partial class FrmBookOrder
         // 
         lblWeight.AutoSize = true;
         lblWeight.Font = new Font("Segoe UI", 9F, FontStyle.Bold);
-        lblWeight.ForeColor = Color.FromArgb(51, 104, 160);
+        lblWeight.ForeColor = Color.FromArgb(75, 86, 148);
         lblWeight.Location = new Point(24, 260);
         lblWeight.Name = "lblWeight";
         lblWeight.Size = new Size(198, 20);
@@ -382,7 +382,7 @@ partial class FrmBookOrder
         // 
         lblServiceRateBadge.AutoSize = true;
         lblServiceRateBadge.Font = new Font("Segoe UI", 8.5F, FontStyle.Bold);
-        lblServiceRateBadge.ForeColor = Color.FromArgb(40, 167, 69);
+        lblServiceRateBadge.ForeColor = Color.FromArgb(74, 160, 120);
         lblServiceRateBadge.Location = new Point(24, 228);
         lblServiceRateBadge.Name = "lblServiceRateBadge";
         lblServiceRateBadge.Size = new Size(185, 20);
@@ -404,7 +404,7 @@ partial class FrmBookOrder
         // 
         lblService.AutoSize = true;
         lblService.Font = new Font("Segoe UI", 9F, FontStyle.Bold);
-        lblService.ForeColor = Color.FromArgb(51, 104, 160);
+        lblService.ForeColor = Color.FromArgb(75, 86, 148);
         lblService.Location = new Point(24, 165);
         lblService.Name = "lblService";
         lblService.Size = new Size(167, 20);
@@ -413,7 +413,7 @@ partial class FrmBookOrder
         // 
         // pnlCustomerCard
         // 
-        pnlCustomerCard.BackColor = Color.FromArgb(248, 250, 252);
+        pnlCustomerCard.BackColor = Color.FromArgb(248, 245, 239);
         pnlCustomerCard.BorderStyle = BorderStyle.FixedSingle;
         pnlCustomerCard.Controls.Add(lblCustAddress);
         pnlCustomerCard.Controls.Add(lblCustPhone);
@@ -428,7 +428,7 @@ partial class FrmBookOrder
         // lblCustAddress
         // 
         lblCustAddress.Font = new Font("Segoe UI", 9F);
-        lblCustAddress.ForeColor = Color.FromArgb(71, 85, 105);
+        lblCustAddress.ForeColor = Color.FromArgb(75, 86, 148);
         lblCustAddress.Location = new Point(14, 88);
         lblCustAddress.Name = "lblCustAddress";
         lblCustAddress.Size = new Size(540, 28);
@@ -439,7 +439,7 @@ partial class FrmBookOrder
         // 
         lblCustPhone.AutoSize = true;
         lblCustPhone.Font = new Font("Segoe UI", 9F);
-        lblCustPhone.ForeColor = Color.FromArgb(71, 85, 105);
+        lblCustPhone.ForeColor = Color.FromArgb(75, 86, 148);
         lblCustPhone.Location = new Point(14, 62);
         lblCustPhone.Name = "lblCustPhone";
         lblCustPhone.Size = new Size(116, 20);
@@ -450,7 +450,7 @@ partial class FrmBookOrder
         // 
         lblCustName.AutoSize = true;
         lblCustName.Font = new Font("Segoe UI", 9.5F, FontStyle.Bold);
-        lblCustName.ForeColor = Color.FromArgb(37, 78, 122);
+        lblCustName.ForeColor = Color.FromArgb(17, 24, 68);
         lblCustName.Location = new Point(14, 36);
         lblCustName.Name = "lblCustName";
         lblCustName.Size = new Size(147, 21);
@@ -461,7 +461,7 @@ partial class FrmBookOrder
         // 
         lblCustInfoTitle.AutoSize = true;
         lblCustInfoTitle.Font = new Font("Segoe UI", 8.5F, FontStyle.Bold);
-        lblCustInfoTitle.ForeColor = Color.FromArgb(102, 163, 191);
+        lblCustInfoTitle.ForeColor = Color.FromArgb(114, 136, 174);
         lblCustInfoTitle.Location = new Point(12, 10);
         lblCustInfoTitle.Name = "lblCustInfoTitle";
         lblCustInfoTitle.Size = new Size(174, 20);

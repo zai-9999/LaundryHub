@@ -11,8 +11,10 @@ public class ServiceType
     /// <summary>Computes the total price given a weight in kg.</summary>
     public decimal ComputePrice(decimal weightKg)
     {
-        decimal billableWeight = Math.Max(weightKg, MinimumWeight);
-        return Math.Round(billableWeight * PricePerKilo, 2);
+        decimal roundedWeight = Math.Round(weightKg, 2, MidpointRounding.AwayFromZero);
+        decimal roundedMinWeight = Math.Round(MinimumWeight, 2, MidpointRounding.AwayFromZero);
+        decimal billableWeight = Math.Max(roundedWeight, roundedMinWeight);
+        return Math.Round(billableWeight * PricePerKilo, 2, MidpointRounding.AwayFromZero);
     }
 
     public override string ToString() => ServiceName;

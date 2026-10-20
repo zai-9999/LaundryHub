@@ -1,5 +1,6 @@
 using System.Drawing.Drawing2D;
 using System.IO;
+using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
 using ReaLTaiizor;
 using ReaLTaiizor.Controls;
@@ -10,12 +11,30 @@ namespace LaundryHub.App.Helpers;
 
 public static class UIThemeHelper
 {
-    public static readonly Color PrimaryDeepOcean = Color.FromArgb(37, 78, 122);
-    public static readonly Color PrimaryTealAccent = Color.FromArgb(102, 163, 191);
+    // #111844 Navy  #4B5694 Indigo  #7288AE Slate  #EAE0CF Sand
+    public static readonly Color Navy        = Color.FromArgb(17, 24, 68);
+    public static readonly Color Indigo      = Color.FromArgb(75, 86, 148);
+    public static readonly Color Slate       = Color.FromArgb(114, 136, 174);
+    public static readonly Color Sand        = Color.FromArgb(234, 224, 207);
 
-    public static readonly Color CardCream = Color.FromArgb(255, 252, 247);
-    public static readonly Color CardMint = Color.FromArgb(210, 232, 228);
-    public static readonly Color CardWhite = Color.White;
+    public static readonly Color SandLight   = Color.FromArgb(246, 242, 234);
+    public static readonly Color Surface     = Color.FromArgb(248, 245, 239);
+    public static readonly Color Tint        = Color.FromArgb(226, 230, 242);
+    public static readonly Color Border      = Color.FromArgb(222, 217, 206);
+    public static readonly Color BorderSoft  = Color.FromArgb(190, 196, 220);
+    public static readonly Color TextMuted   = Color.FromArgb(110, 120, 160);
+
+    public static readonly Color Success     = Color.FromArgb(74, 160, 120);
+    public static readonly Color Warning     = Color.FromArgb(214, 160, 80);
+    public static readonly Color Danger      = Color.FromArgb(184, 72, 88);
+    public static readonly Color Neutral     = Color.FromArgb(130, 138, 165);
+
+    // old names, so existing code still compiles
+    public static readonly Color PrimaryDeepOcean = Navy;
+    public static readonly Color PrimaryTealAccent = Slate;
+    public static readonly Color CardCream   = Color.FromArgb(250, 246, 238);
+    public static readonly Color CardMint    = Tint;
+    public static readonly Color CardWhite   = Color.White;
 
     public const int LoginFormWidth = 1100;
     public const int LoginFormHeight = 800;
@@ -25,19 +44,19 @@ public static class UIThemeHelper
     public const int LoginFieldWidth = 320;
     public const int LoginButtonHeight = 53;
 
-    /// <summary>
-    /// Paints a smooth diagonal linear gradient across the control background.
-    /// </summary>
     public static void PaintGradientBackground(Control control, PaintEventArgs e)
     {
         if (control.ClientRectangle.Width <= 0 || control.ClientRectangle.Height <= 0) return;
 
         using var brush = new LinearGradientBrush(
-            control.ClientRectangle,
-            PrimaryDeepOcean,
-            PrimaryTealAccent,
-            LinearGradientMode.ForwardDiagonal);
-
+            control.ClientRectangle, Navy, Slate, LinearGradientMode.ForwardDiagonal)
+        {
+            InterpolationColors = new ColorBlend
+            {
+                Colors = new[] { Navy, Indigo, Slate },
+                Positions = new[] { 0f, 0.55f, 1f }
+            }
+        };
         e.Graphics.SmoothingMode = SmoothingMode.HighQuality;
         e.Graphics.FillRectangle(brush, control.ClientRectangle);
     }
@@ -48,9 +67,6 @@ public static class UIThemeHelper
     private const int DwmwaWindowCornerPreference = 33;
     private const int DwmwcpRound = 2;
 
-    /// <summary>
-    /// Rounds the OS window corners (Windows 11) and clips the form to a rounded rectangle.
-    /// </summary>
     public static void ApplyRoundedWindow(Form form, int radius = 20)
     {
         void Apply()
@@ -75,15 +91,9 @@ public static class UIThemeHelper
             int preference = DwmwcpRound;
             DwmSetWindowAttribute(form.Handle, DwmwaWindowCornerPreference, ref preference, sizeof(int));
         }
-        catch
-        {
-            // Older Windows versions ignore this attribute.
-        }
+        catch { }
     }
 
-    /// <summary>
-    /// Same window size, rounded chrome, white card, and centered card for auth screens.
-    /// </summary>
     public static void StyleAuthForm(Form form, System.Windows.Forms.Panel card, params Control[] buttons)
     {
         form.ClientSize = new Size(LoginFormWidth, LoginFormHeight);
@@ -92,6 +102,8 @@ public static class UIThemeHelper
         form.StartPosition = FormStartPosition.CenterScreen;
 
         ApplyRoundedWindow(form, LoginWindowRadius);
+        form.BackColor = Navy;
+        ApplyTheme(form);
         card.BackColor = CardWhite;
         ApplyRoundedRegion(card, LoginCardRadius);
         CenterCardOnForm(form, card);
@@ -109,9 +121,6 @@ public static class UIThemeHelper
         }
     }
 
-    /// <summary>
-    /// First button is the primary action; the rest use the same secondary style.
-    /// </summary>
     public static void StyleLoginButtons(params Control[] buttons)
     {
         for (int i = 0; i < buttons.Length; i++)
@@ -121,21 +130,21 @@ public static class UIThemeHelper
             button.Size = new Size(LoginFieldWidth, LoginButtonHeight);
             button.Font = new Font("Segoe UI", 10F, FontStyle.Bold);
             button.Cursor = Cursors.Hand;
-            button.BorderColor = Color.FromArgb(102, 163, 191);
+            button.BorderColor = Slate;
 
             if (i == 0)
             {
                 button.ButtonType = HopeButtonType.Primary;
-                button.PrimaryColor = Color.FromArgb(51, 104, 160);
+                button.PrimaryColor = Indigo;
                 button.TextColor = Color.White;
                 button.HoverTextColor = Color.White;
             }
             else
             {
                 button.ButtonType = HopeButtonType.Default;
-                button.DefaultColor = Color.FromArgb(200, 223, 219);
-                button.TextColor = Color.FromArgb(51, 104, 160);
-                button.HoverTextColor = Color.FromArgb(51, 104, 160);
+                button.DefaultColor = Sand;
+                button.TextColor = Indigo;
+                button.HoverTextColor = Navy;
             }
         }
     }
@@ -148,10 +157,7 @@ public static class UIThemeHelper
             if (File.Exists(logoPath))
                 pictureBox.Image = Image.FromFile(logoPath);
         }
-        catch
-        {
-            // Continue without a logo if the file is missing.
-        }
+        catch { }
     }
 
     public static void CenterCardOnForm(Form form, Control card)
@@ -164,29 +170,27 @@ public static class UIThemeHelper
         card.Top = Math.Max(24, (height - card.Height) / 2);
     }
 
-    // ── Shared palette / metrics for the standard (non-auth) screens ──────────
     public const int ContentCardRadius = 16;
     public const int HeaderBarHeight = 70;
 
-    /// <summary>Gradient (diagonal deep-ocean → teal) painted behind a top header bar.</summary>
     public static void PaintGradientHeaderBar(Control bar, PaintEventArgs e)
-        => PaintGradientBackground(bar, e);
+    {
+        if (bar.ClientRectangle.Width <= 0 || bar.ClientRectangle.Height <= 0) return;
+        using var brush = new LinearGradientBrush(
+            bar.ClientRectangle, Navy, Indigo, LinearGradientMode.Horizontal);
+        e.Graphics.FillRectangle(brush, bar.ClientRectangle);
+    }
 
-    /// <summary>
-    /// Applies the login design language to a standard dashboard / dialog shell:
-    /// rounded window chrome + the signature gradient backdrop. Pass the main
-    /// white card (if any) so it keeps rounded corners on resize.
-    /// Note: If cards need to maintain rounded corners on resize, handle SizeChanged
-    /// in the form itself and call ApplyRoundedRegion.
-    /// </summary>
     public static void StyleStandardForm(Form form, params Control[] contentCards)
     {
         form.StartPosition = FormStartPosition.CenterScreen;
         ApplyRoundedWindow(form, LoginWindowRadius);
+        form.BackColor = Navy;
+        ApplyTheme(form);
 
-        if (contentCards.Length > 0)
+        foreach (var card in contentCards)
         {
-            foreach (var card in contentCards)
+            if (card != null)
             {
                 card.BackColor = CardWhite;
                 ApplyRoundedRegion(card, ContentCardRadius);
@@ -194,57 +198,184 @@ public static class UIThemeHelper
         }
     }
 
-    /// <summary>
-    /// Applies the shared grid theme used across the login-styled app:
-    /// deep-blue header with cream text, white rows, mint selection highlight.
-    /// </summary>
-    public static void StyleDataGridView(DataGridView dgv, int headerHeight = 40)
+    public static void StyleDataGridView(DataGridView dgv, int headerHeight = 42)
     {
         dgv.BackgroundColor = CardWhite;
         dgv.BorderStyle = BorderStyle.None;
         dgv.EnableHeadersVisualStyles = false;
         dgv.RowHeadersVisible = false;
+        dgv.CellBorderStyle = DataGridViewCellBorderStyle.SingleHorizontal;
+        dgv.ColumnHeadersBorderStyle = DataGridViewHeaderBorderStyle.None;
         dgv.ColumnHeadersHeightSizeMode = DataGridViewColumnHeadersHeightSizeMode.DisableResizing;
         dgv.ColumnHeadersHeight = headerHeight;
+        dgv.AllowUserToResizeRows = false;
 
-        var header = new DataGridViewCellStyle
+        dgv.ColumnHeadersDefaultCellStyle = new DataGridViewCellStyle
         {
             Alignment = DataGridViewContentAlignment.MiddleLeft,
-            BackColor = PrimaryDeepOcean,
-            ForeColor = CardCream,
-            SelectionBackColor = PrimaryDeepOcean,
-            SelectionForeColor = CardCream,
+            BackColor = Navy, ForeColor = Sand,
+            SelectionBackColor = Navy, SelectionForeColor = Sand,
             Font = new Font("Segoe UI", 9.5F, FontStyle.Bold),
-            Padding = new Padding(8),
+            Padding = new Padding(10, 0, 8, 0),
             WrapMode = DataGridViewTriState.True
         };
-        dgv.ColumnHeadersDefaultCellStyle = header;
 
         var cell = new DataGridViewCellStyle
         {
             Alignment = DataGridViewContentAlignment.MiddleLeft,
-            BackColor = CardWhite,
-            ForeColor = Color.FromArgb(51, 104, 160),
-            SelectionBackColor = CardMint,
-            SelectionForeColor = PrimaryDeepOcean,
+            BackColor = CardWhite, ForeColor = Navy,
+            SelectionBackColor = Tint, SelectionForeColor = Navy,
             Font = new Font("Segoe UI", 9.5F),
-            Padding = new Padding(6),
+            Padding = new Padding(10, 0, 6, 0),
             WrapMode = DataGridViewTriState.False
         };
         dgv.DefaultCellStyle = cell;
+        dgv.GridColor = Border;
+        dgv.RowTemplate.Height = 38;
+        dgv.AlternatingRowsDefaultCellStyle = new DataGridViewCellStyle(cell) { BackColor = Surface };
 
-        dgv.GridColor = CardMint;
-        dgv.RowTemplate.Height = 36;
-        dgv.AlternatingRowsDefaultCellStyle = new DataGridViewCellStyle
+        dgv.DataBindingComplete += (_, _) =>
         {
-            Alignment = DataGridViewContentAlignment.MiddleLeft,
-            BackColor = Color.FromArgb(248, 250, 252),
-            ForeColor = Color.FromArgb(51, 104, 160),
-            SelectionBackColor = CardMint,
-            SelectionForeColor = PrimaryDeepOcean,
-            Font = new Font("Segoe UI", 9.5F),
-            Padding = new Padding(6)
+            foreach (DataGridViewColumn c in dgv.Columns)
+                c.HeaderText = c.HeaderText.Replace('_', ' ');
         };
+    }
+
+    private static readonly ConditionalWeakTable<Control, object> Polished = new();
+
+    private static readonly HashSet<string> InfoPanels = new()
+    {
+        "pnlPriceSummary", "pnlCustomerCard", "pnlCalculator", "pnlBanner",
+        "pnlResult", "pnlPriceBox"
+    };
+
+    public static void ApplyTheme(Control root)
+    {
+        ApplyThemeTree(root);
+
+        if (root is Form form)
+        {
+            // Stop resizable windows from being squashed smaller than their design.
+            if (form.FormBorderStyle == FormBorderStyle.Sizable && form.MinimumSize == Size.Empty)
+                form.MinimumSize = form.Size;
+
+            // Run once more on Load so this theme wins over constructor code.
+            if (Polished.TryAdd(form, new object()))
+                form.Load += (_, _) => ApplyThemeTree(form);
+        }
+    }
+
+    private static void ApplyThemeTree(Control root)
+    {
+        foreach (Control c in root.Controls)
+        {
+            ThemeControl(c);
+            ApplyThemeTree(c);
+        }
+    }
+
+    private static void ThemeLayout(Control c)
+    {
+        string name = c.Name ?? "";
+
+        if (name.StartsWith("pnlStat", StringComparison.Ordinal))
+            PolishCard(c, 14, true);          // stat cards on all dashboards
+        else if (name.StartsWith("pnlStrip", StringComparison.Ordinal))
+            PolishCard(c, 2, false);          // colored accent strips
+        else if (InfoPanels.Contains(name))
+            PolishCard(c, 12, true);          // price boxes, result panels, banners
+
+        // Admin sidebar buttons: a little taller and easier to click.
+        if (c is HopeButton && c.Parent?.Name == "flpNav")
+            c.Height = 46;
+    }
+
+    private static void PolishCard(Control c, int radius, bool border)
+    {
+        if (!Polished.TryAdd(c, new object())) return;
+
+        ApplyRoundedRegion(c, radius);
+        c.SizeChanged += (_, _) =>
+        {
+            ApplyRoundedRegion(c, radius);
+            c.Invalidate();
+        };
+
+        if (border)
+        {
+            c.Paint += (_, e) =>
+            {
+                if (c.Width < 4 || c.Height < 4) return;
+                using var path = CreateRoundedRectangle(new Rectangle(0, 0, c.Width - 1, c.Height - 1), radius);
+                using var pen = new Pen(Border, 1f);
+                e.Graphics.SmoothingMode = SmoothingMode.AntiAlias;
+                e.Graphics.DrawPath(pen, path);
+            };
+        }
+    }
+
+    private static void ThemeControl(Control c)
+    {
+        ThemeLayout(c);
+
+        switch (c)
+        {
+            case HopeButton hb:
+                hb.Cursor = Cursors.Hand;
+                break;
+
+            case HopeTextBox ht:
+                ht.BaseColor = Color.White;
+                ht.ForeColor = Navy;
+                ht.BorderColorA = Indigo;      // focused
+                ht.BorderColorB = BorderSoft;  // resting
+                break;
+
+            case System.Windows.Forms.Button b:
+                b.FlatStyle = FlatStyle.Flat;
+                b.FlatAppearance.BorderSize = 0;
+                b.FlatAppearance.MouseOverBackColor = Tint;
+                b.FlatAppearance.MouseDownBackColor = Sand;
+                b.Cursor = Cursors.Hand;
+                break;
+
+            case System.Windows.Forms.ComboBox cb:
+                cb.FlatStyle = FlatStyle.Flat;
+                cb.BackColor = Color.White;
+                cb.ForeColor = Navy;
+                break;
+
+            case System.Windows.Forms.CheckBox chk:
+                chk.ForeColor = Indigo;
+                chk.Cursor = Cursors.Hand;
+                break;
+
+            case System.Windows.Forms.LinkLabel lnk:
+                lnk.LinkColor = Indigo;
+                lnk.ActiveLinkColor = Navy;
+                lnk.VisitedLinkColor = Indigo;
+                lnk.LinkBehavior = LinkBehavior.HoverUnderline;
+                lnk.Cursor = Cursors.Hand;
+                break;
+
+            case System.Windows.Forms.ListBox lb:
+                lb.BorderStyle = BorderStyle.None;
+                lb.BackColor = Color.White;
+                lb.ForeColor = Navy;
+                break;
+
+            case System.Windows.Forms.TextBox tb:
+                tb.ForeColor = Navy;
+                break;
+
+            case System.Windows.Forms.DateTimePicker dtp:
+                dtp.CalendarForeColor = Navy;
+                dtp.CalendarMonthBackground = Color.White;
+                dtp.CalendarTitleBackColor = Navy;
+                dtp.CalendarTitleForeColor = Sand;
+                dtp.CalendarTrailingForeColor = Slate;
+                break;
+        }
     }
 
     public static void CenterLoginFields(System.Windows.Forms.Panel card, params Control[] fields)
@@ -261,23 +392,14 @@ public static class UIThemeHelper
                     && (label.TextAlign is ContentAlignment.MiddleCenter or ContentAlignment.TopCenter or ContentAlignment.BottomCenter));
 
             if (stretchFull)
-            {
                 control.SetBounds(0, control.Top, cardW, control.Height);
-            }
             else if (control is Label { AutoSize: true })
-            {
                 control.Left = x;
-            }
             else
-            {
                 control.SetBounds(x, control.Top, fieldW, control.Height);
-            }
         }
     }
 
-    /// <summary>
-    /// Clips buttons to a rounder rectangle and keeps the clip on resize.
-    /// </summary>
     public static void ApplyRoundedButtons(int radius, params Control[] buttons)
     {
         foreach (var button in buttons)
@@ -287,9 +409,6 @@ public static class UIThemeHelper
         }
     }
 
-    /// <summary>
-    /// Clips the control to a rounded rectangle. Safe to call from SizeChanged.
-    /// </summary>
     public static void ApplyRoundedRegion(Control control, int radius = 28)
     {
         if (control.Width <= 0 || control.Height <= 0) return;
@@ -297,14 +416,10 @@ public static class UIThemeHelper
         var bounds = new Rectangle(0, 0, control.Width, control.Height);
         var path = CreateRoundedRectangle(bounds, radius);
         var previous = control.Region;
-        // Region keeps the GraphicsPath; disposing the path would flatten the corners.
         control.Region = new Region(path);
         previous?.Dispose();
     }
 
-    /// <summary>
-    /// Fills the control with a solid color, clipped to the rounded region.
-    /// </summary>
     public static void PaintRoundedSolidCard(Control control, PaintEventArgs e, Color color, int radius = 28)
     {
         var bounds = control.ClientRectangle;
@@ -316,9 +431,6 @@ public static class UIThemeHelper
         e.Graphics.FillPath(brush, path);
     }
 
-    /// <summary>
-    /// Fills the control with a cream-to-mint gradient, clipped to the rounded region.
-    /// </summary>
     public static void PaintRoundedGradientCard(Control control, PaintEventArgs e, int radius = 28)
     {
         var bounds = control.ClientRectangle;
@@ -326,18 +438,10 @@ public static class UIThemeHelper
 
         using var path = CreateRoundedRectangle(bounds, radius);
         e.Graphics.SmoothingMode = SmoothingMode.AntiAlias;
-        using var brush = new LinearGradientBrush(
-            bounds,
-            CardCream,
-            CardMint,
-            LinearGradientMode.ForwardDiagonal);
+        using var brush = new LinearGradientBrush(bounds, CardCream, CardMint, LinearGradientMode.ForwardDiagonal);
         e.Graphics.FillPath(brush, path);
     }
 
-    /// <summary>
-    /// Makes layout container panels transparent so the form's gradient backdrop
-    /// shows through (used by the standard screens to float white cards on gradient).
-    /// </summary>
     public static void MakeTransparent(params Control[] panels)
     {
         foreach (var p in panels)
@@ -361,5 +465,96 @@ public static class UIThemeHelper
         path.AddArc(bounds.X, bounds.Bottom - diameter, diameter, diameter, 90, 90);
         path.CloseFigure();
         return path;
+    }
+
+    public static void SafeInvoke(this Control control, Action action)
+    {
+        if (control == null || control.IsDisposed) return;
+        if (!control.IsHandleCreated)
+        {
+            try
+            {
+                // Force window handle creation if on UI thread
+                _ = control.Handle;
+            }
+            catch
+            {
+                control.HandleCreated += (_, _) => control.SafeInvoke(action);
+                return;
+            }
+        }
+
+        try
+        {
+            if (control.InvokeRequired)
+                control.BeginInvoke(action);
+            else
+                action();
+        }
+        catch (ObjectDisposedException) { }
+        catch (InvalidOperationException) { }
+    }
+
+    // ── Status pills ──────────────────────────────────────────────────────────
+    private static readonly Font StatusPillFont = new("Segoe UI Semibold", 8.5F);
+
+    private static bool TryGetPillColors(string status, out Color back, out Color fore)
+    {
+        switch (status)
+        {
+            case "Washing":          back = Color.FromArgb(226, 230, 242); fore = Color.FromArgb(75, 86, 148);  return true;
+            case "Drying":           back = Color.FromArgb(224, 232, 244); fore = Color.FromArgb(62, 86, 130);  return true;
+            case "Ready for Pickup": back = Color.FromArgb(221, 239, 230); fore = Color.FromArgb(47, 107, 79);  return true;
+            case "Claimed":          back = Color.FromArgb(236, 237, 243); fore = Color.FromArgb(92, 99, 137);  return true;
+            case "Cancelled":        back = Color.FromArgb(246, 224, 227); fore = Color.FromArgb(150, 50, 66);  return true;
+            case "Active":           back = Color.FromArgb(221, 239, 230); fore = Color.FromArgb(47, 107, 79);  return true;
+            case "Disabled":         back = Color.FromArgb(236, 237, 243); fore = Color.FromArgb(92, 99, 137);  return true;
+            case "Paid":             back = Color.FromArgb(221, 239, 230); fore = Color.FromArgb(47, 107, 79);  return true;
+            case "Unpaid":           back = Color.FromArgb(250, 238, 214); fore = Color.FromArgb(146, 96, 22);  return true;
+            default:                 back = Color.Empty; fore = Color.Empty; return false;
+        }
+    }
+
+    /// <summary>Draws the "Status" column as a rounded colored pill.</summary>
+    public static void EnableStatusPills(DataGridView dgv)
+    {
+        dgv.CellPainting += (_, e) =>
+        {
+            if (e.RowIndex < 0 || e.ColumnIndex < 0) return;
+            var colName = dgv.Columns[e.ColumnIndex].Name;
+            if (colName != "Status" && colName != "Payment") return;
+
+            var text = e.FormattedValue?.ToString() ?? "";
+            if (!TryGetPillColors(text, out var back, out var fore)) return;
+
+            // On a selected row the highlight is the same tint as the pill, so use white instead.
+            if ((e.State & DataGridViewElementStates.Selected) != 0) back = Color.White;
+
+            var g = e.Graphics;
+            if (g == null) return;
+
+            e.Handled = true;
+            e.PaintBackground(e.CellBounds, true);
+
+            var size = TextRenderer.MeasureText(g, text, StatusPillFont, Size.Empty, TextFormatFlags.NoPadding);
+            int h = size.Height + 6;
+            int w = Math.Min(size.Width + 24, e.CellBounds.Width - 16);
+            var pill = new Rectangle(e.CellBounds.X + 10, e.CellBounds.Y + (e.CellBounds.Height - h) / 2, w, h);
+
+            g.SmoothingMode = SmoothingMode.AntiAlias;
+            using (var path = new GraphicsPath())
+            {
+                int d = pill.Height;
+                path.AddArc(pill.X, pill.Y, d, d, 90, 180);
+                path.AddArc(pill.Right - d, pill.Y, d, d, 270, 180);
+                path.CloseFigure();
+                using (var brush = new SolidBrush(back))
+                    g.FillPath(brush, path);
+            }
+
+            TextRenderer.DrawText(g, text, StatusPillFont, pill, fore,
+                TextFormatFlags.HorizontalCenter | TextFormatFlags.VerticalCenter |
+                TextFormatFlags.NoPadding | TextFormatFlags.EndEllipsis);
+        };
     }
 }

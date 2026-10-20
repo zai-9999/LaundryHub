@@ -12,10 +12,11 @@ public partial class FrmOrderList : Form
         InitializeComponent();
         UIThemeHelper.StyleStandardForm(this);
         DoubleBuffered = true;
-        pnlTopBar.BackColor = Color.FromArgb(37, 78, 122);
-        lblTitle.BackColor = Color.FromArgb(37, 78, 122);
+        pnlTopBar.BackColor = UIThemeHelper.Navy;
+        lblTitle.BackColor = UIThemeHelper.Navy;
 
         UIThemeHelper.StyleDataGridView(dgvOrders, 34);
+        UIThemeHelper.EnableStatusPills(dgvOrders);
         dtpFilter.Value = DateTime.Today;
         LoadOrders();
     }
@@ -114,12 +115,12 @@ public partial class FrmOrderList : Form
         if (dgvOrders.Columns[e.ColumnIndex].Name != "Status") return;
         e.CellStyle.ForeColor = e.Value?.ToString() switch
         {
-            "Washing"          => Color.FromArgb(51, 104, 160),
-            "Drying"           => Color.FromArgb(102, 163, 191),
-            "Ready for Pickup" => Color.FromArgb(40, 167, 69),
-            "Claimed"          => Color.FromArgb(108, 117, 125),
-            "Cancelled"        => Color.FromArgb(220, 53, 69),
-            _                  => Color.FromArgb(51, 104, 160)
+            "Washing"          => UIThemeHelper.Indigo,
+            "Drying"           => UIThemeHelper.Slate,
+            "Ready for Pickup" => UIThemeHelper.Success,
+            "Claimed"          => UIThemeHelper.Neutral,
+            "Cancelled"        => UIThemeHelper.Danger,
+            _                  => UIThemeHelper.Indigo
         };
         e.CellStyle.Font = new Font("Segoe UI Semibold", 9, FontStyle.Bold);
     }

@@ -6,6 +6,7 @@ public interface ICustomerRepository
 {
     Customer? GetById(int customerId);
     Customer? GetByUserId(int userId);
+    Customer? GetByPhone(string phone);
     IEnumerable<Customer> Search(string term);
     IEnumerable<Customer> GetAll(bool includeArchived = false);
     int Add(Customer customer);
@@ -14,4 +15,6 @@ public interface ICustomerRepository
     void Restore(int customerId);
     bool PhoneExists(string phone, int excludeCustomerId = 0);
     bool HasActiveOrders(int customerId);
+    void CleanupArchivedCustomerOrders();
+    int RegisterCustomerWithUser(User user, Customer customer);
 }

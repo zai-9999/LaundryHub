@@ -14,7 +14,7 @@ public class UserRepository : IUserRepository
     {
         using var conn = _db.CreateConnection();
         return conn.QueryFirstOrDefault<User>(
-            "SELECT * FROM users WHERE (LOWER(username) = LOWER(@Username) OR LOWER(email) = LOWER(@Username)) AND is_active = TRUE",
+            "SELECT * FROM users WHERE (LOWER(username) = LOWER(@Username) OR LOWER(email) = LOWER(@Username))",
             new { Username = username });
     }
 

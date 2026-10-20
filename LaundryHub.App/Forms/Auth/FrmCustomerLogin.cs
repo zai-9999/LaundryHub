@@ -47,32 +47,39 @@ public partial class FrmCustomerLogin : Form
         var username = txtUsername.Text.Trim();
         var password = txtPassword.Text;
 
-        var user = AppServices.Users.GetByUsername(username);
-
-        if (user == null || string.IsNullOrWhiteSpace(user.PasswordHash) || !BCrypt.Net.BCrypt.Verify(password, user.PasswordHash))
+        try
         {
-            ShowError("Invalid username or password.");
-            txtPassword.Clear();
-            txtPassword.Focus();
-            return;
-        }
+            var user = AppServices.Users.GetByUsername(username);
 
-        if (!user.IsActive)
+            if (user == null || string.IsNullOrWhiteSpace(user.PasswordHash) || !BCrypt.Net.BCrypt.Verify(password, user.PasswordHash))
+            {
+                ShowError("Invalid username or password.");
+                txtPassword.Clear();
+                txtPassword.Focus();
+                return;
+            }
+
+            if (!user.IsActive)
+            {
+                ShowError("Your account has been deactivated. Please contact the shop.");
+                return;
+            }
+
+            // Block Staff/Admin from using the Customer Portal
+            if (user.Role != UserRole.Customer.ToString())
+            {
+                ShowError("This portal is for Customers only. Staff & Admin please use the main portal.");
+                txtPassword.Clear();
+                return;
+            }
+
+            SessionManager.Login(user);
+            OpenCustomerPortal();
+        }
+        catch (Exception ex)
         {
-            ShowError("Your account has been deactivated. Please contact the shop.");
-            return;
+            ShowError($"Login error: {ex.Message}");
         }
-
-        // Block Staff/Admin from using the Customer Portal
-        if (user.Role != UserRole.Customer.ToString())
-        {
-            ShowError("This portal is for Customers only. Staff & Admin please use the main portal.");
-            txtPassword.Clear();
-            return;
-        }
-
-        SessionManager.Login(user);
-        OpenCustomerPortal();
     }
 
     private void btnGuestLookup_Click(object? sender, EventArgs e)
@@ -144,6 +151,22 @@ public partial class FrmCustomerLogin : Form
         lblError.Visible = false;
     }
 
+    private void btnTogglePassword_Click(object? sender, EventArgs e)
+    {
+        if (txtPassword.UseSystemPasswordChar)
+        {
+            txtPassword.UseSystemPasswordChar = false;
+            txtPassword.PasswordChar = '\0';
+            btnTogglePassword.Text = "🙈";
+        }
+        else
+        {
+            txtPassword.UseSystemPasswordChar = true;
+            txtPassword.PasswordChar = '●';
+            btnTogglePassword.Text = "👁";
+        }
+    }
+
     private void pnlCard_Paint(object sender, PaintEventArgs e)
     {
         UIThemeHelper.PaintRoundedSolidCard(pnlCard, e, Color.White, UIThemeHelper.LoginCardRadius);
@@ -159,6 +182,8 @@ public partial class FrmCustomerLogin : Form
             lblError, btnLogin,
             lblSeparator, btnRegister,
             btnPricing, btnGuestLookup, btnSwitchToStaff);
+        txtPassword.Width = 280;
+        btnTogglePassword.Location = new Point(txtPassword.Right + 6, txtPassword.Top + (txtPassword.Height - btnTogglePassword.Height) / 2);
         lblError.TextAlign = ContentAlignment.MiddleCenter;
     }
 }

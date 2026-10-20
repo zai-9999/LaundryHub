@@ -3,6 +3,7 @@ using CheckBox = System.Windows.Forms.CheckBox;
 using ReaLTaiizor;
 using ReaLTaiizor.Controls;
 using ReaLTaiizor.Util;
+using LaundryHub.App.Helpers;
 
 namespace LaundryHub.App.Forms.Customer;
 
@@ -23,141 +24,82 @@ partial class FrmCustomerPortal
 
     private void InitializeComponent()
     {
-        DataGridViewCellStyle dataGridViewCellStyle1 = new DataGridViewCellStyle();
-        DataGridViewCellStyle dataGridViewCellStyle2 = new DataGridViewCellStyle();
-        pnlHeader = new Panel();
-        lblWelcome = new Label();
-        btnBookOrder = new HopeButton();
-        btnProfile = new HopeButton();
-        btnLogout = new HopeButton();
+        pnlSidebar = new ModernSidebar();
+        pnlHeader = new ModernHeaderBar();
         pnlBody = new Panel();
-        pnlGridWrap = new Panel();
+        cardGrid = new RoundedCard();
         dgvOrders = new DataGridView();
-        pnlFilterBar = new Panel();
+        tlpToolbar = new TableLayoutPanel();
         lblOrdersTitle = new Label();
         chkActiveOnly = new CheckBox();
         btnViewTicket = new HopeButton();
-        flpStats = new FlowLayoutPanel();
-        pnlStatActive = new Panel();
+        tlpStats = new TableLayoutPanel();
+        cardActive = new RoundedCard();
         lblActiveStat = new Label();
         lblActiveTitle = new Label();
-        pnlStripActive = new Panel();
-        pnlStatReady = new Panel();
+        stripActive = new Panel();
+        cardReady = new RoundedCard();
         lblReadyStat = new Label();
         lblReadyTitle = new Label();
-        pnlStripReady = new Panel();
-        pnlStatTotal = new Panel();
+        stripReady = new Panel();
+        cardTotal = new RoundedCard();
         lblTotalStat = new Label();
         lblTotalTitle = new Label();
-        pnlStripTotal = new Panel();
-        pnlHeader.SuspendLayout();
+        stripTotal = new Panel();
         pnlBody.SuspendLayout();
-        pnlGridWrap.SuspendLayout();
+        cardGrid.SuspendLayout();
         ((System.ComponentModel.ISupportInitialize)dgvOrders).BeginInit();
-        pnlFilterBar.SuspendLayout();
-        flpStats.SuspendLayout();
-        pnlStatActive.SuspendLayout();
-        pnlStatReady.SuspendLayout();
-        pnlStatTotal.SuspendLayout();
+        tlpToolbar.SuspendLayout();
+        tlpStats.SuspendLayout();
+        cardActive.SuspendLayout();
+        cardReady.SuspendLayout();
+        cardTotal.SuspendLayout();
         SuspendLayout();
+        // 
+        // pnlSidebar
+        // 
+        pnlSidebar.Dock = DockStyle.Left;
+        pnlSidebar.Location = new Point(0, 0);
+        pnlSidebar.Name = "pnlSidebar";
+        pnlSidebar.Size = new Size(240, 720);
+        pnlSidebar.TabIndex = 0;
         // 
         // pnlHeader
         // 
-        pnlHeader.BackColor = Color.Transparent;
-        pnlHeader.Controls.Add(lblWelcome);
-        pnlHeader.Controls.Add(btnBookOrder);
-        pnlHeader.Controls.Add(btnProfile);
-        pnlHeader.Controls.Add(btnLogout);
         pnlHeader.Dock = DockStyle.Top;
-        pnlHeader.Location = new Point(0, 0);
+        pnlHeader.Location = new Point(240, 0);
         pnlHeader.Name = "pnlHeader";
-        pnlHeader.Padding = new Padding(24, 0, 24, 0);
-        pnlHeader.Size = new Size(1000, 70);
-        pnlHeader.TabIndex = 0;
-        // 
-        // lblWelcome
-        // 
-        lblWelcome.Dock = DockStyle.Left;
-        lblWelcome.Font = new Font("Segoe UI", 15F, FontStyle.Bold);
-        lblWelcome.ForeColor = Color.FromArgb(242, 239, 231);
-        lblWelcome.Location = new Point(24, 0);
-        lblWelcome.Name = "lblWelcome";
-        lblWelcome.Size = new Size(540, 70);
-        lblWelcome.TabIndex = 0;
-        lblWelcome.Text = "Welcome, Customer!";
-        lblWelcome.TextAlign = ContentAlignment.MiddleLeft;
-        // 
-        // btnBookOrder
-        // 
-        btnBookOrder.ButtonType = HopeButtonType.Primary;
-        btnBookOrder.PrimaryColor = Color.FromArgb(51, 104, 160);
-        btnBookOrder.BorderColor = Color.FromArgb(102, 163, 191);
-        btnBookOrder.TextColor = Color.White;
-        btnBookOrder.HoverTextColor = Color.White;
-        btnBookOrder.Cursor = Cursors.Hand;
-        btnBookOrder.Font = new Font("Segoe UI", 9.5F, FontStyle.Bold);
-        btnBookOrder.Location = new Point(575, 18);
-        btnBookOrder.Name = "btnBookOrder";
-        btnBookOrder.Size = new Size(155, 34);
-        btnBookOrder.TabIndex = 3;
-        btnBookOrder.Text = "+ Book Laundry";
-        btnBookOrder.Click += btnBookOrder_Click;
-        // 
-        // btnProfile
-        // 
-        btnProfile.ButtonType = HopeButtonType.Default;
-        btnProfile.DefaultColor = Color.FromArgb(200, 223, 219);
-        btnProfile.BorderColor = Color.FromArgb(102, 163, 191);
-        btnProfile.TextColor = Color.FromArgb(51, 104, 160);
-        btnProfile.HoverTextColor = Color.FromArgb(51, 104, 160);
-        btnProfile.Cursor = Cursors.Hand;
-        btnProfile.Font = new Font("Segoe UI", 9F);
-        btnProfile.Location = new Point(745, 18);
-        btnProfile.Name = "btnProfile";
-        btnProfile.Size = new Size(125, 34);
-        btnProfile.TabIndex = 1;
-        btnProfile.Text = "My Profile";
-        btnProfile.Click += btnProfile_Click;
-        // 
-        // btnLogout
-        // 
-        btnLogout.ButtonType = HopeButtonType.Default;
-        btnLogout.DefaultColor = Color.FromArgb(242, 239, 231);
-        btnLogout.BorderColor = Color.FromArgb(102, 163, 191);
-        btnLogout.TextColor = Color.FromArgb(51, 104, 160);
-        btnLogout.HoverTextColor = Color.FromArgb(51, 104, 160);
-        btnLogout.Cursor = Cursors.Hand;
-        btnLogout.Font = new Font("Segoe UI", 9F);
-        btnLogout.Location = new Point(885, 18);
-        btnLogout.Name = "btnLogout";
-        btnLogout.Size = new Size(95, 34);
-        btnLogout.TabIndex = 2;
-        btnLogout.Text = "Logout";
-        btnLogout.Click += btnLogout_Click;
+        pnlHeader.Size = new Size(940, 72);
+        pnlHeader.TabIndex = 1;
         // 
         // pnlBody
         // 
-        pnlBody.BackColor = Color.White;
-        pnlBody.Controls.Add(pnlGridWrap);
-        pnlBody.Controls.Add(pnlFilterBar);
-        pnlBody.Controls.Add(flpStats);
+        pnlBody.BackColor = Color.FromArgb(245, 247, 250);
+        pnlBody.Controls.Add(cardGrid);
+        pnlBody.Controls.Add(tlpStats);
         pnlBody.Dock = DockStyle.Fill;
-        pnlBody.Location = new Point(0, 70);
+        pnlBody.Location = new Point(240, 72);
         pnlBody.Name = "pnlBody";
-        pnlBody.Padding = new Padding(24);
-        pnlBody.Size = new Size(1000, 610);
-        pnlBody.TabIndex = 1;
-        pnlBody.Paint += pnlBody_Paint;
+        pnlBody.Padding = new Padding(20);
+        pnlBody.Size = new Size(940, 648);
+        pnlBody.TabIndex = 2;
         // 
-        // pnlGridWrap
+        // cardGrid
         // 
-        pnlGridWrap.Controls.Add(dgvOrders);
-        pnlGridWrap.Dock = DockStyle.Fill;
-        pnlGridWrap.Location = new Point(24, 169);
-        pnlGridWrap.Name = "pnlGridWrap";
-        pnlGridWrap.Padding = new Padding(0, 10, 0, 0);
-        pnlGridWrap.Size = new Size(952, 417);
-        pnlGridWrap.TabIndex = 2;
+        cardGrid.BackColor = Color.Transparent;
+        cardGrid.BorderColor = Color.FromArgb(226, 230, 240);
+        cardGrid.Controls.Add(dgvOrders);
+        cardGrid.Controls.Add(tlpToolbar);
+        cardGrid.Dock = DockStyle.Fill;
+        cardGrid.FillColor = Color.White;
+        cardGrid.Location = new Point(20, 134);
+        cardGrid.Margin = new Padding(0);
+        cardGrid.Name = "cardGrid";
+        cardGrid.Padding = new Padding(16, 12, 16, 14);
+        cardGrid.Radius = 14;
+        cardGrid.Shadow = true;
+        cardGrid.Size = new Size(900, 494);
+        cardGrid.TabIndex = 2;
         // 
         // dgvOrders
         // 
@@ -166,290 +108,316 @@ partial class FrmCustomerPortal
         dgvOrders.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.Fill;
         dgvOrders.BackgroundColor = Color.White;
         dgvOrders.BorderStyle = BorderStyle.None;
-        dataGridViewCellStyle1.Alignment = DataGridViewContentAlignment.MiddleLeft;
-        dataGridViewCellStyle1.BackColor = Color.FromArgb(200, 223, 219);
-        dataGridViewCellStyle1.Font = new Font("Segoe UI", 9.5F, FontStyle.Bold);
-        dataGridViewCellStyle1.ForeColor = Color.FromArgb(51, 104, 160);
-        dataGridViewCellStyle1.Padding = new Padding(6);
-        dataGridViewCellStyle1.SelectionBackColor = Color.FromArgb(200, 223, 219);
-        dataGridViewCellStyle1.SelectionForeColor = Color.FromArgb(51, 104, 160);
-        dataGridViewCellStyle1.WrapMode = DataGridViewTriState.True;
-        dgvOrders.ColumnHeadersDefaultCellStyle = dataGridViewCellStyle1;
-        dgvOrders.ColumnHeadersHeightSizeMode = DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-        dataGridViewCellStyle2.Alignment = DataGridViewContentAlignment.MiddleLeft;
-        dataGridViewCellStyle2.BackColor = Color.White;
-        dataGridViewCellStyle2.Font = new Font("Segoe UI", 9.5F);
-        dataGridViewCellStyle2.ForeColor = Color.FromArgb(51, 104, 160);
-        dataGridViewCellStyle2.SelectionBackColor = Color.FromArgb(102, 163, 191);
-        dataGridViewCellStyle2.SelectionForeColor = Color.White;
-        dataGridViewCellStyle2.WrapMode = DataGridViewTriState.False;
-        dgvOrders.DefaultCellStyle = dataGridViewCellStyle2;
         dgvOrders.Dock = DockStyle.Fill;
         dgvOrders.EnableHeadersVisualStyles = false;
-        dgvOrders.GridColor = Color.FromArgb(200, 223, 219);
-        dgvOrders.Location = new Point(0, 10);
+        dgvOrders.GridColor = Color.FromArgb(234, 224, 207);
+        dgvOrders.Location = new Point(16, 62);
+        dgvOrders.MultiSelect = false;
         dgvOrders.Name = "dgvOrders";
         dgvOrders.ReadOnly = true;
         dgvOrders.RowHeadersVisible = false;
-        dgvOrders.RowTemplate.Height = 38;
         dgvOrders.SelectionMode = DataGridViewSelectionMode.FullRowSelect;
-        dgvOrders.Size = new Size(952, 407);
+        dgvOrders.Size = new Size(868, 418);
         dgvOrders.TabIndex = 0;
         dgvOrders.CellDoubleClick += dgvOrders_CellDoubleClick;
         // 
-        // pnlFilterBar
+        // tlpToolbar
         // 
-        pnlFilterBar.Controls.Add(lblOrdersTitle);
-        pnlFilterBar.Controls.Add(chkActiveOnly);
-        pnlFilterBar.Controls.Add(btnViewTicket);
-        pnlFilterBar.Dock = DockStyle.Top;
-        pnlFilterBar.Location = new Point(24, 124);
-        pnlFilterBar.Name = "pnlFilterBar";
-        pnlFilterBar.Padding = new Padding(0, 4, 0, 0);
-        pnlFilterBar.Size = new Size(952, 45);
-        pnlFilterBar.TabIndex = 1;
+        tlpToolbar.BackColor = Color.White;
+        tlpToolbar.ColumnCount = 3;
+        tlpToolbar.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 50F));
+        tlpToolbar.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 50F));
+        tlpToolbar.ColumnStyles.Add(new ColumnStyle(SizeType.Absolute, 220F));
+        tlpToolbar.Controls.Add(lblOrdersTitle, 0, 0);
+        tlpToolbar.Controls.Add(chkActiveOnly, 1, 0);
+        tlpToolbar.Controls.Add(btnViewTicket, 2, 0);
+        tlpToolbar.Dock = DockStyle.Top;
+        tlpToolbar.Location = new Point(16, 12);
+        tlpToolbar.Name = "tlpToolbar";
+        tlpToolbar.RowCount = 1;
+        tlpToolbar.RowStyles.Add(new RowStyle(SizeType.Percent, 100F));
+        tlpToolbar.Size = new Size(868, 50);
+        tlpToolbar.TabIndex = 1;
         // 
         // lblOrdersTitle
         // 
-        lblOrdersTitle.Dock = DockStyle.Left;
+        lblOrdersTitle.Anchor = AnchorStyles.Left;
+        lblOrdersTitle.AutoSize = true;
         lblOrdersTitle.Font = new Font("Segoe UI", 12F, FontStyle.Bold);
-        lblOrdersTitle.ForeColor = Color.FromArgb(51, 104, 160);
-        lblOrdersTitle.Location = new Point(0, 4);
+        lblOrdersTitle.ForeColor = Color.FromArgb(17, 24, 68);
+        lblOrdersTitle.Location = new Point(0, 14);
+        lblOrdersTitle.Margin = new Padding(0);
         lblOrdersTitle.Name = "lblOrdersTitle";
-        lblOrdersTitle.Size = new Size(200, 41);
+        lblOrdersTitle.Size = new Size(188, 21);
         lblOrdersTitle.TabIndex = 0;
         lblOrdersTitle.Text = "My Laundry Orders";
-        lblOrdersTitle.TextAlign = ContentAlignment.MiddleLeft;
         // 
         // chkActiveOnly
         // 
+        chkActiveOnly.Anchor = AnchorStyles.Left;
         chkActiveOnly.AutoSize = true;
-        chkActiveOnly.Dock = DockStyle.Left;
-        chkActiveOnly.Font = new Font("Segoe UI", 9F);
-        chkActiveOnly.ForeColor = Color.FromArgb(51, 104, 160);
-        chkActiveOnly.Location = new Point(200, 4);
+        chkActiveOnly.Cursor = Cursors.Hand;
+        chkActiveOnly.Font = new Font("Segoe UI", 9F, FontStyle.Bold);
+        chkActiveOnly.ForeColor = Color.FromArgb(75, 86, 148);
+        chkActiveOnly.Location = new Point(327, 15);
         chkActiveOnly.Name = "chkActiveOnly";
-        chkActiveOnly.Padding = new Padding(10, 0, 0, 0);
-        chkActiveOnly.Size = new Size(302, 41);
+        chkActiveOnly.Size = new Size(160, 19);
         chkActiveOnly.TabIndex = 1;
-        chkActiveOnly.Text = "Show active only (Washing / Drying / Ready)";
+        chkActiveOnly.Text = "Active In-Process Only";
         chkActiveOnly.UseVisualStyleBackColor = true;
         chkActiveOnly.CheckedChanged += chkActiveOnly_CheckedChanged;
         // 
         // btnViewTicket
         // 
+        btnViewTicket.Anchor = AnchorStyles.Right;
         btnViewTicket.ButtonType = HopeButtonType.Primary;
-        btnViewTicket.PrimaryColor = Color.FromArgb(51, 104, 160);
-        btnViewTicket.TextColor = Color.FromArgb(242, 239, 231);
+        btnViewTicket.PrimaryColor = Color.FromArgb(75, 86, 148);
+        btnViewTicket.BorderColor = Color.FromArgb(75, 86, 148);
+        btnViewTicket.TextColor = Color.White;
         btnViewTicket.HoverTextColor = Color.White;
         btnViewTicket.Cursor = Cursors.Hand;
-        btnViewTicket.Dock = DockStyle.Right;
         btnViewTicket.Font = new Font("Segoe UI", 9F, FontStyle.Bold);
-        btnViewTicket.Location = new Point(742, 4);
+        btnViewTicket.Location = new Point(658, 6);
+        btnViewTicket.Margin = new Padding(0);
         btnViewTicket.Name = "btnViewTicket";
-        btnViewTicket.Size = new Size(210, 41);
+        btnViewTicket.Size = new Size(210, 38);
         btnViewTicket.TabIndex = 2;
-        btnViewTicket.Text = "View E-Ticket / QR Code";
+        btnViewTicket.Text = "🧾 View E-Ticket / Receipt";
         btnViewTicket.Click += BtnViewTicket_Click;
         // 
-        // flpStats
+        // tlpStats
         // 
-        flpStats.Controls.Add(pnlStatActive);
-        flpStats.Controls.Add(pnlStatReady);
-        flpStats.Controls.Add(pnlStatTotal);
-        flpStats.Dock = DockStyle.Top;
-        flpStats.Location = new Point(24, 24);
-        flpStats.Name = "flpStats";
-        flpStats.Size = new Size(952, 100);
-        flpStats.TabIndex = 0;
+        tlpStats.BackColor = Color.Transparent;
+        tlpStats.ColumnCount = 3;
+        tlpStats.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 33.33F));
+        tlpStats.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 33.33F));
+        tlpStats.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 33.34F));
+        tlpStats.Controls.Add(cardActive, 0, 0);
+        tlpStats.Controls.Add(cardReady, 1, 0);
+        tlpStats.Controls.Add(cardTotal, 2, 0);
+        tlpStats.Dock = DockStyle.Top;
+        tlpStats.Location = new Point(20, 20);
+        tlpStats.Margin = new Padding(0);
+        tlpStats.Name = "tlpStats";
+        tlpStats.RowCount = 1;
+        tlpStats.RowStyles.Add(new RowStyle(SizeType.Percent, 100F));
+        tlpStats.Size = new Size(900, 114);
+        tlpStats.TabIndex = 0;
         // 
-        // pnlStatActive
+        // cardActive
         // 
-        pnlStatActive.BackColor = Color.White;
-        pnlStatActive.Controls.Add(lblActiveStat);
-        pnlStatActive.Controls.Add(lblActiveTitle);
-        pnlStatActive.Controls.Add(pnlStripActive);
-        pnlStatActive.Location = new Point(0, 0);
-        pnlStatActive.Margin = new Padding(0, 0, 15, 0);
-        pnlStatActive.Name = "pnlStatActive";
-        pnlStatActive.Padding = new Padding(16, 12, 16, 12);
-        pnlStatActive.Size = new Size(295, 80);
-        pnlStatActive.TabIndex = 0;
-        pnlStatActive.Region = new Region(RoundRectangle.CreateRoundRect(0, 0, 295, 80, 10));
+        cardActive.BackColor = Color.Transparent;
+        cardActive.BorderColor = Color.FromArgb(226, 230, 240);
+        cardActive.Controls.Add(lblActiveStat);
+        cardActive.Controls.Add(lblActiveTitle);
+        cardActive.Controls.Add(stripActive);
+        cardActive.Dock = DockStyle.Fill;
+        cardActive.FillColor = Color.White;
+        cardActive.Location = new Point(0, 0);
+        cardActive.Margin = new Padding(0, 0, 14, 0);
+        cardActive.Name = "cardActive";
+        cardActive.Padding = new Padding(16, 12, 16, 14);
+        cardActive.Radius = 14;
+        cardActive.Shadow = true;
+        cardActive.Size = new Size(285, 114);
+        cardActive.TabIndex = 0;
         // 
         // lblActiveStat
         // 
+        lblActiveStat.BackColor = Color.Transparent;
         lblActiveStat.Dock = DockStyle.Fill;
-        lblActiveStat.Font = new Font("Segoe UI", 18F, FontStyle.Bold);
-        lblActiveStat.ForeColor = Color.FromArgb(51, 104, 160);
-        lblActiveStat.Location = new Point(20, 30);
+        lblActiveStat.Font = new Font("Segoe UI", 20F, FontStyle.Bold);
+        lblActiveStat.ForeColor = Color.FromArgb(17, 24, 68);
+        lblActiveStat.Location = new Point(20, 32);
         lblActiveStat.Name = "lblActiveStat";
-        lblActiveStat.Size = new Size(259, 38);
-        lblActiveStat.TabIndex = 2;
+        lblActiveStat.Padding = new Padding(10, 0, 0, 0);
+        lblActiveStat.Size = new Size(249, 68);
+        lblActiveStat.TabIndex = 0;
         lblActiveStat.Text = "0";
+        lblActiveStat.TextAlign = ContentAlignment.MiddleLeft;
         // 
         // lblActiveTitle
         // 
+        lblActiveTitle.BackColor = Color.Transparent;
         lblActiveTitle.Dock = DockStyle.Top;
-        lblActiveTitle.Font = new Font("Segoe UI", 8.5F);
-        lblActiveTitle.ForeColor = Color.FromArgb(102, 163, 191);
+        lblActiveTitle.Font = new Font("Segoe UI", 9.5F);
+        lblActiveTitle.ForeColor = Color.FromArgb(114, 136, 174);
         lblActiveTitle.Location = new Point(20, 12);
         lblActiveTitle.Name = "lblActiveTitle";
-        lblActiveTitle.Size = new Size(259, 18);
+        lblActiveTitle.Padding = new Padding(10, 0, 0, 0);
+        lblActiveTitle.Size = new Size(249, 20);
         lblActiveTitle.TabIndex = 1;
         lblActiveTitle.Text = "Active In-Process";
+        lblActiveTitle.TextAlign = ContentAlignment.MiddleLeft;
         // 
-        // pnlStripActive
+        // stripActive
         // 
-        pnlStripActive.BackColor = Color.FromArgb(102, 163, 191);
-        pnlStripActive.Dock = DockStyle.Left;
-        pnlStripActive.Location = new Point(16, 12);
-        pnlStripActive.Name = "pnlStripActive";
-        pnlStripActive.Size = new Size(4, 56);
-        pnlStripActive.TabIndex = 0;
+        stripActive.BackColor = Color.FromArgb(75, 86, 148);
+        stripActive.Dock = DockStyle.Left;
+        stripActive.Location = new Point(16, 12);
+        stripActive.Name = "stripActive";
+        stripActive.Size = new Size(4, 88);
+        stripActive.TabIndex = 2;
         // 
-        // pnlStatReady
+        // cardReady
         // 
-        pnlStatReady.BackColor = Color.White;
-        pnlStatReady.Controls.Add(lblReadyStat);
-        pnlStatReady.Controls.Add(lblReadyTitle);
-        pnlStatReady.Controls.Add(pnlStripReady);
-        pnlStatReady.Location = new Point(310, 0);
-        pnlStatReady.Margin = new Padding(0, 0, 15, 0);
-        pnlStatReady.Name = "pnlStatReady";
-        pnlStatReady.Padding = new Padding(16, 12, 16, 12);
-        pnlStatReady.Size = new Size(295, 80);
-        pnlStatReady.TabIndex = 1;
-        pnlStatReady.Region = new Region(RoundRectangle.CreateRoundRect(0, 0, 295, 80, 10));
+        cardReady.BackColor = Color.Transparent;
+        cardReady.BorderColor = Color.FromArgb(226, 230, 240);
+        cardReady.Controls.Add(lblReadyStat);
+        cardReady.Controls.Add(lblReadyTitle);
+        cardReady.Controls.Add(stripReady);
+        cardReady.Dock = DockStyle.Fill;
+        cardReady.FillColor = Color.White;
+        cardReady.Location = new Point(299, 0);
+        cardReady.Margin = new Padding(0, 0, 14, 0);
+        cardReady.Name = "cardReady";
+        cardReady.Padding = new Padding(16, 12, 16, 14);
+        cardReady.Radius = 14;
+        cardReady.Shadow = true;
+        cardReady.Size = new Size(285, 114);
+        cardReady.TabIndex = 1;
         // 
         // lblReadyStat
         // 
+        lblReadyStat.BackColor = Color.Transparent;
         lblReadyStat.Dock = DockStyle.Fill;
-        lblReadyStat.Font = new Font("Segoe UI", 18F, FontStyle.Bold);
-        lblReadyStat.ForeColor = Color.FromArgb(51, 104, 160);
-        lblReadyStat.Location = new Point(20, 30);
+        lblReadyStat.Font = new Font("Segoe UI", 20F, FontStyle.Bold);
+        lblReadyStat.ForeColor = Color.FromArgb(17, 24, 68);
+        lblReadyStat.Location = new Point(20, 32);
         lblReadyStat.Name = "lblReadyStat";
-        lblReadyStat.Size = new Size(259, 38);
-        lblReadyStat.TabIndex = 2;
+        lblReadyStat.Padding = new Padding(10, 0, 0, 0);
+        lblReadyStat.Size = new Size(249, 68);
+        lblReadyStat.TabIndex = 0;
         lblReadyStat.Text = "0";
+        lblReadyStat.TextAlign = ContentAlignment.MiddleLeft;
         // 
         // lblReadyTitle
         // 
+        lblReadyTitle.BackColor = Color.Transparent;
         lblReadyTitle.Dock = DockStyle.Top;
-        lblReadyTitle.Font = new Font("Segoe UI", 8.5F);
-        lblReadyTitle.ForeColor = Color.FromArgb(102, 163, 191);
+        lblReadyTitle.Font = new Font("Segoe UI", 9.5F);
+        lblReadyTitle.ForeColor = Color.FromArgb(114, 136, 174);
         lblReadyTitle.Location = new Point(20, 12);
         lblReadyTitle.Name = "lblReadyTitle";
-        lblReadyTitle.Size = new Size(259, 18);
+        lblReadyTitle.Padding = new Padding(10, 0, 0, 0);
+        lblReadyTitle.Size = new Size(249, 20);
         lblReadyTitle.TabIndex = 1;
         lblReadyTitle.Text = "Ready for Pickup";
+        lblReadyTitle.TextAlign = ContentAlignment.MiddleLeft;
         // 
-        // pnlStripReady
+        // stripReady
         // 
-        pnlStripReady.BackColor = Color.FromArgb(51, 104, 160);
-        pnlStripReady.Dock = DockStyle.Left;
-        pnlStripReady.Location = new Point(16, 12);
-        pnlStripReady.Name = "pnlStripReady";
-        pnlStripReady.Size = new Size(4, 56);
-        pnlStripReady.TabIndex = 0;
+        stripReady.BackColor = Color.FromArgb(22, 163, 74);
+        stripReady.Dock = DockStyle.Left;
+        stripReady.Location = new Point(16, 12);
+        stripReady.Name = "stripReady";
+        stripReady.Size = new Size(4, 88);
+        stripReady.TabIndex = 2;
         // 
-        // pnlStatTotal
+        // cardTotal
         // 
-        pnlStatTotal.BackColor = Color.White;
-        pnlStatTotal.Controls.Add(lblTotalStat);
-        pnlStatTotal.Controls.Add(lblTotalTitle);
-        pnlStatTotal.Controls.Add(pnlStripTotal);
-        pnlStatTotal.Location = new Point(620, 0);
-        pnlStatTotal.Margin = new Padding(0, 0, 15, 0);
-        pnlStatTotal.Name = "pnlStatTotal";
-        pnlStatTotal.Padding = new Padding(16, 12, 16, 12);
-        pnlStatTotal.Size = new Size(295, 80);
-        pnlStatTotal.TabIndex = 2;
-        pnlStatTotal.Region = new Region(RoundRectangle.CreateRoundRect(0, 0, 295, 80, 10));
+        cardTotal.BackColor = Color.Transparent;
+        cardTotal.BorderColor = Color.FromArgb(226, 230, 240);
+        cardTotal.Controls.Add(lblTotalStat);
+        cardTotal.Controls.Add(lblTotalTitle);
+        cardTotal.Controls.Add(stripTotal);
+        cardTotal.Dock = DockStyle.Fill;
+        cardTotal.FillColor = Color.White;
+        cardTotal.Location = new Point(598, 0);
+        cardTotal.Margin = new Padding(0);
+        cardTotal.Name = "cardTotal";
+        cardTotal.Padding = new Padding(16, 12, 16, 14);
+        cardTotal.Radius = 14;
+        cardTotal.Shadow = true;
+        cardTotal.Size = new Size(302, 114);
+        cardTotal.TabIndex = 2;
         // 
         // lblTotalStat
         // 
+        lblTotalStat.BackColor = Color.Transparent;
         lblTotalStat.Dock = DockStyle.Fill;
-        lblTotalStat.Font = new Font("Segoe UI", 18F, FontStyle.Bold);
-        lblTotalStat.ForeColor = Color.FromArgb(51, 104, 160);
-        lblTotalStat.Location = new Point(20, 30);
+        lblTotalStat.Font = new Font("Segoe UI", 20F, FontStyle.Bold);
+        lblTotalStat.ForeColor = Color.FromArgb(17, 24, 68);
+        lblTotalStat.Location = new Point(20, 32);
         lblTotalStat.Name = "lblTotalStat";
-        lblTotalStat.Size = new Size(259, 38);
-        lblTotalStat.TabIndex = 2;
+        lblTotalStat.Padding = new Padding(10, 0, 0, 0);
+        lblTotalStat.Size = new Size(266, 68);
+        lblTotalStat.TabIndex = 0;
         lblTotalStat.Text = "0";
+        lblTotalStat.TextAlign = ContentAlignment.MiddleLeft;
         // 
         // lblTotalTitle
         // 
+        lblTotalTitle.BackColor = Color.Transparent;
         lblTotalTitle.Dock = DockStyle.Top;
-        lblTotalTitle.Font = new Font("Segoe UI", 8.5F);
-        lblTotalTitle.ForeColor = Color.FromArgb(102, 163, 191);
+        lblTotalTitle.Font = new Font("Segoe UI", 9.5F);
+        lblTotalTitle.ForeColor = Color.FromArgb(114, 136, 174);
         lblTotalTitle.Location = new Point(20, 12);
         lblTotalTitle.Name = "lblTotalTitle";
-        lblTotalTitle.Size = new Size(259, 18);
+        lblTotalTitle.Padding = new Padding(10, 0, 0, 0);
+        lblTotalTitle.Size = new Size(266, 20);
         lblTotalTitle.TabIndex = 1;
-        lblTotalTitle.Text = "Total Orders";
+        lblTotalTitle.Text = "Total Laundry Bookings";
+        lblTotalTitle.TextAlign = ContentAlignment.MiddleLeft;
         // 
-        // pnlStripTotal
+        // stripTotal
         // 
-        pnlStripTotal.BackColor = Color.FromArgb(200, 223, 219);
-        pnlStripTotal.Dock = DockStyle.Left;
-        pnlStripTotal.Location = new Point(16, 12);
-        pnlStripTotal.Name = "pnlStripTotal";
-        pnlStripTotal.Size = new Size(4, 56);
-        pnlStripTotal.TabIndex = 0;
+        stripTotal.BackColor = Color.FromArgb(114, 136, 174);
+        stripTotal.Dock = DockStyle.Left;
+        stripTotal.Location = new Point(16, 12);
+        stripTotal.Name = "stripTotal";
+        stripTotal.Size = new Size(4, 88);
+        stripTotal.TabIndex = 2;
         // 
         // FrmCustomerPortal
         // 
-        AutoScaleDimensions = new SizeF(7F, 17F);
+        AutoScaleDimensions = new SizeF(9F, 21F);
         AutoScaleMode = AutoScaleMode.Font;
-        BackColor = Color.FromArgb(102, 163, 191);
-        ClientSize = new Size(1000, 680);
+        BackColor = Color.FromArgb(245, 247, 250);
+        ClientSize = new Size(1180, 720);
         Controls.Add(pnlBody);
         Controls.Add(pnlHeader);
+        Controls.Add(pnlSidebar);
         Font = new Font("Segoe UI", 9.5F);
-        ForeColor = Color.FromArgb(51, 104, 160);
+        ForeColor = Color.FromArgb(17, 24, 68);
+        MinimumSize = new Size(980, 620);
         Name = "FrmCustomerPortal";
         StartPosition = FormStartPosition.CenterScreen;
         Text = "LaundryHub – Customer Portal";
-        pnlHeader.ResumeLayout(false);
         pnlBody.ResumeLayout(false);
-        pnlGridWrap.ResumeLayout(false);
+        cardGrid.ResumeLayout(false);
         ((System.ComponentModel.ISupportInitialize)dgvOrders).EndInit();
-        pnlFilterBar.ResumeLayout(false);
-        pnlFilterBar.PerformLayout();
-        flpStats.ResumeLayout(false);
-        pnlStatActive.ResumeLayout(false);
-        pnlStatReady.ResumeLayout(false);
-        pnlStatTotal.ResumeLayout(false);
+        tlpToolbar.ResumeLayout(false);
+        tlpToolbar.PerformLayout();
+        tlpStats.ResumeLayout(false);
+        cardActive.ResumeLayout(false);
+        cardReady.ResumeLayout(false);
+        cardTotal.ResumeLayout(false);
         ResumeLayout(false);
     }
 
     #endregion
 
-    private Panel pnlHeader;
-    private Label lblWelcome;
-    private HopeButton btnBookOrder;
-    private HopeButton btnProfile;
-    private HopeButton btnLogout;
+    private ModernSidebar pnlSidebar;
+    private ModernHeaderBar pnlHeader;
     private Panel pnlBody;
-    private FlowLayoutPanel flpStats;
-    private Panel pnlStatActive;
-    private Panel pnlStripActive;
-    private Label lblActiveTitle;
-    private Label lblActiveStat;
-    private Panel pnlStatReady;
-    private Panel pnlStripReady;
-    private Label lblReadyTitle;
-    private Label lblReadyStat;
-    private Panel pnlStatTotal;
-    private Panel pnlStripTotal;
-    private Label lblTotalTitle;
-    private Label lblTotalStat;
-    private Panel pnlFilterBar;
+    private RoundedCard cardGrid;
+    private DataGridView dgvOrders;
+    private TableLayoutPanel tlpToolbar;
     private Label lblOrdersTitle;
     private CheckBox chkActiveOnly;
     private HopeButton btnViewTicket;
-    private Panel pnlGridWrap;
-    private DataGridView dgvOrders;
+    private TableLayoutPanel tlpStats;
+    private RoundedCard cardActive;
+    private Panel stripActive;
+    private Label lblActiveTitle;
+    private Label lblActiveStat;
+    private RoundedCard cardReady;
+    private Panel stripReady;
+    private Label lblReadyTitle;
+    private Label lblReadyStat;
+    private RoundedCard cardTotal;
+    private Panel stripTotal;
+    private Label lblTotalTitle;
+    private Label lblTotalStat;
 }
-

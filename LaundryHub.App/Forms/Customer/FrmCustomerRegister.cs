@@ -83,20 +83,16 @@ public partial class FrmCustomerRegister : Form
                 Role = UserRole.Customer.ToString(),
                 IsActive = true
             };
-            AppServices.Users.Add(user);
-
-            var createdUser = AppServices.Users.GetByUsername(username);
-            int? userId = createdUser?.UserId;
 
             var customer = new CustomerModel
             {
-                UserId = userId,
                 FullName = fullName,
                 Phone = phone,
                 Email = email,
                 Address = string.IsNullOrWhiteSpace(txtAddress.Text) ? null : txtAddress.Text.Trim()
             };
-            AppServices.Customers.Add(customer);
+
+            AppServices.Customers.RegisterCustomerWithUser(user, customer);
 
             MessageBox.Show(
                 "Account successfully created! You may now log in to view your orders.",
@@ -130,9 +126,10 @@ public partial class FrmCustomerRegister : Form
             return false;
         }
 
-        if (AppServices.Customers.PhoneExists(txtPhone.Text.Trim()))
+        var existingCustomer = AppServices.Customers.GetByPhone(txtPhone.Text.Trim());
+        if (existingCustomer != null && existingCustomer.UserId != null)
         {
-            ShowError("This phone number is already registered.");
+            ShowError("This phone number is already registered to an account.");
             txtPhone.Focus();
             return false;
         }
@@ -165,10 +162,18 @@ public partial class FrmCustomerRegister : Form
             return false;
         }
 
+        var emailToCheck = string.IsNullOrWhiteSpace(txtEmail.Text) ? $"{txtUsername.Text.Trim()}@laundryhub.local" : txtEmail.Text.Trim();
         if (!string.IsNullOrWhiteSpace(txtEmail.Text)
             && !Regex.IsMatch(txtEmail.Text.Trim(), @"^[^@\s]+@[^@\s]+\.[^@\s]+$"))
         {
             ShowError("Please enter a valid email address.");
+            txtEmail.Focus();
+            return false;
+        }
+
+        if (AppServices.Users.EmailExists(emailToCheck))
+        {
+            ShowError("This email address is already in use by another account.");
             txtEmail.Focus();
             return false;
         }

@@ -1,4 +1,4 @@
-namespace LaundryHub.App.Forms.Staff;
+﻿namespace LaundryHub.App.Forms.Staff;
 
 partial class FrmCustomerRegistration
 {
@@ -59,7 +59,7 @@ partial class FrmCustomerRegistration
         // 
         // pnlHeader
         // 
-        pnlHeader.BackColor = Color.FromArgb(30, 41, 59);
+        pnlHeader.BackColor = Color.FromArgb(17, 24, 68);
         pnlHeader.Controls.Add(lblTitle);
         pnlHeader.Controls.Add(btnClose);
         pnlHeader.Dock = DockStyle.Top;
@@ -73,7 +73,7 @@ partial class FrmCustomerRegistration
         // 
         lblTitle.Dock = DockStyle.Left;
         lblTitle.Font = new Font("Segoe UI", 16F, FontStyle.Bold);
-        lblTitle.ForeColor = Color.FromArgb(96, 165, 250);
+        lblTitle.ForeColor = Color.FromArgb(114, 136, 174);
         lblTitle.Location = new Point(24, 0);
         lblTitle.Name = "lblTitle";
         lblTitle.Size = new Size(500, 65);
@@ -83,7 +83,7 @@ partial class FrmCustomerRegistration
         // 
         // btnClose
         // 
-        btnClose.BackColor = Color.FromArgb(51, 65, 85);
+        btnClose.BackColor = Color.FromArgb(17, 24, 68);
         btnClose.Cursor = Cursors.Hand;
         btnClose.FlatAppearance.BorderSize = 0;
         btnClose.FlatStyle = FlatStyle.Flat;
@@ -133,12 +133,12 @@ partial class FrmCustomerRegistration
         dgvCustomers.AllowUserToAddRows = false;
         dgvCustomers.AllowUserToDeleteRows = false;
         dgvCustomers.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.Fill;
-        dgvCustomers.BackgroundColor = Color.FromArgb(30, 41, 59);
+        dgvCustomers.BackgroundColor = Color.FromArgb(17, 24, 68);
         dgvCustomers.BorderStyle = BorderStyle.None;
         dataGridViewCellStyle1.Alignment = DataGridViewContentAlignment.MiddleLeft;
-        dataGridViewCellStyle1.BackColor = Color.FromArgb(15, 23, 42);
+        dataGridViewCellStyle1.BackColor = Color.FromArgb(17, 24, 68);
         dataGridViewCellStyle1.Font = new Font("Segoe UI", 9.5F, FontStyle.Bold);
-        dataGridViewCellStyle1.ForeColor = Color.FromArgb(148, 163, 184);
+        dataGridViewCellStyle1.ForeColor = Color.FromArgb(140, 150, 185);
         dataGridViewCellStyle1.Padding = new Padding(6);
         dataGridViewCellStyle1.SelectionBackColor = SystemColors.Highlight;
         dataGridViewCellStyle1.SelectionForeColor = SystemColors.HighlightText;
@@ -146,16 +146,16 @@ partial class FrmCustomerRegistration
         dgvCustomers.ColumnHeadersDefaultCellStyle = dataGridViewCellStyle1;
         dgvCustomers.ColumnHeadersHeightSizeMode = DataGridViewColumnHeadersHeightSizeMode.AutoSize;
         dataGridViewCellStyle2.Alignment = DataGridViewContentAlignment.MiddleLeft;
-        dataGridViewCellStyle2.BackColor = Color.FromArgb(30, 41, 59);
+        dataGridViewCellStyle2.BackColor = Color.FromArgb(17, 24, 68);
         dataGridViewCellStyle2.Font = new Font("Segoe UI", 9.5F);
         dataGridViewCellStyle2.ForeColor = Color.White;
-        dataGridViewCellStyle2.SelectionBackColor = Color.FromArgb(37, 99, 235);
+        dataGridViewCellStyle2.SelectionBackColor = Color.FromArgb(75, 86, 148);
         dataGridViewCellStyle2.SelectionForeColor = Color.White;
         dataGridViewCellStyle2.WrapMode = DataGridViewTriState.False;
         dgvCustomers.DefaultCellStyle = dataGridViewCellStyle2;
         dgvCustomers.Dock = DockStyle.Fill;
         dgvCustomers.EnableHeadersVisualStyles = false;
-        dgvCustomers.GridColor = Color.FromArgb(51, 65, 85);
+        dgvCustomers.GridColor = Color.FromArgb(17, 24, 68);
         dgvCustomers.Location = new Point(0, 10);
         dgvCustomers.Name = "dgvCustomers";
         dgvCustomers.ReadOnly = true;
@@ -169,7 +169,7 @@ partial class FrmCustomerRegistration
         // 
         // pnlSearchBar
         // 
-        pnlSearchBar.BackColor = Color.FromArgb(30, 41, 59);
+        pnlSearchBar.BackColor = Color.FromArgb(17, 24, 68);
         pnlSearchBar.Controls.Add(txtSearch);
         pnlSearchBar.Controls.Add(lblSearchIcon);
         pnlSearchBar.Controls.Add(btnArchive);
@@ -182,7 +182,7 @@ partial class FrmCustomerRegistration
         // 
         // txtSearch
         // 
-        txtSearch.BackColor = Color.FromArgb(15, 23, 42);
+        txtSearch.BackColor = Color.FromArgb(17, 24, 68);
         txtSearch.BorderStyle = BorderStyle.FixedSingle;
         txtSearch.Dock = DockStyle.Fill;
         txtSearch.Font = new Font("Segoe UI", 10.5F);
@@ -224,7 +224,7 @@ partial class FrmCustomerRegistration
         // 
         // pnlLeftCard
         // 
-        pnlLeftCard.BackColor = Color.FromArgb(30, 41, 59);
+        pnlLeftCard.BackColor = Color.FromArgb(17, 24, 68);
         pnlLeftCard.Controls.Add(flpForm);
         pnlLeftCard.Controls.Add(lblFormTitle);
         pnlLeftCard.Dock = DockStyle.Left;
@@ -260,17 +260,17 @@ partial class FrmCustomerRegistration
         // lblFullName
         // 
         lblFullName.Font = new Font("Segoe UI", 8.5F);
-        lblFullName.ForeColor = Color.FromArgb(148, 163, 184);
+        lblFullName.ForeColor = Color.FromArgb(140, 150, 185);
         lblFullName.Location = new Point(0, 16);
         lblFullName.Margin = new Padding(0, 6, 0, 2);
         lblFullName.Name = "lblFullName";
-        lblFullName.Size = new Size(320, 18);
+        lblFullName.Size = new Size(320, 18); 
         lblFullName.TabIndex = 0;
         lblFullName.Text = "Full Name *";
         // 
         // txtFullName
         // 
-        txtFullName.BackColor = Color.FromArgb(15, 23, 42);
+        txtFullName.BackColor = Color.FromArgb(17, 24, 68);
         txtFullName.BorderStyle = BorderStyle.FixedSingle;
         txtFullName.Font = new Font("Segoe UI", 10F);
         txtFullName.ForeColor = Color.White;
@@ -283,7 +283,7 @@ partial class FrmCustomerRegistration
         // lblPhone
         // 
         lblPhone.Font = new Font("Segoe UI", 8.5F);
-        lblPhone.ForeColor = Color.FromArgb(148, 163, 184);
+        lblPhone.ForeColor = Color.FromArgb(140, 150, 185);
         lblPhone.Location = new Point(0, 73);
         lblPhone.Margin = new Padding(0, 6, 0, 2);
         lblPhone.Name = "lblPhone";
@@ -293,7 +293,7 @@ partial class FrmCustomerRegistration
         // 
         // txtPhone
         // 
-        txtPhone.BackColor = Color.FromArgb(15, 23, 42);
+        txtPhone.BackColor = Color.FromArgb(17, 24, 68);
         txtPhone.BorderStyle = BorderStyle.FixedSingle;
         txtPhone.Font = new Font("Segoe UI", 10F);
         txtPhone.ForeColor = Color.White;
@@ -306,7 +306,7 @@ partial class FrmCustomerRegistration
         // lblEmail
         // 
         lblEmail.Font = new Font("Segoe UI", 8.5F);
-        lblEmail.ForeColor = Color.FromArgb(148, 163, 184);
+        lblEmail.ForeColor = Color.FromArgb(140, 150, 185);
         lblEmail.Location = new Point(0, 130);
         lblEmail.Margin = new Padding(0, 6, 0, 2);
         lblEmail.Name = "lblEmail";
@@ -316,7 +316,7 @@ partial class FrmCustomerRegistration
         // 
         // txtEmail
         // 
-        txtEmail.BackColor = Color.FromArgb(15, 23, 42);
+        txtEmail.BackColor = Color.FromArgb(17, 24, 68);
         txtEmail.BorderStyle = BorderStyle.FixedSingle;
         txtEmail.Font = new Font("Segoe UI", 10F);
         txtEmail.ForeColor = Color.White;
@@ -329,7 +329,7 @@ partial class FrmCustomerRegistration
         // lblAddress
         // 
         lblAddress.Font = new Font("Segoe UI", 8.5F);
-        lblAddress.ForeColor = Color.FromArgb(148, 163, 184);
+        lblAddress.ForeColor = Color.FromArgb(140, 150, 185);
         lblAddress.Location = new Point(0, 187);
         lblAddress.Margin = new Padding(0, 6, 0, 2);
         lblAddress.Name = "lblAddress";
@@ -339,7 +339,7 @@ partial class FrmCustomerRegistration
         // 
         // txtAddress
         // 
-        txtAddress.BackColor = Color.FromArgb(15, 23, 42);
+        txtAddress.BackColor = Color.FromArgb(17, 24, 68);
         txtAddress.BorderStyle = BorderStyle.FixedSingle;
         txtAddress.Font = new Font("Segoe UI", 10F);
         txtAddress.ForeColor = Color.White;
@@ -372,7 +372,7 @@ partial class FrmCustomerRegistration
         // 
         // btnSave
         // 
-        btnSave.BackColor = Color.FromArgb(37, 99, 235);
+        btnSave.BackColor = Color.FromArgb(75, 86, 148);
         btnSave.Cursor = Cursors.Hand;
         btnSave.FlatAppearance.BorderSize = 0;
         btnSave.FlatStyle = FlatStyle.Flat;
@@ -388,7 +388,7 @@ partial class FrmCustomerRegistration
         // 
         // btnClear
         // 
-        btnClear.BackColor = Color.FromArgb(51, 65, 85);
+        btnClear.BackColor = Color.FromArgb(17, 24, 68);
         btnClear.Cursor = Cursors.Hand;
         btnClear.FlatAppearance.BorderSize = 0;
         btnClear.FlatStyle = FlatStyle.Flat;
@@ -403,7 +403,7 @@ partial class FrmCustomerRegistration
         // 
         // btnSelect
         // 
-        btnSelect.BackColor = Color.FromArgb(16, 185, 129);
+        btnSelect.BackColor = Color.FromArgb(74, 160, 120);
         btnSelect.Cursor = Cursors.Hand;
         btnSelect.FlatAppearance.BorderSize = 0;
         btnSelect.FlatStyle = FlatStyle.Flat;
@@ -434,7 +434,7 @@ partial class FrmCustomerRegistration
         // 
         AutoScaleDimensions = new SizeF(7F, 17F);
         AutoScaleMode = AutoScaleMode.Font;
-        BackColor = Color.FromArgb(15, 23, 42);
+        BackColor = Color.FromArgb(17, 24, 68);
         ClientSize = new Size(1000, 640);
         Controls.Add(pnlContainer);
         Controls.Add(pnlHeader);

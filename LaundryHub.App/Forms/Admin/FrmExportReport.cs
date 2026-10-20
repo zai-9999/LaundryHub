@@ -12,11 +12,12 @@ public partial class FrmExportReport : Form
         DoubleBuffered = true;
         ResizeRedraw = true;
         UIThemeHelper.StyleStandardForm(this);
-        pnlHeader.BackColor = Color.FromArgb(37, 78, 122);
-        lblTitle.BackColor = Color.FromArgb(37, 78, 122);
-        pnlContainer.BackColor = Color.FromArgb(240, 244, 248);
-        pnlGridWrap.BackColor = Color.FromArgb(240, 244, 248);
+        pnlHeader.BackColor = UIThemeHelper.Navy;
+        lblTitle.BackColor = UIThemeHelper.Navy;
+        pnlContainer.BackColor = UIThemeHelper.Surface;
+        pnlGridWrap.BackColor = UIThemeHelper.Surface;
         UIThemeHelper.StyleDataGridView(dgvPreview);
+        UIThemeHelper.EnableStatusPills(dgvPreview);
         UIThemeHelper.ApplyRoundedRegion(pnlStatOrders, 10);
         UIThemeHelper.ApplyRoundedRegion(pnlStatPending, 10);
         UIThemeHelper.ApplyRoundedRegion(pnlStatClaimed, 10);

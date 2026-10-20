@@ -2,86 +2,97 @@ using LaundryHub.App.Helpers;
 using LaundryHub.Core.Models;
 using System.Drawing.Drawing2D;
 using ReaLTaiizor.Util;
+using System.Threading.Tasks;
 
 namespace LaundryHub.App.Forms.Admin;
 
 public partial class FrmAdminDashboard : Form
 {
-    private System.Windows.Forms.Timer? clockTimer;
+    private System.Windows.Forms.Timer? searchDebounceTimer;
+    private bool isLoading = false;
+    private List<Order>? cachedOrders;
 
     public FrmAdminDashboard()
     {
         InitializeComponent();
         DoubleBuffered = true;
         ResizeRedraw = true;
-        pnlHeader.BackColor = Color.FromArgb(37, 78, 122);
-        lblWelcome.BackColor = Color.FromArgb(37, 78, 122);
-        lblLogo.BackColor = Color.FromArgb(37, 78, 122);
-        lblClock.BackColor = Color.FromArgb(37, 78, 122);
-        UIThemeHelper.StyleDataGridView(dgvTodayOrders);
-        UIThemeHelper.ApplyRoundedRegion(pnlMain, UIThemeHelper.ContentCardRadius);
-        pnlMain.SizeChanged += (s, e) => UIThemeHelper.ApplyRoundedRegion(pnlMain, UIThemeHelper.ContentCardRadius);
-        UIThemeHelper.ApplyRoundedRegion(pnlStatOrders, 10);
-        UIThemeHelper.ApplyRoundedRegion(pnlStatRevenue, 10);
-        UIThemeHelper.ApplyRoundedRegion(pnlStatPending, 10);
-        UIThemeHelper.ApplyRoundedRegion(pnlStatClaimed, 10);
 
-        pnlSidebar.Paint += pnlSidebar_Paint;
-        ApplyNavButtonStyles();
+        UIThemeHelper.StyleDataGridView(dgvTodayOrders);
+        UIThemeHelper.EnableStatusPills(dgvTodayOrders);
+
+        // Sidebar Branding & Navigation
+        pnlSidebar.BrandLabel.Text = "🧺 LaundryHub";
+        pnlSidebar.BrandSubtitle.Text = "ADMIN & OPERATIONS";
+
+        pnlSidebar.AddSection("GENERAL");
+        var btnNavDash = pnlSidebar.AddNavButton("📊", "Overview & Analytics");
+        btnNavDash.IsActive = true;
+
+        pnlSidebar.AddSection("OPERATIONS");
+        pnlSidebar.AddNavButton("➕", "New Laundry Order", btnNewOrder_Click);
+        pnlSidebar.AddNavButton("👥", "Customer Management", btnCustomerRegistration_Click);
+        pnlSidebar.AddNavButton("📋", "Staff Operations View", btnStaffDashboard_Click);
+
+        pnlSidebar.AddSection("ADMINISTRATION");
+        pnlSidebar.AddNavButton("👔", "Manage Staff", btnManageStaff_Click);
+        pnlSidebar.AddNavButton("🏷️", "Services & Rates", btnServicePricing_Click);
+        pnlSidebar.AddNavButton("📈", "Daily Reports & Excel", btnExportReport_Click);
+
+        pnlSidebar.AddSection("SYSTEM");
+        pnlSidebar.AddNavButton("🔄", "Refresh Dashboard", btnRefresh_Click);
+        pnlSidebar.AddNavButton("🚪", "Logout", btnLogout_Click);
+
+        // Header Bar Setup
+        pnlHeader.Title = "Platform Overview & Analytics";
+        pnlHeader.Subtitle = "REAL-TIME LAUNDRY WORKFLOW, PERFORMANCE & REVENUE MONITORING";
+        pnlHeader.SearchBox.Hint = "Search order #, customer, status...";
+        pnlHeader.SearchBox.TextChanged += txtSearch_TextChanged;
+        pnlHeader.ActionButton.Text = "🚪 Logout";
+        pnlHeader.ActionButton.Click += btnLogout_Click;
 
         if (SessionManager.CurrentUser != null)
         {
-            lblWelcome.Text = $"LaundryHub Admin  •  {SessionManager.CurrentUser.FullName}";
-            LoadDashboardData();
+            pnlHeader.UserName = SessionManager.CurrentUser.FullName;
+            pnlHeader.UserRole = SessionManager.CurrentUser.Role;
         }
 
-        clockTimer = new System.Windows.Forms.Timer { Interval = 1000 };
-        clockTimer.Tick += (_, _) => lblClock.Text = DateTime.Now.ToString("dddd, MMM dd, yyyy  hh:mm:ss tt");
-        clockTimer.Start();
-        lblClock.Text = DateTime.Now.ToString("dddd, MMM dd, yyyy  hh:mm:ss tt");
-    }
+        var stats = StatRow.Replace(flpStats,
+            ("Today's Total Orders", UIThemeHelper.Indigo),
+            ("Today's Revenue",      UIThemeHelper.Success),
+            ("Pending in Progress",  UIThemeHelper.Warning),
+            ("Claimed Today",        UIThemeHelper.Slate));
+        lblTotalToday = stats[0].ValueLabel;
+        lblSalesToday = stats[1].ValueLabel;
+        lblPending    = stats[2].ValueLabel;
+        lblClaimed    = stats[3].ValueLabel;
+        lblSalesToday.Font = new Font("Segoe UI", 17F, FontStyle.Bold);
 
-    protected override void OnPaintBackground(PaintEventArgs e)
-    {
-        base.OnPaintBackground(e);
-        UIThemeHelper.PaintGradientBackground(this, e);
-    }
+        lblTotalToday.Text = "—";
+        lblSalesToday.Text = "—";
+        lblPending.Text = "—";
+        lblClaimed.Text = "—";
 
-    private void pnlMain_Paint(object sender, PaintEventArgs e)
-    {
-        UIThemeHelper.PaintRoundedSolidCard(pnlMain, e, Color.White, UIThemeHelper.ContentCardRadius);
-    }
-
-    private void pnlSidebar_Paint(object? sender, PaintEventArgs e)
-    {
-        UIThemeHelper.PaintGradientBackground(pnlSidebar, e);
-    }
-
-    private void ApplyNavButtonStyles()
-    {
-        foreach (var btn in new[] { btnManageStaff, btnServicePricing, btnExportReport, btnStaffDashboard, btnCustomerRegistration, btnRefresh })
+        this.Shown += async (_, _) =>
         {
-            btn.ButtonType = HopeButtonType.Primary;
-            btn.PrimaryColor = Color.FromArgb(37, 78, 122);
-            btn.TextColor = Color.White;
-            btn.HoverTextColor = Color.White;
-        }
+            await LoadDashboardDataAsync();
 
-        // Primary action button — HopeButton pill highlight.
-        btnNewOrder.ButtonType = HopeButtonType.Primary;
-        btnNewOrder.PrimaryColor = Color.FromArgb(102, 163, 191);
-        btnNewOrder.TextColor = Color.White;
-        btnNewOrder.HoverTextColor = Color.White;
+            // Run database cleanup in the background without slowing down dashboard display
+            _ = Task.Run(() =>
+            {
+                try { AppServices.Customers.CleanupArchivedCustomerOrders(); }
+                catch { }
+            });
+        };
 
-        btnLogout.ButtonType = HopeButtonType.Primary;
-        btnLogout.PrimaryColor = Color.FromArgb(190, 60, 60);
-        btnLogout.TextColor = Color.White;
-        btnLogout.HoverTextColor = Color.White;
+        searchDebounceTimer = new System.Windows.Forms.Timer { Interval = 300 };
+        searchDebounceTimer.Tick += SearchDebounceTimer_Tick;
 
-        btnLogoutNav.ButtonType = HopeButtonType.Primary;
-        btnLogoutNav.PrimaryColor = Color.FromArgb(190, 60, 60);
-        btnLogoutNav.TextColor = Color.White;
-        btnLogoutNav.HoverTextColor = Color.White;
+        this.FormClosing += (_, _) =>
+        {
+            searchDebounceTimer?.Stop();
+            searchDebounceTimer?.Dispose();
+        };
     }
 
     private void btnLogout_Click(object? sender, EventArgs e) => this.Close();
@@ -116,41 +127,81 @@ public partial class FrmAdminDashboard : Form
         f.ShowDialog(this);
     }
 
-    private void btnNewOrder_Click(object? sender, EventArgs e)
+    private async void btnNewOrder_Click(object? sender, EventArgs e)
     {
+        DataCache.InvalidatePrefix("daily_report");
         var f = new Staff.FrmNewOrder();
-        if (f.ShowDialog(this) == DialogResult.OK) LoadDashboardData();
+        if (f.ShowDialog(this) == DialogResult.OK) await LoadDashboardDataAsync();
     }
 
-    private void btnRefresh_Click(object? sender, EventArgs e) => LoadDashboardData();
+    private async void btnRefresh_Click(object? sender, EventArgs e)
+    {
+        DataCache.InvalidatePrefix("daily_report");
+        await LoadDashboardDataAsync();
+    }
 
-    private void txtSearch_TextChanged(object? sender, EventArgs e) => FilterOrders(txtSearch.Text.Trim());
+    private void txtSearch_TextChanged(object? sender, EventArgs e)
+    {
+        searchDebounceTimer?.Stop();
+        searchDebounceTimer?.Start();
+    }
+
+    private void SearchDebounceTimer_Tick(object? sender, EventArgs e)
+    {
+        searchDebounceTimer?.Stop();
+        var query = pnlHeader.SearchBox.Text.Trim();
+        if (cachedOrders != null)
+        {
+            this.SafeInvoke(() => FilterOrders(query));
+        }
+    }
 
     private void dgvTodayOrders_CellDoubleClick(object? sender, DataGridViewCellEventArgs e) => OpenSelectedOrderDetail();
 
-    private void LoadDashboardData()
+    private async Task LoadDashboardDataAsync()
     {
-        var report = AppServices.Orders.GetDailyReport(DateTime.Today);
+        if (isLoading) return;
+        isLoading = true;
 
-        lblTotalToday.Text = report.TotalOrders.ToString();
-        lblSalesToday.Text = $"₱{report.TotalSales:N2}";
-        lblPending.Text = report.PendingOrders.ToString();
-        lblClaimed.Text = report.ClaimedOrders.ToString();
+        try
+        {
+            var cacheKey = $"daily_report_{DateTime.Today:yyyyMMdd}";
+            var report = await DataCache.GetOrAddAsync(cacheKey,
+                () => Task.Run(() => AppServices.Orders.GetDailyReport(DateTime.Today)),
+                TimeSpan.FromSeconds(30));
 
-        PopulateGrid(report.Orders);
+            cachedOrders = report.Orders.ToList();
+
+            this.SafeInvoke(() =>
+            {
+                lblTotalToday.Text = report.TotalOrders.ToString();
+                lblSalesToday.Text = $"₱{report.TotalSales:N2}";
+                lblPending.Text = report.PendingOrders.ToString();
+                lblClaimed.Text = report.ClaimedOrders.ToString();
+
+                lblLiveBadge.Text = $"● {report.TotalOrders} Live";
+
+                PopulateGrid(report.Orders);
+            });
+        }
+        finally
+        {
+            isLoading = false;
+        }
     }
 
     private void FilterOrders(string query)
     {
-        var report = AppServices.Orders.GetDailyReport(DateTime.Today);
+        if (cachedOrders == null) return;
+
         if (string.IsNullOrWhiteSpace(query))
         {
-            PopulateGrid(report.Orders);
+            PopulateGrid(cachedOrders);
         }
         else
         {
             var q = query.ToLower();
-            var filtered = report.Orders.Where(o =>
+            var filtered = cachedOrders.Where(o =>
                 o.OrderNumber.ToLower().Contains(q) ||
                 (o.CustomerName?.ToLower().Contains(q) ?? false) ||
                 o.Status.ToLower().Contains(q)).ToList();
@@ -177,7 +228,7 @@ public partial class FrmAdminDashboard : Form
             col.Visible = false;
     }
 
-    private void OpenSelectedOrderDetail()
+    private async void OpenSelectedOrderDetail()
     {
         if (dgvTodayOrders.SelectedRows.Count == 0) return;
         var row = dgvTodayOrders.SelectedRows[0];
@@ -188,7 +239,7 @@ public partial class FrmAdminDashboard : Form
             {
                 var f = new Staff.FrmOrderDetail(order);
                 f.ShowDialog(this);
-                LoadDashboardData();
+                await LoadDashboardDataAsync();
             }
         }
     }

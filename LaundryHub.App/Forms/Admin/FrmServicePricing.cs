@@ -15,12 +15,13 @@ public partial class FrmServicePricing : Form
         ResizeRedraw = true;
         UIThemeHelper.StyleStandardForm(this, pnlLeftCard);
         pnlLeftCard.SizeChanged += (s, e) => UIThemeHelper.ApplyRoundedRegion(pnlLeftCard, UIThemeHelper.ContentCardRadius);
-        pnlHeader.BackColor = Color.FromArgb(37, 78, 122);
-        lblTitle.BackColor = Color.FromArgb(37, 78, 122);
-        pnlContainer.BackColor = Color.FromArgb(240, 244, 248);
-        pnlRight.BackColor = Color.FromArgb(240, 244, 248);
+        pnlHeader.BackColor = UIThemeHelper.Navy;
+        lblTitle.BackColor = UIThemeHelper.Navy;
+        pnlContainer.BackColor = UIThemeHelper.Surface;
+        pnlRight.BackColor = UIThemeHelper.Surface;
         flpForm.BackColor = Color.White;
         UIThemeHelper.StyleDataGridView(dgvServices);
+        UIThemeHelper.EnableStatusPills(dgvServices);
         LoadServices();
     }
 
@@ -75,35 +76,42 @@ public partial class FrmServicePricing : Form
     {
         if (!ValidateForm()) return;
 
-        var name = txtServiceName.Text.Trim();
-        var price = decimal.Parse(txtPricePerKilo.Text.Trim());
-        var minWeight = decimal.Parse(txtMinWeight.Text.Trim());
-
-        if (_editingServiceId > 0 && _selectedService != null)
+        try
         {
-            _selectedService.ServiceName = name;
-            _selectedService.PricePerKilo = price;
-            _selectedService.MinimumWeight = minWeight;
-            _selectedService.IsActive = chkActive.Checked;
+            var name = txtServiceName.Text.Trim();
+            var price = Math.Round(decimal.Parse(txtPricePerKilo.Text.Trim()), 2, MidpointRounding.AwayFromZero);
+            var minWeight = Math.Round(decimal.Parse(txtMinWeight.Text.Trim()), 2, MidpointRounding.AwayFromZero);
 
-            AppServices.ServiceTypes.Update(_selectedService);
-            MessageBox.Show("Service type updated successfully!", "Success", MessageBoxButtons.OK, MessageBoxIcon.Information);
-        }
-        else
-        {
-            var newService = new ServiceType
+            if (_editingServiceId > 0 && _selectedService != null)
             {
-                ServiceName = name,
-                PricePerKilo = price,
-                MinimumWeight = minWeight,
-                IsActive = chkActive.Checked
-            };
-            AppServices.ServiceTypes.Add(newService);
-            MessageBox.Show($"New service '{name}' created!", "Success", MessageBoxButtons.OK, MessageBoxIcon.Information);
-        }
+                _selectedService.ServiceName = name;
+                _selectedService.PricePerKilo = price;
+                _selectedService.MinimumWeight = minWeight;
+                _selectedService.IsActive = chkActive.Checked;
 
-        LoadServices();
-        ResetForm();
+                AppServices.ServiceTypes.Update(_selectedService);
+                MessageBox.Show("Service type updated successfully!", "Success", MessageBoxButtons.OK, MessageBoxIcon.Information);
+            }
+            else
+            {
+                var newService = new ServiceType
+                {
+                    ServiceName = name,
+                    PricePerKilo = price,
+                    MinimumWeight = minWeight,
+                    IsActive = chkActive.Checked
+                };
+                AppServices.ServiceTypes.Add(newService);
+                MessageBox.Show($"New service '{name}' created!", "Success", MessageBoxButtons.OK, MessageBoxIcon.Information);
+            }
+
+            LoadServices();
+            ResetForm();
+        }
+        catch (Exception ex)
+        {
+            ShowError($"Database error: {ex.Message}");
+        }
     }
 
     private void btnToggleActive_Click(object? sender, EventArgs e)
@@ -114,10 +122,17 @@ public partial class FrmServicePricing : Form
             return;
         }
 
-        bool newStatus = !_selectedService.IsActive;
-        AppServices.ServiceTypes.SetActive(_selectedService.ServiceId, newStatus);
-        LoadServices();
-        MessageBox.Show($"Service '{_selectedService.ServiceName}' is now {(newStatus ? "Active" : "Disabled")}.", "Status Changed", MessageBoxButtons.OK, MessageBoxIcon.Information);
+        try
+        {
+            bool newStatus = !_selectedService.IsActive;
+            AppServices.ServiceTypes.SetActive(_selectedService.ServiceId, newStatus);
+            LoadServices();
+            MessageBox.Show($"Service '{_selectedService.ServiceName}' is now {(newStatus ? "Active" : "Disabled")}.", "Status Changed", MessageBoxButtons.OK, MessageBoxIcon.Information);
+        }
+        catch (Exception ex)
+        {
+            MessageBox.Show($"Failed to change service status: {ex.Message}", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+        }
     }
 
     private void ResetForm()

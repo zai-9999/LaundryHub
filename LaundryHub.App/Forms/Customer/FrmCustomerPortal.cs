@@ -1,6 +1,7 @@
 using LaundryHub.App.Helpers;
 using LaundryHub.Core.Models;
 using System.Drawing.Drawing2D;
+using System.Threading.Tasks;
 
 namespace LaundryHub.App.Forms.Customer;
 
@@ -8,54 +9,78 @@ public partial class FrmCustomerPortal : Form
 {
     private Core.Models.Customer? _customer;
     private readonly User _user;
+    private bool isLoading = false;
 
     public FrmCustomerPortal()
     {
         InitializeComponent();
         DoubleBuffered = true;
         ResizeRedraw = true;
-        UIThemeHelper.StyleStandardForm(this, pnlBody);
-        pnlBody.SizeChanged += (s, e) => UIThemeHelper.ApplyRoundedRegion(pnlBody, UIThemeHelper.ContentCardRadius);
+
         UIThemeHelper.StyleDataGridView(dgvOrders);
+        UIThemeHelper.EnableStatusPills(dgvOrders);
+
+        // Sidebar Branding & Navigation
+        pnlSidebar.BrandLabel.Text = "🧺 LaundryHub";
+        pnlSidebar.BrandSubtitle.Text = "CUSTOMER PORTAL";
+
+        pnlSidebar.AddSection("GENERAL");
+        var btnNavOrders = pnlSidebar.AddNavButton("📋", "My Laundry Orders");
+        btnNavOrders.IsActive = true;
+
+        pnlSidebar.AddSection("SERVICES");
+        pnlSidebar.AddNavButton("➕", "Book New Laundry", btnBookOrder_Click);
+        pnlSidebar.AddNavButton("👤", "My Profile & Info", btnProfile_Click);
+        pnlSidebar.AddNavButton("🧾", "View E-Ticket", BtnViewTicket_Click);
+
+        pnlSidebar.AddSection("SYSTEM");
+        pnlSidebar.AddNavButton("🔄", "Refresh Status", async (s, e) =>
+        {
+            if (_customer != null)
+            {
+                DataCache.Invalidate($"customer_orders_{_customer.CustomerId}");
+                await LoadOrdersAsync();
+            }
+        });
+        pnlSidebar.AddNavButton("🚪", "Sign Out", btnLogout_Click);
+
+        // Header Setup
+        pnlHeader.Title = "My Laundry Portal";
+        pnlHeader.Subtitle = "TRACK LAUNDRY PROGRESS, PICKUP STATUS & BOOK ONLINE";
+        pnlHeader.SearchBox.Hint = "Search order number...";
+        pnlHeader.ActionButton.Text = "➕ Book";
+        pnlHeader.ActionButton.PrimaryColor = UIThemeHelper.Indigo;
+        pnlHeader.ActionButton.Click += btnBookOrder_Click;
 
         if (SessionManager.CurrentUser != null)
         {
             _user = SessionManager.CurrentUser;
-            _customer = AppServices.Customers.GetByUserId(_user.UserId);
-            lblWelcome.Text = $"Welcome, {_customer?.FullName ?? _user.FullName}!";
-            LoadOrders();
+            pnlHeader.UserName = _user.FullName;
+            pnlHeader.UserRole = "Valued Customer";
+            this.Shown += async (_, _) => await LoadCustomerDataAsync();
         }
         else
         {
             _user = new User { FullName = "Customer" };
         }
+
+        this.FormClosing += (_, _) => isLoading = false;
     }
 
-    protected override void OnPaintBackground(PaintEventArgs e)
-    {
-        base.OnPaintBackground(e);
-        UIThemeHelper.PaintGradientBackground(this, e);
-    }
-
-    private void pnlBody_Paint(object sender, PaintEventArgs e)
-    {
-        UIThemeHelper.PaintRoundedSolidCard(pnlBody, e, Color.White, 16);
-    }
-
-    private void btnProfile_Click(object? sender, EventArgs e)
+    private async void btnProfile_Click(object? sender, EventArgs e)
     {
         if (_customer != null)
         {
             var f = new FrmUpdateProfile(_customer, _user);
             if (f.ShowDialog(this) == DialogResult.OK)
             {
-                _customer = AppServices.Customers.GetByUserId(_user.UserId);
-                lblWelcome.Text = $"Welcome, {_customer?.FullName ?? _user.FullName}!";
+                DataCache.Invalidate($"customer_{_user.UserId}");
+                await LoadCustomerDataAsync();
             }
         }
     }
 
-    private void btnBookOrder_Click(object? sender, EventArgs e)
+    private async void btnBookOrder_Click(object? sender, EventArgs e)
     {
         if (_customer == null)
         {
@@ -66,7 +91,8 @@ public partial class FrmCustomerPortal : Form
         var bookForm = new FrmBookOrder(_customer, _user);
         if (bookForm.ShowDialog(this) == DialogResult.OK && bookForm.CreatedOrder != null)
         {
-            LoadOrders();
+            DataCache.Invalidate($"customer_orders_{_customer.CustomerId}");
+            await LoadOrdersAsync();
             ShowTicketModal(bookForm.CreatedOrder);
         }
     }
@@ -76,9 +102,12 @@ public partial class FrmCustomerPortal : Form
         this.Close();
     }
 
-    private void chkActiveOnly_CheckedChanged(object? sender, EventArgs e)
+    private async void chkActiveOnly_CheckedChanged(object? sender, EventArgs e)
     {
-        LoadOrders();
+        if (_customer != null)
+        {
+            await LoadOrdersAsync();
+        }
     }
 
     private void dgvOrders_CellDoubleClick(object? sender, DataGridViewCellEventArgs e)
@@ -86,37 +115,82 @@ public partial class FrmCustomerPortal : Form
         BtnViewTicket_Click(null, EventArgs.Empty);
     }
 
-    private void LoadOrders()
+    private async Task LoadCustomerDataAsync()
+    {
+        if (isLoading) return;
+        isLoading = true;
+
+        try
+        {
+            var cacheKey = $"customer_{_user.UserId}";
+            _customer = await DataCache.GetOrAddAsync(cacheKey,
+                () => Task.Run(() => AppServices.Customers.GetByUserId(_user.UserId)),
+                TimeSpan.FromSeconds(30));
+
+            this.SafeInvoke(() =>
+            {
+                pnlHeader.UserName = _customer?.FullName ?? _user.FullName;
+            });
+
+            await LoadOrdersAsync();
+        }
+        finally
+        {
+            isLoading = false;
+        }
+    }
+
+    private async Task LoadOrdersAsync()
     {
         if (_customer == null) return;
 
-        var orders = AppServices.Orders.GetByCustomer(_customer.CustomerId).ToList();
+        var cacheKey = $"customer_orders_{_customer.CustomerId}";
+        var orders = await DataCache.GetOrAddAsync(cacheKey,
+            () => Task.Run(() => AppServices.Orders.GetByCustomer(_customer.CustomerId).ToList()),
+            TimeSpan.FromSeconds(30));
 
-        // Update stats
-        lblActiveStat.Text = orders.Count(o => o.Status is "Washing" or "Drying").ToString();
-        lblReadyStat.Text = orders.Count(o => o.Status == "Ready for Pickup").ToString();
-        lblTotalStat.Text = orders.Count.ToString();
-
-        if (chkActiveOnly.Checked)
+        this.SafeInvoke(() =>
         {
-            orders = orders.Where(o => o.Status is "Washing" or "Drying" or "Ready for Pickup").ToList();
-        }
+            // Update stats
+            lblActiveStat.Text = orders.Count(o => o.Status is "Washing" or "Drying").ToString();
+            lblReadyStat.Text = orders.Count(o => o.Status == "Ready for Pickup").ToString();
+            lblTotalStat.Text = orders.Count.ToString();
 
-        dgvOrders.DataSource = orders.Select(o => new
-        {
-            o.OrderId,
-            Order_No = o.OrderNumber,
-            Service = o.ServiceName ?? "Laundry",
-            Weight = $"{o.WeightKg} kg",
-            Total = $"₱{o.TotalAmount:N2}",
-            Payment = o.PaymentRecorded ? "Paid" : "Unpaid",
-            o.Status,
-            Pickup_Date = o.PickupDate?.ToString("MMM dd, yyyy") ?? "—",
-            Date_Placed = o.CreatedAt.ToString("MMM dd, yyyy")
-        }).ToList();
+            var filteredOrders = orders;
+            if (chkActiveOnly.Checked)
+            {
+                filteredOrders = orders.Where(o => o.Status is "Washing" or "Drying" or "Ready for Pickup").ToList();
+            }
 
-        if (dgvOrders.Columns["OrderId"] is { } col)
-            col.Visible = false;
+            dgvOrders.DataSource = filteredOrders.Select(o => new
+            {
+                o.OrderId,
+                Order_No = o.OrderNumber,
+                Service = o.ServiceName ?? "Laundry",
+                Weight = $"{o.WeightKg} kg",
+                Total = $"₱{o.TotalAmount:N2}",
+                Payment = o.PaymentRecorded ? "Paid" : "Unpaid",
+                o.Status,
+                Pickup_Date = o.PickupDate?.ToString("MMM dd, yyyy") ?? "—",
+                Date_Placed = o.CreatedAt.ToString("MMM dd, yyyy")
+            }).ToList();
+
+            if (dgvOrders.Columns["OrderId"] is { } col)
+                col.Visible = false;
+
+            void SetWeight(string name, float weight)
+            {
+                if (dgvOrders.Columns[name] is { } c) c.FillWeight = weight;
+            }
+            SetWeight("Order_No", 160);
+            SetWeight("Service", 110);
+            SetWeight("Weight", 80);
+            SetWeight("Total", 90);
+            SetWeight("Payment", 90);
+            SetWeight("Status", 120);
+            SetWeight("Pickup_Date", 105);
+            SetWeight("Date_Placed", 105);
+        });
     }
 
     private void BtnViewTicket_Click(object? sender, EventArgs e)
@@ -141,7 +215,7 @@ public partial class FrmCustomerPortal : Form
             Size = new Size(380, 480),
             StartPosition = FormStartPosition.CenterParent,
             BackColor = Color.White,
-            ForeColor = Color.FromArgb(30, 41, 59),
+            ForeColor = UIThemeHelper.Navy,
             FormBorderStyle = FormBorderStyle.FixedDialog,
             MaximizeBox = false,
             MinimizeBox = false
@@ -161,7 +235,7 @@ public partial class FrmCustomerPortal : Form
         {
             Text = order.OrderNumber,
             Font = new Font("Segoe UI", 13, FontStyle.Bold),
-            ForeColor = Color.FromArgb(37, 78, 122),
+            ForeColor = UIThemeHelper.Navy,
             Location = new Point(20, 230),
             Size = new Size(330, 25),
             TextAlign = ContentAlignment.MiddleCenter
@@ -171,7 +245,7 @@ public partial class FrmCustomerPortal : Form
         {
             Text = $"Status: {order.Status.ToUpper()}",
             Font = new Font("Segoe UI", 10, FontStyle.Bold),
-            ForeColor = Color.FromArgb(51, 104, 160),
+            ForeColor = UIThemeHelper.Indigo,
             Location = new Point(20, 260),
             Size = new Size(330, 22),
             TextAlign = ContentAlignment.MiddleCenter
@@ -181,7 +255,7 @@ public partial class FrmCustomerPortal : Form
         {
             Text = $"Service: {order.ServiceName} ({order.WeightKg} kg)\nTotal Amount: ₱{order.TotalAmount:N2} ({(order.PaymentRecorded ? "Paid" : "Unpaid")})\nTarget Pickup: {order.PickupDate:MMMM dd, yyyy}",
             Font = new Font("Segoe UI", 9),
-            ForeColor = Color.FromArgb(71, 85, 105),
+            ForeColor = UIThemeHelper.Indigo,
             Location = new Point(20, 290),
             Size = new Size(330, 65),
             TextAlign = ContentAlignment.MiddleCenter
@@ -192,7 +266,7 @@ public partial class FrmCustomerPortal : Form
             Text = "Close Ticket",
             Location = new Point(100, 380),
             Size = new Size(170, 36),
-            BackColor = Color.FromArgb(37, 78, 122),
+            BackColor = UIThemeHelper.Navy,
             ForeColor = Color.White,
             FlatStyle = FlatStyle.Flat,
             Font = new Font("Segoe UI", 9.5f, FontStyle.Bold),

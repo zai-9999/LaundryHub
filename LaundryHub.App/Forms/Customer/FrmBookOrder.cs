@@ -67,14 +67,15 @@ public partial class FrmBookOrder : Form
         lblServiceRateBadge.Text = $"Rate: ₱{svc.PricePerKilo:N2} / kg  (Min. {svc.MinimumWeight:F1} kg)";
         lblPriceRate.Text = $"Rate: ₱{svc.PricePerKilo:N2} per kilo";
 
-        if (!decimal.TryParse(txtWeight.Text.Trim(), out var kg) || kg <= 0)
+        if (!decimal.TryParse(txtWeight.Text.Trim(), out var rawKg) || rawKg <= 0)
         {
             lblBillableWeight.Text = "Billed weight: 0.0 kg";
             lblTotalAmount.Text = "₱0.00";
             return;
         }
 
-        decimal billable = Math.Max(kg, svc.MinimumWeight);
+        decimal kg = Math.Round(rawKg, 2, MidpointRounding.AwayFromZero);
+        decimal billable = Math.Max(kg, Math.Round(svc.MinimumWeight, 2, MidpointRounding.AwayFromZero));
         decimal total = svc.ComputePrice(kg);
 
         lblBillableWeight.Text = $"Billed weight: {billable:F1} kg {(kg < svc.MinimumWeight ? "(minimum load applied)" : "")}";
@@ -111,12 +112,14 @@ public partial class FrmBookOrder : Form
             return;
         }
 
-        if (!decimal.TryParse(txtWeight.Text.Trim(), out var kg) || kg <= 0)
+        if (!decimal.TryParse(txtWeight.Text.Trim(), out var rawKg) || rawKg <= 0)
         {
             ShowError("Please enter a valid estimated weight in kilograms.");
             txtWeight.Focus();
             return;
         }
+
+        var kg = Math.Round(rawKg, 2, MidpointRounding.AwayFromZero);
 
         if (kg > 100)
         {

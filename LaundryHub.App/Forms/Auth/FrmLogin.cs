@@ -53,6 +53,8 @@ public partial class FrmLogin : Form
             lblError, btnLogin,
             lnkForgotPassword, lblSeparator,
             btnSwitchToCustomer);
+        txtPassword.Width = 280;
+        btnTogglePassword.Location = new Point(txtPassword.Right + 6, txtPassword.Top + (txtPassword.Height - btnTogglePassword.Height) / 2);
         lblError.TextAlign = ContentAlignment.MiddleCenter;
     }
 
@@ -63,33 +65,40 @@ public partial class FrmLogin : Form
         var username = txtUsername.Text.Trim();
         var password = txtPassword.Text;
 
-        var user = AppServices.Users.GetByUsername(username);
-
-        if (user == null || string.IsNullOrWhiteSpace(user.PasswordHash) || !BCrypt.Net.BCrypt.Verify(password, user.PasswordHash))
+        try
         {
-            ShowError("Invalid username or password.");
-            txtPassword.Clear();
-            txtPassword.Focus();
-            return;
-        }
+            var user = AppServices.Users.GetByUsername(username);
 
-        if (!user.IsActive)
+            if (user == null || string.IsNullOrWhiteSpace(user.PasswordHash) || !BCrypt.Net.BCrypt.Verify(password, user.PasswordHash))
+            {
+                ShowError("Invalid username or password.");
+                txtPassword.Clear();
+                txtPassword.Focus();
+                return;
+            }
+
+            if (!user.IsActive)
+            {
+                ShowError("Your account has been deactivated. Please contact the administrator.");
+                return;
+            }
+
+            SessionManager.Login(user);
+
+            if (user.Role == UserRole.Customer.ToString())
+            {
+                SessionManager.Logout();
+                ShowError("This portal is for Staff & Admin only. Please use the Customer Portal.");
+                txtPassword.Clear();
+                return;
+            }
+
+            OpenDashboard();
+        }
+        catch (Exception ex)
         {
-            ShowError("Your account has been deactivated. Please contact the administrator.");
-            return;
+            ShowError($"Login error: {ex.Message}");
         }
-
-        SessionManager.Login(user);
-
-        if (user.Role == UserRole.Customer.ToString())
-        {
-            SessionManager.Logout();
-            ShowError("This portal is for Staff & Admin only. Please use the Customer Portal.");
-            txtPassword.Clear();
-            return;
-        }
-
-        OpenDashboard();
     }
 
     private void btnSwitchToCustomer_Click(object? sender, EventArgs e)
@@ -104,6 +113,22 @@ public partial class FrmLogin : Form
     {
         MessageBox.Show("Please contact your administrator to reset your password.",
             "Forgot Password", MessageBoxButtons.OK, MessageBoxIcon.Information);
+    }
+
+    private void btnTogglePassword_Click(object? sender, EventArgs e)
+    {
+        if (txtPassword.UseSystemPasswordChar)
+        {
+            txtPassword.UseSystemPasswordChar = false;
+            txtPassword.PasswordChar = '\0';
+            btnTogglePassword.Text = "🙈";
+        }
+        else
+        {
+            txtPassword.UseSystemPasswordChar = true;
+            txtPassword.PasswordChar = '●';
+            btnTogglePassword.Text = "👁";
+        }
     }
 
     private void OpenDashboard()

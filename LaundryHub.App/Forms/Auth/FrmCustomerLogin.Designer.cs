@@ -1,7 +1,8 @@
-using ReaLTaiizor;
+﻿using ReaLTaiizor;
 using ReaLTaiizor.Controls;
 using ReaLTaiizor.Util;
 using System.IO;
+using Button = System.Windows.Forms.Button;
 
 namespace LaundryHub.App.Forms.Auth;
 
@@ -28,6 +29,7 @@ partial class FrmCustomerLogin
         txtUsername = new HopeTextBox();
         lblPass = new Label();
         txtPassword = new HopeTextBox();
+        btnTogglePassword = new Button();
         lblError = new Label();
         btnLogin = new HopeButton();
         lblSeparator = new Label();
@@ -49,6 +51,7 @@ partial class FrmCustomerLogin
         pnlCard.Controls.Add(txtUsername);
         pnlCard.Controls.Add(lblPass);
         pnlCard.Controls.Add(txtPassword);
+        pnlCard.Controls.Add(btnTogglePassword);
         pnlCard.Controls.Add(lblError);
         pnlCard.Controls.Add(btnLogin);
         pnlCard.Controls.Add(lblSeparator);
@@ -76,7 +79,7 @@ partial class FrmCustomerLogin
         // lblTitle
         // 
         lblTitle.Font = new Font("Segoe UI", 22F, FontStyle.Bold);
-        lblTitle.ForeColor = Color.FromArgb(51, 104, 160);
+        lblTitle.ForeColor = Color.FromArgb(75, 86, 148);
         lblTitle.Location = new Point(0, 96);
         lblTitle.Name = "lblTitle";
         lblTitle.Size = new Size(445, 48);
@@ -87,7 +90,7 @@ partial class FrmCustomerLogin
         // lblSubtitle
         // 
         lblSubtitle.Font = new Font("Segoe UI", 9F);
-        lblSubtitle.ForeColor = Color.FromArgb(102, 163, 191);
+        lblSubtitle.ForeColor = Color.FromArgb(114, 136, 174);
         lblSubtitle.Location = new Point(0, 147);
         lblSubtitle.Name = "lblSubtitle";
         lblSubtitle.Size = new Size(445, 27);
@@ -99,7 +102,7 @@ partial class FrmCustomerLogin
         // 
         lblUser.AutoSize = true;
         lblUser.Font = new Font("Segoe UI", 8.5F, FontStyle.Bold);
-        lblUser.ForeColor = Color.FromArgb(51, 104, 160);
+        lblUser.ForeColor = Color.FromArgb(75, 86, 148);
         lblUser.Location = new Point(62, 195);
         lblUser.Name = "lblUser";
         lblUser.Size = new Size(80, 20);
@@ -110,10 +113,10 @@ partial class FrmCustomerLogin
         // 
         txtUsername.BackColor = Color.White;
         txtUsername.BaseColor = Color.White;
-        txtUsername.BorderColorA = Color.FromArgb(102, 163, 191);
-        txtUsername.BorderColorB = Color.FromArgb(200, 223, 219);
+        txtUsername.BorderColorA = Color.FromArgb(75, 86, 148);
+        txtUsername.BorderColorB = Color.FromArgb(190, 196, 220);
         txtUsername.Font = new Font("Segoe UI", 10F);
-        txtUsername.ForeColor = Color.FromArgb(51, 104, 160);
+        txtUsername.ForeColor = Color.FromArgb(75, 86, 148);
         txtUsername.Hint = "Enter username";
         txtUsername.Location = new Point(62, 221);
         txtUsername.Margin = new Padding(3, 4, 3, 4);
@@ -134,7 +137,7 @@ partial class FrmCustomerLogin
         // 
         lblPass.AutoSize = true;
         lblPass.Font = new Font("Segoe UI", 8.5F, FontStyle.Bold);
-        lblPass.ForeColor = Color.FromArgb(51, 104, 160);
+        lblPass.ForeColor = Color.FromArgb(75, 86, 148);
         lblPass.Location = new Point(62, 283);
         lblPass.Name = "lblPass";
         lblPass.Size = new Size(76, 20);
@@ -145,10 +148,10 @@ partial class FrmCustomerLogin
         // 
         txtPassword.BackColor = Color.White;
         txtPassword.BaseColor = Color.White;
-        txtPassword.BorderColorA = Color.FromArgb(102, 163, 191);
-        txtPassword.BorderColorB = Color.FromArgb(200, 223, 219);
+        txtPassword.BorderColorA = Color.FromArgb(75, 86, 148);
+        txtPassword.BorderColorB = Color.FromArgb(190, 196, 220);
         txtPassword.Font = new Font("Segoe UI", 10F);
-        txtPassword.ForeColor = Color.FromArgb(51, 104, 160);
+        txtPassword.ForeColor = Color.FromArgb(75, 86, 148);
         txtPassword.Hint = "Enter password";
         txtPassword.Location = new Point(62, 309);
         txtPassword.Margin = new Padding(3, 4, 3, 4);
@@ -160,15 +163,30 @@ partial class FrmCustomerLogin
         txtPassword.SelectedText = "";
         txtPassword.SelectionLength = 0;
         txtPassword.SelectionStart = 0;
-        txtPassword.Size = new Size(320, 39);
+        txtPassword.Size = new Size(280, 39);
         txtPassword.TabIndex = 2;
         txtPassword.TabStop = false;
         txtPassword.UseSystemPasswordChar = true;
-        // 
+        //
+        // btnTogglePassword
+        //
+        btnTogglePassword.BackColor = Color.Transparent;
+        btnTogglePassword.FlatAppearance.BorderSize = 0;
+        btnTogglePassword.FlatStyle = FlatStyle.Flat;
+        btnTogglePassword.Font = new Font("Segoe UI", 9F);
+        btnTogglePassword.ForeColor = Color.FromArgb(114, 136, 174);
+        btnTogglePassword.Location = new Point(348, 312);
+        btnTogglePassword.Name = "btnTogglePassword";
+        btnTogglePassword.Size = new Size(34, 33);
+        btnTogglePassword.TabIndex = 8;
+        btnTogglePassword.Text = "👁";
+        btnTogglePassword.UseVisualStyleBackColor = false;
+        btnTogglePassword.Click += btnTogglePassword_Click;
+        //
         // lblError
         // 
         lblError.Font = new Font("Segoe UI", 8.5F);
-        lblError.ForeColor = Color.FromArgb(220, 53, 69);
+        lblError.ForeColor = Color.FromArgb(184, 72, 88);
         lblError.Location = new Point(62, 355);
         lblError.Name = "lblError";
         lblError.Size = new Size(320, 24);
@@ -178,30 +196,30 @@ partial class FrmCustomerLogin
         // 
         // btnLogin
         // 
-        btnLogin.BorderColor = Color.FromArgb(220, 223, 230);
+        btnLogin.BorderColor = Color.FromArgb(232, 227, 218);
         btnLogin.ButtonType = HopeButtonType.Primary;
         btnLogin.Cursor = Cursors.Hand;
-        btnLogin.DangerColor = Color.FromArgb(245, 108, 108);
+        btnLogin.DangerColor = Color.FromArgb(184, 72, 88);
         btnLogin.DefaultColor = Color.FromArgb(255, 255, 255);
         btnLogin.Font = new Font("Segoe UI", 10F, FontStyle.Bold);
         btnLogin.HoverTextColor = Color.White;
-        btnLogin.InfoColor = Color.FromArgb(144, 147, 153);
+        btnLogin.InfoColor = Color.FromArgb(130, 138, 165);
         btnLogin.Location = new Point(62, 387);
         btnLogin.Margin = new Padding(3, 4, 3, 4);
         btnLogin.Name = "btnLogin";
-        btnLogin.PrimaryColor = Color.FromArgb(51, 104, 160);
+        btnLogin.PrimaryColor = Color.FromArgb(75, 86, 148);
         btnLogin.Size = new Size(320, 53);
-        btnLogin.SuccessColor = Color.FromArgb(103, 194, 58);
+        btnLogin.SuccessColor = Color.FromArgb(74, 160, 120);
         btnLogin.TabIndex = 3;
         btnLogin.Text = "Sign In";
         btnLogin.TextColor = Color.White;
-        btnLogin.WarningColor = Color.FromArgb(230, 162, 60);
+        btnLogin.WarningColor = Color.FromArgb(214, 160, 80);
         btnLogin.Click += btnLogin_Click;
         // 
         // lblSeparator
         // 
         lblSeparator.Font = new Font("Segoe UI", 8F);
-        lblSeparator.ForeColor = Color.FromArgb(51, 104, 160);
+        lblSeparator.ForeColor = Color.FromArgb(75, 86, 148);
         lblSeparator.Location = new Point(0, 450);
         lblSeparator.Name = "lblSeparator";
         lblSeparator.Size = new Size(445, 24);
@@ -211,97 +229,97 @@ partial class FrmCustomerLogin
         // 
         // btnRegister
         // 
-        btnRegister.BorderColor = Color.FromArgb(102, 163, 191);
+        btnRegister.BorderColor = Color.FromArgb(114, 136, 174);
         btnRegister.ButtonType = HopeButtonType.Default;
         btnRegister.Cursor = Cursors.Hand;
-        btnRegister.DangerColor = Color.FromArgb(245, 108, 108);
-        btnRegister.DefaultColor = Color.FromArgb(200, 223, 219);
+        btnRegister.DangerColor = Color.FromArgb(184, 72, 88);
+        btnRegister.DefaultColor = Color.FromArgb(234, 224, 207);
         btnRegister.Font = new Font("Segoe UI", 9.5F, FontStyle.Bold);
-        btnRegister.HoverTextColor = Color.FromArgb(51, 104, 160);
-        btnRegister.InfoColor = Color.FromArgb(144, 147, 153);
+        btnRegister.HoverTextColor = Color.FromArgb(75, 86, 148);
+        btnRegister.InfoColor = Color.FromArgb(130, 138, 165);
         btnRegister.Location = new Point(62, 475);
         btnRegister.Margin = new Padding(3, 4, 3, 4);
         btnRegister.Name = "btnRegister";
-        btnRegister.PrimaryColor = Color.FromArgb(64, 158, 255);
+        btnRegister.PrimaryColor = Color.FromArgb(114, 136, 174);
         btnRegister.Size = new Size(320, 48);
-        btnRegister.SuccessColor = Color.FromArgb(103, 194, 58);
+        btnRegister.SuccessColor = Color.FromArgb(74, 160, 120);
         btnRegister.TabIndex = 4;
         btnRegister.Text = "Register as Customer";
-        btnRegister.TextColor = Color.FromArgb(51, 104, 160);
-        btnRegister.WarningColor = Color.FromArgb(230, 162, 60);
+        btnRegister.TextColor = Color.FromArgb(75, 86, 148);
+        btnRegister.WarningColor = Color.FromArgb(214, 160, 80);
         btnRegister.Click += btnRegister_Click;
         // 
         // btnPricing
         // 
-        btnPricing.BorderColor = Color.FromArgb(102, 163, 191);
+        btnPricing.BorderColor = Color.FromArgb(114, 136, 174);
         btnPricing.ButtonType = HopeButtonType.Default;
         btnPricing.Cursor = Cursors.Hand;
-        btnPricing.DangerColor = Color.FromArgb(245, 108, 108);
-        btnPricing.DefaultColor = Color.FromArgb(242, 239, 231);
+        btnPricing.DangerColor = Color.FromArgb(184, 72, 88);
+        btnPricing.DefaultColor = Color.FromArgb(246, 242, 234);
         btnPricing.Font = new Font("Segoe UI", 9.5F, FontStyle.Bold);
-        btnPricing.HoverTextColor = Color.FromArgb(51, 104, 160);
-        btnPricing.InfoColor = Color.FromArgb(144, 147, 153);
+        btnPricing.HoverTextColor = Color.FromArgb(75, 86, 148);
+        btnPricing.InfoColor = Color.FromArgb(130, 138, 165);
         btnPricing.Location = new Point(62, 530);
         btnPricing.Margin = new Padding(3, 4, 3, 4);
         btnPricing.Name = "btnPricing";
-        btnPricing.PrimaryColor = Color.FromArgb(64, 158, 255);
+        btnPricing.PrimaryColor = Color.FromArgb(114, 136, 174);
         btnPricing.Size = new Size(320, 48);
-        btnPricing.SuccessColor = Color.FromArgb(103, 194, 58);
+        btnPricing.SuccessColor = Color.FromArgb(74, 160, 120);
         btnPricing.TabIndex = 5;
         btnPricing.Text = "View Services & Pricing";
-        btnPricing.TextColor = Color.FromArgb(51, 104, 160);
-        btnPricing.WarningColor = Color.FromArgb(230, 162, 60);
+        btnPricing.TextColor = Color.FromArgb(75, 86, 148);
+        btnPricing.WarningColor = Color.FromArgb(214, 160, 80);
         btnPricing.Click += btnPricing_Click;
         // 
         // btnGuestLookup
         // 
-        btnGuestLookup.BorderColor = Color.FromArgb(102, 163, 191);
+        btnGuestLookup.BorderColor = Color.FromArgb(114, 136, 174);
         btnGuestLookup.ButtonType = HopeButtonType.Default;
         btnGuestLookup.Cursor = Cursors.Hand;
-        btnGuestLookup.DangerColor = Color.FromArgb(245, 108, 108);
-        btnGuestLookup.DefaultColor = Color.FromArgb(200, 223, 219);
+        btnGuestLookup.DangerColor = Color.FromArgb(184, 72, 88);
+        btnGuestLookup.DefaultColor = Color.FromArgb(234, 224, 207);
         btnGuestLookup.Font = new Font("Segoe UI", 9.5F, FontStyle.Bold);
-        btnGuestLookup.HoverTextColor = Color.FromArgb(51, 104, 160);
-        btnGuestLookup.InfoColor = Color.FromArgb(144, 147, 153);
+        btnGuestLookup.HoverTextColor = Color.FromArgb(75, 86, 148);
+        btnGuestLookup.InfoColor = Color.FromArgb(130, 138, 165);
         btnGuestLookup.Location = new Point(62, 585);
         btnGuestLookup.Margin = new Padding(3, 4, 3, 4);
         btnGuestLookup.Name = "btnGuestLookup";
-        btnGuestLookup.PrimaryColor = Color.FromArgb(64, 158, 255);
+        btnGuestLookup.PrimaryColor = Color.FromArgb(114, 136, 174);
         btnGuestLookup.Size = new Size(320, 48);
-        btnGuestLookup.SuccessColor = Color.FromArgb(103, 194, 58);
+        btnGuestLookup.SuccessColor = Color.FromArgb(74, 160, 120);
         btnGuestLookup.TabIndex = 6;
         btnGuestLookup.Text = "Check Order Status (No Account)";
-        btnGuestLookup.TextColor = Color.FromArgb(51, 104, 160);
-        btnGuestLookup.WarningColor = Color.FromArgb(230, 162, 60);
+        btnGuestLookup.TextColor = Color.FromArgb(75, 86, 148);
+        btnGuestLookup.WarningColor = Color.FromArgb(214, 160, 80);
         btnGuestLookup.Click += btnGuestLookup_Click;
         // 
         // btnSwitchToStaff
         // 
-        btnSwitchToStaff.BorderColor = Color.FromArgb(102, 163, 191);
+        btnSwitchToStaff.BorderColor = Color.FromArgb(114, 136, 174);
         btnSwitchToStaff.ButtonType = HopeButtonType.Default;
         btnSwitchToStaff.Cursor = Cursors.Hand;
-        btnSwitchToStaff.DangerColor = Color.FromArgb(245, 108, 108);
-        btnSwitchToStaff.DefaultColor = Color.FromArgb(200, 223, 219);
+        btnSwitchToStaff.DangerColor = Color.FromArgb(184, 72, 88);
+        btnSwitchToStaff.DefaultColor = Color.FromArgb(234, 224, 207);
         btnSwitchToStaff.Font = new Font("Segoe UI", 9.5F, FontStyle.Bold);
-        btnSwitchToStaff.HoverTextColor = Color.FromArgb(51, 104, 160);
-        btnSwitchToStaff.InfoColor = Color.FromArgb(144, 147, 153);
+        btnSwitchToStaff.HoverTextColor = Color.FromArgb(75, 86, 148);
+        btnSwitchToStaff.InfoColor = Color.FromArgb(130, 138, 165);
         btnSwitchToStaff.Location = new Point(62, 640);
         btnSwitchToStaff.Margin = new Padding(3, 4, 3, 4);
         btnSwitchToStaff.Name = "btnSwitchToStaff";
-        btnSwitchToStaff.PrimaryColor = Color.FromArgb(64, 158, 255);
+        btnSwitchToStaff.PrimaryColor = Color.FromArgb(114, 136, 174);
         btnSwitchToStaff.Size = new Size(320, 48);
-        btnSwitchToStaff.SuccessColor = Color.FromArgb(103, 194, 58);
+        btnSwitchToStaff.SuccessColor = Color.FromArgb(74, 160, 120);
         btnSwitchToStaff.TabIndex = 7;
         btnSwitchToStaff.Text = "Switch to Staff / Admin Portal";
-        btnSwitchToStaff.TextColor = Color.FromArgb(51, 104, 160);
-        btnSwitchToStaff.WarningColor = Color.FromArgb(230, 162, 60);
+        btnSwitchToStaff.TextColor = Color.FromArgb(75, 86, 148);
+        btnSwitchToStaff.WarningColor = Color.FromArgb(214, 160, 80);
         btnSwitchToStaff.Click += btnSwitchToStaff_Click;
         // 
         // FrmCustomerLogin
         // 
         AutoScaleDimensions = new SizeF(8F, 20F);
         AutoScaleMode = AutoScaleMode.Font;
-        BackColor = Color.FromArgb(102, 163, 191);
+        BackColor = Color.FromArgb(114, 136, 174);
         ClientSize = new Size(1100, 800);
         Controls.Add(pnlCard);
         FormBorderStyle = FormBorderStyle.FixedSingle;
@@ -323,6 +341,7 @@ partial class FrmCustomerLogin
     private PictureBox    picLogo;
     private HopeTextBox   txtUsername;
     private HopeTextBox   txtPassword;
+    private Button         btnTogglePassword;
     private HopeButton    btnLogin;
     private HopeButton    btnRegister;
     private HopeButton    btnPricing;

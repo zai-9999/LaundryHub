@@ -13,6 +13,7 @@ public interface IOrderRepository
     int Add(Order order);
     void UpdateStatus(int orderId, string newStatus, string? cancelReason = null, int? changedBy = null, string? notes = null);
     void RecordPayment(int orderId, decimal amountPaid);
+    void ClaimOrderWithPayment(int orderId, decimal amountPaid, int? changedBy = null, string? notes = null);
     void Archive(int orderId);
     string GenerateOrderNumber();
     DailyReport GetDailyReport(DateTime date);

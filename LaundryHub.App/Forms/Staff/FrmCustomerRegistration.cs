@@ -25,11 +25,11 @@ public partial class FrmCustomerRegistration : Form
         ResizeRedraw = true;
         UIThemeHelper.StyleStandardForm(this, pnlLeftCard);
         pnlLeftCard.SizeChanged += (s, e) => UIThemeHelper.ApplyRoundedRegion(pnlLeftCard, UIThemeHelper.ContentCardRadius);
-        pnlHeader.BackColor = Color.FromArgb(37, 78, 122);
-        lblTitle.BackColor = Color.FromArgb(37, 78, 122);
-        pnlContainer.BackColor = Color.FromArgb(240, 244, 248);
-        pnlRight.BackColor = Color.FromArgb(240, 244, 248);
-        pnlSearchBar.BackColor = Color.FromArgb(240, 244, 248);
+        pnlHeader.BackColor = UIThemeHelper.Navy;
+        lblTitle.BackColor = UIThemeHelper.Navy;
+        pnlContainer.BackColor = UIThemeHelper.Surface;
+        pnlRight.BackColor = UIThemeHelper.Surface;
+        pnlSearchBar.BackColor = UIThemeHelper.Surface;
         flpForm.BackColor = Color.White;
         UIThemeHelper.StyleDataGridView(dgvCustomers);
 
@@ -126,45 +126,52 @@ public partial class FrmCustomerRegistration : Form
         var email = string.IsNullOrWhiteSpace(txtEmail.Text) ? null : txtEmail.Text.Trim();
         var address = string.IsNullOrWhiteSpace(txtAddress.Text) ? null : txtAddress.Text.Trim();
 
-        if (_editingCustomerId > 0 && _selectedCustomer != null)
+        try
         {
-            // Update
-            _selectedCustomer.FullName = name;
-            _selectedCustomer.Phone = phone;
-            _selectedCustomer.Email = email;
-            _selectedCustomer.Address = address;
-
-            AppServices.Customers.Update(_selectedCustomer);
-            CreatedCustomer = _selectedCustomer;
-            MessageBox.Show("Customer updated successfully!", "Success", MessageBoxButtons.OK, MessageBoxIcon.Information);
-        }
-        else
-        {
-            // Insert
-            var customer = new CustomerModel
+            if (_editingCustomerId > 0 && _selectedCustomer != null)
             {
-                FullName = name,
-                Phone = phone,
-                Email = email,
-                Address = address
-            };
+                // Update
+                _selectedCustomer.FullName = name;
+                _selectedCustomer.Phone = phone;
+                _selectedCustomer.Email = email;
+                _selectedCustomer.Address = address;
 
-            int newId = AppServices.Customers.Add(customer);
-            customer.CustomerId = newId;
-            CreatedCustomer = customer;
-            MessageBox.Show($"Customer {customer.FullName} registered successfully!", "Success", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                AppServices.Customers.Update(_selectedCustomer);
+                CreatedCustomer = _selectedCustomer;
+                MessageBox.Show("Customer updated successfully!", "Success", MessageBoxButtons.OK, MessageBoxIcon.Information);
+            }
+            else
+            {
+                // Insert
+                var customer = new CustomerModel
+                {
+                    FullName = name,
+                    Phone = phone,
+                    Email = email,
+                    Address = address
+                };
+
+                int newId = AppServices.Customers.Add(customer);
+                customer.CustomerId = newId;
+                CreatedCustomer = customer;
+                MessageBox.Show($"Customer {customer.FullName} registered successfully!", "Success", MessageBoxButtons.OK, MessageBoxIcon.Information);
+            }
+
+            LoadCustomers();
+
+            if (_returnCustomer && CreatedCustomer != null)
+            {
+                this.DialogResult = DialogResult.OK;
+                this.Close();
+            }
+            else
+            {
+                ResetForm();
+            }
         }
-
-        LoadCustomers();
-
-        if (_returnCustomer && CreatedCustomer != null)
+        catch (Exception ex)
         {
-            this.DialogResult = DialogResult.OK;
-            this.Close();
-        }
-        else
-        {
-            ResetForm();
+            ShowError($"Database error: {ex.Message}");
         }
     }
 
@@ -243,11 +250,26 @@ public partial class FrmCustomerRegistration : Form
             return false;
         }
 
+        if (AppServices.Customers.PhoneExists(phone, _editingCustomerId))
+        {
+            ShowError("This phone number is already registered to another customer.");
+            txtPhone.Focus();
+            return false;
+        }
+
         if (!string.IsNullOrWhiteSpace(email))
         {
             if (!Regex.IsMatch(email, @"^[^@\s]+@[^@\s]+\.[^@\s]+$"))
             {
                 ShowError("Please enter a valid email address.");
+                txtEmail.Focus();
+                return false;
+            }
+
+            int excludeUserId = _selectedCustomer?.UserId ?? 0;
+            if (AppServices.Users.EmailExists(email, excludeUserId))
+            {
+                ShowError("This email address is already in use by another account.");
                 txtEmail.Focus();
                 return false;
             }
