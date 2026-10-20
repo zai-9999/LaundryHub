@@ -175,7 +175,7 @@ partial class FrmLogin
         btnTogglePassword.Name = "btnTogglePassword";
         btnTogglePassword.Size = new Size(34, 33);
         btnTogglePassword.TabIndex = 8;
-        btnTogglePassword.Text = "";
+        btnTogglePassword.Text = "\uD83D\uDE48"; // 🙈 eye closed (default)
         btnTogglePassword.UseVisualStyleBackColor = false;
         btnTogglePassword.Click += btnTogglePassword_Click;
         //

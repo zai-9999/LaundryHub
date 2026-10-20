@@ -185,15 +185,17 @@ public partial class FrmCustomerLogin : Form
     {
         if (txtPassword.UseSystemPasswordChar)
         {
+            // Show password
             txtPassword.UseSystemPasswordChar = false;
             txtPassword.PasswordChar = '\0';
-            btnTogglePassword.Text = "";
+            btnTogglePassword.Text = "\uD83D\uDC41"; // 👁 eye open
         }
         else
         {
+            // Hide password
             txtPassword.UseSystemPasswordChar = true;
             txtPassword.PasswordChar = '\0';
-            btnTogglePassword.Text = "";
+            btnTogglePassword.Text = "\uD83D\uDE48"; // 🙈 eye closed
         }
     }
 
