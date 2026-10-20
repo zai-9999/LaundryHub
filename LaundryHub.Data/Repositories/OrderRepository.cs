@@ -72,7 +72,7 @@ public class OrderRepository : IOrderRepository
     public int Add(Order order)
     {
         using var conn = _db.CreateConnection();
-        conn.Open();
+        if (conn.State != System.Data.ConnectionState.Open) conn.Open();
         using var tran = conn.BeginTransaction();
         try
         {
@@ -131,7 +131,7 @@ public class OrderRepository : IOrderRepository
     public void UpdateStatus(int orderId, string newStatus, string? cancelReason = null, int? changedBy = null, string? notes = null)
     {
         using var conn = _db.CreateConnection();
-        conn.Open();
+        if (conn.State != System.Data.ConnectionState.Open) conn.Open();
         using var tran = conn.BeginTransaction();
         try
         {
@@ -181,7 +181,7 @@ public class OrderRepository : IOrderRepository
     public void ClaimOrderWithPayment(int orderId, decimal amountPaid, int? changedBy = null, string? notes = null)
     {
         using var conn = _db.CreateConnection();
-        conn.Open();
+        if (conn.State != System.Data.ConnectionState.Open) conn.Open();
         using var tran = conn.BeginTransaction();
         try
         {
@@ -255,7 +255,7 @@ public class OrderRepository : IOrderRepository
             PendingOrders = orders.Count(o => o.Status is "Washing" or "Drying" or "Ready for Pickup"),
             ClaimedOrders = orders.Count(o => o.Status == "Claimed"),
             CancelledOrders = orders.Count(o => o.Status == "Cancelled"),
-            TotalSales = orders.Where(o => o.Status == "Claimed").Sum(o => o.TotalAmount),
+            TotalSales = orders.Where(o => o.Status == "Claimed" || o.PaymentRecorded).Sum(o => o.AmountPaid ?? o.TotalAmount),
             Orders = orders
         };
     }

@@ -172,7 +172,7 @@ public partial class FrmNewOrder : Form
 
     private void ShowQrTicket(Order order)
     {
-        var bmp = Helpers.QrCodeHelper.GenerateQrCode(order.OrderNumber);
+        using var bmp = Helpers.QrCodeHelper.GenerateQrCode(order.OrderNumber);
 
         using var ticketForm = new Form
         {

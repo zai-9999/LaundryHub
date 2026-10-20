@@ -138,7 +138,7 @@ public class CustomerRepository : ICustomerRepository
     public int RegisterCustomerWithUser(User user, Customer customer)
     {
         using var conn = _db.CreateConnection();
-        conn.Open();
+        if (conn.State != System.Data.ConnectionState.Open) conn.Open();
         using var tran = conn.BeginTransaction();
         try
         {

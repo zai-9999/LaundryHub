@@ -77,7 +77,9 @@ public partial class FrmOrderDetail : Form
         // QR Code
         try
         {
+            var oldImg = picQrCode.Image;
             picQrCode.Image = QrCodeHelper.GenerateImage(_order.OrderNumber);
+            oldImg?.Dispose();
         }
         catch { }
 

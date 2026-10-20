@@ -8,6 +8,7 @@ namespace LaundryHub.App.Forms.Staff;
 public partial class FrmStaffDashboard : Form
 {
     private bool isLoading = false;
+    private List<Order>? _cachedOrders;
 
     public FrmStaffDashboard()
     {
@@ -39,6 +40,7 @@ public partial class FrmStaffDashboard : Form
         pnlHeader.Title = "Laundry Operations & Order Hub";
         pnlHeader.Subtitle = "REAL-TIME SERVICE QUEUE, ORDERS & CUSTOMER INTAKE";
         pnlHeader.SearchBox.Hint = "Quick search orders...";
+        pnlHeader.SearchBox.TextChanged += (s, e) => FilterOrders();
         pnlHeader.ActionButton.Text = "🚪 Logout";
         pnlHeader.ActionButton.Click += btnLogout_Click;
 
@@ -88,6 +90,8 @@ public partial class FrmStaffDashboard : Form
                 () => Task.Run(() => AppServices.Orders.GetAll().Take(15).ToList()),
                 TimeSpan.FromSeconds(30));
 
+            _cachedOrders = orders;
+
             this.SafeInvoke(() =>
             {
                 lblPending.Text = report.PendingOrders.ToString();
@@ -97,27 +101,47 @@ public partial class FrmStaffDashboard : Form
 
                 lblLiveBadge.Text = $"● {orders.Count} In Queue";
 
-                dgvOrders.DataSource = orders.Select(o => new
-                {
-                    o.OrderId,
-                    Order_No = o.OrderNumber,
-                    Customer = o.CustomerName,
-                    Service = o.ServiceName,
-                    Weight = $"{o.WeightKg} kg",
-                    Total = $"₱{o.TotalAmount:N2}",
-                    Status = o.Status,
-                    Payment = o.PaymentRecorded ? "Paid" : "Unpaid",
-                    Date = o.CreatedAt.ToString("MM/dd hh:mm tt")
-                }).ToList();
-
-                if (dgvOrders.Columns["OrderId"] is { } col)
-                    col.Visible = false;
+                FilterOrders();
             });
         }
         finally
         {
             isLoading = false;
         }
+    }
+
+    private void FilterOrders()
+    {
+        if (_cachedOrders == null) return;
+
+        var query = pnlHeader.SearchBox.Text.Trim();
+        var list = _cachedOrders.AsEnumerable();
+
+        if (!string.IsNullOrWhiteSpace(query))
+        {
+            var q = query.ToLower();
+            list = list.Where(o =>
+                o.OrderNumber.ToLower().Contains(q) ||
+                (o.CustomerName?.ToLower().Contains(q) ?? false) ||
+                (o.ServiceName?.ToLower().Contains(q) ?? false) ||
+                o.Status.ToLower().Contains(q));
+        }
+
+        dgvOrders.DataSource = list.Select(o => new
+        {
+            o.OrderId,
+            Order_No = o.OrderNumber,
+            Customer = o.CustomerName,
+            Service = o.ServiceName,
+            Weight = $"{o.WeightKg} kg",
+            Total = $"₱{o.TotalAmount:N2}",
+            Status = o.Status,
+            Payment = o.PaymentRecorded ? "Paid" : "Unpaid",
+            Date = o.CreatedAt.ToString("MM/dd hh:mm tt")
+        }).ToList();
+
+        if (dgvOrders.Columns["OrderId"] is { } col)
+            col.Visible = false;
     }
 
     private async void DgvOrders_CellDoubleClick(object? sender, DataGridViewCellEventArgs e)

@@ -10,6 +10,7 @@ public partial class FrmCustomerPortal : Form
     private Core.Models.Customer? _customer;
     private readonly User _user;
     private bool isLoading = false;
+    private List<Order>? _cachedOrders;
 
     public FrmCustomerPortal()
     {
@@ -48,6 +49,7 @@ public partial class FrmCustomerPortal : Form
         pnlHeader.Title = "My Laundry Portal";
         pnlHeader.Subtitle = "TRACK LAUNDRY PROGRESS, PICKUP STATUS & BOOK ONLINE";
         pnlHeader.SearchBox.Hint = "Search order number...";
+        pnlHeader.SearchBox.TextChanged += (s, e) => FilterOrders();
         pnlHeader.ActionButton.Text = "➕ Book";
         pnlHeader.ActionButton.PrimaryColor = UIThemeHelper.Indigo;
         pnlHeader.ActionButton.Click += btnBookOrder_Click;
@@ -149,53 +151,77 @@ public partial class FrmCustomerPortal : Form
             () => Task.Run(() => AppServices.Orders.GetByCustomer(_customer.CustomerId).ToList()),
             TimeSpan.FromSeconds(30));
 
+        _cachedOrders = orders;
+
         this.SafeInvoke(() =>
         {
-            // Update stats
             lblActiveStat.Text = orders.Count(o => o.Status is "Washing" or "Drying").ToString();
             lblReadyStat.Text = orders.Count(o => o.Status == "Ready for Pickup").ToString();
             lblTotalStat.Text = orders.Count.ToString();
 
-            var filteredOrders = orders;
-            if (chkActiveOnly.Checked)
-            {
-                filteredOrders = orders.Where(o => o.Status is "Washing" or "Drying" or "Ready for Pickup").ToList();
-            }
-
-            dgvOrders.DataSource = filteredOrders.Select(o => new
-            {
-                o.OrderId,
-                Order_No = o.OrderNumber,
-                Service = o.ServiceName ?? "Laundry",
-                Weight = $"{o.WeightKg} kg",
-                Total = $"₱{o.TotalAmount:N2}",
-                Payment = o.PaymentRecorded ? "Paid" : "Unpaid",
-                o.Status,
-                Pickup_Date = o.PickupDate?.ToString("MMM dd, yyyy") ?? "—",
-                Date_Placed = o.CreatedAt.ToString("MMM dd, yyyy")
-            }).ToList();
-
-            if (dgvOrders.Columns["OrderId"] is { } col)
-                col.Visible = false;
-
-            void SetWeight(string name, float weight)
-            {
-                if (dgvOrders.Columns[name] is { } c) c.FillWeight = weight;
-            }
-            SetWeight("Order_No", 160);
-            SetWeight("Service", 110);
-            SetWeight("Weight", 80);
-            SetWeight("Total", 90);
-            SetWeight("Payment", 90);
-            SetWeight("Status", 120);
-            SetWeight("Pickup_Date", 105);
-            SetWeight("Date_Placed", 105);
+            FilterOrders();
         });
+    }
+
+    private void FilterOrders()
+    {
+        if (_cachedOrders == null) return;
+
+        var filtered = _cachedOrders.AsEnumerable();
+
+        if (chkActiveOnly.Checked)
+        {
+            filtered = filtered.Where(o => o.Status is "Washing" or "Drying" or "Ready for Pickup");
+        }
+
+        var query = pnlHeader.SearchBox.Text.Trim();
+        if (!string.IsNullOrWhiteSpace(query))
+        {
+            var q = query.ToLower();
+            filtered = filtered.Where(o =>
+                o.OrderNumber.ToLower().Contains(q) ||
+                (o.ServiceName?.ToLower().Contains(q) ?? false) ||
+                o.Status.ToLower().Contains(q));
+        }
+
+        var list = filtered.ToList();
+        dgvOrders.DataSource = list.Select(o => new
+        {
+            o.OrderId,
+            Order_No = o.OrderNumber,
+            Service = o.ServiceName ?? "Laundry",
+            Weight = $"{o.WeightKg} kg",
+            Total = $"₱{o.TotalAmount:N2}",
+            Payment = o.PaymentRecorded ? "Paid" : "Unpaid",
+            o.Status,
+            Pickup_Date = o.PickupDate?.ToString("MMM dd, yyyy") ?? "—",
+            Date_Placed = o.CreatedAt.ToString("MMM dd, yyyy")
+        }).ToList();
+
+        if (dgvOrders.Columns["OrderId"] is { } col)
+            col.Visible = false;
+
+        void SetWeight(string name, float weight)
+        {
+            if (dgvOrders.Columns[name] is { } c) c.FillWeight = weight;
+        }
+        SetWeight("Order_No", 160);
+        SetWeight("Service", 110);
+        SetWeight("Weight", 80);
+        SetWeight("Total", 90);
+        SetWeight("Payment", 90);
+        SetWeight("Status", 120);
+        SetWeight("Pickup_Date", 105);
+        SetWeight("Date_Placed", 105);
     }
 
     private void BtnViewTicket_Click(object? sender, EventArgs e)
     {
-        if (dgvOrders.SelectedRows.Count == 0) return;
+        if (dgvOrders.SelectedRows.Count == 0)
+        {
+            MessageBox.Show("Please select an order from the list first to view its e-ticket.", "No Order Selected", MessageBoxButtons.OK, MessageBoxIcon.Information);
+            return;
+        }
         var row = dgvOrders.SelectedRows[0];
         if (row.Cells["OrderId"].Value is int orderId)
         {
@@ -230,6 +256,7 @@ public partial class FrmCustomerPortal : Form
             BorderStyle = BorderStyle.FixedSingle,
             Image = QrCodeHelper.GenerateImage(order.OrderNumber)
         };
+        dlg.FormClosed += (_, _) => pic.Image?.Dispose();
 
         var lblNo = new Label
         {

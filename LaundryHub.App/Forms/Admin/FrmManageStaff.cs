@@ -146,6 +146,8 @@ public partial class FrmManageStaff : Form
         {
             bool newStatus = !_selectedUser.IsActive;
             AppServices.Users.SetActive(_selectedUser.UserId, newStatus);
+            _selectedUser.IsActive = newStatus;
+            chkActive.Checked = newStatus;
             LoadStaff();
             MessageBox.Show($"User {_selectedUser.Username} is now {(newStatus ? "Active" : "Disabled")}.", "Status Changed", MessageBoxButtons.OK, MessageBoxIcon.Information);
         }

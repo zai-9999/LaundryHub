@@ -23,7 +23,7 @@ public static class QrCodeHelper
     /// </summary>
     public static string SaveToTempFile(string orderNumber)
     {
-        var bmp  = GenerateQrCode(orderNumber);
+        using var bmp = GenerateQrCode(orderNumber);
         var path = Path.Combine(Path.GetTempPath(), $"QR_{orderNumber}.png");
         bmp.Save(path, System.Drawing.Imaging.ImageFormat.Png);
         return path;
