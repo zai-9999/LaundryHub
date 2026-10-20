@@ -60,13 +60,13 @@ public static class ExcelHelper
         // ── Table Rows ───────────────────────────────────────────
         foreach (var o in report.Orders)
         {
-            ws.Cell(row, 1).Value = o.OrderNumber;
-            ws.Cell(row, 2).Value = o.CustomerName;
-            ws.Cell(row, 3).Value = o.CustomerPhone;
-            ws.Cell(row, 4).Value = o.ServiceName;
+            ws.Cell(row, 1).Value = o.OrderNumber ?? "";
+            ws.Cell(row, 2).Value = o.CustomerName ?? "";
+            ws.Cell(row, 3).Value = o.CustomerPhone ?? "";
+            ws.Cell(row, 4).Value = o.ServiceName ?? "";
             ws.Cell(row, 5).Value = (double)o.WeightKg;
             ws.Cell(row, 6).Value = (double)o.TotalAmount;
-            ws.Cell(row, 7).Value = o.Status;
+            ws.Cell(row, 7).Value = o.Status ?? "";
             ws.Cell(row, 8).Value = o.CreatedAt.ToString("hh:mm tt");
             if (row % 2 == 0)
                 ws.Range(row, 1, row, 8).Style.Fill.SetBackgroundColor(XLColor.FromHtml("#F6F2EA"));

@@ -37,7 +37,12 @@ public static class EmailHelper
         var smtpPort  = int.Parse(cfg["Email:SmtpPort"]!);
         var sender    = cfg["Email:SenderEmail"]!;
         var senderName = cfg["Email:SenderName"]!;
-        var appPwd    = cfg["Email:AppPassword"]!;
+        var appPwd    = cfg["Email:AppPassword"];
+        if (string.IsNullOrWhiteSpace(appPwd) || appPwd.Equals("SET_IN_ENV", StringComparison.OrdinalIgnoreCase))
+        {
+            System.Diagnostics.Debug.WriteLine("Email:AppPassword is not configured or still SET_IN_ENV. Skipping receipt email.");
+            return;
+        }
         var shopName  = AppServices.ShopName;
 
         var message   = new MimeMessage();

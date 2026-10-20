@@ -14,7 +14,7 @@ public class OrderRepository : IOrderRepository
         SELECT o.*, c.full_name AS customer_name, c.phone AS customer_phone,
                s.service_name, u.full_name AS created_by_name
         FROM orders o
-        JOIN customers c ON c.customer_id = o.customer_id AND c.is_archived = FALSE
+        JOIN customers c ON c.customer_id = o.customer_id
         JOIN service_types s ON s.service_id = o.service_id
         LEFT JOIN users u ON u.user_id = o.created_by";
 
@@ -255,7 +255,7 @@ public class OrderRepository : IOrderRepository
             PendingOrders = orders.Count(o => o.Status is "Washing" or "Drying" or "Ready for Pickup"),
             ClaimedOrders = orders.Count(o => o.Status == "Claimed"),
             CancelledOrders = orders.Count(o => o.Status == "Cancelled"),
-            TotalSales = orders.Where(o => o.Status == "Claimed" || o.PaymentRecorded).Sum(o => o.AmountPaid ?? o.TotalAmount),
+            TotalSales = orders.Where(o => o.Status != "Cancelled" && (o.Status == "Claimed" || o.PaymentRecorded)).Sum(o => o.AmountPaid ?? o.TotalAmount),
             Orders = orders
         };
     }
