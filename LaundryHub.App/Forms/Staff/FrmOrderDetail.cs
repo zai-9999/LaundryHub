@@ -122,7 +122,7 @@ public partial class FrmOrderDetail : Form
         }
     }
 
-    private void btnAdvanceStatus_Click(object? sender, EventArgs e)
+    private async void btnAdvanceStatus_Click(object? sender, EventArgs e)
     {
         if (_order.Status == "Booked")
         {
@@ -146,7 +146,38 @@ public partial class FrmOrderDetail : Form
         {
             AppServices.Orders.UpdateStatus(_order.OrderId, nextStatus);
             RefreshOrderData();
-            MessageBox.Show($"Order status moved to '{nextStatus}'.", "Status Updated", MessageBoxButtons.OK, MessageBoxIcon.Information);
+
+            if (nextStatus == "Ready for Pickup")
+            {
+                if (_customer == null || string.IsNullOrWhiteSpace(_customer.Email))
+                {
+                    MessageBox.Show(
+                        "Order status moved to 'Ready for Pickup', but this customer has no email address registered.",
+                        "Status Updated",
+                        MessageBoxButtons.OK,
+                        MessageBoxIcon.Warning);
+                }
+                else if (await EmailHelper.SendReadyForPickupAsync(_order, _customer))
+                {
+                    MessageBox.Show(
+                        $"Order status moved to 'Ready for Pickup'. A notification was sent to {_customer.Email}.",
+                        "Status Updated",
+                        MessageBoxButtons.OK,
+                        MessageBoxIcon.Information);
+                }
+                else
+                {
+                    MessageBox.Show(
+                        "Order status moved to 'Ready for Pickup', but the email notification could not be sent.",
+                        "Status Updated",
+                        MessageBoxButtons.OK,
+                        MessageBoxIcon.Warning);
+                }
+            }
+            else
+            {
+                MessageBox.Show($"Order status moved to '{nextStatus}'.", "Status Updated", MessageBoxButtons.OK, MessageBoxIcon.Information);
+            }
         }
     }
 
