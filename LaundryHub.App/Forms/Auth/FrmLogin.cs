@@ -1,4 +1,4 @@
-﻿using LaundryHub.App.Helpers;
+using LaundryHub.App.Helpers;
 using LaundryHub.Core.Enums;
 using BCrypt.Net;
 
@@ -145,7 +145,7 @@ public partial class FrmLogin : Form
         else
         {
             txtPassword.UseSystemPasswordChar = true;
-            txtPassword.PasswordChar = '';
+            txtPassword.PasswordChar = '\0';
             btnTogglePassword.Text = "";
         }
     }

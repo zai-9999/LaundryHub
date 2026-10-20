@@ -1,4 +1,4 @@
-﻿using Panel = System.Windows.Forms.Panel;
+using Panel = System.Windows.Forms.Panel;
 using CheckBox = System.Windows.Forms.CheckBox;
 using Button = System.Windows.Forms.Button;
 using ReaLTaiizor;
@@ -382,7 +382,7 @@ partial class FrmManageStaff
         txtPassword.Location = new Point(0, 269);
         txtPassword.Margin = new Padding(0, 2, 0, 4);
         txtPassword.Name = "txtPassword";
-        txtPassword.PasswordChar = '';
+        txtPassword.PasswordChar = '\0';
         txtPassword.Size = new Size(310, 34);
         txtPassword.TabIndex = 9;
         txtPassword.UseSystemPasswordChar = true;

@@ -1,4 +1,4 @@
-﻿using ReaLTaiizor;
+using ReaLTaiizor;
 using ReaLTaiizor.Controls;
 using ReaLTaiizor.Util;
 using System.IO;
@@ -154,7 +154,7 @@ partial class FrmLogin
         txtPassword.MaxLength = 32767;
         txtPassword.Multiline = false;
         txtPassword.Name = "txtPassword";
-        txtPassword.PasswordChar = '';
+        txtPassword.PasswordChar = '\0';
         txtPassword.ScrollBars = ScrollBars.None;
         txtPassword.SelectedText = "";
         txtPassword.SelectionLength = 0;

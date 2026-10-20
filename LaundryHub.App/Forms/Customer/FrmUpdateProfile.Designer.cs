@@ -1,4 +1,4 @@
-﻿using Panel = System.Windows.Forms.Panel;
+using Panel = System.Windows.Forms.Panel;
 using CheckBox = System.Windows.Forms.CheckBox;
 using ReaLTaiizor;
 using ReaLTaiizor.Controls;
@@ -187,7 +187,7 @@ partial class FrmUpdateProfile
         txtNewPassword.ForeColor = Color.FromArgb(75, 86, 148);
         txtNewPassword.Location = new Point(24, 304);
         txtNewPassword.Name = "txtNewPassword";
-        txtNewPassword.PasswordChar = '';
+        txtNewPassword.PasswordChar = '\0';
         txtNewPassword.UseSystemPasswordChar = true;
         txtNewPassword.Size = new Size(390, 32);
         txtNewPassword.TabIndex = 11;
