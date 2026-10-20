@@ -64,10 +64,35 @@ public partial class FrmExportReport : Form
     {
         if (_currentReport == null) return;
 
-        var path = ExcelHelper.ExportDailyReport(_currentReport, this);
-        if (!string.IsNullOrEmpty(path))
+        try
         {
-            MessageBox.Show($"Report successfully exported to:\n{path}", "Export Complete", MessageBoxButtons.OK, MessageBoxIcon.Information);
+            var path = ExcelHelper.ExportDailyReport(_currentReport, this);
+            if (!string.IsNullOrEmpty(path))
+            {
+                MessageBox.Show($"Report successfully exported to Excel:\n{path}", "Export Complete", MessageBoxButtons.OK, MessageBoxIcon.Information);
+            }
+        }
+        catch (Exception ex)
+        {
+            MessageBox.Show($"Failed to export Excel report: {ex.Message}", "Export Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+        }
+    }
+
+    private void btnExportPdf_Click(object? sender, EventArgs e)
+    {
+        if (_currentReport == null) return;
+
+        try
+        {
+            var path = PdfReportHelper.ExportDailyReport(_currentReport, this);
+            if (!string.IsNullOrEmpty(path))
+            {
+                MessageBox.Show($"Report successfully exported to PDF:\n{path}", "Export Complete", MessageBoxButtons.OK, MessageBoxIcon.Information);
+            }
+        }
+        catch (Exception ex)
+        {
+            MessageBox.Show($"Failed to export PDF report: {ex.Message}", "Export Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
         }
     }
 }

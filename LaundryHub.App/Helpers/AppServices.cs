@@ -19,7 +19,7 @@ public static class AppServices
     public static OrderRepository        Orders        { get; private set; } = null!;
     public static ServiceTypeRepository  ServiceTypes  { get; private set; } = null!;
 
-    public static string ShopName => Configuration["App:ShopName"] ?? "LaundryHub";
+    public static string ShopName => Configuration?["App:ShopName"] ?? "LaundryHub";
 
     public static void Initialize()
     {

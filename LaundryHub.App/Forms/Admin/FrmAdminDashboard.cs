@@ -36,7 +36,7 @@ public partial class FrmAdminDashboard : Form
         pnlSidebar.AddSection("ADMINISTRATION");
         pnlSidebar.AddNavButton("👔", "Manage Staff", btnManageStaff_Click);
         pnlSidebar.AddNavButton("🏷️", "Services & Rates", btnServicePricing_Click);
-        pnlSidebar.AddNavButton("📈", "Daily Reports & Excel", btnExportReport_Click);
+        pnlSidebar.AddNavButton("📈", "Reports & Export", btnExportReport_Click);
 
         pnlSidebar.AddSection("SYSTEM");
         pnlSidebar.AddNavButton("🔄", "Refresh Dashboard", btnRefresh_Click);

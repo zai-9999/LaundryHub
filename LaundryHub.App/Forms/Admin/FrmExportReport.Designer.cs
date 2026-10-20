@@ -1,4 +1,4 @@
-﻿using Panel = System.Windows.Forms.Panel;
+using Panel = System.Windows.Forms.Panel;
 using CheckBox = System.Windows.Forms.CheckBox;
 using Button = System.Windows.Forms.Button;
 using ReaLTaiizor;
@@ -51,6 +51,7 @@ partial class FrmExportReport
         lblSalesTitle = new Label();
         pnlStripSales = new Panel();
         pnlFilterBar = new Panel();
+        btnExportPdf = new HopeButton();
         btnExportExcel = new HopeButton();
         btnLoad = new HopeButton();
         dtpDate = new DateTimePicker();
@@ -372,6 +373,7 @@ partial class FrmExportReport
         // pnlFilterBar
         // 
         pnlFilterBar.BackColor = Color.White;
+        pnlFilterBar.Controls.Add(btnExportPdf);
         pnlFilterBar.Controls.Add(btnExportExcel);
         pnlFilterBar.Controls.Add(btnLoad);
         pnlFilterBar.Controls.Add(dtpDate);
@@ -392,12 +394,29 @@ partial class FrmExportReport
         btnExportExcel.Cursor = Cursors.Hand;
         btnExportExcel.Dock = DockStyle.Right;
         btnExportExcel.Font = new Font("Segoe UI", 9.5F, FontStyle.Bold);
-        btnExportExcel.Location = new Point(686, 8);
+        btnExportExcel.Location = new Point(716, 8);
         btnExportExcel.Name = "btnExportExcel";
-        btnExportExcel.Size = new Size(200, 36);
+        btnExportExcel.Size = new Size(170, 36);
         btnExportExcel.TabIndex = 3;
-        btnExportExcel.Text = "📥 Export to Excel (.xlsx)";
+        btnExportExcel.Text = "📊 Export to Excel";
         btnExportExcel.Click += btnExportExcel_Click;
+        // 
+        // btnExportPdf
+        // 
+        btnExportPdf.ButtonType = HopeButtonType.Primary;
+        btnExportPdf.PrimaryColor = Color.FromArgb(17, 24, 68);
+        btnExportPdf.TextColor = Color.FromArgb(246, 242, 234);
+        btnExportPdf.HoverTextColor = Color.White;
+        btnExportPdf.Cursor = Cursors.Hand;
+        btnExportPdf.Dock = DockStyle.Right;
+        btnExportPdf.Font = new Font("Segoe UI", 9.5F, FontStyle.Bold);
+        btnExportPdf.Location = new Point(536, 8);
+        btnExportPdf.Margin = new Padding(0, 0, 10, 0);
+        btnExportPdf.Name = "btnExportPdf";
+        btnExportPdf.Size = new Size(170, 36);
+        btnExportPdf.TabIndex = 4;
+        btnExportPdf.Text = "📄 Export to PDF";
+        btnExportPdf.Click += btnExportPdf_Click;
         // 
         // btnLoad
         // 
@@ -453,7 +472,7 @@ partial class FrmExportReport
         MaximizeBox = false;
         Name = "FrmExportReport";
         StartPosition = FormStartPosition.CenterParent;
-        Text = "LaundryHub – Daily Reports & Excel Export";
+        Text = "LaundryHub – Daily Reports & Export (PDF / Excel)";
         pnlHeader.ResumeLayout(false);
         pnlContainer.ResumeLayout(false);
         pnlGridWrap.ResumeLayout(false);
@@ -478,6 +497,7 @@ partial class FrmExportReport
     private DateTimePicker dtpDate;
     private HopeButton btnLoad;
     private HopeButton btnExportExcel;
+    private HopeButton btnExportPdf;
     private FlowLayoutPanel flpStats;
     private Panel pnlStatOrders;
     private Panel pnlStripOrders;
