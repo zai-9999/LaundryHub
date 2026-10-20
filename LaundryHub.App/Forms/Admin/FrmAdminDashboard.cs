@@ -78,13 +78,6 @@ public partial class FrmAdminDashboard : Form
         this.Shown += async (_, _) =>
         {
             await LoadDashboardDataAsync();
-
-            // Run database cleanup in the background without slowing down dashboard display
-            _ = Task.Run(() =>
-            {
-                try { AppServices.Customers.CleanupArchivedCustomerOrders(); }
-                catch { }
-            });
         };
 
         searchDebounceTimer = new System.Windows.Forms.Timer { Interval = 300 };
