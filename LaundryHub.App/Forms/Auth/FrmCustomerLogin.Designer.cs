@@ -323,7 +323,7 @@ partial class FrmCustomerLogin
         AutoScaleDimensions = new SizeF(96F, 96F);
         AutoScaleMode = AutoScaleMode.Dpi;
         BackColor = Color.FromArgb(114, 136, 174);
-        ClientSize = new Size(1100, 800);
+        ClientSize = new Size(1100, 960);
         Controls.Add(pnlCard);
         FormBorderStyle = FormBorderStyle.Sizable;
         Margin = new Padding(3, 4, 3, 4);
