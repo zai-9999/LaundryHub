@@ -151,6 +151,13 @@ public partial class FrmGuestLookup : Form
                 pnlResult.Visible = true;
             });
         }
+
+        catch (Exception ex)
+        {
+            ErrorHandler.Log(ex, "guest order lookup");
+            ShowError(ErrorHandler.FriendlyMessage(ex));
+        }
+
         finally
         {
             isLoading = false;

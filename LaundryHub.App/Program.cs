@@ -13,6 +13,23 @@ static class Program
     {
         ApplicationConfiguration.Initialize();
 
+        Application.SetUnhandledExceptionMode(UnhandledExceptionMode.CatchException);
+        Application.ThreadException += (_, e) => ErrorHandler.Show(e.Exception);
+        AppDomain.CurrentDomain.UnhandledException += (_, e) =>
+        {
+            if (e.ExceptionObject is Exception fatal) ErrorHandler.Log(fatal, "fatal error");
+            MessageBox.Show(
+                "LaundryHub hit a serious problem and has to close.\n\nDetails were saved to the error log.",
+                "LaundryHub",
+                MessageBoxButtons.OK,
+                MessageBoxIcon.Error);
+        };
+        TaskScheduler.UnobservedTaskException += (_, e) =>
+        {
+            ErrorHandler.Log(e.Exception, "background task");
+            e.SetObserved();
+        };
+
         try
         {
             AppServices.Initialize();
@@ -27,7 +44,7 @@ static class Program
             return;
         }
 
-        // Check the database before showing the login screen.
+
         while (true)
         {
             try

@@ -59,7 +59,7 @@ public partial class FrmCustomerPortal : Form
             _user = SessionManager.CurrentUser;
             pnlHeader.UserName = _user.FullName;
             pnlHeader.UserRole = "Valued Customer";
-            this.Shown += async (_, _) => await LoadCustomerDataAsync();
+            this.Shown += async (_, _) => await ErrorHandler.SafeAsync(LoadCustomerDataAsync, "load your orders");
         }
         else
         {

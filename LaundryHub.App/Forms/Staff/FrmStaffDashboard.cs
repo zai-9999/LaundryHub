@@ -69,7 +69,7 @@ public partial class FrmStaffDashboard : Form
 
         dgvOrders.CellDoubleClick += DgvOrders_CellDoubleClick;
 
-        this.Shown += async (_, _) => await LoadSummaryAsync();
+        this.Shown += async (_, _) => await ErrorHandler.SafeAsync(LoadSummaryAsync, "load the dashboard");
         this.FormClosing += (_, _) => isLoading = false;
     }
 

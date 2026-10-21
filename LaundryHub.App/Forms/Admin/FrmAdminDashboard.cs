@@ -77,7 +77,7 @@ public partial class FrmAdminDashboard : Form
 
         this.Shown += async (_, _) =>
         {
-            await LoadDashboardDataAsync();
+            await ErrorHandler.SafeAsync(LoadDashboardDataAsync, "load the dashboard");
         };
 
         searchDebounceTimer = new System.Windows.Forms.Timer { Interval = 300 };

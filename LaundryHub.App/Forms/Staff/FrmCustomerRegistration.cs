@@ -176,7 +176,7 @@ public partial class FrmCustomerRegistration : Form
 
                 AppServices.Customers.Update(_selectedCustomer);
                 CreatedCustomer = _selectedCustomer;
-                MessageBox.Show("Customer updated successfully!", "Success", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                AlertDialog.Success("Customer updated successfully!");
             }
             else
             {
