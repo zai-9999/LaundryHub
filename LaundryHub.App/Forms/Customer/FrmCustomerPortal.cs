@@ -76,7 +76,7 @@ public partial class FrmCustomerPortal : Form
             var f = new FrmUpdateProfile(_customer, _user);
             if (f.ShowDialog(this) == DialogResult.OK)
             {
-                DataCache.Invalidate($"portal_customer_{_user.UserId}");
+                DataCache.Invalidate($"customer_by_user_{_user.UserId}");
                 await LoadCustomerDataAsync();
             }
         }
@@ -124,7 +124,7 @@ public partial class FrmCustomerPortal : Form
 
         try
         {
-            var cacheKey = $"portal_customer_{_user.UserId}";
+            var cacheKey = $"customer_by_user_{_user.UserId}";
             _customer = await DataCache.GetOrAddAsync(cacheKey,
                 () => Task.Run(() => AppServices.Customers.GetByUserId(_user.UserId)),
                 TimeSpan.FromSeconds(30));

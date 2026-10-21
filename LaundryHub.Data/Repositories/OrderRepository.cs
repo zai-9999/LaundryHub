@@ -128,6 +128,15 @@ public class OrderRepository : IOrderRepository
         }
     }
 
+    private static bool IsValidTransition(string? from, string to) => (from, to) switch
+    {
+        ("Washing", "Drying") => true,
+        ("Drying", "Ready for Pickup") => true,
+        ("Ready for Pickup", "Claimed") => true,
+        ("Washing" or "Drying" or "Ready for Pickup", "Cancelled") => true,
+        _ => false
+    };
+
     public bool ConfirmDropOff(int orderId)
     {
         using var conn = _db.CreateConnection();
@@ -160,6 +169,9 @@ public class OrderRepository : IOrderRepository
         try
         {
             var oldStatus = conn.ExecuteScalar<string?>("SELECT status FROM orders WHERE order_id = @OrderId FOR UPDATE", new { OrderId = orderId }, transaction: tran);
+
+            if (!IsValidTransition(oldStatus, newStatus))
+                throw new InvalidOperationException($"An order cannot move from '{oldStatus}' to '{newStatus}'.");
 
             conn.Execute(@"
                 UPDATE orders
@@ -212,6 +224,15 @@ public class OrderRepository : IOrderRepository
             var oldStatus = conn.ExecuteScalar<string?>(
                 "SELECT status FROM orders WHERE order_id = @OrderId FOR UPDATE",
                 new { OrderId = orderId }, transaction: tran);
+
+            if (oldStatus != "Ready for Pickup")
+                throw new InvalidOperationException($"Only orders that are Ready for Pickup can be claimed (this one is '{oldStatus}').");
+
+            var total = conn.ExecuteScalar<decimal>(
+                "SELECT total_amount FROM orders WHERE order_id = @OrderId",
+                new { OrderId = orderId }, transaction: tran);
+            if (amountPaid < total)
+                throw new InvalidOperationException("Payment is less than the total due.");
 
             conn.Execute(@"
                 UPDATE orders
@@ -266,20 +287,38 @@ public class OrderRepository : IOrderRepository
     public DailyReport GetDailyReport(DateTime date)
     {
         using var conn = _db.CreateConnection();
+
+        // Orders created on this date (this is the list shown in the grid)
         var orders = conn.Query<Order>($@"
-            {SelectJoined}
-            WHERE DATE(o.created_at) = @Date AND o.is_archived = FALSE
-            ORDER BY o.created_at DESC",
+        {SelectJoined}
+        WHERE DATE(o.created_at) = @Date AND o.is_archived = FALSE
+        ORDER BY o.created_at DESC",
             new { Date = date.Date }).ToList();
+
+        // Pending = every unfinished order, whatever day it was created
+        var pending = conn.ExecuteScalar<int>(@"
+        SELECT COUNT(1) FROM orders
+        WHERE is_archived = FALSE
+          AND status IN ('Washing', 'Drying', 'Ready for Pickup')");
+
+        // Sales = money collected on this date (claimed and paid that day),
+        // using the order total, not the cash handed over
+        var sales = conn.ExecuteScalar<decimal>(@"
+        SELECT COALESCE(SUM(total_amount), 0) FROM orders
+        WHERE is_archived = FALSE
+          AND status = 'Claimed'
+          AND payment_recorded = TRUE
+          AND DATE(claimed_at) = @Date",
+            new { Date = date.Date });
 
         return new DailyReport
         {
             ReportDate = date.Date,
             TotalOrders = orders.Count,
-            PendingOrders = orders.Count(o => o.Status is "Washing" or "Drying" or "Ready for Pickup"),
+            PendingOrders = pending,
             ClaimedOrders = orders.Count(o => o.Status == "Claimed"),
             CancelledOrders = orders.Count(o => o.Status == "Cancelled"),
-            TotalSales = orders.Where(o => o.Status == "Claimed").Sum(o => o.TotalAmount),
+            TotalSales = sales,
             Orders = orders
         };
     }
