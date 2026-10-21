@@ -12,8 +12,8 @@ public static class AuthLayout
 {
     private const int CardWidth = 480;
     private const int FieldWidth = 360;
-    private const int TopPad = 36;
-    private const int BottomPad = 36;
+    private const int TopPad = 50;
+    private const int BottomPad = 50;
     private static bool _busy;
 
     public static void Arrange(System.Windows.Forms.Panel card)
@@ -49,7 +49,7 @@ public static class AuthLayout
                 l.Font = AppFonts.Make(10F, FontStyle.Bold);
                 l.ForeColor = UIThemeHelper.Indigo;
                 l.TextAlign = ContentAlignment.BottomLeft;
-                Field(l, 24, 4);
+                Field(l, 24, 8);
             }
 
             void Input(Control? t, int w = FieldWidth)
@@ -57,7 +57,7 @@ public static class AuthLayout
                 if (t == null) return;
                 t.Font = AppFonts.Make(11F);
                 t.TabStop = true;
-                Field(t, 44, 16, w);
+                Field(t, 44, 20, w);
                 y -= 0;
             }
 
@@ -70,7 +70,7 @@ public static class AuthLayout
                 hb.TextColor = UIThemeHelper.Indigo;
                 hb.HoverTextColor = UIThemeHelper.Navy;
                 hb.Font = AppFonts.Make(10.5F, FontStyle.Bold);
-                Field(hb, 46, 10);
+                Field(hb, 46, 14);
                 UIThemeHelper.ApplyRoundedRegion(hb, 14);
             }
 
@@ -83,27 +83,27 @@ public static class AuthLayout
                 hb.TextColor = UIThemeHelper.Slate;
                 hb.HoverTextColor = UIThemeHelper.Indigo;
                 hb.Font = AppFonts.Make(10F);
-                Field(hb, 38, 2);
+                Field(hb, 38, 8);
                 UIThemeHelper.ApplyRoundedRegion(hb, 12);
             }
 
             // ---- header ----
             if (Find("picLogo") is PictureBox pic && pic.Image != null)
-                Full(pic, 64, 4);
+                Full(pic, 64, 8);
 
             if (Find("lblTitle") is Label title)
             {
                 title.Font = AppFonts.Make(26F, FontStyle.Bold);
                 title.ForeColor = UIThemeHelper.Indigo;
                 title.TextAlign = ContentAlignment.MiddleCenter;
-                Full(title, 46, 0);
+                Full(title, 46, 8);
             }
             if (Find("lblSubtitle") is Label sub)
             {
                 sub.Font = AppFonts.Make(10.5F);
                 sub.ForeColor = UIThemeHelper.TextMuted;
                 sub.TextAlign = ContentAlignment.MiddleCenter;
-                Full(sub, 26, 26);
+                Full(sub, 26, 30);
             }
 
             // ---- fields ----
@@ -133,11 +133,11 @@ public static class AuthLayout
             {
                 forgot.Font = AppFonts.Make(9.5F);
                 forgot.TextAlign = ContentAlignment.MiddleRight;
-                Field(forgot, 24, 4);
+                Field(forgot, 24, 8);
             }
             else
             {
-                y -= 4;
+                y -= 8;
             }
 
             if (Find("lblError") is Label err)
@@ -151,7 +151,7 @@ public static class AuthLayout
             if (Find("btnLogin") is HopeButton login)
             {
                 login.Font = AppFonts.Make(11F, FontStyle.Bold);
-                Field(login, 50, 18);
+                Field(login, 50, 24);
                 UIThemeHelper.ApplyRoundedRegion(login, 14);
             }
 
@@ -161,7 +161,7 @@ public static class AuthLayout
                 sep.Font = AppFonts.Make(9.5F);
                 sep.ForeColor = UIThemeHelper.TextMuted;
                 sep.TextAlign = ContentAlignment.MiddleCenter;
-                Full(sep, 22, 10);
+                Full(sep, 22, 14);
             }
 
             Outlined(Find("btnRegister"));
