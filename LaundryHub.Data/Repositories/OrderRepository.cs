@@ -154,10 +154,11 @@ public class OrderRepository : IOrderRepository
 
     private static bool IsValidTransition(string? from, string to) => (from, to) switch
     {
+        ("Booked", "Washing") => true,
         ("Washing", "Drying") => true,
         ("Drying", "Ready for Pickup") => true,
         ("Ready for Pickup", "Claimed") => true,
-        ("Washing" or "Drying" or "Ready for Pickup", "Cancelled") => true,
+        ("Booked" or "Washing" or "Drying" or "Ready for Pickup", "Cancelled") => true,
         _ => false
     };
     public void UpdateStatus(int orderId, string newStatus, string? cancelReason = null, int? changedBy = null, string? notes = null)
