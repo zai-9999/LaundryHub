@@ -320,7 +320,7 @@ public static class UIThemeHelper
     }
 
     // Smallest font size (pt) allowed anywhere in the app. Raise/lower to taste.
-    private const float MinFontSize = 10.5F;
+    private const float MinFontSize = 11F;
 
     private static void NormalizeFont(Control c)
     {
