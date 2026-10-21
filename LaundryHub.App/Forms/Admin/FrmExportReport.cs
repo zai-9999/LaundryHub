@@ -68,7 +68,7 @@ public partial class FrmExportReport : Form
         var path = ExcelHelper.ExportDailyReport(_currentReport, this);
         if (!string.IsNullOrEmpty(path))
         {
-            MessageBox.Show($"Report successfully exported to:\n{path}", "Export Complete", MessageBoxButtons.OK, MessageBoxIcon.Information);
+            UiMessages.Show($"Report successfully exported to:\n{path}", "Export Complete", MessageBoxButtons.OK, MessageBoxIcon.Information);
         }
     }
 }

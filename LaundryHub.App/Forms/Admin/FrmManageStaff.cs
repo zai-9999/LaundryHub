@@ -109,7 +109,7 @@ public partial class FrmManageStaff : Form
                 }
 
                 AppServices.Users.Update(_selectedUser);
-                MessageBox.Show("Staff member updated successfully!", "Success", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                UiMessages.Show("Staff member updated successfully!", "Success", MessageBoxButtons.OK, MessageBoxIcon.Information);
             }
             else
             {
@@ -124,7 +124,7 @@ public partial class FrmManageStaff : Form
                     IsActive = chkActive.Checked
                 };
                 AppServices.Users.Add(newUser);
-                MessageBox.Show($"New staff member '{username}' created!", "Success", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                UiMessages.Show($"New staff member '{username}' created!", "Success", MessageBoxButtons.OK, MessageBoxIcon.Information);
             }
 
             LoadStaff();

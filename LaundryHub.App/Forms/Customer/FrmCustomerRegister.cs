@@ -102,7 +102,7 @@ public partial class FrmCustomerRegister : Form
 
             AppServices.Customers.RegisterCustomerWithUser(user, customer);
 
-            MessageBox.Show(
+            UiMessages.Show(
                 "Account successfully created! You may now log in to view your orders.",
                 "Registration Complete",
                 MessageBoxButtons.OK,

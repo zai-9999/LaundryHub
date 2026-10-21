@@ -154,7 +154,7 @@ public partial class FrmOrderDetail : Form
                 {
                     if (_customer == null || string.IsNullOrWhiteSpace(_customer.Email))
                     {
-                        MessageBox.Show(
+                        UiMessages.Show(
                             "Order status moved to 'Ready for Pickup', but this customer has no email address registered.",
                             "Status Updated",
                             MessageBoxButtons.OK,
@@ -162,7 +162,7 @@ public partial class FrmOrderDetail : Form
                     }
                     else if (await EmailHelper.SendReadyForPickupAsync(_order, _customer))
                     {
-                        MessageBox.Show(
+                        UiMessages.Show(
                             $"Order status moved to 'Ready for Pickup'. A notification was sent to {_customer.Email}.",
                             "Status Updated",
                             MessageBoxButtons.OK,
@@ -170,7 +170,7 @@ public partial class FrmOrderDetail : Form
                     }
                     else
                     {
-                        MessageBox.Show(
+                        UiMessages.Show(
                             "Order status moved to 'Ready for Pickup', but the email notification could not be sent.",
                             "Status Updated",
                             MessageBoxButtons.OK,
@@ -179,12 +179,12 @@ public partial class FrmOrderDetail : Form
                 }
                 else
                 {
-                    MessageBox.Show($"Order status moved to '{nextStatus}'.", "Status Updated", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                    UiMessages.Show($"Order status moved to '{nextStatus}'.", "Status Updated", MessageBoxButtons.OK, MessageBoxIcon.Information);
                 }
             }
             catch (Exception ex)
             {
-                MessageBox.Show($"Failed to update order status: {ex.Message}", "Database Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                UiMessages.Show($"Failed to update order status: {ex.Message}", "Database Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
     }
@@ -194,7 +194,7 @@ public partial class FrmOrderDetail : Form
         var service = AppServices.ServiceTypes.GetById(_order.ServiceId);
         if (service == null)
         {
-            MessageBox.Show("The service pricing could not be found.", "Unable to Update Weight", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+            UiMessages.Show("The service pricing could not be found.", "Unable to Update Weight", MessageBoxButtons.OK, MessageBoxIcon.Warning);
             return;
         }
 
@@ -265,14 +265,14 @@ public partial class FrmOrderDetail : Form
             var weight = GetWeight();
             if (!weight.HasValue)
             {
-                MessageBox.Show("Please enter a valid weight greater than zero.", "Invalid Weight", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                UiMessages.Show("Please enter a valid weight greater than zero.", "Invalid Weight", MessageBoxButtons.OK, MessageBoxIcon.Warning);
                 return;
             }
 
             var total = service.ComputePrice(weight.Value);
             if (!AppServices.Orders.UpdateConfirmedWeight(_order.OrderId, weight.Value, total))
             {
-                MessageBox.Show("The weight was not updated. The order may already be paid, claimed, or cancelled.",
+                UiMessages.Show("The weight was not updated. The order may already be paid, claimed, or cancelled.",
                     "Unable to Update Weight", MessageBoxButtons.OK, MessageBoxIcon.Warning);
                 return;
             }
@@ -287,7 +287,7 @@ public partial class FrmOrderDetail : Form
         if (dlg.ShowDialog(this) == DialogResult.OK)
         {
             RefreshOrderData();
-            MessageBox.Show("The confirmed weight and order total were updated.", "Weight Updated", MessageBoxButtons.OK, MessageBoxIcon.Information);
+            UiMessages.Show("The confirmed weight and order total were updated.", "Weight Updated", MessageBoxButtons.OK, MessageBoxIcon.Information);
         }
     }
 
@@ -368,7 +368,7 @@ public partial class FrmOrderDetail : Form
         {
             if (!InputValidator.IsValidPrice(txtAmount.Text, out var paid, out var priceErr, fieldName: "Payment amount", min: _order.TotalAmount, max: 1000000m))
             {
-                MessageBox.Show(priceErr, "Invalid Payment", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                UiMessages.Show(priceErr, "Invalid Payment", MessageBoxButtons.OK, MessageBoxIcon.Warning);
                 txtAmount.Focus();
                 return;
             }
@@ -381,7 +381,7 @@ public partial class FrmOrderDetail : Form
             }
             catch (Exception ex)
             {
-                MessageBox.Show($"Failed to record payment and claim order: {ex.Message}", "Database Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                UiMessages.Show($"Failed to record payment and claim order: {ex.Message}", "Database Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         };
 
@@ -389,7 +389,7 @@ public partial class FrmOrderDetail : Form
         if (dlg.ShowDialog(this) == DialogResult.OK)
         {
             RefreshOrderData();
-            MessageBox.Show("Order has been successfully marked as CLAIMED and payment recorded!", "Order Claimed", MessageBoxButtons.OK, MessageBoxIcon.Information);
+            UiMessages.Show("Order has been successfully marked as CLAIMED and payment recorded!", "Order Claimed", MessageBoxButtons.OK, MessageBoxIcon.Information);
         }
     }
 
@@ -443,7 +443,7 @@ public partial class FrmOrderDetail : Form
             var reason = txtReason.Text.Trim();
             if (string.IsNullOrWhiteSpace(reason) || reason.Length < 3)
             {
-                MessageBox.Show("Please provide a valid cancellation reason (at least 3 characters).", "Reason Required", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                UiMessages.Show("Please provide a valid cancellation reason (at least 3 characters).", "Reason Required", MessageBoxButtons.OK, MessageBoxIcon.Warning);
                 txtReason.Focus();
                 return;
             }
@@ -456,7 +456,7 @@ public partial class FrmOrderDetail : Form
             }
             catch (Exception ex)
             {
-                MessageBox.Show($"Failed to cancel order: {ex.Message}", "Database Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                UiMessages.Show($"Failed to cancel order: {ex.Message}", "Database Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         };
 
@@ -464,7 +464,7 @@ public partial class FrmOrderDetail : Form
         if (dlg.ShowDialog(this) == DialogResult.OK)
         {
             RefreshOrderData();
-            MessageBox.Show("Order cancelled.", "Notice", MessageBoxButtons.OK, MessageBoxIcon.Information);
+            UiMessages.Show("Order cancelled.", "Notice", MessageBoxButtons.OK, MessageBoxIcon.Information);
         }
     }
 
@@ -493,7 +493,7 @@ public partial class FrmOrderDetail : Form
         }
         catch (Exception ex)
         {
-            MessageBox.Show($"Print failed: {ex.Message}", "Print Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            UiMessages.Show($"Print failed: {ex.Message}", "Print Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
         }
     }
 
@@ -501,11 +501,11 @@ public partial class FrmOrderDetail : Form
     {
         if (_customer == null || string.IsNullOrWhiteSpace(_customer.Email))
         {
-            MessageBox.Show("This customer does not have an email address registered.", "No Email", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+            UiMessages.Show("This customer does not have an email address registered.", "No Email", MessageBoxButtons.OK, MessageBoxIcon.Warning);
             return;
         }
 
         EmailHelper.SendReceiptAsync(_order, _customer);
-        MessageBox.Show($"A digital receipt has been sent to {_customer.Email}.", "Email Sent", MessageBoxButtons.OK, MessageBoxIcon.Information);
+        UiMessages.Show($"A digital receipt has been sent to {_customer.Email}.", "Email Sent", MessageBoxButtons.OK, MessageBoxIcon.Information);
     }
 }

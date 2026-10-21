@@ -193,7 +193,7 @@ public partial class FrmStaffDashboard : Form
 
     private void btnLogout_Click(object? sender, EventArgs e)
     {
-        if (MessageBox.Show("Are you sure you want to log out of Staff Operations?", "Confirm Logout", MessageBoxButtons.YesNo,
+        if (UiMessages.Show("Are you sure you want to log out of Staff Operations?", "Confirm Logout", MessageBoxButtons.YesNo,
                 MessageBoxIcon.Question) == DialogResult.Yes)
             this.Close();
     }

@@ -86,7 +86,7 @@ public partial class FrmCustomerPortal : Form
     {
         if (_customer == null)
         {
-            MessageBox.Show("Please complete your profile before booking an order.", "Notice", MessageBoxButtons.OK, MessageBoxIcon.Information);
+            UiMessages.Show("Please complete your profile before booking an order.", "Notice", MessageBoxButtons.OK, MessageBoxIcon.Information);
             return;
         }
 
@@ -219,7 +219,7 @@ public partial class FrmCustomerPortal : Form
     {
         if (dgvOrders.SelectedRows.Count == 0)
         {
-            MessageBox.Show("Please select an order from the list first to view its e-ticket.", "No Order Selected", MessageBoxButtons.OK, MessageBoxIcon.Information);
+            UiMessages.Show("Please select an order from the list first to view its e-ticket.", "No Order Selected", MessageBoxButtons.OK, MessageBoxIcon.Information);
             return;
         }
         var row = dgvOrders.SelectedRows[0];

@@ -104,7 +104,7 @@ public partial class FrmServicePricing : Form
                 _selectedService.IsActive = true;
 
                 AppServices.ServiceTypes.Update(_selectedService);
-                MessageBox.Show("Service type updated successfully!", "Success", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                UiMessages.Show("Service type updated successfully!", "Success", MessageBoxButtons.OK, MessageBoxIcon.Information);
             }
             else
             {
@@ -116,7 +116,7 @@ public partial class FrmServicePricing : Form
                     IsActive = true
                 };
                 AppServices.ServiceTypes.Add(newService);
-                MessageBox.Show($"New service '{name}' created!", "Success", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                UiMessages.Show($"New service '{name}' created!", "Success", MessageBoxButtons.OK, MessageBoxIcon.Information);
             }
 
             LoadServices();

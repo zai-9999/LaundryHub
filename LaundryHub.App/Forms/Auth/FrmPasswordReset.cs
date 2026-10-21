@@ -141,7 +141,7 @@ public class FrmPasswordReset : Form
         {
             ThrottleService.RegisterAttempt(key, limit, window, lockout);
             // Para di halata kung may account o wala
-            MessageBox.Show("If an account exists for the provided information, a temporary password will be sent to the registered email.",
+            UiMessages.Show("If an account exists for the provided information, a temporary password will be sent to the registered email.",
                 "Password Reset", MessageBoxButtons.OK, MessageBoxIcon.Information);
             Close();
             return;
@@ -154,7 +154,7 @@ public class FrmPasswordReset : Form
         EmailHelper.SendPasswordReset(user, temp);
         ThrottleService.Reset(key);
 
-        MessageBox.Show("If an account exists for the provided information, a temporary password will be sent to the registered email.",
+        UiMessages.Show("If an account exists for the provided information, a temporary password will be sent to the registered email.",
             "Password Reset", MessageBoxButtons.OK, MessageBoxIcon.Information);
         Close();
     }

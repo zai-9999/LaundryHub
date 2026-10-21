@@ -121,7 +121,7 @@ public partial class FrmUpdateProfile : Form
             }
             AppServices.Users.Update(_user);
 
-            MessageBox.Show("Profile successfully updated!", "Success", MessageBoxButtons.OK, MessageBoxIcon.Information);
+            UiMessages.Show("Profile successfully updated!", "Success", MessageBoxButtons.OK, MessageBoxIcon.Information);
             this.DialogResult = DialogResult.OK;
             this.Close();
         }

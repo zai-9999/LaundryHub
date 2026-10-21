@@ -192,7 +192,7 @@ public partial class FrmCustomerRegistration : Form
                 int newId = AppServices.Customers.Add(customer);
                 customer.CustomerId = newId;
                 CreatedCustomer = customer;
-                MessageBox.Show($"Customer {customer.FullName} registered successfully!", "Success", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                UiMessages.Show($"Customer {customer.FullName} registered successfully!", "Success", MessageBoxButtons.OK, MessageBoxIcon.Information);
             }
 
             LoadCustomers();
@@ -217,7 +217,7 @@ public partial class FrmCustomerRegistration : Form
     {
         if (_selectedCustomer == null)
         {
-            MessageBox.Show("Please choose a customer from the table first.", "Selection Required", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+            UiMessages.Show("Please choose a customer from the table first.", "Selection Required", MessageBoxButtons.OK, MessageBoxIcon.Warning);
             return;
         }
 
@@ -230,11 +230,11 @@ public partial class FrmCustomerRegistration : Form
     {
         if (_selectedCustomer == null)
         {
-            MessageBox.Show("Please select a customer to archive.", "Notice", MessageBoxButtons.OK, MessageBoxIcon.Information);
+            UiMessages.Show("Please select a customer to archive.", "Notice", MessageBoxButtons.OK, MessageBoxIcon.Information);
             return;
         }
 
-        var confirm = MessageBox.Show($"Are you sure you want to archive customer '{_selectedCustomer.FullName}'?",
+        var confirm = UiMessages.Show($"Are you sure you want to archive customer '{_selectedCustomer.FullName}'?",
             "Confirm Archive", MessageBoxButtons.YesNo, MessageBoxIcon.Warning);
 
         if (confirm == DialogResult.Yes)
@@ -244,11 +244,11 @@ public partial class FrmCustomerRegistration : Form
                 AppServices.Customers.Archive(_selectedCustomer.CustomerId);
                 ResetForm();
                 LoadCustomers();
-                MessageBox.Show("Customer archived successfully.", "Success", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                UiMessages.Show("Customer archived successfully.", "Success", MessageBoxButtons.OK, MessageBoxIcon.Information);
             }
             catch (InvalidOperationException ex)
             {
-                MessageBox.Show(ex.Message, "Cannot Archive", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                UiMessages.Show(ex.Message, "Cannot Archive", MessageBoxButtons.OK, MessageBoxIcon.Warning);
             }
         }
     }
@@ -257,14 +257,14 @@ public partial class FrmCustomerRegistration : Form
     {
         if (_selectedCustomer == null || !_selectedCustomer.IsArchived)
         {
-            MessageBox.Show("Select an archived customer from the list first.", "Notice", MessageBoxButtons.OK, MessageBoxIcon.Information);
+            UiMessages.Show("Select an archived customer from the list first.", "Notice", MessageBoxButtons.OK, MessageBoxIcon.Information);
             return;
         }
 
         AppServices.Customers.Restore(_selectedCustomer.CustomerId);
         ResetForm();
         LoadCustomers(txtSearch.Text.Trim());
-        MessageBox.Show("Customer restored.", "Success", MessageBoxButtons.OK, MessageBoxIcon.Information);
+        UiMessages.Show("Customer restored.", "Success", MessageBoxButtons.OK, MessageBoxIcon.Information);
     }
     private void ResetForm()
     {

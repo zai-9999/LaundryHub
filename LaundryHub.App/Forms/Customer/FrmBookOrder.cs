@@ -172,7 +172,7 @@ public partial class FrmBookOrder : Form
             // Send confirmation email receipt asynchronously
             EmailHelper.SendReceiptAsync(order, _customer);
 
-            MessageBox.Show(
+            UiMessages.Show(
                 $"Your laundry order has been successfully booked!\n\nOrder Number: {order.OrderNumber}\nTotal Due: {order.TotalAmount:N2}\nPickup Target: {order.PickupDate:MMMM dd, yyyy}\n\nPresent your digital QR E-Ticket upon claiming.",
                 "Order Confirmed!",
                 MessageBoxButtons.OK,
