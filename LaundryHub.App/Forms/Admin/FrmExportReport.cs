@@ -9,6 +9,7 @@ public partial class FrmExportReport : Form
 
     public FrmExportReport()
     {
+        InitializeComponent();
         DoubleBuffered = true;
         ResizeRedraw = true;
         UIThemeHelper.StyleStandardForm(this);

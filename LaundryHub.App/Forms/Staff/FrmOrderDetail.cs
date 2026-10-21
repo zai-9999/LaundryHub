@@ -16,6 +16,7 @@ public partial class FrmOrderDetail : Form
 
     public FrmOrderDetail(Order order)
     {
+        InitializeComponent();
         _order = order;
         DoubleBuffered = true;
         ResizeRedraw = true;
