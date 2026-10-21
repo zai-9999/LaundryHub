@@ -1,5 +1,4 @@
 ﻿using Panel = System.Windows.Forms.Panel;
-using Button = System.Windows.Forms.Button;
 using ReaLTaiizor;
 using ReaLTaiizor.Controls;
 using ReaLTaiizor.Util;
@@ -26,7 +25,7 @@ partial class FrmBookOrder
         pnlHeader = new Panel();
         lblTitle = new Label();
         lblSubtitle = new Label();
-        btnCloseTop = new Button();
+        btnCloseTop = new HopeButton();
         pnlMainCard = new Panel();
         pnlPriceSummary = new Panel();
         lblPriceTitle = new Label();
@@ -36,16 +35,16 @@ partial class FrmBookOrder
         btnBookNow = new HopeButton();
         btnCancel = new HopeButton();
         lblError = new Label();
-        txtNotes = new TextBox();
+        txtNotes = new HopeTextBox();
         lblNotes = new Label();
         dtpPickup = new DateTimePicker();
         lblPickup = new Label();
         pnlQuickWeight = new FlowLayoutPanel();
-        btnWeight4 = new Button();
-        btnWeight6 = new Button();
-        btnWeight8 = new Button();
-        btnWeight10 = new Button();
-        txtWeight = new TextBox();
+        btnWeight4 = new HopeButton();
+        btnWeight6 = new HopeButton();
+        btnWeight8 = new HopeButton();
+        btnWeight10 = new HopeButton();
+        txtWeight = new HopeTextBox();
         lblWeight = new Label();
         lblServiceRateBadge = new Label();
         cmbServices = new ComboBox();
@@ -98,20 +97,20 @@ partial class FrmBookOrder
         lblSubtitle.Text = "Select your service and schedule a pickup or drop-off";
         // 
         // btnCloseTop
-        // 
+        //
         btnCloseTop.Anchor = AnchorStyles.Top | AnchorStyles.Right;
-        btnCloseTop.BackColor = Color.Transparent;
+        btnCloseTop.ButtonType = HopeButtonType.Default;
+        btnCloseTop.DefaultColor = Color.FromArgb(17, 24, 68);
+        btnCloseTop.BorderColor = Color.FromArgb(17, 24, 68);
         btnCloseTop.Cursor = Cursors.Hand;
-        btnCloseTop.FlatAppearance.BorderSize = 0;
-        btnCloseTop.FlatStyle = FlatStyle.Flat;
         btnCloseTop.Font = new Font("Segoe UI", 12F, FontStyle.Bold);
-        btnCloseTop.ForeColor = Color.White;
+        btnCloseTop.HoverTextColor = Color.White;
         btnCloseTop.Location = new Point(570, 15);
         btnCloseTop.Name = "btnCloseTop";
         btnCloseTop.Size = new Size(35, 35);
         btnCloseTop.TabIndex = 2;
         btnCloseTop.Text = "";
-        btnCloseTop.UseVisualStyleBackColor = false;
+        btnCloseTop.TextColor = Color.White;
         btnCloseTop.Click += btnCancel_Click;
         // 
         // pnlMainCard
@@ -242,12 +241,17 @@ partial class FrmBookOrder
         lblError.Visible = false;
         // 
         // txtNotes
-        // 
+        //
+        txtNotes.BackColor = Color.White;
+        txtNotes.BaseColor = Color.White;
+        txtNotes.BorderColorA = Color.FromArgb(75, 86, 148);
+        txtNotes.BorderColorB = Color.FromArgb(190, 196, 220);
         txtNotes.Font = new Font("Segoe UI", 9.5F);
+        txtNotes.ForeColor = Color.FromArgb(75, 86, 148);
+        txtNotes.Hint = "e.g. Delicate fabric, separate colored clothes, mild detergent...";
         txtNotes.Location = new Point(24, 430);
         txtNotes.Multiline = true;
         txtNotes.Name = "txtNotes";
-        txtNotes.PlaceholderText = "e.g. Delicate fabric, separate colored clothes, mild detergent...";
         txtNotes.Size = new Size(572, 52);
         txtNotes.TabIndex = 9;
         // 
@@ -294,72 +298,78 @@ partial class FrmBookOrder
         pnlQuickWeight.TabIndex = 5;
         // 
         // btnWeight4
-        // 
-        btnWeight4.BackColor = Color.FromArgb(248, 245, 239);
+        //
+        btnWeight4.ButtonType = HopeButtonType.Default;
+        btnWeight4.DefaultColor = Color.FromArgb(248, 245, 239);
+        btnWeight4.BorderColor = Color.FromArgb(234, 224, 207);
         btnWeight4.Cursor = Cursors.Hand;
-        btnWeight4.FlatAppearance.BorderColor = Color.FromArgb(234, 224, 207);
-        btnWeight4.FlatStyle = FlatStyle.Flat;
         btnWeight4.Font = new Font("Segoe UI", 8.5F);
-        btnWeight4.ForeColor = Color.FromArgb(17, 24, 68);
+        btnWeight4.HoverTextColor = Color.FromArgb(17, 24, 68);
         btnWeight4.Location = new Point(3, 3);
         btnWeight4.Name = "btnWeight4";
         btnWeight4.Size = new Size(80, 32);
         btnWeight4.TabIndex = 0;
         btnWeight4.Text = "4.0 kg";
-        btnWeight4.UseVisualStyleBackColor = false;
+        btnWeight4.TextColor = Color.FromArgb(17, 24, 68);
         btnWeight4.Click += btnQuickWeight_Click;
-        // 
+        //
         // btnWeight6
-        // 
-        btnWeight6.BackColor = Color.FromArgb(248, 245, 239);
+        //
+        btnWeight6.ButtonType = HopeButtonType.Default;
+        btnWeight6.DefaultColor = Color.FromArgb(248, 245, 239);
+        btnWeight6.BorderColor = Color.FromArgb(234, 224, 207);
         btnWeight6.Cursor = Cursors.Hand;
-        btnWeight6.FlatAppearance.BorderColor = Color.FromArgb(234, 224, 207);
-        btnWeight6.FlatStyle = FlatStyle.Flat;
         btnWeight6.Font = new Font("Segoe UI", 8.5F);
-        btnWeight6.ForeColor = Color.FromArgb(17, 24, 68);
+        btnWeight6.HoverTextColor = Color.FromArgb(17, 24, 68);
         btnWeight6.Location = new Point(89, 3);
         btnWeight6.Name = "btnWeight6";
         btnWeight6.Size = new Size(80, 32);
         btnWeight6.TabIndex = 1;
         btnWeight6.Text = "6.0 kg";
-        btnWeight6.UseVisualStyleBackColor = false;
+        btnWeight6.TextColor = Color.FromArgb(17, 24, 68);
         btnWeight6.Click += btnQuickWeight_Click;
-        // 
+        //
         // btnWeight8
-        // 
-        btnWeight8.BackColor = Color.FromArgb(248, 245, 239);
+        //
+        btnWeight8.ButtonType = HopeButtonType.Default;
+        btnWeight8.DefaultColor = Color.FromArgb(248, 245, 239);
+        btnWeight8.BorderColor = Color.FromArgb(234, 224, 207);
         btnWeight8.Cursor = Cursors.Hand;
-        btnWeight8.FlatAppearance.BorderColor = Color.FromArgb(234, 224, 207);
-        btnWeight8.FlatStyle = FlatStyle.Flat;
         btnWeight8.Font = new Font("Segoe UI", 8.5F);
-        btnWeight8.ForeColor = Color.FromArgb(17, 24, 68);
+        btnWeight8.HoverTextColor = Color.FromArgb(17, 24, 68);
         btnWeight8.Location = new Point(175, 3);
         btnWeight8.Name = "btnWeight8";
         btnWeight8.Size = new Size(80, 32);
         btnWeight8.TabIndex = 2;
         btnWeight8.Text = "8.0 kg";
-        btnWeight8.UseVisualStyleBackColor = false;
+        btnWeight8.TextColor = Color.FromArgb(17, 24, 68);
         btnWeight8.Click += btnQuickWeight_Click;
-        // 
+        //
         // btnWeight10
-        // 
-        btnWeight10.BackColor = Color.FromArgb(248, 245, 239);
+        //
+        btnWeight10.ButtonType = HopeButtonType.Default;
+        btnWeight10.DefaultColor = Color.FromArgb(248, 245, 239);
+        btnWeight10.BorderColor = Color.FromArgb(234, 224, 207);
         btnWeight10.Cursor = Cursors.Hand;
-        btnWeight10.FlatAppearance.BorderColor = Color.FromArgb(234, 224, 207);
-        btnWeight10.FlatStyle = FlatStyle.Flat;
         btnWeight10.Font = new Font("Segoe UI", 8.5F);
-        btnWeight10.ForeColor = Color.FromArgb(17, 24, 68);
+        btnWeight10.HoverTextColor = Color.FromArgb(17, 24, 68);
         btnWeight10.Location = new Point(261, 3);
         btnWeight10.Name = "btnWeight10";
         btnWeight10.Size = new Size(80, 32);
         btnWeight10.TabIndex = 3;
         btnWeight10.Text = "10.0 kg";
-        btnWeight10.UseVisualStyleBackColor = false;
+        btnWeight10.TextColor = Color.FromArgb(17, 24, 68);
         btnWeight10.Click += btnQuickWeight_Click;
         // 
         // txtWeight
-        // 
+        //
+        txtWeight.BackColor = Color.White;
+        txtWeight.BaseColor = Color.White;
+        txtWeight.BorderColorA = Color.FromArgb(75, 86, 148);
+        txtWeight.BorderColorB = Color.FromArgb(190, 196, 220);
         txtWeight.Font = new Font("Segoe UI", 10.5F);
+        txtWeight.ForeColor = Color.FromArgb(75, 86, 148);
+        txtWeight.Hint = "4.0";
         txtWeight.Location = new Point(24, 285);
         txtWeight.Name = "txtWeight";
         txtWeight.Size = new Size(170, 31);
@@ -470,8 +480,8 @@ partial class FrmBookOrder
         // 
         // FrmBookOrder
         // 
-        AutoScaleDimensions = new SizeF(8F, 20F);
-        AutoScaleMode = AutoScaleMode.Font;
+        AutoScaleDimensions = new SizeF(96F, 96F);
+        AutoScaleMode = AutoScaleMode.Dpi;
         ClientSize = new Size(620, 760);
         Controls.Add(pnlMainCard);
         Controls.Add(pnlHeader);
@@ -498,7 +508,7 @@ partial class FrmBookOrder
     private Panel pnlHeader;
     private Label lblTitle;
     private Label lblSubtitle;
-    private Button btnCloseTop;
+    private HopeButton btnCloseTop;
     private Panel pnlMainCard;
     private Panel pnlCustomerCard;
     private Label lblCustInfoTitle;
@@ -509,16 +519,16 @@ partial class FrmBookOrder
     private ComboBox cmbServices;
     private Label lblServiceRateBadge;
     private Label lblWeight;
-    private TextBox txtWeight;
+    private HopeTextBox txtWeight;
     private FlowLayoutPanel pnlQuickWeight;
-    private Button btnWeight4;
-    private Button btnWeight6;
-    private Button btnWeight8;
-    private Button btnWeight10;
+    private HopeButton btnWeight4;
+    private HopeButton btnWeight6;
+    private HopeButton btnWeight8;
+    private HopeButton btnWeight10;
     private Label lblPickup;
     private DateTimePicker dtpPickup;
     private Label lblNotes;
-    private TextBox txtNotes;
+    private HopeTextBox txtNotes;
     private Panel pnlPriceSummary;
     private Label lblPriceTitle;
     private Label lblPriceRate;

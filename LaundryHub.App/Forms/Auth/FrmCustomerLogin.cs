@@ -12,7 +12,6 @@ public partial class FrmCustomerLogin : Form
         DoubleBuffered = true;
         ResizeRedraw = true;
         UIThemeHelper.StyleAuthForm(this, pnlCard, btnLogin, btnRegister, btnPricing, btnGuestLookup, btnSwitchToStaff);
-        UIThemeHelper.LoadAuthLogo(picLogo);
         CenterCardContents();
         pnlCard.SizeChanged += (_, _) => CenterCardContents();
         txtUsername.TextChanged += (_, _) => lblError.Visible = false;
@@ -105,6 +104,7 @@ public partial class FrmCustomerLogin : Form
     {
         var guestForm = new Guest.FrmGuestLookup();
         guestForm.FormClosed += (_, _) => this.Show();
+        guestForm.WindowState = this.WindowState;
         guestForm.Show();
         this.Hide();
     }
@@ -113,6 +113,7 @@ public partial class FrmCustomerLogin : Form
     {
         var regForm = new Customer.FrmCustomerRegister();
         regForm.FormClosed += (_, _) => this.Show();
+        regForm.WindowState = this.WindowState;
         regForm.Show();
         this.Hide();
     }
@@ -128,6 +129,12 @@ public partial class FrmCustomerLogin : Form
         this.Close(); // Returns to the Staff/Admin login (which re-shows via FormClosed)
     }
 
+    private void lnkForgotPassword_LinkClicked(object? sender, LinkLabelLinkClickedEventArgs e)
+    {
+        using var reset = new FrmPasswordReset();
+        reset.ShowDialog(this);
+    }
+
     //  Navigation 
 
     private void OpenCustomerPortal()
@@ -141,6 +148,7 @@ public partial class FrmCustomerLogin : Form
             ClearFields();
         };
 
+        portal.WindowState = this.WindowState;
         portal.Show();
         this.Hide();
     }
@@ -183,20 +191,10 @@ public partial class FrmCustomerLogin : Form
 
     private void btnTogglePassword_Click(object? sender, EventArgs e)
     {
-        if (txtPassword.UseSystemPasswordChar)
-        {
-            // Show password
-            txtPassword.UseSystemPasswordChar = false;
-            txtPassword.PasswordChar = '\0';
-            btnTogglePassword.Text = "\uD83D\uDC41"; // 👁 eye open
-        }
-        else
-        {
-            // Hide password
-            txtPassword.UseSystemPasswordChar = true;
-            txtPassword.PasswordChar = '\0';
-            btnTogglePassword.Text = "\uD83D\uDE48"; // 🙈 eye closed
-        }
+        bool hide = !txtPassword.UseSystemPasswordChar;
+        txtPassword.UseSystemPasswordChar = hide;
+        txtPassword.PasswordChar = '\0';
+        btnTogglePassword.Text = hide ? "Show" : "Hide";
     }
 
     private void pnlCard_Paint(object sender, PaintEventArgs e)
@@ -204,18 +202,5 @@ public partial class FrmCustomerLogin : Form
         UIThemeHelper.PaintRoundedSolidCard(pnlCard, e, Color.White, UIThemeHelper.LoginCardRadius);
     }
 
-    private void CenterCardContents()
-    {
-        UIThemeHelper.CenterLoginFields(
-            pnlCard,
-            picLogo, lblTitle, lblSubtitle,
-            lblUser, txtUsername,
-            lblPass, txtPassword,
-            lblError, btnLogin,
-            lblSeparator, btnRegister,
-            btnPricing, btnGuestLookup, btnSwitchToStaff);
-        txtPassword.Width = 280;
-        btnTogglePassword.Location = new Point(txtPassword.Right + 6, txtPassword.Top + (txtPassword.Height - btnTogglePassword.Height) / 2);
-        lblError.TextAlign = ContentAlignment.MiddleCenter;
-    }
+    private void CenterCardContents() => AuthLayout.Arrange(pnlCard);
 }

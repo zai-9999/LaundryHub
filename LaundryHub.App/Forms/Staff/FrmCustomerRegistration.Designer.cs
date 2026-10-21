@@ -1,4 +1,9 @@
-﻿namespace LaundryHub.App.Forms.Staff;
+﻿using Panel = System.Windows.Forms.Panel;
+using ReaLTaiizor;
+using ReaLTaiizor.Controls;
+using ReaLTaiizor.Util;
+
+namespace LaundryHub.App.Forms.Staff;
 
 partial class FrmCustomerRegistration
 {
@@ -21,30 +26,29 @@ partial class FrmCustomerRegistration
         DataGridViewCellStyle dataGridViewCellStyle2 = new DataGridViewCellStyle();
         pnlHeader = new Panel();
         lblTitle = new Label();
-        btnClose = new Button();
+        btnClose = new HopeButton();
         pnlContainer = new Panel();
         pnlRight = new Panel();
         pnlGridContainer = new Panel();
         dgvCustomers = new DataGridView();
         pnlSearchBar = new Panel();
-        txtSearch = new TextBox();
+        txtSearch = new HopeTextBox();
         lblSearchIcon = new Label();
-        btnArchive = new Button();
         pnlLeftCard = new Panel();
         flpForm = new FlowLayoutPanel();
         lblFullName = new Label();
-        txtFullName = new TextBox();
+        txtFullName = new HopeTextBox();
         lblPhone = new Label();
-        txtPhone = new TextBox();
+        txtPhone = new HopeTextBox();
         lblEmail = new Label();
-        txtEmail = new TextBox();
+        txtEmail = new HopeTextBox();
         lblAddress = new Label();
-        txtAddress = new TextBox();
+        txtAddress = new HopeTextBox();
         lblError = new Label();
         flpButtons = new FlowLayoutPanel();
-        btnSave = new Button();
-        btnClear = new Button();
-        btnSelect = new Button();
+        btnSave = new HopeButton();
+        btnClear = new HopeButton();
+        btnSelect = new HopeButton();
         lblFormTitle = new Label();
         pnlHeader.SuspendLayout();
         pnlContainer.SuspendLayout();
@@ -73,7 +77,7 @@ partial class FrmCustomerRegistration
         // 
         lblTitle.Dock = DockStyle.Left;
         lblTitle.Font = new Font("Segoe UI", 16F, FontStyle.Bold);
-        lblTitle.ForeColor = Color.FromArgb(114, 136, 174);
+        lblTitle.ForeColor = Color.White;
         lblTitle.Location = new Point(24, 0);
         lblTitle.Name = "lblTitle";
         lblTitle.Size = new Size(500, 65);
@@ -82,18 +86,19 @@ partial class FrmCustomerRegistration
         lblTitle.TextAlign = ContentAlignment.MiddleLeft;
         // 
         // btnClose
-        // 
-        btnClose.BackColor = Color.FromArgb(17, 24, 68);
+        //
+        btnClose.ButtonType = HopeButtonType.Default;
+        btnClose.DefaultColor = Color.FromArgb(17, 24, 68);
+        btnClose.BorderColor = Color.FromArgb(17, 24, 68);
         btnClose.Cursor = Cursors.Hand;
-        btnClose.FlatAppearance.BorderSize = 0;
-        btnClose.FlatStyle = FlatStyle.Flat;
-        btnClose.ForeColor = Color.White;
+        btnClose.Font = new Font("Segoe UI", 9.5F);
+        btnClose.HoverTextColor = Color.White;
         btnClose.Location = new Point(886, 16);
         btnClose.Name = "btnClose";
         btnClose.Size = new Size(90, 34);
         btnClose.TabIndex = 1;
         btnClose.Text = " Close";
-        btnClose.UseVisualStyleBackColor = false;
+        btnClose.TextColor = Color.White;
         btnClose.Click += btnClose_Click;
         // 
         // pnlContainer
@@ -172,7 +177,6 @@ partial class FrmCustomerRegistration
         pnlSearchBar.BackColor = Color.FromArgb(17, 24, 68);
         pnlSearchBar.Controls.Add(txtSearch);
         pnlSearchBar.Controls.Add(lblSearchIcon);
-        pnlSearchBar.Controls.Add(btnArchive);
         pnlSearchBar.Dock = DockStyle.Top;
         pnlSearchBar.Location = new Point(16, 0);
         pnlSearchBar.Name = "pnlSearchBar";
@@ -181,15 +185,17 @@ partial class FrmCustomerRegistration
         pnlSearchBar.TabIndex = 0;
         // 
         // txtSearch
-        // 
-        txtSearch.BackColor = Color.FromArgb(17, 24, 68);
-        txtSearch.BorderStyle = BorderStyle.FixedSingle;
+        //
+        txtSearch.BackColor = Color.White;
+        txtSearch.BaseColor = Color.White;
+        txtSearch.BorderColorA = Color.FromArgb(75, 86, 148);
+        txtSearch.BorderColorB = Color.FromArgb(75, 86, 148);
         txtSearch.Dock = DockStyle.Fill;
         txtSearch.Font = new Font("Segoe UI", 10.5F);
-        txtSearch.ForeColor = Color.White;
+        txtSearch.ForeColor = Color.FromArgb(17, 24, 68);
+        txtSearch.Hint = "Search by name or phone number...";
         txtSearch.Location = new Point(40, 8);
         txtSearch.Name = "txtSearch";
-        txtSearch.PlaceholderText = "Search by name or phone number...";
         txtSearch.Size = new Size(417, 26);
         txtSearch.TabIndex = 1;
         txtSearch.TextChanged += txtSearch_TextChanged;
@@ -204,23 +210,6 @@ partial class FrmCustomerRegistration
         lblSearchIcon.TabIndex = 0;
         lblSearchIcon.Text = "";
         lblSearchIcon.TextAlign = ContentAlignment.MiddleCenter;
-        // 
-        // btnArchive
-        // 
-        btnArchive.BackColor = Color.FromArgb(153, 27, 27);
-        btnArchive.Cursor = Cursors.Hand;
-        btnArchive.Dock = DockStyle.Right;
-        btnArchive.FlatAppearance.BorderSize = 0;
-        btnArchive.FlatStyle = FlatStyle.Flat;
-        btnArchive.Font = new Font("Segoe UI", 8.5F);
-        btnArchive.ForeColor = Color.White;
-        btnArchive.Location = new Point(457, 8);
-        btnArchive.Name = "btnArchive";
-        btnArchive.Size = new Size(95, 32);
-        btnArchive.TabIndex = 2;
-        btnArchive.Text = " Archive";
-        btnArchive.UseVisualStyleBackColor = false;
-        btnArchive.Click += btnArchive_Click;
         // 
         // pnlLeftCard
         // 
@@ -259,8 +248,8 @@ partial class FrmCustomerRegistration
         // 
         // lblFullName
         // 
-        lblFullName.Font = new Font("Segoe UI", 8.5F);
-        lblFullName.ForeColor = Color.FromArgb(140, 150, 185);
+        lblFullName.Font = new Font("Segoe UI", 9F);
+        lblFullName.ForeColor = Color.FromArgb(220, 226, 240);
         lblFullName.Location = new Point(0, 16);
         lblFullName.Margin = new Padding(0, 6, 0, 2);
         lblFullName.Name = "lblFullName";
@@ -269,80 +258,92 @@ partial class FrmCustomerRegistration
         lblFullName.Text = "Full Name *";
         // 
         // txtFullName
-        // 
-        txtFullName.BackColor = Color.FromArgb(17, 24, 68);
-        txtFullName.BorderStyle = BorderStyle.FixedSingle;
+        //
+        txtFullName.BackColor = Color.White;
+        txtFullName.BaseColor = Color.White;
+        txtFullName.BorderColorA = Color.FromArgb(75, 86, 148);
+        txtFullName.BorderColorB = Color.FromArgb(75, 86, 148);
         txtFullName.Font = new Font("Segoe UI", 10F);
-        txtFullName.ForeColor = Color.White;
+        txtFullName.ForeColor = Color.FromArgb(17, 24, 68);
+        txtFullName.Hint = "Enter full name";
         txtFullName.Location = new Point(0, 39);
         txtFullName.Margin = new Padding(0, 3, 0, 3);
         txtFullName.Name = "txtFullName";
         txtFullName.Size = new Size(320, 25);
         txtFullName.TabIndex = 1;
-        // 
+        //
         // lblPhone
-        // 
-        lblPhone.Font = new Font("Segoe UI", 8.5F);
-        lblPhone.ForeColor = Color.FromArgb(140, 150, 185);
+        //
+        lblPhone.Font = new Font("Segoe UI", 9F);
+        lblPhone.ForeColor = Color.FromArgb(220, 226, 240);
         lblPhone.Location = new Point(0, 73);
         lblPhone.Margin = new Padding(0, 6, 0, 2);
         lblPhone.Name = "lblPhone";
         lblPhone.Size = new Size(320, 18);
         lblPhone.TabIndex = 2;
         lblPhone.Text = "Phone Number * (e.g. 09171234567)";
-        // 
+        //
         // txtPhone
-        // 
-        txtPhone.BackColor = Color.FromArgb(17, 24, 68);
-        txtPhone.BorderStyle = BorderStyle.FixedSingle;
+        //
+        txtPhone.BackColor = Color.White;
+        txtPhone.BaseColor = Color.White;
+        txtPhone.BorderColorA = Color.FromArgb(75, 86, 148);
+        txtPhone.BorderColorB = Color.FromArgb(75, 86, 148);
         txtPhone.Font = new Font("Segoe UI", 10F);
-        txtPhone.ForeColor = Color.White;
+        txtPhone.ForeColor = Color.FromArgb(17, 24, 68);
+        txtPhone.Hint = "09171234567";
         txtPhone.Location = new Point(0, 96);
         txtPhone.Margin = new Padding(0, 3, 0, 3);
         txtPhone.Name = "txtPhone";
         txtPhone.Size = new Size(320, 25);
         txtPhone.TabIndex = 3;
-        // 
+        //
         // lblEmail
-        // 
-        lblEmail.Font = new Font("Segoe UI", 8.5F);
-        lblEmail.ForeColor = Color.FromArgb(140, 150, 185);
+        //
+        lblEmail.Font = new Font("Segoe UI", 9F);
+        lblEmail.ForeColor = Color.FromArgb(220, 226, 240);
         lblEmail.Location = new Point(0, 130);
         lblEmail.Margin = new Padding(0, 6, 0, 2);
         lblEmail.Name = "lblEmail";
         lblEmail.Size = new Size(320, 18);
         lblEmail.TabIndex = 4;
         lblEmail.Text = "Email Address (Optional)";
-        // 
+        //
         // txtEmail
-        // 
-        txtEmail.BackColor = Color.FromArgb(17, 24, 68);
-        txtEmail.BorderStyle = BorderStyle.FixedSingle;
+        //
+        txtEmail.BackColor = Color.White;
+        txtEmail.BaseColor = Color.White;
+        txtEmail.BorderColorA = Color.FromArgb(75, 86, 148);
+        txtEmail.BorderColorB = Color.FromArgb(75, 86, 148);
         txtEmail.Font = new Font("Segoe UI", 10F);
-        txtEmail.ForeColor = Color.White;
+        txtEmail.ForeColor = Color.FromArgb(17, 24, 68);
+        txtEmail.Hint = "user@example.com";
         txtEmail.Location = new Point(0, 153);
         txtEmail.Margin = new Padding(0, 3, 0, 3);
         txtEmail.Name = "txtEmail";
         txtEmail.Size = new Size(320, 25);
         txtEmail.TabIndex = 5;
-        // 
+        //
         // lblAddress
-        // 
-        lblAddress.Font = new Font("Segoe UI", 8.5F);
-        lblAddress.ForeColor = Color.FromArgb(140, 150, 185);
+        //
+        lblAddress.Font = new Font("Segoe UI", 9F);
+        lblAddress.ForeColor = Color.FromArgb(220, 226, 240);
         lblAddress.Location = new Point(0, 187);
         lblAddress.Margin = new Padding(0, 6, 0, 2);
         lblAddress.Name = "lblAddress";
         lblAddress.Size = new Size(320, 18);
         lblAddress.TabIndex = 6;
         lblAddress.Text = "Complete Address (Optional)";
-        // 
+        //
         // txtAddress
-        // 
-        txtAddress.BackColor = Color.FromArgb(17, 24, 68);
-        txtAddress.BorderStyle = BorderStyle.FixedSingle;
+        //
+        txtAddress.BackColor = Color.White;
+        txtAddress.BaseColor = Color.White;
+        txtAddress.BorderColorA = Color.FromArgb(75, 86, 148);
+        txtAddress.BorderColorB = Color.FromArgb(75, 86, 148);
         txtAddress.Font = new Font("Segoe UI", 10F);
-        txtAddress.ForeColor = Color.White;
+        txtAddress.ForeColor = Color.FromArgb(17, 24, 68);
+        txtAddress.Hint = "House No., Street, City";
         txtAddress.Location = new Point(0, 210);
         txtAddress.Margin = new Padding(0, 3, 0, 3);
         txtAddress.Multiline = true;
@@ -352,7 +353,7 @@ partial class FrmCustomerRegistration
         // 
         // lblError
         // 
-        lblError.Font = new Font("Segoe UI", 8.5F);
+        lblError.Font = new Font("Segoe UI", 9F, FontStyle.Bold);
         lblError.ForeColor = Color.FromArgb(248, 113, 113);
         lblError.Location = new Point(3, 263);
         lblError.Name = "lblError";
@@ -371,51 +372,52 @@ partial class FrmCustomerRegistration
         flpButtons.TabIndex = 9;
         // 
         // btnSave
-        // 
-        btnSave.BackColor = Color.FromArgb(75, 86, 148);
+        //
+        btnSave.ButtonType = HopeButtonType.Primary;
+        btnSave.PrimaryColor = Color.FromArgb(75, 86, 148);
+        btnSave.BorderColor = Color.FromArgb(75, 86, 148);
         btnSave.Cursor = Cursors.Hand;
-        btnSave.FlatAppearance.BorderSize = 0;
-        btnSave.FlatStyle = FlatStyle.Flat;
         btnSave.Font = new Font("Segoe UI", 9.5F, FontStyle.Bold);
-        btnSave.ForeColor = Color.White;
+        btnSave.HoverTextColor = Color.White;
         btnSave.Location = new Point(3, 3);
         btnSave.Name = "btnSave";
         btnSave.Size = new Size(150, 38);
         btnSave.TabIndex = 0;
         btnSave.Text = " Save Customer";
-        btnSave.UseVisualStyleBackColor = false;
+        btnSave.TextColor = Color.White;
         btnSave.Click += btnSave_Click;
-        // 
+        //
         // btnClear
-        // 
-        btnClear.BackColor = Color.FromArgb(17, 24, 68);
+        //
+        btnClear.ButtonType = HopeButtonType.Default;
+        btnClear.DefaultColor = Color.FromArgb(17, 24, 68);
+        btnClear.BorderColor = Color.FromArgb(17, 24, 68);
         btnClear.Cursor = Cursors.Hand;
-        btnClear.FlatAppearance.BorderSize = 0;
-        btnClear.FlatStyle = FlatStyle.Flat;
-        btnClear.ForeColor = Color.White;
+        btnClear.Font = new Font("Segoe UI", 9.5F);
+        btnClear.HoverTextColor = Color.White;
         btnClear.Location = new Point(159, 3);
         btnClear.Name = "btnClear";
         btnClear.Size = new Size(150, 38);
         btnClear.TabIndex = 1;
         btnClear.Text = " Clear";
-        btnClear.UseVisualStyleBackColor = false;
+        btnClear.TextColor = Color.White;
         btnClear.Click += btnClear_Click;
-        // 
+        //
         // btnSelect
-        // 
-        btnSelect.BackColor = Color.FromArgb(74, 160, 120);
+        //
+        btnSelect.ButtonType = HopeButtonType.Primary;
+        btnSelect.PrimaryColor = Color.FromArgb(74, 160, 120);
+        btnSelect.BorderColor = Color.FromArgb(74, 160, 120);
         btnSelect.Cursor = Cursors.Hand;
-        btnSelect.FlatAppearance.BorderSize = 0;
-        btnSelect.FlatStyle = FlatStyle.Flat;
         btnSelect.Font = new Font("Segoe UI", 10F, FontStyle.Bold);
-        btnSelect.ForeColor = Color.White;
+        btnSelect.HoverTextColor = Color.White;
         btnSelect.Location = new Point(3, 52);
         btnSelect.Margin = new Padding(3, 8, 3, 3);
         btnSelect.Name = "btnSelect";
         btnSelect.Size = new Size(306, 38);
         btnSelect.TabIndex = 2;
         btnSelect.Text = " Select for Current Order";
-        btnSelect.UseVisualStyleBackColor = false;
+        btnSelect.TextColor = Color.White;
         btnSelect.Visible = false;
         btnSelect.Click += btnSelect_Click;
         // 
@@ -432,8 +434,8 @@ partial class FrmCustomerRegistration
         // 
         // FrmCustomerRegistration
         // 
-        AutoScaleDimensions = new SizeF(7F, 17F);
-        AutoScaleMode = AutoScaleMode.Font;
+        AutoScaleDimensions = new SizeF(96F, 96F);
+        AutoScaleMode = AutoScaleMode.Dpi;
         BackColor = Color.FromArgb(17, 24, 68);
         ClientSize = new Size(1000, 640);
         Controls.Add(pnlContainer);
@@ -463,29 +465,28 @@ partial class FrmCustomerRegistration
 
     private Panel pnlHeader;
     private Label lblTitle;
-    private Button btnClose;
+    private HopeButton btnClose;
     private Panel pnlContainer;
     private Panel pnlLeftCard;
     private Label lblFormTitle;
     private FlowLayoutPanel flpForm;
     private Label lblFullName;
-    private TextBox txtFullName;
+    private HopeTextBox txtFullName;
     private Label lblPhone;
-    private TextBox txtPhone;
+    private HopeTextBox txtPhone;
     private Label lblEmail;
-    private TextBox txtEmail;
+    private HopeTextBox txtEmail;
     private Label lblAddress;
-    private TextBox txtAddress;
+    private HopeTextBox txtAddress;
     private Label lblError;
     private FlowLayoutPanel flpButtons;
-    private Button btnSave;
-    private Button btnClear;
-    private Button btnSelect;
+    private HopeButton btnSave;
+    private HopeButton btnClear;
+    private HopeButton btnSelect;
     private Panel pnlRight;
     private Panel pnlSearchBar;
     private Label lblSearchIcon;
-    private TextBox txtSearch;
-    private Button btnArchive;
+    private HopeTextBox txtSearch;
     private Panel pnlGridContainer;
     private DataGridView dgvCustomers;
 }

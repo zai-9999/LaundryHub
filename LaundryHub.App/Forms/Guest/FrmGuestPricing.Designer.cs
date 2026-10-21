@@ -1,5 +1,4 @@
 ﻿using Panel = System.Windows.Forms.Panel;
-using Button = System.Windows.Forms.Button;
 using ReaLTaiizor;
 using ReaLTaiizor.Controls;
 using ReaLTaiizor.Util;
@@ -26,14 +25,14 @@ partial class FrmGuestPricing
         pnlHeader = new Panel();
         lblTitle = new Label();
         lblSubtitle = new Label();
-        btnCloseTop = new Button();
+        btnCloseTop = new HopeButton();
         pnlBody = new Panel();
         pnlCalculator = new Panel();
         lblCalcTitle = new Label();
         lblServiceSelect = new Label();
         cmbService = new ComboBox();
         lblWeightInput = new Label();
-        txtWeight = new TextBox();
+        txtWeight = new HopeTextBox();
         lblEstimatedTotal = new Label();
         lblEstimateValue = new Label();
         lblCalcNote = new Label();
@@ -85,20 +84,20 @@ partial class FrmGuestPricing
         lblSubtitle.Text = "Standard transparent pricing for all laundry needs";
         // 
         // btnCloseTop
-        // 
+        //
         btnCloseTop.Anchor = AnchorStyles.Top | AnchorStyles.Right;
-        btnCloseTop.BackColor = Color.Transparent;
+        btnCloseTop.ButtonType = HopeButtonType.Default;
+        btnCloseTop.DefaultColor = Color.FromArgb(17, 24, 68);
+        btnCloseTop.BorderColor = Color.FromArgb(17, 24, 68);
         btnCloseTop.Cursor = Cursors.Hand;
-        btnCloseTop.FlatAppearance.BorderSize = 0;
-        btnCloseTop.FlatStyle = FlatStyle.Flat;
         btnCloseTop.Font = new Font("Segoe UI", 12F, FontStyle.Bold);
-        btnCloseTop.ForeColor = Color.White;
+        btnCloseTop.HoverTextColor = Color.White;
         btnCloseTop.Location = new Point(630, 15);
         btnCloseTop.Name = "btnCloseTop";
         btnCloseTop.Size = new Size(35, 35);
         btnCloseTop.TabIndex = 2;
         btnCloseTop.Text = "";
-        btnCloseTop.UseVisualStyleBackColor = false;
+        btnCloseTop.TextColor = Color.White;
         btnCloseTop.Click += btnClose_Click;
         // 
         // pnlBody
@@ -196,8 +195,14 @@ partial class FrmGuestPricing
         lblWeightInput.Text = "Weight Load (kg):";
         // 
         // txtWeight
-        // 
+        //
+        txtWeight.BackColor = Color.White;
+        txtWeight.BaseColor = Color.White;
+        txtWeight.BorderColorA = Color.FromArgb(75, 86, 148);
+        txtWeight.BorderColorB = Color.FromArgb(190, 196, 220);
         txtWeight.Font = new Font("Segoe UI", 9.5F);
+        txtWeight.ForeColor = Color.FromArgb(75, 86, 148);
+        txtWeight.Hint = "5.0";
         txtWeight.Location = new Point(255, 72);
         txtWeight.Name = "txtWeight";
         txtWeight.Size = new Size(130, 29);
@@ -295,8 +300,8 @@ partial class FrmGuestPricing
         // 
         // FrmGuestPricing
         // 
-        AutoScaleDimensions = new SizeF(8F, 20F);
-        AutoScaleMode = AutoScaleMode.Font;
+        AutoScaleDimensions = new SizeF(96F, 96F);
+        AutoScaleMode = AutoScaleMode.Dpi;
         ClientSize = new Size(680, 640);
         Controls.Add(pnlBody);
         Controls.Add(pnlHeader);
@@ -321,7 +326,7 @@ partial class FrmGuestPricing
     private Panel pnlHeader;
     private Label lblTitle;
     private Label lblSubtitle;
-    private Button btnCloseTop;
+    private HopeButton btnCloseTop;
     private Panel pnlBody;
     private DataGridView dgvPricing;
     private Panel pnlCalculator;
@@ -329,7 +334,7 @@ partial class FrmGuestPricing
     private Label lblServiceSelect;
     private ComboBox cmbService;
     private Label lblWeightInput;
-    private TextBox txtWeight;
+    private HopeTextBox txtWeight;
     private Label lblEstimatedTotal;
     private Label lblEstimateValue;
     private Label lblCalcNote;

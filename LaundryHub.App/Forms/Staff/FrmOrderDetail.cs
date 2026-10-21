@@ -16,12 +16,25 @@ public partial class FrmOrderDetail : Form
 
     public FrmOrderDetail(Order order)
     {
+        InitializeComponent();
         _order = order;
         DoubleBuffered = true;
         ResizeRedraw = true;
         UIThemeHelper.StyleStandardForm(this, pnlLeftCard, pnlRightCard);
-        pnlLeftCard.SizeChanged += (s, e) => UIThemeHelper.ApplyRoundedRegion(pnlLeftCard, UIThemeHelper.ContentCardRadius);
-        pnlRightCard.SizeChanged += (s, e) => UIThemeHelper.ApplyRoundedRegion(pnlRightCard, UIThemeHelper.ContentCardRadius);
+        pnlLeftCard.SizeChanged += (s, e) =>
+        {
+            if (this.WindowState == FormWindowState.Maximized)
+                pnlLeftCard.Region = null;
+            else
+                UIThemeHelper.ApplyRoundedRegion(pnlLeftCard, UIThemeHelper.ContentCardRadius);
+        };
+        pnlRightCard.SizeChanged += (s, e) =>
+        {
+            if (this.WindowState == FormWindowState.Maximized)
+                pnlRightCard.Region = null;
+            else
+                UIThemeHelper.ApplyRoundedRegion(pnlRightCard, UIThemeHelper.ContentCardRadius);
+        };
         pnlHeader.BackColor = UIThemeHelper.Navy;
         lblOrderNumber.BackColor = UIThemeHelper.Navy;
         pnlContainer.BackColor = UIThemeHelper.Surface;
@@ -282,6 +295,7 @@ public partial class FrmOrderDetail : Form
 
         dlg.Controls.AddRange(new Control[] { lblPrompt, txtWeight, lblTotal, btnConfirm });
         UpdatePreview();
+        UIThemeHelper.ApplyTheme(dlg);
 
         if (dlg.ShowDialog(this) == DialogResult.OK)
         {
@@ -385,6 +399,7 @@ public partial class FrmOrderDetail : Form
         };
 
         dlg.Controls.AddRange(new Control[] { lblPrompt, txtAmount, lblChange, btnConfirm });
+        UIThemeHelper.ApplyTheme(dlg);
         if (dlg.ShowDialog(this) == DialogResult.OK)
         {
             RefreshOrderData();
@@ -460,6 +475,7 @@ public partial class FrmOrderDetail : Form
         };
 
         dlg.Controls.AddRange(new Control[] { lblPrompt, txtReason, btnConfirm });
+        UIThemeHelper.ApplyTheme(dlg);
         if (dlg.ShowDialog(this) == DialogResult.OK)
         {
             RefreshOrderData();

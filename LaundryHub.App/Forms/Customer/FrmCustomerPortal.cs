@@ -303,6 +303,7 @@ public partial class FrmCustomerPortal : Form
         btnClose.Click += (_, _) => dlg.Close();
 
         dlg.Controls.AddRange(new Control[] { pic, lblNo, lblStatus, lblDetails, btnClose });
+        UIThemeHelper.ApplyTheme(dlg);
         dlg.ShowDialog(this);
     }
 }

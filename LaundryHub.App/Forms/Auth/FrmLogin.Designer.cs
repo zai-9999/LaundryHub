@@ -260,14 +260,14 @@ partial class FrmLogin
         // 
         // FrmLogin
         // 
-        AutoScaleDimensions = new SizeF(8F, 20F);
-        AutoScaleMode = AutoScaleMode.Font;
+        AutoScaleDimensions = new SizeF(96F, 96F);
+        AutoScaleMode = AutoScaleMode.Dpi;
         BackColor = Color.FromArgb(114, 136, 174);
         ClientSize = new Size(1100, 800);
         Controls.Add(pnlCard);
-        FormBorderStyle = FormBorderStyle.FixedSingle;
+        FormBorderStyle = FormBorderStyle.Sizable;
         Margin = new Padding(3, 4, 3, 4);
-        MaximizeBox = false;
+        MaximizeBox = true;
         Name = "FrmLogin";
         StartPosition = FormStartPosition.CenterScreen;
         Text = "LaundryHub  Staff & Admin Login";

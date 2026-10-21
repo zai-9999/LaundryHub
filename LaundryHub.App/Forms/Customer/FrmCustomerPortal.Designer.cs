@@ -371,8 +371,8 @@ partial class FrmCustomerPortal
         // 
         // FrmCustomerPortal
         // 
-        AutoScaleDimensions = new SizeF(9F, 21F);
-        AutoScaleMode = AutoScaleMode.Font;
+        AutoScaleDimensions = new SizeF(96F, 96F);
+        AutoScaleMode = AutoScaleMode.Dpi;
         BackColor = Color.FromArgb(245, 247, 250);
         ClientSize = new Size(1180, 720);
         Controls.Add(pnlBody);

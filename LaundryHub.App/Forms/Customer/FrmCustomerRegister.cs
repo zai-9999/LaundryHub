@@ -14,7 +14,6 @@ public partial class FrmCustomerRegister : Form
         DoubleBuffered = true;
         ResizeRedraw = true;
         UIThemeHelper.StyleAuthForm(this, pnlCard, btnRegister, btnBack);
-        UIThemeHelper.LoadAuthLogo(picLogo);
         CenterCardContents();
         InputValidator.RestrictToPhoneInput(txtPhone);
         InputValidator.RestrictToUsernameInput(txtUsername, 30);
@@ -53,7 +52,7 @@ public partial class FrmCustomerRegister : Form
     {
         UIThemeHelper.CenterLoginFields(
             pnlCard,
-            picLogo, lblTitle, lblSub,
+            lblTitle, lblSub,
             lblFullName, txtFullName,
             lblPhone, txtPhone,
             lblUsername, txtUsername,

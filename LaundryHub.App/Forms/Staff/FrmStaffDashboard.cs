@@ -1,5 +1,6 @@
 ﻿using LaundryHub.App.Helpers;
 using LaundryHub.Core.Models;
+using System.ComponentModel;
 using System.Drawing.Drawing2D;
 using System.Threading.Tasks;
 
@@ -9,6 +10,9 @@ public partial class FrmStaffDashboard : Form
 {
     private bool isLoading = false;
     private List<Order>? _cachedOrders;
+    private ContextMenuStrip? _statusMenu;
+    private int _selectedOrderId = -1;
+    private string _selectedOrderStatus = "";
 
     public FrmStaffDashboard()
     {
@@ -68,6 +72,12 @@ public partial class FrmStaffDashboard : Form
         lblSales.Text = "";
 
         dgvOrders.CellDoubleClick += DgvOrders_CellDoubleClick;
+
+        // Status quick-actions menu on the grid (right-click a row)
+        _statusMenu = new ContextMenuStrip();
+        _statusMenu.Opening += StatusMenu_Opening;
+        _statusMenu.ItemClicked += StatusMenu_ItemClicked;
+        dgvOrders.ContextMenuStrip = _statusMenu;
 
         this.Shown += async (_, _) => await LoadSummaryAsync();
         this.FormClosing += (_, _) => isLoading = false;
@@ -157,6 +167,82 @@ public partial class FrmStaffDashboard : Form
                 f.ShowDialog(this);
                 await LoadSummaryAsync();
             }
+        }
+    }
+
+    private void StatusMenu_Opening(object? sender, CancelEventArgs e)
+    {
+        _statusMenu!.Items.Clear();
+        if (dgvOrders.SelectedRows.Count == 0)
+        {
+            e.Cancel = true;
+            return;
+        }
+
+        var row = dgvOrders.SelectedRows[0];
+        if (row.Cells["OrderId"]?.Value is not int id)
+        {
+            e.Cancel = true;
+            return;
+        }
+        _selectedOrderId = id;
+        _selectedOrderStatus = row.Cells["Status"]?.Value?.ToString() ?? "";
+
+        void Add(string text, string nextStatus)
+        {
+            var item = new ToolStripMenuItem(text) { Tag = nextStatus };
+            _statusMenu!.Items.Add(item);
+        }
+
+        switch (_selectedOrderStatus)
+        {
+            case "Booked":
+                Add("Mark as Washing", "Washing");
+                break;
+            case "Washing":
+                Add("Mark as Drying", "Drying");
+                break;
+            case "Drying":
+                Add("Mark as Ready for Pickup", "Ready for Pickup");
+                break;
+            case "Ready for Pickup":
+                // claiming requires payment entry via Order Detail
+                break;
+            case "Claimed":
+            case "Cancelled":
+                e.Cancel = true;
+                return;
+            default:
+                Add("Update Status", "Washing");
+                break;
+        }
+
+        if (_statusMenu.Items.Count > 0)
+        {
+            _statusMenu.Items.Add(new ToolStripSeparator());
+        }
+        _statusMenu.Items.Add(new ToolStripMenuItem("Cancel Order") { Tag = "Cancelled" });
+    }
+
+    private async void StatusMenu_ItemClicked(object? sender, ToolStripItemClickedEventArgs e)
+    {
+        if (_selectedOrderId < 0 || e.ClickedItem.Tag is not string nextStatus) return;
+
+        try
+        {
+            AppServices.Orders.UpdateStatus(_selectedOrderId, nextStatus,
+                changedBy: SessionManager.CurrentUser?.UserId);
+            await LoadSummaryAsync();
+        }
+        catch (Exception ex)
+        {
+            MessageBox.Show($"Failed to update order status: {ex.Message}", "Status Update",
+                MessageBoxButtons.OK, MessageBoxIcon.Error);
+        }
+        finally
+        {
+            _selectedOrderId = -1;
+            _selectedOrderStatus = "";
         }
     }
 

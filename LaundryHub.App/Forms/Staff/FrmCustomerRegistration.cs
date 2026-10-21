@@ -33,6 +33,22 @@ public partial class FrmCustomerRegistration : Form
         flpForm.BackColor = Color.White;
         UIThemeHelper.StyleDataGridView(dgvCustomers);
 
+        // This form was designed for a dark card; restyle it for the light card.
+        foreach (var t in new[] { txtFullName, txtPhone, txtEmail, txtAddress })
+        {
+            t.BackColor = Color.White;
+            t.BaseColor = Color.White;
+            t.ForeColor = UIThemeHelper.Navy;
+            t.BorderColorA = UIThemeHelper.Indigo;
+            t.BorderColorB = UIThemeHelper.BorderSoft;
+        }
+
+        foreach (var l in new[] { lblFullName, lblPhone, lblEmail, lblAddress })
+            l.ForeColor = UIThemeHelper.TextMuted;
+
+        lblFormTitle.ForeColor = UIThemeHelper.Navy;
+        lblTitle.UseMnemonic = false;   // shows "&" instead of underlining the next letter
+
         InputValidator.RestrictToPhoneInput(txtPhone);
 
         txtFullName.TextChanged += (_, _) => lblError.Visible = false;
@@ -45,6 +61,7 @@ public partial class FrmCustomerRegistration : Form
         btnSelect.Visible = _returnCustomer;
 
         LoadCustomers();
+        dgvCustomers.CellContentClick += dgvCustomers_CellContentClick;
     }
 
     protected override void OnPaintBackground(PaintEventArgs e)
@@ -89,6 +106,7 @@ public partial class FrmCustomerRegistration : Form
         dgvCustomers.DataSource = list;
         if (dgvCustomers.Columns["CustomerId"] is { } col)
             col.Visible = false;
+        EnsureActionColumn();
     }
 
     private void dgvCustomers_SelectionChanged(object? sender, EventArgs e)
@@ -193,31 +211,65 @@ public partial class FrmCustomerRegistration : Form
         this.Close();
     }
 
-    private void btnArchive_Click(object? sender, EventArgs e)
+    private void dgvCustomers_CellContentClick(object? sender, DataGridViewCellEventArgs e)
     {
-        if (_selectedCustomer == null)
-        {
-            MessageBox.Show("Please select a customer to archive.", "Notice", MessageBoxButtons.OK, MessageBoxIcon.Information);
-            return;
-        }
+        if (e.RowIndex < 0 || dgvCustomers.Columns[e.ColumnIndex].Name != "colArchive") return;
+        if (dgvCustomers.Rows[e.RowIndex].Cells["CustomerId"].Value is not int id) return;
 
-        var confirm = MessageBox.Show($"Are you sure you want to archive customer '{_selectedCustomer.FullName}'?",
+        ArchiveCustomer(id);
+    }
+
+    private void ArchiveCustomer(int customerId)
+    {
+        var customer = AppServices.Customers.GetById(customerId);
+        if (customer == null) return;
+
+        var confirm = MessageBox.Show(
+            $"Are you sure you want to archive customer '{customer.FullName}'?",
             "Confirm Archive", MessageBoxButtons.YesNo, MessageBoxIcon.Warning);
+        if (confirm != DialogResult.Yes) return;
 
-        if (confirm == DialogResult.Yes)
+        try
         {
-            try
-            {
-                AppServices.Customers.Archive(_selectedCustomer.CustomerId);
-                ResetForm();
-                LoadCustomers();
-                MessageBox.Show("Customer archived successfully.", "Success", MessageBoxButtons.OK, MessageBoxIcon.Information);
-            }
-            catch (InvalidOperationException ex)
-            {
-                MessageBox.Show(ex.Message, "Cannot Archive", MessageBoxButtons.OK, MessageBoxIcon.Warning);
-            }
+            AppServices.Customers.Archive(customerId);
+            ResetForm();
+            LoadCustomers(txtSearch.Text.Trim());
+            MessageBox.Show("Customer archived successfully.", "Success",
+                MessageBoxButtons.OK, MessageBoxIcon.Information);
         }
+        catch (InvalidOperationException ex)
+        {
+            MessageBox.Show(ex.Message, "Cannot Archive", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+        }
+    }
+
+    private void EnsureActionColumn()
+    {
+        if (!dgvCustomers.Columns.Contains("colArchive"))
+        {
+            dgvCustomers.Columns.Add(new DataGridViewButtonColumn
+            {
+                Name = "colArchive",
+                HeaderText = "Action",
+                Text = "Archive",
+                UseColumnTextForButtonValue = true,
+                FlatStyle = FlatStyle.Flat,
+                Width = 110,
+                AutoSizeMode = DataGridViewAutoSizeColumnMode.None,
+                Visible = !_returnCustomer,
+                DefaultCellStyle = new DataGridViewCellStyle
+                {
+                    Alignment = DataGridViewContentAlignment.MiddleCenter,
+                    BackColor = UIThemeHelper.Danger,
+                    ForeColor = Color.White,
+                    SelectionBackColor = UIThemeHelper.Danger,
+                    SelectionForeColor = Color.White,
+                    Padding = new Padding(10, 6, 10, 6)
+                }
+            });
+        }
+
+        dgvCustomers.Columns["colArchive"]!.DisplayIndex = dgvCustomers.Columns.Count - 1;
     }
 
     private void ResetForm()
