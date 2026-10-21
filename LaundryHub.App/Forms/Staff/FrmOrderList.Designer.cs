@@ -29,7 +29,8 @@ partial class FrmOrderList
         btnViewDetail = new HopeButton();
         dtpFilter = new DateTimePicker();
         chkFilterDate = new CheckBox();
-        txtSearch = new HopeTextBox();
+        pnlSearch = new Panel();
+        txtSearch = new System.Windows.Forms.TextBox();
         lblTitle = new Label();
         pnlLegend = new Panel();
         lblDotCancelled = new Label();
@@ -54,7 +55,7 @@ partial class FrmOrderList
         pnlTopBar.Controls.Add(btnViewDetail);
         pnlTopBar.Controls.Add(dtpFilter);
         pnlTopBar.Controls.Add(chkFilterDate);
-        pnlTopBar.Controls.Add(txtSearch);
+        pnlTopBar.Controls.Add(pnlSearch);
         pnlTopBar.Controls.Add(lblTitle);
         pnlTopBar.Dock = DockStyle.Top;
         pnlTopBar.Location = new Point(0, 0);
@@ -74,9 +75,8 @@ partial class FrmOrderList
         btnViewDetail.Font = new Font("Segoe UI", 9F, FontStyle.Bold);
         btnViewDetail.Location = new Point(934, 12);
         btnViewDetail.Name = "btnViewDetail";
-        btnViewDetail.Size = new Size(100, 40);
-        btnViewDetail.TabIndex = 4;
-        btnViewDetail.Text = "View Detail";
+        btnViewDetail.Size = new Size(140, 40);
+        btnViewDetail.Text = "Manage Order";
         btnViewDetail.Click += btnViewDetail_Click;
         // 
         // dtpFilter
@@ -106,20 +106,26 @@ partial class FrmOrderList
         chkFilterDate.UseVisualStyleBackColor = true;
         chkFilterDate.CheckedChanged += chkFilterDate_CheckedChanged;
         // 
+        // 
+        // pnlSearch
+        // 
+        pnlSearch.BackColor = Color.White;
+        pnlSearch.Controls.Add(txtSearch);
+        pnlSearch.Dock = DockStyle.Fill;
+        pnlSearch.Name = "pnlSearch";
+        pnlSearch.Padding = new Padding(12, 11, 12, 0);
+        pnlSearch.TabIndex = 1;
+        // 
         // txtSearch
         // 
         txtSearch.BackColor = Color.White;
-        txtSearch.BaseColor = Color.White;
-        txtSearch.BorderColorA = Color.FromArgb(75, 86, 148);
-        txtSearch.BorderColorB = Color.FromArgb(190, 196, 220);
+        txtSearch.BorderStyle = BorderStyle.None;
         txtSearch.Dock = DockStyle.Fill;
-        txtSearch.Font = new Font("Segoe UI", 10F);
+        txtSearch.Font = new Font("Segoe UI", 10.5F);
         txtSearch.ForeColor = Color.FromArgb(75, 86, 148);
-        txtSearch.Hint = "Search by order # or customer name...";
-        txtSearch.Location = new Point(196, 12);
         txtSearch.Name = "txtSearch";
-        txtSearch.Size = new Size(498, 40);
-        txtSearch.TabIndex = 1;
+        txtSearch.PlaceholderText = "Search by order # or customer name...";
+        txtSearch.TabIndex = 0;
         txtSearch.TextChanged += txtSearch_TextChanged;
         // 
         // lblTitle
@@ -306,8 +312,8 @@ partial class FrmOrderList
         // 
         // FrmOrderList
         // 
-        AutoScaleDimensions = new SizeF(7F, 17F);
-        AutoScaleMode = AutoScaleMode.Font;
+        AutoScaleDimensions = new SizeF(96F, 96F);
+        AutoScaleMode = AutoScaleMode.Dpi;
         BackColor = Color.FromArgb(246, 242, 234);
         ClientSize = new Size(1050, 640);
         Controls.Add(dgvOrders);
@@ -330,7 +336,8 @@ partial class FrmOrderList
 
     private Panel pnlTopBar;
     private Label lblTitle;
-    private HopeTextBox txtSearch;
+    private Panel pnlSearch;
+    private System.Windows.Forms.TextBox txtSearch;
     private CheckBox chkFilterDate;
     private DateTimePicker dtpFilter;
     private HopeButton btnViewDetail;

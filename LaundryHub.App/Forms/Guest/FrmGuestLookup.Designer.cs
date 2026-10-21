@@ -461,15 +461,15 @@ partial class FrmGuestLookup
         // 
         // FrmGuestLookup
         // 
-        AutoScaleDimensions = new SizeF(7F, 17F);
-        AutoScaleMode = AutoScaleMode.Font;
+        AutoScaleDimensions = new SizeF(96F, 96F);
+        AutoScaleMode = AutoScaleMode.Dpi;
         BackColor = Color.FromArgb(114, 136, 174);
         ClientSize = new Size(1100, 800);
         Controls.Add(pnlCard);
         Font = new Font("Segoe UI", 9.5F);
         ForeColor = Color.FromArgb(75, 86, 148);
-        FormBorderStyle = FormBorderStyle.FixedSingle;
-        MaximizeBox = false;
+        FormBorderStyle = FormBorderStyle.Sizable;
+        MaximizeBox = true;
         Name = "FrmGuestLookup";
         StartPosition = FormStartPosition.CenterScreen;
         Text = "LaundryHub  Guest Order Tracking";

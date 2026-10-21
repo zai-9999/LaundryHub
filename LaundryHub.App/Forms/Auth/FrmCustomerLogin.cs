@@ -12,7 +12,6 @@ public partial class FrmCustomerLogin : Form
         DoubleBuffered = true;
         ResizeRedraw = true;
         UIThemeHelper.StyleAuthForm(this, pnlCard, btnLogin, btnRegister, btnPricing, btnGuestLookup, btnSwitchToStaff);
-        UIThemeHelper.LoadAuthLogo(picLogo);
         CenterCardContents();
         pnlCard.SizeChanged += (_, _) => CenterCardContents();
         txtUsername.TextChanged += (_, _) => lblError.Visible = false;
@@ -105,6 +104,7 @@ public partial class FrmCustomerLogin : Form
     {
         var guestForm = new Guest.FrmGuestLookup();
         guestForm.FormClosed += (_, _) => this.Show();
+        guestForm.WindowState = this.WindowState;
         guestForm.Show();
         this.Hide();
     }
@@ -113,6 +113,7 @@ public partial class FrmCustomerLogin : Form
     {
         var regForm = new Customer.FrmCustomerRegister();
         regForm.FormClosed += (_, _) => this.Show();
+        regForm.WindowState = this.WindowState;
         regForm.Show();
         this.Hide();
     }
@@ -128,6 +129,12 @@ public partial class FrmCustomerLogin : Form
         this.Close(); // Returns to the Staff/Admin login (which re-shows via FormClosed)
     }
 
+    private void lnkForgotPassword_LinkClicked(object? sender, LinkLabelLinkClickedEventArgs e)
+    {
+        using var reset = new FrmPasswordReset();
+        reset.ShowDialog(this);
+    }
+
     //  Navigation 
 
     private void OpenCustomerPortal()
@@ -141,6 +148,7 @@ public partial class FrmCustomerLogin : Form
             ClearFields();
         };
 
+        portal.WindowState = this.WindowState;
         portal.Show();
         this.Hide();
     }
@@ -208,7 +216,7 @@ public partial class FrmCustomerLogin : Form
     {
         UIThemeHelper.CenterLoginFields(
             pnlCard,
-            picLogo, lblTitle, lblSubtitle,
+            lblTitle, lblSubtitle,
             lblUser, txtUsername,
             lblPass, txtPassword,
             lblError, btnLogin,

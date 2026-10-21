@@ -81,18 +81,23 @@ partial class FrmExportReport
         // 
         // btnClose
         // 
-        btnClose.ButtonType = HopeButtonType.Default;
-        btnClose.DefaultColor = Color.FromArgb(114, 136, 174);
         btnClose.BorderColor = Color.FromArgb(234, 224, 207);
-        btnClose.TextColor = Color.FromArgb(246, 242, 234);
-        btnClose.HoverTextColor = Color.White;
+        btnClose.ButtonType = HopeButtonType.Default;
         btnClose.Cursor = Cursors.Hand;
+        btnClose.DangerColor = Color.FromArgb(245, 108, 108);
+        btnClose.DefaultColor = Color.FromArgb(114, 136, 174);
         btnClose.Font = new Font("Segoe UI", 9.5F, FontStyle.Bold);
+        btnClose.HoverTextColor = Color.White;
+        btnClose.InfoColor = Color.FromArgb(144, 147, 153);
         btnClose.Location = new Point(836, 16);
         btnClose.Name = "btnClose";
+        btnClose.PrimaryColor = Color.FromArgb(64, 158, 255);
         btnClose.Size = new Size(90, 34);
+        btnClose.SuccessColor = Color.FromArgb(103, 194, 58);
         btnClose.TabIndex = 1;
         btnClose.Text = " Close";
+        btnClose.TextColor = Color.FromArgb(246, 242, 234);
+        btnClose.WarningColor = Color.FromArgb(230, 162, 60);
         btnClose.Click += btnClose_Click;
         // 
         // lblTitle
@@ -163,6 +168,7 @@ partial class FrmExportReport
         dgvPreview.Name = "dgvPreview";
         dgvPreview.ReadOnly = true;
         dgvPreview.RowHeadersVisible = false;
+        dgvPreview.RowHeadersWidth = 51;
         dgvPreview.RowTemplate.Height = 36;
         dgvPreview.SelectionMode = DataGridViewSelectionMode.FullRowSelect;
         dgvPreview.Size = new Size(902, 339);
@@ -385,36 +391,47 @@ partial class FrmExportReport
         // 
         // btnExportExcel
         // 
+        btnExportExcel.BorderColor = Color.FromArgb(220, 223, 230);
         btnExportExcel.ButtonType = HopeButtonType.Primary;
-        btnExportExcel.PrimaryColor = Color.FromArgb(75, 86, 148);
-        btnExportExcel.TextColor = Color.FromArgb(246, 242, 234);
-        btnExportExcel.HoverTextColor = Color.White;
         btnExportExcel.Cursor = Cursors.Hand;
+        btnExportExcel.DangerColor = Color.FromArgb(245, 108, 108);
+        btnExportExcel.DefaultColor = Color.FromArgb(255, 255, 255);
         btnExportExcel.Dock = DockStyle.Right;
         btnExportExcel.Font = new Font("Segoe UI", 9.5F, FontStyle.Bold);
+        btnExportExcel.HoverTextColor = Color.White;
+        btnExportExcel.InfoColor = Color.FromArgb(144, 147, 153);
         btnExportExcel.Location = new Point(686, 8);
         btnExportExcel.Name = "btnExportExcel";
+        btnExportExcel.PrimaryColor = Color.FromArgb(75, 86, 148);
         btnExportExcel.Size = new Size(200, 36);
+        btnExportExcel.SuccessColor = Color.FromArgb(103, 194, 58);
         btnExportExcel.TabIndex = 3;
         btnExportExcel.Text = " Export to Excel (.xlsx)";
+        btnExportExcel.TextColor = Color.FromArgb(246, 242, 234);
+        btnExportExcel.WarningColor = Color.FromArgb(230, 162, 60);
         btnExportExcel.Click += btnExportExcel_Click;
         // 
         // btnLoad
         // 
-        btnLoad.ButtonType = HopeButtonType.Default;
-        btnLoad.DefaultColor = Color.FromArgb(234, 224, 207);
         btnLoad.BorderColor = Color.FromArgb(114, 136, 174);
-        btnLoad.TextColor = Color.FromArgb(75, 86, 148);
-        btnLoad.HoverTextColor = Color.FromArgb(75, 86, 148);
+        btnLoad.ButtonType = HopeButtonType.Default;
         btnLoad.Cursor = Cursors.Hand;
+        btnLoad.DangerColor = Color.FromArgb(245, 108, 108);
+        btnLoad.DefaultColor = Color.FromArgb(234, 224, 207);
         btnLoad.Dock = DockStyle.Left;
         btnLoad.Font = new Font("Segoe UI", 9F, FontStyle.Bold);
+        btnLoad.HoverTextColor = Color.FromArgb(75, 86, 148);
+        btnLoad.InfoColor = Color.FromArgb(144, 147, 153);
         btnLoad.Location = new Point(250, 8);
         btnLoad.Margin = new Padding(12, 0, 0, 0);
         btnLoad.Name = "btnLoad";
+        btnLoad.PrimaryColor = Color.FromArgb(64, 158, 255);
         btnLoad.Size = new Size(130, 36);
+        btnLoad.SuccessColor = Color.FromArgb(103, 194, 58);
         btnLoad.TabIndex = 2;
         btnLoad.Text = "Refresh Date";
+        btnLoad.TextColor = Color.FromArgb(75, 86, 148);
+        btnLoad.WarningColor = Color.FromArgb(230, 162, 60);
         btnLoad.Click += btnLoad_Click;
         // 
         // dtpDate
@@ -424,7 +441,7 @@ partial class FrmExportReport
         dtpDate.Format = DateTimePickerFormat.Short;
         dtpDate.Location = new Point(105, 8);
         dtpDate.Name = "dtpDate";
-        dtpDate.Size = new Size(145, 25);
+        dtpDate.Size = new Size(145, 30);
         dtpDate.TabIndex = 1;
         // 
         // lblSelectDate
@@ -441,8 +458,8 @@ partial class FrmExportReport
         // 
         // FrmExportReport
         // 
-        AutoScaleDimensions = new SizeF(7F, 17F);
-        AutoScaleMode = AutoScaleMode.Font;
+        AutoScaleDimensions = new SizeF(120F, 120F);
+        AutoScaleMode = AutoScaleMode.Dpi;
         BackColor = Color.FromArgb(246, 242, 234);
         ClientSize = new Size(950, 640);
         Controls.Add(pnlContainer);

@@ -124,6 +124,7 @@ public partial class FrmLogin : Form
     {
         var customerLogin = new FrmCustomerLogin();
         customerLogin.FormClosed += (_, _) => this.Show();
+        customerLogin.WindowState = this.WindowState;
         customerLogin.Show();
         this.Hide();
     }
@@ -168,6 +169,7 @@ public partial class FrmLogin : Form
             ClearFields();
         };
 
+        dashboard.WindowState = this.WindowState;
         dashboard.Show();
         this.Hide();
     }

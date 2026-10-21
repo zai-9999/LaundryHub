@@ -301,8 +301,8 @@ partial class FrmNewOrder
         // 
         // FrmNewOrder
         // 
-        AutoScaleDimensions = new SizeF(7F, 17F);
-        AutoScaleMode = AutoScaleMode.Font;
+        AutoScaleDimensions = new SizeF(96F, 96F);
+        AutoScaleMode = AutoScaleMode.Dpi;
         BackColor = Color.FromArgb(246, 242, 234);
         ClientSize = new Size(520, 585);
         Controls.Add(lstCustomers);

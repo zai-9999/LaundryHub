@@ -1,5 +1,6 @@
 ﻿using System.Drawing.Drawing2D;
 using System.IO;
+using System.Linq;
 using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
 using ReaLTaiizor;
@@ -69,18 +70,21 @@ public static class UIThemeHelper
 
     public static void ApplyRoundedWindow(Form form, int radius = 20)
     {
-        void Apply()
+        void Round()
         {
+            if (form.WindowState == FormWindowState.Maximized)
+            {
+                form.Region = null;          // full-screen: no rounded clipping
+                return;
+            }
             ApplyRoundedRegion(form, radius);
             TrySetSystemRoundCorners(form);
         }
 
-        if (form.IsHandleCreated)
-            Apply();
-        else
-            form.HandleCreated += (_, _) => Apply();
+        if (form.IsHandleCreated) Round();
+        else form.HandleCreated += (_, _) => Round();
 
-        form.SizeChanged += (_, _) => ApplyRoundedRegion(form, radius);
+        form.SizeChanged += (_, _) => Round();
     }
 
     private static void TrySetSystemRoundCorners(Form form)
@@ -97,8 +101,9 @@ public static class UIThemeHelper
     public static void StyleAuthForm(Form form, System.Windows.Forms.Panel card, params Control[] buttons)
     {
         form.ClientSize = new Size(LoginFormWidth, LoginFormHeight);
-        form.FormBorderStyle = FormBorderStyle.FixedSingle;
-        form.MaximizeBox = false;
+        form.FormBorderStyle = FormBorderStyle.Sizable;
+        form.MaximizeBox = true;
+        form.MinimumSize = form.Size;
         form.StartPosition = FormStartPosition.CenterScreen;
 
         ApplyRoundedWindow(form, LoginWindowRadius);
@@ -314,8 +319,19 @@ public static class UIThemeHelper
         }
     }
 
+    private static void NormalizeFont(Control c)
+    {
+        var f = c.Font;
+        if (f.Name.StartsWith("Segoe UI", StringComparison.OrdinalIgnoreCase)
+            && !f.Name.Contains("Emoji") && !f.Name.Contains("Symbol"))
+        {
+            c.Font = AppFonts.Make(f.Size, f.Style);   // also turns "Semibold" into regular family + Bold
+        }
+    }
+
     private static void ThemeControl(Control c)
     {
+        NormalizeFont(c);
         ThemeLayout(c);
 
         switch (c)

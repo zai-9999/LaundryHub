@@ -1,5 +1,6 @@
 ﻿using LaundryHub.App.Helpers;
 using LaundryHub.Core.Models;
+using ReaLTaiizor.Controls;
 using CustomerModel = LaundryHub.Core.Models.Customer;
 
 namespace LaundryHub.App.Forms.Customer;
@@ -92,7 +93,7 @@ public partial class FrmBookOrder : Form
 
     private void btnQuickWeight_Click(object? sender, EventArgs e)
     {
-        if (sender is Button btn)
+        if (sender is Control btn)
         {
             var weightStr = btn.Text.Replace(" kg", "").Trim();
             txtWeight.Text = weightStr;

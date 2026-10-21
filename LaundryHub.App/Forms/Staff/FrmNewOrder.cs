@@ -45,7 +45,13 @@ public partial class FrmNewOrder : Form
         UIThemeHelper.StyleStandardForm(this);
         this.ClientSize = new Size(pnlCard.Right + margin, pnlCard.Bottom + margin);
         UIThemeHelper.ApplyRoundedRegion(pnlCard, UIThemeHelper.LoginCardRadius);
-        pnlCard.SizeChanged += (s, e) => UIThemeHelper.ApplyRoundedRegion(pnlCard, UIThemeHelper.LoginCardRadius);
+        pnlCard.SizeChanged += (s, e) =>
+        {
+            if (this.WindowState == FormWindowState.Maximized)
+                pnlCard.Region = null;
+            else
+                UIThemeHelper.ApplyRoundedRegion(pnlCard, UIThemeHelper.LoginCardRadius);
+        };
 
         pnlPriceBox.BackColor = UIThemeHelper.SandLight;
         btnSave.PrimaryColor = UIThemeHelper.Indigo;

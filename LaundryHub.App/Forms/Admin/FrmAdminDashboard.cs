@@ -1,4 +1,4 @@
-﻿using LaundryHub.App.Helpers;
+using LaundryHub.App.Helpers;
 using LaundryHub.Core.Models;
 using System.Drawing.Drawing2D;
 using ReaLTaiizor.Util;
@@ -44,7 +44,7 @@ public partial class FrmAdminDashboard : Form
 
         // Header Bar Setup
         pnlHeader.Title = "Platform Overview & Analytics";
-        pnlHeader.Subtitle = "REAL-TIME LAUNDRY WORKFLOW, PERFORMANCE & REVENUE MONITORING";
+        pnlHeader.Subtitle = "ALL ORDERS  ·  REAL-TIME WORKFLOW, PERFORMANCE & REVENUE MONITORING";
         pnlHeader.SearchBox.Hint = "Search order #, customer, status...";
         pnlHeader.SearchBox.TextChanged += txtSearch_TextChanged;
         pnlHeader.ActionButton.Text = " Logout";
@@ -57,10 +57,10 @@ public partial class FrmAdminDashboard : Form
         }
 
         var stats = StatRow.Replace(flpStats,
-            ("Today's Total Orders", UIThemeHelper.Indigo),
-            ("Today's Revenue",      UIThemeHelper.Success),
-            ("Pending in Progress",  UIThemeHelper.Warning),
-            ("Claimed Today",        UIThemeHelper.Slate));
+            ("Total Orders",       UIThemeHelper.Indigo),
+            ("Total Revenue",      UIThemeHelper.Success),
+            ("In Progress",        UIThemeHelper.Warning),
+            ("Claimed",            UIThemeHelper.Slate));
         lblTotalToday = stats[0].ValueLabel;
         lblSalesToday = stats[1].ValueLabel;
         lblPending    = stats[2].ValueLabel;
@@ -118,14 +118,14 @@ public partial class FrmAdminDashboard : Form
 
     private async void btnNewOrder_Click(object? sender, EventArgs e)
     {
-        DataCache.InvalidatePrefix("daily_report");
+        DataCache.Invalidate("admin_all_orders");
         var f = new Staff.FrmNewOrder();
         if (f.ShowDialog(this) == DialogResult.OK) await LoadDashboardDataAsync();
     }
 
     private async void btnRefresh_Click(object? sender, EventArgs e)
     {
-        DataCache.InvalidatePrefix("daily_report");
+        DataCache.Invalidate("admin_all_orders");
         await LoadDashboardDataAsync();
     }
 
@@ -154,24 +154,25 @@ public partial class FrmAdminDashboard : Form
 
         try
         {
-            var cacheKey = $"daily_report_{DateTime.Today:yyyyMMdd}";
-            var report = await DataCache.GetOrAddAsync(cacheKey,
-                () => Task.Run(() => AppServices.Orders.GetDailyReport(DateTime.Today)),
-                TimeSpan.FromSeconds(30));
+            // Load ALL orders (no date filter) so we can verify every order is reflected
+        var cacheKey = $"admin_daily_{DateTime.Today:yyyyMMdd}";
+        var report = await DataCache.GetOrAddAsync(cacheKey,
+            () => Task.Run(() => AppServices.Orders.GetDailyReport(DateTime.Today)),
+            TimeSpan.FromSeconds(30));
 
-            cachedOrders = report.Orders.ToList();
+        cachedOrders = report.Orders;
 
-            this.SafeInvoke(() =>
-            {
-                lblTotalToday.Text = report.TotalOrders.ToString();
-                lblSalesToday.Text = $"{report.TotalSales:N2}";
-                lblPending.Text = report.PendingOrders.ToString();
-                lblClaimed.Text = report.ClaimedOrders.ToString();
+        this.SafeInvoke(() =>
+        {
+            lblTotalToday.Text = report.TotalOrders.ToString();
+            lblSalesToday.Text = $"{report.TotalSales:N2}";
+            lblPending.Text    = report.PendingOrders.ToString();
+            lblClaimed.Text    = report.ClaimedOrders.ToString();
 
-                lblLiveBadge.Text = $" {report.TotalOrders} Live";
+            lblLiveBadge.Text = $" {report.TotalOrders} Total Today";
 
-                PopulateGrid(report.Orders);
-            });
+            PopulateGrid(report.Orders);
+        });
         }
         finally
         {
@@ -210,7 +211,7 @@ public partial class FrmAdminDashboard : Form
             Total = $"{o.TotalAmount:N2}",
             Payment = o.PaymentRecorded ? "Paid" : "Unpaid",
             o.Status,
-            Time = o.CreatedAt.ToString("hh:mm tt")
+            Time = o.CreatedAt.ToString("MMM dd, yyyy  hh:mm tt")
         }).ToList();
 
         if (dgvTodayOrders.Columns["OrderId"] is { } col)

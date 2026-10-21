@@ -1,4 +1,4 @@
-﻿using Panel = System.Windows.Forms.Panel;
+using Panel = System.Windows.Forms.Panel;
 using ReaLTaiizor.Controls;
 using LaundryHub.App.Helpers;
 
@@ -169,7 +169,7 @@ partial class FrmAdminDashboard
         lblTableTitle.Name = "lblTableTitle";
         lblTableTitle.Size = new Size(868, 24);
         lblTableTitle.TabIndex = 0;
-        lblTableTitle.Text = "Today's Laundry Orders";
+        lblTableTitle.Text = "All Laundry Orders";
         lblTableTitle.TextAlign = ContentAlignment.MiddleLeft;
         // 
         // flpStats
@@ -362,8 +362,8 @@ partial class FrmAdminDashboard
         // 
         // FrmAdminDashboard
         // 
-        AutoScaleDimensions = new SizeF(9F, 21F);
-        AutoScaleMode = AutoScaleMode.Font;
+        AutoScaleDimensions = new SizeF(96F, 96F);
+        AutoScaleMode = AutoScaleMode.Dpi;
         BackColor = Color.FromArgb(245, 247, 250);
         ClientSize = new Size(1180, 740);
         Controls.Add(pnlMain);

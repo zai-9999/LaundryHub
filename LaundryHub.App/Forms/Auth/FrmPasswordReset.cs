@@ -17,20 +17,18 @@ public class FrmPasswordReset : Form
 
     public FrmPasswordReset()
     {
-        // Form
         Text = "Password Reset";
-        StartPosition = FormStartPosition.CenterParent;
-        FormBorderStyle = FormBorderStyle.FixedDialog;
-        MaximizeBox = false;
-        MinimizeBox = false;
-        Width = 460;
-        Height = 260;
-        BackColor = Color.FromArgb(15, 23, 42);
+        StartPosition = FormStartPosition.CenterScreen;
+        FormBorderStyle = FormBorderStyle.Sizable;
+        MaximizeBox = true;
+        MinimizeBox = true;
+        MinimumSize = new Size(460, 260);
+        Size = new Size(460, 260);
+        BackColor = UIThemeHelper.Navy;
 
-        // Card panel (matches app UI)
         pnlCard = new Panel
         {
-            BackColor = Color.FromArgb(30, 41, 59),
+            BackColor = UIThemeHelper.CardWhite,
             Location = new Point(40, 30),
             Size = new Size(380, 170)
         };
@@ -40,7 +38,7 @@ public class FrmPasswordReset : Form
         {
             Text = "Password Reset",
             Font = new Font("Segoe UI Semibold", 12F, FontStyle.Bold),
-            ForeColor = Color.White,
+            ForeColor = UIThemeHelper.Navy,
             Location = new Point(20, 16),
             AutoSize = true
         };
@@ -49,17 +47,17 @@ public class FrmPasswordReset : Form
         {
             Text = "Enter your username or email to receive a temporary password.",
             Font = new Font("Segoe UI", 8.5F),
-            ForeColor = Color.FromArgb(148, 163, 184),
+            ForeColor = UIThemeHelper.TextMuted,
             Location = new Point(20, 44),
             Size = new Size(340, 28)
         };
 
         txtUserOrEmail = new TextBox
         {
-            BackColor = Color.FromArgb(15, 23, 42),
+            BackColor = Color.White,
             BorderStyle = BorderStyle.FixedSingle,
             Font = new Font("Segoe UI", 11F),
-            ForeColor = Color.White,
+            ForeColor = UIThemeHelper.Navy,
             Location = new Point(20, 78),
             Size = new Size(340, 27)
         };
@@ -67,7 +65,7 @@ public class FrmPasswordReset : Form
         lblError = new Label
         {
             Font = new Font("Segoe UI", 8.5F),
-            ForeColor = Color.FromArgb(248, 113, 113),
+            ForeColor = UIThemeHelper.Danger,
             Location = new Point(20, 108),
             Size = new Size(340, 18),
             Visible = false
@@ -76,7 +74,7 @@ public class FrmPasswordReset : Form
         btnSend = new Button
         {
             Text = "Send",
-            BackColor = Color.FromArgb(37, 99, 235),
+            BackColor = UIThemeHelper.Indigo,
             FlatStyle = FlatStyle.Flat,
             ForeColor = Color.White,
             Font = new Font("Segoe UI Semibold", 9F, FontStyle.Bold),
@@ -89,12 +87,12 @@ public class FrmPasswordReset : Form
         {
             Text = "Cancel",
             FlatStyle = FlatStyle.Flat,
-            ForeColor = Color.FromArgb(96, 165, 250),
+            ForeColor = UIThemeHelper.Indigo,
             Font = new Font("Segoe UI", 8.5F),
             Location = new Point(200, 128),
             Size = new Size(160, 30)
         };
-        btnCancel.FlatAppearance.BorderColor = Color.FromArgb(59, 130, 246);
+        btnCancel.FlatAppearance.BorderColor = UIThemeHelper.BorderSoft;
 
         btnSend.Click += BtnSend_Click;
         btnCancel.Click += (_, _) => Close();
@@ -107,6 +105,13 @@ public class FrmPasswordReset : Form
         pnlCard.Controls.Add(btnCancel);
 
         Controls.Add(pnlCard);
+
+        // Keep card sized to form on resize
+        SizeChanged += (_, _) =>
+        {
+            pnlCard.Size = new Size(ClientSize.Width - 80, ClientSize.Height - 60);
+            pnlCard.Location = new Point(40, 30);
+        };
     }
 
     private void BtnSend_Click(object? sender, EventArgs e)
@@ -140,14 +145,12 @@ public class FrmPasswordReset : Form
         if (user == null)
         {
             ThrottleService.RegisterAttempt(key, limit, window, lockout);
-            // Para di halata kung may account o wala
             MessageBox.Show("If an account exists for the provided information, a temporary password will be sent to the registered email.",
                 "Password Reset", MessageBoxButtons.OK, MessageBoxIcon.Information);
             Close();
             return;
         }
 
-        // generate ng temp password to update
         var temp = GenerateTempPassword(10);
         var hash = BCrypt.Net.BCrypt.HashPassword(temp);
         AppServices.Users.SetPasswordHash(user.UserId, hash);
@@ -182,8 +185,6 @@ public class FrmPasswordReset : Form
 
     private void PnlCard_Paint(object? sender, PaintEventArgs e)
     {
-        var g = e.Graphics;
-        using var pen = new Pen(Color.FromArgb(59, 130, 246), 1);
-        g.DrawRectangle(pen, 0, 0, pnlCard.Width - 1, pnlCard.Height - 1);
+        UIThemeHelper.PaintRoundedSolidCard(pnlCard, e, UIThemeHelper.CardWhite, UIThemeHelper.LoginCardRadius);
     }
 }

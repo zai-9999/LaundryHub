@@ -21,7 +21,6 @@ partial class FrmCustomerRegister
     private void InitializeComponent()
     {
         pnlCard = new Panel();
-        picLogo = new PictureBox();
         lblTitle = new Label();
         lblSub = new Label();
         lblFullName = new Label();
@@ -42,13 +41,11 @@ partial class FrmCustomerRegister
         btnRegister = new HopeButton();
         btnBack = new HopeButton();
         pnlCard.SuspendLayout();
-        ((System.ComponentModel.ISupportInitialize)picLogo).BeginInit();
         SuspendLayout();
         // 
         // pnlCard
         // 
         pnlCard.BackColor = Color.White;
-        pnlCard.Controls.Add(picLogo);
         pnlCard.Controls.Add(lblTitle);
         pnlCard.Controls.Add(lblSub);
         pnlCard.Controls.Add(lblFullName);
@@ -74,20 +71,11 @@ partial class FrmCustomerRegister
         pnlCard.TabIndex = 0;
         pnlCard.Paint += pnlCard_Paint;
         // 
-        // picLogo
-        // 
-        picLogo.Location = new Point(0, 16);
-        picLogo.Name = "picLogo";
-        picLogo.Size = new Size(445, 52);
-        picLogo.SizeMode = PictureBoxSizeMode.Zoom;
-        picLogo.TabIndex = 0;
-        picLogo.TabStop = false;
-        // 
         // lblTitle
         // 
         lblTitle.Font = new Font("Segoe UI", 22F, FontStyle.Bold);
         lblTitle.ForeColor = Color.FromArgb(75, 86, 148);
-        lblTitle.Location = new Point(0, 68);
+        lblTitle.Location = new Point(0, 20);
         lblTitle.Name = "lblTitle";
         lblTitle.Size = new Size(445, 40);
         lblTitle.TabIndex = 1;
@@ -98,7 +86,7 @@ partial class FrmCustomerRegister
         // 
         lblSub.Font = new Font("Segoe UI", 9F);
         lblSub.ForeColor = Color.FromArgb(114, 136, 174);
-        lblSub.Location = new Point(0, 108);
+        lblSub.Location = new Point(0, 60);
         lblSub.Name = "lblSub";
         lblSub.Size = new Size(445, 22);
         lblSub.TabIndex = 2;
@@ -110,7 +98,7 @@ partial class FrmCustomerRegister
         lblFullName.AutoSize = true;
         lblFullName.Font = new Font("Segoe UI", 8.5F, FontStyle.Bold);
         lblFullName.ForeColor = Color.FromArgb(75, 86, 148);
-        lblFullName.Location = new Point(62, 138);
+        lblFullName.Location = new Point(62, 90);
         lblFullName.Name = "lblFullName";
         lblFullName.Size = new Size(80, 20);
         lblFullName.TabIndex = 3;
@@ -125,7 +113,7 @@ partial class FrmCustomerRegister
         txtFullName.Font = new Font("Segoe UI", 10F);
         txtFullName.ForeColor = Color.FromArgb(75, 86, 148);
         txtFullName.Hint = "Enter full name";
-        txtFullName.Location = new Point(62, 158);
+        txtFullName.Location = new Point(62, 110);
         txtFullName.Name = "txtFullName";
         txtFullName.Size = new Size(320, 36);
         txtFullName.TabIndex = 1;
@@ -135,7 +123,7 @@ partial class FrmCustomerRegister
         lblPhone.AutoSize = true;
         lblPhone.Font = new Font("Segoe UI", 8.5F, FontStyle.Bold);
         lblPhone.ForeColor = Color.FromArgb(75, 86, 148);
-        lblPhone.Location = new Point(62, 198);
+        lblPhone.Location = new Point(62, 150);
         lblPhone.Name = "lblPhone";
         lblPhone.Size = new Size(50, 20);
         lblPhone.TabIndex = 4;
@@ -150,7 +138,7 @@ partial class FrmCustomerRegister
         txtPhone.Font = new Font("Segoe UI", 10F);
         txtPhone.ForeColor = Color.FromArgb(75, 86, 148);
         txtPhone.Hint = "09171234567";
-        txtPhone.Location = new Point(62, 218);
+        txtPhone.Location = new Point(62, 170);
         txtPhone.Name = "txtPhone";
         txtPhone.Size = new Size(320, 36);
         txtPhone.TabIndex = 2;
@@ -160,7 +148,7 @@ partial class FrmCustomerRegister
         lblUsername.AutoSize = true;
         lblUsername.Font = new Font("Segoe UI", 8.5F, FontStyle.Bold);
         lblUsername.ForeColor = Color.FromArgb(75, 86, 148);
-        lblUsername.Location = new Point(62, 258);
+        lblUsername.Location = new Point(62, 210);
         lblUsername.Name = "lblUsername";
         lblUsername.Size = new Size(80, 20);
         lblUsername.TabIndex = 5;
@@ -175,7 +163,7 @@ partial class FrmCustomerRegister
         txtUsername.Font = new Font("Segoe UI", 10F);
         txtUsername.ForeColor = Color.FromArgb(75, 86, 148);
         txtUsername.Hint = "Choose a username";
-        txtUsername.Location = new Point(62, 278);
+        txtUsername.Location = new Point(62, 230);
         txtUsername.Name = "txtUsername";
         txtUsername.Size = new Size(320, 36);
         txtUsername.TabIndex = 3;
@@ -185,7 +173,7 @@ partial class FrmCustomerRegister
         lblPassword.AutoSize = true;
         lblPassword.Font = new Font("Segoe UI", 8.5F, FontStyle.Bold);
         lblPassword.ForeColor = Color.FromArgb(75, 86, 148);
-        lblPassword.Location = new Point(62, 318);
+        lblPassword.Location = new Point(62, 270);
         lblPassword.Name = "lblPassword";
         lblPassword.Size = new Size(76, 20);
         lblPassword.TabIndex = 6;
@@ -200,7 +188,7 @@ partial class FrmCustomerRegister
         txtPassword.Font = new Font("Segoe UI", 10F);
         txtPassword.ForeColor = Color.FromArgb(75, 86, 148);
         txtPassword.Hint = "Min 6 characters";
-        txtPassword.Location = new Point(62, 338);
+        txtPassword.Location = new Point(62, 290);
         txtPassword.Name = "txtPassword";
         txtPassword.PasswordChar = '\0';
         txtPassword.Size = new Size(320, 36);
@@ -212,7 +200,7 @@ partial class FrmCustomerRegister
         lblConfirmPassword.AutoSize = true;
         lblConfirmPassword.Font = new Font("Segoe UI", 8.5F, FontStyle.Bold);
         lblConfirmPassword.ForeColor = Color.FromArgb(75, 86, 148);
-        lblConfirmPassword.Location = new Point(62, 378);
+        lblConfirmPassword.Location = new Point(62, 330);
         lblConfirmPassword.Name = "lblConfirmPassword";
         lblConfirmPassword.Size = new Size(140, 20);
         lblConfirmPassword.TabIndex = 7;
@@ -227,7 +215,7 @@ partial class FrmCustomerRegister
         txtConfirmPassword.Font = new Font("Segoe UI", 10F);
         txtConfirmPassword.ForeColor = Color.FromArgb(75, 86, 148);
         txtConfirmPassword.Hint = "Re-enter password";
-        txtConfirmPassword.Location = new Point(62, 398);
+        txtConfirmPassword.Location = new Point(62, 350);
         txtConfirmPassword.Name = "txtConfirmPassword";
         txtConfirmPassword.PasswordChar = '\0';
         txtConfirmPassword.Size = new Size(320, 36);
@@ -239,7 +227,7 @@ partial class FrmCustomerRegister
         lblEmail.AutoSize = true;
         lblEmail.Font = new Font("Segoe UI", 8.5F, FontStyle.Bold);
         lblEmail.ForeColor = Color.FromArgb(75, 86, 148);
-        lblEmail.Location = new Point(62, 438);
+        lblEmail.Location = new Point(62, 390);
         lblEmail.Name = "lblEmail";
         lblEmail.Size = new Size(160, 20);
         lblEmail.TabIndex = 8;
@@ -254,7 +242,7 @@ partial class FrmCustomerRegister
         txtEmail.Font = new Font("Segoe UI", 10F);
         txtEmail.ForeColor = Color.FromArgb(75, 86, 148);
         txtEmail.Hint = "user@example.com";
-        txtEmail.Location = new Point(62, 458);
+        txtEmail.Location = new Point(62, 410);
         txtEmail.Name = "txtEmail";
         txtEmail.Size = new Size(320, 36);
         txtEmail.TabIndex = 6;
@@ -264,7 +252,7 @@ partial class FrmCustomerRegister
         lblAddress.AutoSize = true;
         lblAddress.Font = new Font("Segoe UI", 8.5F, FontStyle.Bold);
         lblAddress.ForeColor = Color.FromArgb(75, 86, 148);
-        lblAddress.Location = new Point(62, 498);
+        lblAddress.Location = new Point(62, 450);
         lblAddress.Name = "lblAddress";
         lblAddress.Size = new Size(180, 20);
         lblAddress.TabIndex = 9;
@@ -279,7 +267,7 @@ partial class FrmCustomerRegister
         txtAddress.Font = new Font("Segoe UI", 10F);
         txtAddress.ForeColor = Color.FromArgb(75, 86, 148);
         txtAddress.Hint = "House No., Street, City";
-        txtAddress.Location = new Point(62, 518);
+        txtAddress.Location = new Point(62, 470);
         txtAddress.Name = "txtAddress";
         txtAddress.Size = new Size(320, 36);
         txtAddress.TabIndex = 7;
@@ -288,7 +276,7 @@ partial class FrmCustomerRegister
         // 
         lblError.Font = new Font("Segoe UI", 8.5F);
         lblError.ForeColor = Color.FromArgb(184, 72, 88);
-        lblError.Location = new Point(62, 556);
+        lblError.Location = new Point(62, 508);
         lblError.Name = "lblError";
         lblError.Size = new Size(320, 22);
         lblError.TabIndex = 10;
@@ -302,7 +290,7 @@ partial class FrmCustomerRegister
         btnRegister.Cursor = Cursors.Hand;
         btnRegister.Font = new Font("Segoe UI", 10F, FontStyle.Bold);
         btnRegister.HoverTextColor = Color.White;
-        btnRegister.Location = new Point(62, 582);
+        btnRegister.Location = new Point(62, 534);
         btnRegister.Name = "btnRegister";
         btnRegister.PrimaryColor = Color.FromArgb(75, 86, 148);
         btnRegister.Size = new Size(320, 53);
@@ -319,7 +307,7 @@ partial class FrmCustomerRegister
         btnBack.DefaultColor = Color.FromArgb(234, 224, 207);
         btnBack.Font = new Font("Segoe UI", 10F, FontStyle.Bold);
         btnBack.HoverTextColor = Color.FromArgb(75, 86, 148);
-        btnBack.Location = new Point(62, 642);
+        btnBack.Location = new Point(62, 594);
         btnBack.Name = "btnBack";
         btnBack.Size = new Size(320, 53);
         btnBack.TabIndex = 9;
@@ -329,26 +317,24 @@ partial class FrmCustomerRegister
         // 
         // FrmCustomerRegister
         // 
-        AutoScaleDimensions = new SizeF(8F, 20F);
-        AutoScaleMode = AutoScaleMode.Font;
+        AutoScaleDimensions = new SizeF(96F, 96F);
+        AutoScaleMode = AutoScaleMode.Dpi;
         BackColor = Color.FromArgb(114, 136, 174);
         ClientSize = new Size(1100, 800);
         Controls.Add(pnlCard);
-        FormBorderStyle = FormBorderStyle.FixedSingle;
-        MaximizeBox = false;
+        FormBorderStyle = FormBorderStyle.Sizable;
+        MaximizeBox = true;
         Name = "FrmCustomerRegister";
         StartPosition = FormStartPosition.CenterScreen;
         Text = "LaundryHub  Create Customer Account";
         pnlCard.ResumeLayout(false);
         pnlCard.PerformLayout();
-        ((System.ComponentModel.ISupportInitialize)picLogo).EndInit();
         ResumeLayout(false);
     }
 
     #endregion
 
     private Panel pnlCard;
-    private PictureBox picLogo;
     private Label lblTitle;
     private Label lblSub;
     private Label lblFullName;

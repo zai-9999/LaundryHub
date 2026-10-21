@@ -12,7 +12,7 @@ public partial class FrmExportReport : Form
         DoubleBuffered = true;
         ResizeRedraw = true;
         UIThemeHelper.StyleStandardForm(this);
-        pnlHeader.BackColor = UIThemeHelper.Navy;
+            pnlHeader.BackColor = UIThemeHelper.Navy;
         lblTitle.BackColor = UIThemeHelper.Navy;
         pnlContainer.BackColor = UIThemeHelper.Surface;
         pnlGridWrap.BackColor = UIThemeHelper.Surface;
