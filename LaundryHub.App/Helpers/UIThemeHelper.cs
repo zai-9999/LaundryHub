@@ -1,4 +1,4 @@
-using System.Drawing.Drawing2D;
+﻿using System.Drawing.Drawing2D;
 using System.IO;
 using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
@@ -495,13 +495,14 @@ public static class UIThemeHelper
         catch (InvalidOperationException) { }
     }
 
-    // ── Status pills ──────────────────────────────────────────────────────────
+    //  Status pills 
     private static readonly Font StatusPillFont = new("Segoe UI Semibold", 8.5F);
 
     private static bool TryGetPillColors(string status, out Color back, out Color fore)
     {
         switch (status)
         {
+            case "Booked":           back = Color.FromArgb(236, 237, 243); fore = Color.FromArgb(92, 99, 137);  return true;
             case "Washing":          back = Color.FromArgb(226, 230, 242); fore = Color.FromArgb(75, 86, 148);  return true;
             case "Drying":           back = Color.FromArgb(224, 232, 244); fore = Color.FromArgb(62, 86, 130);  return true;
             case "Ready for Pickup": back = Color.FromArgb(221, 239, 230); fore = Color.FromArgb(47, 107, 79);  return true;

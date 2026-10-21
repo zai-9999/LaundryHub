@@ -128,6 +128,30 @@ public class OrderRepository : IOrderRepository
         }
     }
 
+    public bool ConfirmDropOff(int orderId)
+    {
+        using var conn = _db.CreateConnection();
+        return conn.Execute(@"
+            UPDATE orders
+            SET status = 'Washing', updated_at = NOW()
+            WHERE order_id = @OrderId AND status = 'Booked'",
+            new { OrderId = orderId }) > 0;
+    }
+
+    public bool UpdateConfirmedWeight(int orderId, decimal weightKg, decimal totalAmount)
+    {
+        using var conn = _db.CreateConnection();
+        return conn.Execute(@"
+            UPDATE orders
+            SET weight_kg = @WeightKg,
+                total_amount = @TotalAmount,
+                updated_at = NOW()
+            WHERE order_id = @OrderId
+              AND status IN ('Washing', 'Drying', 'Ready for Pickup')
+              AND payment_recorded = FALSE",
+            new { OrderId = orderId, WeightKg = weightKg, TotalAmount = totalAmount }) > 0;
+    }
+
     private static bool IsValidTransition(string? from, string to) => (from, to) switch
     {
         ("Washing", "Drying") => true,

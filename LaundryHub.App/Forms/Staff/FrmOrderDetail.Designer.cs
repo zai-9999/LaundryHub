@@ -1,5 +1,6 @@
 ﻿using Panel = System.Windows.Forms.Panel;
 using CheckBox = System.Windows.Forms.CheckBox;
+using Button = System.Windows.Forms.Button;
 using ReaLTaiizor;
 using ReaLTaiizor.Controls;
 using ReaLTaiizor.Util;
@@ -39,6 +40,7 @@ partial class FrmOrderDetail
         btnAdvanceStatus = new HopeButton();
         btnClaimOrder = new HopeButton();
         btnCancelOrder = new HopeButton();
+        btnEditWeight = new Button();
         tlpDetails = new TableLayoutPanel();
         lblHCustomer = new Label();
         lblCustomerInfo = new Label();
@@ -96,7 +98,7 @@ partial class FrmOrderDetail
         btnClose.Size = new Size(80, 34);
         btnClose.SuccessColor = Color.FromArgb(74, 160, 120);
         btnClose.TabIndex = 2;
-        btnClose.Text = "✕ Close";
+        btnClose.Text = " Close";
         btnClose.TextColor = Color.FromArgb(75, 86, 148);
         btnClose.WarningColor = Color.FromArgb(214, 160, 80);
         btnClose.Click += btnClose_Click;
@@ -174,7 +176,7 @@ partial class FrmOrderDetail
         btnResendEmail.Size = new Size(220, 38);
         btnResendEmail.SuccessColor = Color.FromArgb(74, 160, 120);
         btnResendEmail.TabIndex = 3;
-        btnResendEmail.Text = "✉ Resend Email Receipt";
+        btnResendEmail.Text = " Resend Email Receipt";
         btnResendEmail.TextColor = Color.FromArgb(75, 86, 148);
         btnResendEmail.WarningColor = Color.FromArgb(214, 160, 80);
         btnResendEmail.Click += btnResendEmail_Click;
@@ -195,7 +197,7 @@ partial class FrmOrderDetail
         btnPrintQr.Size = new Size(220, 38);
         btnPrintQr.SuccessColor = Color.FromArgb(74, 160, 120);
         btnPrintQr.TabIndex = 2;
-        btnPrintQr.Text = "🖨 Print QR Ticket";
+        btnPrintQr.Text = " Print QR Ticket";
         btnPrintQr.TextColor = Color.FromArgb(246, 242, 234);
         btnPrintQr.WarningColor = Color.FromArgb(214, 160, 80);
         btnPrintQr.Click += btnPrintQr_Click;
@@ -241,6 +243,7 @@ partial class FrmOrderDetail
         flpActions.Controls.Add(btnAdvanceStatus);
         flpActions.Controls.Add(btnClaimOrder);
         flpActions.Controls.Add(btnCancelOrder);
+        flpActions.Controls.Add(btnEditWeight);
         flpActions.Dock = DockStyle.Bottom;
         flpActions.Location = new Point(20, 431);
         flpActions.Name = "flpActions";
@@ -285,7 +288,7 @@ partial class FrmOrderDetail
         btnClaimOrder.Size = new Size(135, 38);
         btnClaimOrder.SuccessColor = Color.FromArgb(74, 160, 120);
         btnClaimOrder.TabIndex = 1;
-        btnClaimOrder.Text = "💰 Claim / Pay";
+        btnClaimOrder.Text = " Claim / Pay";
         btnClaimOrder.TextColor = Color.White;
         btnClaimOrder.WarningColor = Color.FromArgb(214, 160, 80);
         btnClaimOrder.Click += btnClaimOrder_Click;
@@ -306,10 +309,26 @@ partial class FrmOrderDetail
         btnCancelOrder.Size = new Size(135, 38);
         btnCancelOrder.SuccessColor = Color.FromArgb(74, 160, 120);
         btnCancelOrder.TabIndex = 2;
-        btnCancelOrder.Text = "✕ Cancel Order";
+        btnCancelOrder.Text = " Cancel Order";
         btnCancelOrder.TextColor = Color.FromArgb(184, 72, 88);
         btnCancelOrder.WarningColor = Color.FromArgb(214, 160, 80);
         btnCancelOrder.Click += btnCancelOrder_Click;
+        // 
+        // btnEditWeight
+        // 
+        btnEditWeight.BackColor = Color.FromArgb(124, 58, 237);
+        btnEditWeight.Cursor = Cursors.Hand;
+        btnEditWeight.FlatAppearance.BorderSize = 0;
+        btnEditWeight.FlatStyle = FlatStyle.Flat;
+        btnEditWeight.Font = new Font("Segoe UI", 9F, FontStyle.Bold);
+        btnEditWeight.ForeColor = Color.White;
+        btnEditWeight.Location = new Point(3, 55);
+        btnEditWeight.Name = "btnEditWeight";
+        btnEditWeight.Size = new Size(135, 36);
+        btnEditWeight.TabIndex = 3;
+        btnEditWeight.Text = " Edit Weight";
+        btnEditWeight.UseVisualStyleBackColor = false;
+        btnEditWeight.Click += btnEditWeight_Click;
         // 
         // tlpDetails
         // 
@@ -600,6 +619,7 @@ partial class FrmOrderDetail
     private HopeButton btnAdvanceStatus;
     private HopeButton btnClaimOrder;
     private HopeButton btnCancelOrder;
+    private Button btnEditWeight;
     private Panel pnlRightWrapper;
     private Panel pnlRightCard;
     private Label lblQrTitle;

@@ -1,4 +1,4 @@
-using Panel = System.Windows.Forms.Panel;
+﻿using Panel = System.Windows.Forms.Panel;
 using CheckBox = System.Windows.Forms.CheckBox;
 using ReaLTaiizor;
 using ReaLTaiizor.Controls;
@@ -182,7 +182,7 @@ partial class FrmCustomerPortal
         btnViewTicket.Name = "btnViewTicket";
         btnViewTicket.Size = new Size(210, 38);
         btnViewTicket.TabIndex = 2;
-        btnViewTicket.Text = "🧾 View E-Ticket / Receipt";
+        btnViewTicket.Text = " View E-Ticket / Receipt";
         btnViewTicket.Click += BtnViewTicket_Click;
         // 
         // tlpStats
@@ -383,7 +383,7 @@ partial class FrmCustomerPortal
         MinimumSize = new Size(980, 620);
         Name = "FrmCustomerPortal";
         StartPosition = FormStartPosition.CenterScreen;
-        Text = "LaundryHub – Customer Portal";
+        Text = "LaundryHub  Customer Portal";
         pnlBody.ResumeLayout(false);
         cardGrid.ResumeLayout(false);
         ((System.ComponentModel.ISupportInitialize)dgvOrders).EndInit();

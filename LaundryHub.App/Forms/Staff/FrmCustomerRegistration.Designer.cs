@@ -78,7 +78,7 @@ partial class FrmCustomerRegistration
         lblTitle.Name = "lblTitle";
         lblTitle.Size = new Size(500, 65);
         lblTitle.TabIndex = 0;
-        lblTitle.Text = "👥 Customer Directory & Registration";
+        lblTitle.Text = " Customer Directory & Registration";
         lblTitle.TextAlign = ContentAlignment.MiddleLeft;
         // 
         // btnClose
@@ -92,7 +92,7 @@ partial class FrmCustomerRegistration
         btnClose.Name = "btnClose";
         btnClose.Size = new Size(90, 34);
         btnClose.TabIndex = 1;
-        btnClose.Text = "✕ Close";
+        btnClose.Text = " Close";
         btnClose.UseVisualStyleBackColor = false;
         btnClose.Click += btnClose_Click;
         // 
@@ -202,7 +202,7 @@ partial class FrmCustomerRegistration
         lblSearchIcon.Name = "lblSearchIcon";
         lblSearchIcon.Size = new Size(28, 32);
         lblSearchIcon.TabIndex = 0;
-        lblSearchIcon.Text = "🔍";
+        lblSearchIcon.Text = "";
         lblSearchIcon.TextAlign = ContentAlignment.MiddleCenter;
         // 
         // btnArchive
@@ -218,7 +218,7 @@ partial class FrmCustomerRegistration
         btnArchive.Name = "btnArchive";
         btnArchive.Size = new Size(95, 32);
         btnArchive.TabIndex = 2;
-        btnArchive.Text = "🗑 Archive";
+        btnArchive.Text = " Archive";
         btnArchive.UseVisualStyleBackColor = false;
         btnArchive.Click += btnArchive_Click;
         // 
@@ -382,7 +382,7 @@ partial class FrmCustomerRegistration
         btnSave.Name = "btnSave";
         btnSave.Size = new Size(150, 38);
         btnSave.TabIndex = 0;
-        btnSave.Text = "💾 Save Customer";
+        btnSave.Text = " Save Customer";
         btnSave.UseVisualStyleBackColor = false;
         btnSave.Click += btnSave_Click;
         // 
@@ -397,7 +397,7 @@ partial class FrmCustomerRegistration
         btnClear.Name = "btnClear";
         btnClear.Size = new Size(150, 38);
         btnClear.TabIndex = 1;
-        btnClear.Text = "↺ Clear";
+        btnClear.Text = " Clear";
         btnClear.UseVisualStyleBackColor = false;
         btnClear.Click += btnClear_Click;
         // 
@@ -414,7 +414,7 @@ partial class FrmCustomerRegistration
         btnSelect.Name = "btnSelect";
         btnSelect.Size = new Size(306, 38);
         btnSelect.TabIndex = 2;
-        btnSelect.Text = "✔ Select for Current Order";
+        btnSelect.Text = " Select for Current Order";
         btnSelect.UseVisualStyleBackColor = false;
         btnSelect.Visible = false;
         btnSelect.Click += btnSelect_Click;
@@ -428,7 +428,7 @@ partial class FrmCustomerRegistration
         lblFormTitle.Name = "lblFormTitle";
         lblFormTitle.Size = new Size(340, 35);
         lblFormTitle.TabIndex = 0;
-        lblFormTitle.Text = "➕ New Customer";
+        lblFormTitle.Text = " New Customer";
         // 
         // FrmCustomerRegistration
         // 

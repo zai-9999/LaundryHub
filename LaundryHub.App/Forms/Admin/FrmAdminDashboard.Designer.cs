@@ -1,4 +1,4 @@
-using Panel = System.Windows.Forms.Panel;
+﻿using Panel = System.Windows.Forms.Panel;
 using ReaLTaiizor.Controls;
 using LaundryHub.App.Helpers;
 
@@ -63,15 +63,15 @@ partial class FrmAdminDashboard
         pnlSidebar.Dock = DockStyle.Left;
         pnlSidebar.Location = new Point(0, 0);
         pnlSidebar.Name = "pnlSidebar";
-        pnlSidebar.Size = new Size(240, 740);
+        pnlSidebar.Size = new Size(265, 740);
         pnlSidebar.TabIndex = 1;
         // 
         // pnlHeader
         // 
         pnlHeader.Dock = DockStyle.Top;
-        pnlHeader.Location = new Point(240, 0);
+        pnlHeader.Location = new Point(265, 0);
         pnlHeader.Name = "pnlHeader";
-        pnlHeader.Size = new Size(940, 72);
+        pnlHeader.Size = new Size(915, 72);
         pnlHeader.TabIndex = 0;
         // 
         // pnlMain
@@ -80,10 +80,10 @@ partial class FrmAdminDashboard
         pnlMain.Controls.Add(cardOrders);
         pnlMain.Controls.Add(flpStats);
         pnlMain.Dock = DockStyle.Fill;
-        pnlMain.Location = new Point(240, 72);
+        pnlMain.Location = new Point(265, 72);
         pnlMain.Name = "pnlMain";
         pnlMain.Padding = new Padding(20);
-        pnlMain.Size = new Size(940, 668);
+        pnlMain.Size = new Size(915, 668);
         pnlMain.TabIndex = 2;
         // 
         // cardOrders
@@ -145,7 +145,7 @@ partial class FrmAdminDashboard
         lblLiveBadge.Name = "lblLiveBadge";
         lblLiveBadge.Size = new Size(100, 26);
         lblLiveBadge.TabIndex = 2;
-        lblLiveBadge.Text = "● Live Activity";
+        lblLiveBadge.Text = " Live Activity";
         lblLiveBadge.TextAlign = ContentAlignment.MiddleCenter;
         // 
         // lblTableSubtitle
@@ -250,7 +250,7 @@ partial class FrmAdminDashboard
         lblSalesToday.Name = "lblSalesToday";
         lblSalesToday.Size = new Size(173, 47);
         lblSalesToday.TabIndex = 2;
-        lblSalesToday.Text = "₱0.00";
+        lblSalesToday.Text = "0.00";
         // 
         // lblRevenueTitle
         // 
@@ -373,7 +373,7 @@ partial class FrmAdminDashboard
         ForeColor = Color.FromArgb(17, 24, 68);
         Name = "FrmAdminDashboard";
         StartPosition = FormStartPosition.CenterScreen;
-        Text = "LaundryHub – Owner & Administrator Dashboard";
+        Text = "LaundryHub  Owner & Administrator Dashboard";
         pnlMain.ResumeLayout(false);
         cardOrders.ResumeLayout(false);
         ((System.ComponentModel.ISupportInitialize)dgvTodayOrders).EndInit();

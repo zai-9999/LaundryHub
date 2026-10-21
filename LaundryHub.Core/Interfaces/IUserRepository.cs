@@ -5,6 +5,7 @@ namespace LaundryHub.Core.Interfaces;
 public interface IUserRepository
 {
     User? GetByUsername(string username);
+    User? GetByEmail(string email);
     User? GetById(int userId);
     IEnumerable<User> GetAllStaff();
     void Add(User user);
@@ -12,4 +13,5 @@ public interface IUserRepository
     void SetActive(int userId, bool isActive);
     bool UsernameExists(string username, int excludeUserId = 0);
     bool EmailExists(string email, int excludeUserId = 0);
+    void SetPasswordHash(int userId, string passwordHash);
 }

@@ -86,7 +86,7 @@ partial class FrmServicePricing
         btnClose.Name = "btnClose";
         btnClose.Size = new Size(90, 34);
         btnClose.TabIndex = 1;
-        btnClose.Text = "✕ Close";
+        btnClose.Text = " Close";
         btnClose.Click += btnClose_Click;
         // 
         // lblTitle
@@ -176,7 +176,6 @@ partial class FrmServicePricing
         // pnlToolBar
         // 
         pnlToolBar.BackColor = Color.Transparent;
-        pnlToolBar.Controls.Add(btnToggleActive);
         pnlToolBar.Controls.Add(lblGridTitle);
         pnlToolBar.Dock = DockStyle.Top;
         pnlToolBar.Location = new Point(16, 0);
@@ -236,7 +235,6 @@ partial class FrmServicePricing
         flpForm.Controls.Add(txtPricePerKilo);
         flpForm.Controls.Add(lblMinWeight);
         flpForm.Controls.Add(txtMinWeight);
-        flpForm.Controls.Add(chkActive);
         flpForm.Controls.Add(lblError);
         flpForm.Controls.Add(flpButtons);
         flpForm.Dock = DockStyle.Fill;
@@ -282,7 +280,7 @@ partial class FrmServicePricing
         lblPricePerKilo.Name = "lblPricePerKilo";
         lblPricePerKilo.Size = new Size(290, 18);
         lblPricePerKilo.TabIndex = 2;
-        lblPricePerKilo.Text = "Price Per Kilo (₱) *";
+        lblPricePerKilo.Text = "Price Per Kilo () *";
         // 
         // txtPricePerKilo
         // 
@@ -386,7 +384,7 @@ partial class FrmServicePricing
         btnClear.Name = "btnClear";
         btnClear.Size = new Size(135, 40);
         btnClear.TabIndex = 1;
-        btnClear.Text = "↺ Clear";
+        btnClear.Text = " Clear";
         btnClear.Click += btnClear_Click;
         // 
         // lblFormTitle
@@ -414,7 +412,7 @@ partial class FrmServicePricing
         MaximizeBox = false;
         Name = "FrmServicePricing";
         StartPosition = FormStartPosition.CenterParent;
-        Text = "LaundryHub – Service Types & Pricing Management";
+        Text = "LaundryHub  Service Types & Pricing Management";
         pnlHeader.ResumeLayout(false);
         pnlContainer.ResumeLayout(false);
         pnlRight.ResumeLayout(false);

@@ -1,4 +1,4 @@
-using LaundryHub.App.Helpers;
+﻿using LaundryHub.App.Helpers;
 using LaundryHub.Core.Models;
 
 namespace LaundryHub.App.Forms.Admin;
@@ -22,6 +22,21 @@ public partial class FrmServicePricing : Form
         flpForm.BackColor = Color.White;
         UIThemeHelper.StyleDataGridView(dgvServices);
         UIThemeHelper.EnableStatusPills(dgvServices);
+
+        InputValidator.RestrictToDecimalInput(txtPricePerKilo);
+        InputValidator.RestrictToDecimalInput(txtMinWeight);
+        txtServiceName.TextChanged += (_, _) => lblError.Visible = false;
+        txtPricePerKilo.TextChanged += (_, _) => lblError.Visible = false;
+        txtMinWeight.TextChanged += (_, _) => lblError.Visible = false;
+
+        // Ensure all service pricing entries are active
+        try
+        {
+            using var conn = AppServices.DbContext.CreateConnection();
+            Dapper.SqlMapper.Execute(conn, "UPDATE service_types SET is_active = TRUE WHERE is_active = FALSE");
+        }
+        catch { }
+
         LoadServices();
     }
 
@@ -42,9 +57,8 @@ public partial class FrmServicePricing : Form
         {
             s.ServiceId,
             Service = s.ServiceName,
-            Rate = $"₱{s.PricePerKilo:N2} / kg",
-            Min_Weight = $"{s.MinimumWeight:F1} kg",
-            Status = s.IsActive ? "Active" : "Disabled"
+            Rate = $"{s.PricePerKilo:N2} / kg",
+            Min_Weight = $"{s.MinimumWeight:F1} kg"
         }).ToList();
 
         if (dgvServices.Columns["ServiceId"] is { } col)
@@ -79,15 +93,15 @@ public partial class FrmServicePricing : Form
         try
         {
             var name = txtServiceName.Text.Trim();
-            var price = Math.Round(decimal.Parse(txtPricePerKilo.Text.Trim()), 2, MidpointRounding.AwayFromZero);
-            var minWeight = Math.Round(decimal.Parse(txtMinWeight.Text.Trim()), 2, MidpointRounding.AwayFromZero);
+            InputValidator.IsValidPrice(txtPricePerKilo.Text, out var price, out _, fieldName: "Price per kilo", min: 1.00m, max: 10000m);
+            InputValidator.IsValidWeight(txtMinWeight.Text, out var minWeight, out _, min: 0.5m, max: 50m);
 
             if (_editingServiceId > 0 && _selectedService != null)
             {
                 _selectedService.ServiceName = name;
                 _selectedService.PricePerKilo = price;
                 _selectedService.MinimumWeight = minWeight;
-                _selectedService.IsActive = chkActive.Checked;
+                _selectedService.IsActive = true;
 
                 AppServices.ServiceTypes.Update(_selectedService);
                 MessageBox.Show("Service type updated successfully!", "Success", MessageBoxButtons.OK, MessageBoxIcon.Information);
@@ -99,7 +113,7 @@ public partial class FrmServicePricing : Form
                     ServiceName = name,
                     PricePerKilo = price,
                     MinimumWeight = minWeight,
-                    IsActive = chkActive.Checked
+                    IsActive = true
                 };
                 AppServices.ServiceTypes.Add(newService);
                 MessageBox.Show($"New service '{name}' created!", "Success", MessageBoxButtons.OK, MessageBoxIcon.Information);
@@ -116,23 +130,6 @@ public partial class FrmServicePricing : Form
 
     private void btnToggleActive_Click(object? sender, EventArgs e)
     {
-        if (_selectedService == null)
-        {
-            MessageBox.Show("Please select a service type first.", "Notice", MessageBoxButtons.OK, MessageBoxIcon.Information);
-            return;
-        }
-
-        try
-        {
-            bool newStatus = !_selectedService.IsActive;
-            AppServices.ServiceTypes.SetActive(_selectedService.ServiceId, newStatus);
-            LoadServices();
-            MessageBox.Show($"Service '{_selectedService.ServiceName}' is now {(newStatus ? "Active" : "Disabled")}.", "Status Changed", MessageBoxButtons.OK, MessageBoxIcon.Information);
-        }
-        catch (Exception ex)
-        {
-            MessageBox.Show($"Failed to change service status: {ex.Message}", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
-        }
     }
 
     private void ResetForm()
@@ -152,24 +149,39 @@ public partial class FrmServicePricing : Form
     private bool ValidateForm()
     {
         lblError.Visible = false;
+        var name = txtServiceName.Text.Trim();
 
-        if (string.IsNullOrWhiteSpace(txtServiceName.Text))
+        if (string.IsNullOrWhiteSpace(name) || name.Length < 2)
         {
-            ShowError("Please enter a service name.");
+            ShowError("Please enter a valid service name (at least 2 characters).");
             txtServiceName.Focus();
             return false;
         }
 
-        if (!decimal.TryParse(txtPricePerKilo.Text.Trim(), out var p) || p <= 0)
+        if (name.Length > 60)
         {
-            ShowError("Price per kilo must be a positive number.");
+            ShowError("Service name cannot exceed 60 characters.");
+            txtServiceName.Focus();
+            return false;
+        }
+
+        if (AppServices.ServiceTypes.NameExists(name, _editingServiceId))
+        {
+            ShowError("A service with this name already exists.");
+            txtServiceName.Focus();
+            return false;
+        }
+
+        if (!InputValidator.IsValidPrice(txtPricePerKilo.Text, out _, out var priceErr, fieldName: "Price per kilo", min: 1.00m, max: 10000m))
+        {
+            ShowError(priceErr);
             txtPricePerKilo.Focus();
             return false;
         }
 
-        if (!decimal.TryParse(txtMinWeight.Text.Trim(), out var w) || w <= 0)
+        if (!InputValidator.IsValidWeight(txtMinWeight.Text, out _, out var weightErr, min: 0.5m, max: 50m))
         {
-            ShowError("Minimum weight must be a positive number.");
+            ShowError($"Minimum weight: {weightErr}");
             txtMinWeight.Focus();
             return false;
         }
@@ -179,7 +191,7 @@ public partial class FrmServicePricing : Form
 
     private void ShowError(string msg)
     {
-        lblError.Text = $"⚠ {msg}";
+        lblError.Text = $" {msg}";
         lblError.Visible = true;
     }
 }

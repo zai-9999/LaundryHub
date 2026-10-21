@@ -53,4 +53,12 @@ public class ServiceTypeRepository : IServiceTypeRepository
         conn.Execute("UPDATE service_types SET is_active = @IsActive WHERE service_id = @ServiceId",
             new { IsActive = isActive, ServiceId = serviceId });
     }
+
+    public bool NameExists(string serviceName, int excludeServiceId = 0)
+    {
+        using var conn = _db.CreateConnection();
+        return conn.ExecuteScalar<int>(
+            "SELECT COUNT(1) FROM service_types WHERE LOWER(service_name) = LOWER(@ServiceName) AND service_id != @ExcludeId",
+            new { ServiceName = serviceName.Trim(), ExcludeId = excludeServiceId }) > 0;
+    }
 }

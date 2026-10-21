@@ -1,4 +1,4 @@
-﻿using ReaLTaiizor;
+using ReaLTaiizor;
 using ReaLTaiizor.Controls;
 using ReaLTaiizor.Util;
 using System.IO;
@@ -158,7 +158,7 @@ partial class FrmCustomerLogin
         txtPassword.MaxLength = 32767;
         txtPassword.Multiline = false;
         txtPassword.Name = "txtPassword";
-        txtPassword.PasswordChar = '●';
+        txtPassword.PasswordChar = '\0';
         txtPassword.ScrollBars = ScrollBars.None;
         txtPassword.SelectedText = "";
         txtPassword.SelectionLength = 0;
@@ -179,7 +179,7 @@ partial class FrmCustomerLogin
         btnTogglePassword.Name = "btnTogglePassword";
         btnTogglePassword.Size = new Size(34, 33);
         btnTogglePassword.TabIndex = 8;
-        btnTogglePassword.Text = "👁";
+        btnTogglePassword.Text = "\uD83D\uDE48"; // 🙈 eye closed (default)
         btnTogglePassword.UseVisualStyleBackColor = false;
         btnTogglePassword.Click += btnTogglePassword_Click;
         //
@@ -224,7 +224,7 @@ partial class FrmCustomerLogin
         lblSeparator.Name = "lblSeparator";
         lblSeparator.Size = new Size(445, 24);
         lblSeparator.TabIndex = 6;
-        lblSeparator.Text = "──── or ────";
+        lblSeparator.Text = " or ";
         lblSeparator.TextAlign = ContentAlignment.MiddleCenter;
         // 
         // btnRegister
@@ -327,7 +327,7 @@ partial class FrmCustomerLogin
         MaximizeBox = false;
         Name = "FrmCustomerLogin";
         StartPosition = FormStartPosition.CenterScreen;
-        Text = "LaundryHub – Customer Portal";
+        Text = "LaundryHub  Customer Portal";
         Load += FrmCustomerLogin_Load;
         pnlCard.ResumeLayout(false);
         pnlCard.PerformLayout();

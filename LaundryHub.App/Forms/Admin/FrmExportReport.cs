@@ -1,4 +1,4 @@
-using LaundryHub.App.Helpers;
+﻿using LaundryHub.App.Helpers;
 using LaundryHub.Core.Models;
 
 namespace LaundryHub.App.Forms.Admin;
@@ -44,7 +44,7 @@ public partial class FrmExportReport : Form
         lblTotalOrders.Text = _currentReport.TotalOrders.ToString();
         lblPending.Text = _currentReport.PendingOrders.ToString();
         lblClaimed.Text = _currentReport.ClaimedOrders.ToString();
-        lblSales.Text = $"₱{_currentReport.TotalSales:N2}";
+        lblSales.Text = $"{_currentReport.TotalSales:N2}";
 
         dgvPreview.DataSource = _currentReport.Orders.Select(o => new
         {
@@ -53,7 +53,7 @@ public partial class FrmExportReport : Form
             Phone = o.CustomerPhone,
             Service = o.ServiceName,
             Weight = $"{o.WeightKg} kg",
-            Total = $"₱{o.TotalAmount:N2}",
+            Total = $"{o.TotalAmount:N2}",
             o.Status,
             Payment = o.PaymentRecorded ? "Paid" : "Unpaid",
             Date = o.CreatedAt.ToString("MM/dd/yyyy hh:mm tt")

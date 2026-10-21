@@ -244,7 +244,7 @@ partial class FrmGuestLookup
         lblStep3.Name = "lblStep3";
         lblStep3.Size = new Size(118, 36);
         lblStep3.TabIndex = 0;
-        lblStep3.Text = "📦 Claimed";
+        lblStep3.Text = " Claimed";
         lblStep3.TextAlign = ContentAlignment.MiddleCenter;
         // 
         // pnlStep2
@@ -266,7 +266,7 @@ partial class FrmGuestLookup
         lblStep2.Name = "lblStep2";
         lblStep2.Size = new Size(118, 36);
         lblStep2.TabIndex = 0;
-        lblStep2.Text = "✨ Ready";
+        lblStep2.Text = " Ready";
         lblStep2.TextAlign = ContentAlignment.MiddleCenter;
         // 
         // pnlStep1
@@ -288,7 +288,7 @@ partial class FrmGuestLookup
         lblStep1.Name = "lblStep1";
         lblStep1.Size = new Size(118, 36);
         lblStep1.TabIndex = 0;
-        lblStep1.Text = "🌀 Drying";
+        lblStep1.Text = " Drying";
         lblStep1.TextAlign = ContentAlignment.MiddleCenter;
         // 
         // pnlStep0
@@ -363,7 +363,7 @@ partial class FrmGuestLookup
         lnkPricing.Size = new Size(420, 24);
         lnkPricing.TabIndex = 11;
         lnkPricing.TabStop = true;
-        lnkPricing.Text = "🏷️ View Laundry Services & Pricing";
+        lnkPricing.Text = " View Laundry Services & Pricing";
         lnkPricing.TextAlign = ContentAlignment.MiddleCenter;
         lnkPricing.LinkClicked += lnkPricing_LinkClicked;
         // 
@@ -472,7 +472,7 @@ partial class FrmGuestLookup
         MaximizeBox = false;
         Name = "FrmGuestLookup";
         StartPosition = FormStartPosition.CenterScreen;
-        Text = "LaundryHub – Guest Order Tracking";
+        Text = "LaundryHub  Guest Order Tracking";
         pnlCard.ResumeLayout(false);
         pnlResult.ResumeLayout(false);
         tlpGrid.ResumeLayout(false);

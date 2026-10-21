@@ -67,7 +67,7 @@ partial class FrmNewOrder
         lblSecCustomer.Name = "lblSecCustomer";
         lblSecCustomer.Size = new Size(74, 15);
         lblSecCustomer.TabIndex = 1;
-        lblSecCustomer.Text = "── Customer";
+        lblSecCustomer.Text = " Customer";
         // 
         // lblSearchPrompt
         // 
@@ -144,7 +144,7 @@ partial class FrmNewOrder
         lblSecService.Name = "lblSecService";
         lblSecService.Size = new Size(117, 15);
         lblSecService.TabIndex = 7;
-        lblSecService.Text = "── Service & Weight";
+        lblSecService.Text = " Service & Weight";
         // 
         // lblServicePrompt
         // 
@@ -226,7 +226,7 @@ partial class FrmNewOrder
         lblPrice.Name = "lblPrice";
         lblPrice.Size = new Size(106, 45);
         lblPrice.TabIndex = 0;
-        lblPrice.Text = "₱0.00";
+        lblPrice.Text = "0.00";
         // 
         // lblSecPickup
         // 
@@ -237,7 +237,7 @@ partial class FrmNewOrder
         lblSecPickup.Name = "lblSecPickup";
         lblSecPickup.Size = new Size(86, 15);
         lblSecPickup.TabIndex = 13;
-        lblSecPickup.Text = "── Pickup Date";
+        lblSecPickup.Text = " Pickup Date";
         // 
         // lblPickupPrompt
         // 

@@ -1,4 +1,4 @@
-using System.Drawing.Drawing2D;
+﻿using System.Drawing.Drawing2D;
 using ReaLTaiizor.Controls;
 
 namespace LaundryHub.App.Helpers;
@@ -32,19 +32,28 @@ public class ModernHeaderBar : System.Windows.Forms.Panel
         BackColor = Color.White;
         Padding = new Padding(24, 12, 24, 12);
 
-        // ── Right-side User Profile ──
-        _pnlUserProfile = new System.Windows.Forms.Panel
+        //  Right-side Container Panel 
+        // Avoids DockStyle.Right height stretching on individual controls
+        var pnlRight = new System.Windows.Forms.Panel
         {
             Dock = DockStyle.Right,
-            Width = 200,
+            Width = 570,
+            BackColor = Color.Transparent
+        };
+
+        //  Right-side User Profile 
+        _pnlUserProfile = new System.Windows.Forms.Panel
+        {
+            Location = new Point(370, 4),
+            Size = new Size(196, 40),
             BackColor = Color.Transparent
         };
 
         _lblAvatar = new Label
         {
             Size = new Size(40, 40),
-            Location = new Point(0, 4),
-            BackColor = UIThemeHelper.Navy,
+            Location = new Point(0, 0),
+            BackColor = Color.Transparent,
             ForeColor = UIThemeHelper.Sand,
             Font = new Font("Segoe UI", 10F, FontStyle.Bold),
             TextAlign = ContentAlignment.MiddleCenter,
@@ -53,57 +62,61 @@ public class ModernHeaderBar : System.Windows.Forms.Panel
         _lblAvatar.Paint += (s, e) =>
         {
             e.Graphics.SmoothingMode = SmoothingMode.AntiAlias;
-            using var path = new GraphicsPath();
-            path.AddEllipse(0, 0, _lblAvatar.Width - 1, _lblAvatar.Height - 1);
-            _lblAvatar.Region = new Region(path);
+            e.Graphics.TextRenderingHint = System.Drawing.Text.TextRenderingHint.ClearTypeGridFit;
+            using var brush = new SolidBrush(UIThemeHelper.Navy);
+            e.Graphics.FillEllipse(brush, 0, 0, _lblAvatar.Width - 1, _lblAvatar.Height - 1);
+            TextRenderer.DrawText(e.Graphics, _lblAvatar.Text, _lblAvatar.Font,
+                new Rectangle(0, 0, _lblAvatar.Width, _lblAvatar.Height),
+                UIThemeHelper.Sand,
+                TextFormatFlags.HorizontalCenter | TextFormatFlags.VerticalCenter | TextFormatFlags.NoPadding);
         };
 
         _lblName = new Label
         {
-            Location = new Point(48, 6),
-            Size = new Size(150, 18),
+            Location = new Point(48, 3),
+            Size = new Size(146, 18),
             Font = new Font("Segoe UI", 9.5F, FontStyle.Bold),
             ForeColor = UIThemeHelper.Navy,
             TextAlign = ContentAlignment.MiddleLeft,
-            Text = "Administrator"
+            Text = "Administrator",
+            UseMnemonic = false
         };
 
         _lblRole = new Label
         {
-            Location = new Point(48, 24),
-            Size = new Size(150, 16),
+            Location = new Point(48, 21),
+            Size = new Size(146, 16),
             Font = new Font("Segoe UI", 8F),
             ForeColor = UIThemeHelper.TextMuted,
             TextAlign = ContentAlignment.MiddleLeft,
-            Text = "System Admin"
+            Text = "System Admin",
+            UseMnemonic = false
         };
 
         _pnlUserProfile.Controls.Add(_lblName);
         _pnlUserProfile.Controls.Add(_lblRole);
         _pnlUserProfile.Controls.Add(_lblAvatar);
 
-        // ── Action Button (e.g. Logout / Refresh) ──
+        //  Action Button (e.g. Logout / Refresh) 
         _btnAction = new HopeButton
         {
-            Dock = DockStyle.Right,
-            Width = 92,
-            Height = 36,
+            Location = new Point(260, 6),
+            Size = new Size(96, 36),
             Font = new Font("Segoe UI", 9F, FontStyle.Bold),
             ButtonType = ReaLTaiizor.Util.HopeButtonType.Primary,
             PrimaryColor = UIThemeHelper.Danger,
             BorderColor = UIThemeHelper.Danger,
             TextColor = Color.White,
             HoverTextColor = Color.White,
-            Text = "🚪 Logout",
-            Cursor = Cursors.Hand,
-            Margin = new Padding(0, 6, 16, 6)
+            Text = " Logout",
+            Cursor = Cursors.Hand
         };
 
-        // ── Search Box ──
+        //  Search Box 
         _txtSearch = new HopeTextBox
         {
-            Dock = DockStyle.Right,
-            Width = 240,
+            Location = new Point(0, 6),
+            Size = new Size(244, 36),
             Font = new Font("Segoe UI", 9.5F),
             BaseColor = Color.FromArgb(248, 249, 252),
             BorderColorA = UIThemeHelper.Indigo,
@@ -112,22 +125,11 @@ public class ModernHeaderBar : System.Windows.Forms.Panel
             Hint = "Search Order # or Name..."
         };
 
-        // Spacer between search and user profile
-        var spacerRight = new System.Windows.Forms.Panel
-        {
-            Dock = DockStyle.Right,
-            Width = 16,
-            BackColor = Color.Transparent
-        };
+        pnlRight.Controls.Add(_pnlUserProfile);
+        pnlRight.Controls.Add(_btnAction);
+        pnlRight.Controls.Add(_txtSearch);
 
-        var spacerSearch = new System.Windows.Forms.Panel
-        {
-            Dock = DockStyle.Right,
-            Width = 16,
-            BackColor = Color.Transparent
-        };
-
-        // ── Left Side: Title & Subtitle ──
+        //  Left Side: Title & Subtitle 
         var pnlTitles = new System.Windows.Forms.Panel
         {
             Dock = DockStyle.Fill,
@@ -141,7 +143,8 @@ public class ModernHeaderBar : System.Windows.Forms.Panel
             Font = new Font("Segoe UI", 14F, FontStyle.Bold),
             ForeColor = UIThemeHelper.Navy,
             Text = "Platform Overview & Analytics",
-            TextAlign = ContentAlignment.MiddleLeft
+            TextAlign = ContentAlignment.MiddleLeft,
+            UseMnemonic = false
         };
 
         _lblSubtitle = new Label
@@ -151,19 +154,16 @@ public class ModernHeaderBar : System.Windows.Forms.Panel
             Font = new Font("Segoe UI", 7.5F, FontStyle.Bold),
             ForeColor = UIThemeHelper.Indigo,
             Text = "REAL-TIME LAUNDRY WORKFLOW, PERFORMANCE & REVENUE MONITORING",
-            TextAlign = ContentAlignment.MiddleLeft
+            TextAlign = ContentAlignment.MiddleLeft,
+            UseMnemonic = false
         };
 
         pnlTitles.Controls.Add(_lblSubtitle);
         pnlTitles.Controls.Add(_lblTitle);
 
-        // Add controls in right-to-left dock order
+        // Add controls in dock order: Fill first, then Right container
         Controls.Add(pnlTitles);
-        Controls.Add(spacerSearch);
-        Controls.Add(_txtSearch);
-        Controls.Add(spacerRight);
-        Controls.Add(_btnAction);
-        Controls.Add(_pnlUserProfile);
+        Controls.Add(pnlRight);
     }
 
     public string Title

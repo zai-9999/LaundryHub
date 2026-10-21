@@ -1,4 +1,4 @@
-using LaundryHub.App.Helpers;
+﻿using LaundryHub.App.Helpers;
 using LaundryHub.Core.Models;
 using System.Drawing.Printing;
 using CustomerModel = LaundryHub.Core.Models.Customer;
@@ -49,16 +49,16 @@ public partial class FrmOrderDetail : Form
             _customer = AppServices.Customers.GetById(_order.CustomerId);
         }
 
-        this.Text = $"Order Details – {_order.OrderNumber}";
-        lblOrderNumber.Text = $"🧾 {_order.OrderNumber}";
+        this.Text = $"Order Details  {_order.OrderNumber}";
+        lblOrderNumber.Text = $" {_order.OrderNumber}";
         lblCustomerInfo.Text = $"{_customer?.FullName ?? _order.CustomerName} ({_customer?.Phone ?? _order.CustomerPhone})";
         lblServiceInfo.Text = _order.ServiceName ?? "Standard Laundry";
         lblWeightInfo.Text = $"{_order.WeightKg:F2} kg";
-        lblTotalAmount.Text = $"₱{_order.TotalAmount:N2}";
+        lblTotalAmount.Text = $"{_order.TotalAmount:N2}";
 
         if (_order.PaymentRecorded)
         {
-            lblPaymentStatus.Text = $"Paid (₱{_order.AmountPaid:N2})";
+            lblPaymentStatus.Text = $"Paid ({_order.AmountPaid:N2})";
             lblPaymentStatus.ForeColor = UIThemeHelper.Sand;
         }
         else
@@ -67,9 +67,9 @@ public partial class FrmOrderDetail : Form
             lblPaymentStatus.ForeColor = UIThemeHelper.Indigo;
         }
 
-        lblPickupDate.Text = _order.PickupDate?.ToString("MMMM dd, yyyy") ?? "—";
+        lblPickupDate.Text = _order.PickupDate?.ToString("MMMM dd, yyyy") ?? "";
         lblCreatedDate.Text = _order.CreatedAt.ToString("MMM dd, yyyy hh:mm tt");
-        lblCancelReason.Text = string.IsNullOrWhiteSpace(_order.CancelReason) ? "—" : _order.CancelReason;
+        lblCancelReason.Text = string.IsNullOrWhiteSpace(_order.CancelReason) ? "" : _order.CancelReason;
 
         // Status badge styling
         UpdateStatusBadge();
@@ -87,17 +87,18 @@ public partial class FrmOrderDetail : Form
         btnAdvanceStatus.Visible = _order.Status is "Washing" or "Drying";
         if (_order.Status == "Washing")
         {
-            btnAdvanceStatus.Text = "🌀 Mark as Drying";
+            btnAdvanceStatus.Text = " Mark as Drying";
             btnAdvanceStatus.BackColor = UIThemeHelper.Slate;
         }
         else if (_order.Status == "Drying")
         {
-            btnAdvanceStatus.Text = "✨ Ready for Pickup";
+            btnAdvanceStatus.Text = " Ready for Pickup";
             btnAdvanceStatus.BackColor = UIThemeHelper.Slate;
         }
 
         btnClaimOrder.Visible = _order.Status == "Ready for Pickup";
         btnCancelOrder.Visible = _order.Status != "Claimed" && _order.Status != "Cancelled";
+        btnEditWeight.Visible = _order.Status is "Washing" or "Drying" or "Ready for Pickup" && !_order.PaymentRecorded;
     }
 
     private void UpdateStatusBadge()
@@ -132,12 +133,12 @@ public partial class FrmOrderDetail : Form
         }
     }
 
-    private void btnAdvanceStatus_Click(object? sender, EventArgs e)
+    private async void btnAdvanceStatus_Click(object? sender, EventArgs e)
     {
         string nextStatus = _order.Status switch
         {
             "Washing" => "Drying",
-            "Drying" => "Ready for Pickup",
+            "Drying"  => "Ready for Pickup",
             _ => _order.Status
         };
 
@@ -147,7 +148,38 @@ public partial class FrmOrderDetail : Form
             {
                 AppServices.Orders.UpdateStatus(_order.OrderId, nextStatus, changedBy: SessionManager.CurrentUser?.UserId);
                 RefreshOrderData();
-                MessageBox.Show($"Order status moved to '{nextStatus}'.", "Status Updated", MessageBoxButtons.OK, MessageBoxIcon.Information);
+
+                if (nextStatus == "Ready for Pickup")
+                {
+                    if (_customer == null || string.IsNullOrWhiteSpace(_customer.Email))
+                    {
+                        MessageBox.Show(
+                            "Order status moved to 'Ready for Pickup', but this customer has no email address registered.",
+                            "Status Updated",
+                            MessageBoxButtons.OK,
+                            MessageBoxIcon.Warning);
+                    }
+                    else if (await EmailHelper.SendReadyForPickupAsync(_order, _customer))
+                    {
+                        MessageBox.Show(
+                            $"Order status moved to 'Ready for Pickup'. A notification was sent to {_customer.Email}.",
+                            "Status Updated",
+                            MessageBoxButtons.OK,
+                            MessageBoxIcon.Information);
+                    }
+                    else
+                    {
+                        MessageBox.Show(
+                            "Order status moved to 'Ready for Pickup', but the email notification could not be sent.",
+                            "Status Updated",
+                            MessageBoxButtons.OK,
+                            MessageBoxIcon.Warning);
+                    }
+                }
+                else
+                {
+                    MessageBox.Show($"Order status moved to '{nextStatus}'.", "Status Updated", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                }
             }
             catch (Exception ex)
             {
@@ -156,11 +188,113 @@ public partial class FrmOrderDetail : Form
         }
     }
 
+    private void btnEditWeight_Click(object? sender, EventArgs e)
+    {
+        var service = AppServices.ServiceTypes.GetById(_order.ServiceId);
+        if (service == null)
+        {
+            MessageBox.Show("The service pricing could not be found.", "Unable to Update Weight", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+            return;
+        }
+
+        using var dlg = new Form
+        {
+            Text = $"Confirm Actual Weight  {_order.OrderNumber}",
+            Size = new Size(410, 300),
+            StartPosition = FormStartPosition.CenterParent,
+            BackColor = Color.FromArgb(15, 23, 42),
+            ForeColor = Color.White,
+            FormBorderStyle = FormBorderStyle.FixedDialog,
+            MaximizeBox = false,
+            MinimizeBox = false
+        };
+
+        var lblPrompt = new Label
+        {
+            Text = "Enter the Weight Confirmed at Drop-off (kg):",
+            Location = new Point(30, 20),
+            Size = new Size(340, 25),
+            Font = new Font("Segoe UI", 10, FontStyle.Bold)
+        };
+        var txtWeight = new TextBox
+        {
+            Text = _order.WeightKg.ToString("F2"),
+            Location = new Point(30, 55),
+            Size = new Size(340, 32),
+            Font = new Font("Segoe UI", 12),
+            BackColor = Color.FromArgb(30, 41, 59),
+            ForeColor = Color.White
+        };
+        var lblTotal = new Label
+        {
+            Location = new Point(30, 100),
+            Size = new Size(340, 45),
+            Font = new Font("Segoe UI", 10, FontStyle.Bold),
+            ForeColor = Color.FromArgb(52, 211, 153)
+        };
+        var btnConfirm = new Button
+        {
+            Text = " Save Confirmed Weight",
+            Location = new Point(30, 165),
+            Size = new Size(340, 38),
+            BackColor = Color.FromArgb(37, 99, 235),
+            ForeColor = Color.White,
+            FlatStyle = FlatStyle.Flat,
+            Font = new Font("Segoe UI", 10, FontStyle.Bold)
+        };
+        btnConfirm.FlatAppearance.BorderSize = 0;
+
+        decimal? GetWeight()
+        {
+            return decimal.TryParse(txtWeight.Text, out var weight) && weight > 0 ? weight : null;
+        }
+
+        void UpdatePreview()
+        {
+            var weight = GetWeight();
+            lblTotal.Text = weight.HasValue
+                ? $"New total: {service.ComputePrice(weight.Value):N2} (minimum {service.MinimumWeight:N2} kg)"
+                : "Enter a Valid Weight.";
+            lblTotal.ForeColor = weight.HasValue ? Color.FromArgb(52, 211, 153) : Color.FromArgb(248, 113, 113);
+        }
+
+        txtWeight.TextChanged += (_, _) => UpdatePreview();
+        btnConfirm.Click += (_, _) =>
+        {
+            var weight = GetWeight();
+            if (!weight.HasValue)
+            {
+                MessageBox.Show("Please enter a valid weight greater than zero.", "Invalid Weight", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                return;
+            }
+
+            var total = service.ComputePrice(weight.Value);
+            if (!AppServices.Orders.UpdateConfirmedWeight(_order.OrderId, weight.Value, total))
+            {
+                MessageBox.Show("The weight was not updated. The order may already be paid, claimed, or cancelled.",
+                    "Unable to Update Weight", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                return;
+            }
+
+            dlg.DialogResult = DialogResult.OK;
+            dlg.Close();
+        };
+
+        dlg.Controls.AddRange(new Control[] { lblPrompt, txtWeight, lblTotal, btnConfirm });
+        UpdatePreview();
+
+        if (dlg.ShowDialog(this) == DialogResult.OK)
+        {
+            RefreshOrderData();
+            MessageBox.Show("The confirmed weight and order total were updated.", "Weight Updated", MessageBoxButtons.OK, MessageBoxIcon.Information);
+        }
+    }
+
     private void btnClaimOrder_Click(object? sender, EventArgs e)
     {
         using var dlg = new Form
         {
-            Text = $"Claim Order – {_order.OrderNumber}",
+            Text = $"Claim Order  {_order.OrderNumber}",
             Size = new Size(380, 280),
             StartPosition = FormStartPosition.CenterParent,
             BackColor = Color.White,
@@ -172,7 +306,7 @@ public partial class FrmOrderDetail : Form
 
         var lblPrompt = new Label
         {
-            Text = $"Total Due: ₱{_order.TotalAmount:N2}\nEnter Amount Tendered / Paid:",
+            Text = $"Total Due: {_order.TotalAmount:N2}\nEnter Amount Tendered / Paid:",
             Location = new Point(30, 20),
             Size = new Size(310, 40),
             Font = new Font("Segoe UI", 10, FontStyle.Bold),
@@ -190,22 +324,32 @@ public partial class FrmOrderDetail : Form
         };
         var lblChange = new Label
         {
-            Text = "Change: ₱0.00",
+            Text = "Change: 0.00",
             Location = new Point(30, 115),
             Size = new Size(300, 25),
             Font = new Font("Segoe UI", 10, FontStyle.Bold),
             ForeColor = UIThemeHelper.Success
         };
 
-        txtAmount.TextChanged += (_, _) =>
+        InputValidator.RestrictToDecimalInput(txtAmount);
+
+        void UpdateChange()
         {
-            if (decimal.TryParse(txtAmount.Text, out var paid))
+            if (decimal.TryParse(txtAmount.Text.Trim().Replace(',', '.'), System.Globalization.NumberStyles.AllowDecimalPoint, System.Globalization.CultureInfo.InvariantCulture, out var paid))
             {
                 var change = paid - _order.TotalAmount;
-                lblChange.Text = change >= 0 ? $"Change: ₱{change:N2}" : $"Short by: ₱{Math.Abs(change):N2}";
+                lblChange.Text = change >= 0 ? $"Change: {change:N2}" : $"Short by: {Math.Abs(change):N2}";
                 lblChange.ForeColor = change >= 0 ? UIThemeHelper.Success : UIThemeHelper.Danger;
             }
-        };
+            else
+            {
+                lblChange.Text = "Enter a valid payment amount.";
+                lblChange.ForeColor = UIThemeHelper.Warning;
+            }
+        }
+
+        txtAmount.TextChanged += (_, _) => UpdateChange();
+        UpdateChange();
 
         var btnConfirm = new Button
         {
@@ -221,22 +365,22 @@ public partial class FrmOrderDetail : Form
         btnConfirm.FlatAppearance.BorderSize = 0;
         btnConfirm.Click += (_, _) =>
         {
-            if (decimal.TryParse(txtAmount.Text, out var paid) && paid >= _order.TotalAmount)
+            if (!InputValidator.IsValidPrice(txtAmount.Text, out var paid, out var priceErr, fieldName: "Payment amount", min: _order.TotalAmount, max: 1000000m))
             {
-                try
-                {
-                    AppServices.Orders.ClaimOrderWithPayment(_order.OrderId, paid, changedBy: SessionManager.CurrentUser?.UserId, notes: $"Paid: ₱{paid:N2}");
-                    dlg.DialogResult = DialogResult.OK;
-                    dlg.Close();
-                }
-                catch (Exception ex)
-                {
-                    MessageBox.Show($"Failed to record payment and claim order: {ex.Message}", "Database Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                }
+                MessageBox.Show(priceErr, "Invalid Payment", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                txtAmount.Focus();
+                return;
             }
-            else
+
+            try
             {
-                MessageBox.Show("Payment amount must be greater than or equal to total amount.", "Invalid Payment", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                AppServices.Orders.ClaimOrderWithPayment(_order.OrderId, paid, changedBy: SessionManager.CurrentUser?.UserId, notes: $"Paid: {paid:N2}");
+                dlg.DialogResult = DialogResult.OK;
+                dlg.Close();
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"Failed to record payment and claim order: {ex.Message}", "Database Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         };
 
@@ -275,6 +419,7 @@ public partial class FrmOrderDetail : Form
             Location = new Point(30, 50),
             Size = new Size(330, 55),
             Multiline = true,
+            MaxLength = 250,
             Font = new Font("Segoe UI", 9.5f),
             BackColor = UIThemeHelper.Surface,
             ForeColor = UIThemeHelper.Navy,
@@ -294,9 +439,11 @@ public partial class FrmOrderDetail : Form
         btnConfirm.FlatAppearance.BorderSize = 0;
         btnConfirm.Click += (_, _) =>
         {
-            if (string.IsNullOrWhiteSpace(txtReason.Text))
+            var reason = txtReason.Text.Trim();
+            if (string.IsNullOrWhiteSpace(reason) || reason.Length < 3)
             {
-                MessageBox.Show("Please provide a reason for cancellation.", "Reason Required", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                MessageBox.Show("Please provide a valid cancellation reason (at least 3 characters).", "Reason Required", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                txtReason.Focus();
                 return;
             }
 
@@ -333,7 +480,7 @@ public partial class FrmOrderDetail : Form
                 ev.Graphics?.DrawString($"Order E-Ticket: {_order.OrderNumber}", fontSub, Brushes.Black, 60, 75);
                 ev.Graphics?.DrawString($"Customer: {_order.CustomerName}", fontSub, Brushes.Black, 60, 95);
                 ev.Graphics?.DrawString($"Service: {_order.ServiceName} | {_order.WeightKg} kg", fontSub, Brushes.Black, 60, 115);
-                ev.Graphics?.DrawString($"Amount Due: ₱{_order.TotalAmount:N2}", fontSub, Brushes.Black, 60, 135);
+                ev.Graphics?.DrawString($"Amount Due: {_order.TotalAmount:N2}", fontSub, Brushes.Black, 60, 135);
                 if (picQrCode.Image != null)
                 {
                     ev.Graphics?.DrawImage(picQrCode.Image, 60, 165, 180, 180);

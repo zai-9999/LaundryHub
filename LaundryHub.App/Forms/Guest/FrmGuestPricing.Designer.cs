@@ -97,7 +97,7 @@ partial class FrmGuestPricing
         btnCloseTop.Name = "btnCloseTop";
         btnCloseTop.Size = new Size(35, 35);
         btnCloseTop.TabIndex = 2;
-        btnCloseTop.Text = "✕";
+        btnCloseTop.Text = "";
         btnCloseTop.UseVisualStyleBackColor = false;
         btnCloseTop.Click += btnClose_Click;
         // 
@@ -160,7 +160,7 @@ partial class FrmGuestPricing
         lblCalcTitle.Name = "lblCalcTitle";
         lblCalcTitle.Size = new Size(205, 25);
         lblCalcTitle.TabIndex = 0;
-        lblCalcTitle.Text = "💡 Quick Price Calculator";
+        lblCalcTitle.Text = " Quick Price Calculator";
         // 
         // lblServiceSelect
         // 
@@ -225,7 +225,7 @@ partial class FrmGuestPricing
         lblEstimateValue.Name = "lblEstimateValue";
         lblEstimateValue.Size = new Size(92, 37);
         lblEstimateValue.TabIndex = 6;
-        lblEstimateValue.Text = "₱0.00";
+        lblEstimateValue.Text = "0.00";
         // 
         // lblCalcNote
         // 
@@ -305,7 +305,7 @@ partial class FrmGuestPricing
         MinimizeBox = false;
         Name = "FrmGuestPricing";
         StartPosition = FormStartPosition.CenterParent;
-        Text = "LaundryHub – Pricing & Services";
+        Text = "LaundryHub  Pricing & Services";
         pnlHeader.ResumeLayout(false);
         pnlHeader.PerformLayout();
         pnlBody.ResumeLayout(false);

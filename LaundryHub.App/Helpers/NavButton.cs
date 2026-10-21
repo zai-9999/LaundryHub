@@ -134,7 +134,7 @@ public class NavButton : System.Windows.Forms.Panel
             using var textFont = new Font("Segoe UI", 9.5F, _isActive ? FontStyle.Bold : FontStyle.Regular);
             var textRect = new Rectangle(textX, 0, bounds.Width - textX - 14, bounds.Height);
             TextRenderer.DrawText(g, _caption, textFont, textRect, textColor,
-                TextFormatFlags.VerticalCenter | TextFormatFlags.Left | TextFormatFlags.EndEllipsis);
+                TextFormatFlags.VerticalCenter | TextFormatFlags.Left | TextFormatFlags.EndEllipsis | TextFormatFlags.NoPrefix);
         }
 
         // Badge

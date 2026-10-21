@@ -1,4 +1,4 @@
-using ClosedXML.Excel;
+﻿using ClosedXML.Excel;
 using LaundryHub.Core.Models;
 
 namespace LaundryHub.App.Helpers;
@@ -24,29 +24,29 @@ public static class ExcelHelper
         using var workbook  = new XLWorkbook();
         var ws              = workbook.Worksheets.Add("Daily Report");
 
-        // ── Header ──────────────────────────────────────────────
+        //  Header 
         ws.Cell(1, 1).Value = AppServices.ShopName;
         ws.Range(1, 1, 1, 8).Merge().Style
             .Font.SetBold(true)
             .Font.SetFontSize(16)
             .Alignment.SetHorizontal(XLAlignmentHorizontalValues.Center);
 
-        ws.Cell(2, 1).Value = $"Daily Report – {report.ReportDate:MMMM dd, yyyy}";
+        ws.Cell(2, 1).Value = $"Daily Report  {report.ReportDate:MMMM dd, yyyy}";
         ws.Range(2, 1, 2, 8).Merge().Style
             .Font.SetItalic(true)
             .Alignment.SetHorizontal(XLAlignmentHorizontalValues.Center);
 
-        // ── Summary ─────────────────────────────────────────────
+        //  Summary 
         int row = 4;
         WriteSummaryRow(ws, ref row, "Total Orders",     report.TotalOrders);
         WriteSummaryRow(ws, ref row, "Pending",          report.PendingOrders);
         WriteSummaryRow(ws, ref row, "Claimed",          report.ClaimedOrders);
         WriteSummaryRow(ws, ref row, "Cancelled",        report.CancelledOrders);
-        WriteSummaryRow(ws, ref row, "Total Sales",      $"₱{report.TotalSales:N2}");
+        WriteSummaryRow(ws, ref row, "Total Sales",      $"{report.TotalSales:N2}");
         row++;
 
-        // ── Table Header ─────────────────────────────────────────
-        var headers = new[] { "Order #", "Customer", "Phone", "Service", "Weight (kg)", "Total (₱)", "Status", "Date" };
+        //  Table Header 
+        var headers = new[] { "Order #", "Customer", "Phone", "Service", "Weight (kg)", "Total ()", "Status", "Date" };
         for (int c = 0; c < headers.Length; c++)
         {
             var cell = ws.Cell(row, c + 1);
@@ -57,7 +57,7 @@ public static class ExcelHelper
         }
         row++;
 
-        // ── Table Rows ───────────────────────────────────────────
+        //  Table Rows 
         foreach (var o in report.Orders)
         {
             ws.Cell(row, 1).Value = o.OrderNumber ?? "";

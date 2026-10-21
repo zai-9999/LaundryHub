@@ -15,6 +15,8 @@ public partial class FrmLogin : Form
         UIThemeHelper.LoadAuthLogo(picLogo);
         CenterCardContents();
         pnlCard.SizeChanged += (_, _) => CenterCardContents();
+        txtUsername.TextChanged += (_, _) => lblError.Visible = false;
+        txtPassword.TextChanged += (_, _) => lblError.Visible = false;
     }
 
     protected override void OnPaintBackground(PaintEventArgs e)
@@ -65,17 +67,34 @@ public partial class FrmLogin : Form
         var username = txtUsername.Text.Trim();
         var password = txtPassword.Text;
 
+        // Throttle login attempts per username to mitigate brute force
+        var key = $"login:{username}";
+        var limit = 5;
+        var window = TimeSpan.FromMinutes(15);
+        var lockout = TimeSpan.FromMinutes(15);
+
+        if (!ThrottleService.IsAllowed(key, limit, window, lockout))
+        {
+            var rem = ThrottleService.GetRemainingLockout(key);
+            ShowError($"Too many login attempts. Try again in {Math.Ceiling(rem.TotalMinutes)} minutes.");
+            return;
+        }
+
         try
         {
             var user = AppServices.Users.GetByUsername(username);
 
             if (user == null || string.IsNullOrWhiteSpace(user.PasswordHash) || !BCrypt.Net.BCrypt.Verify(password, user.PasswordHash))
             {
+                ThrottleService.RegisterAttempt(key, limit, window, lockout);
                 ShowError("Invalid username or password.");
                 txtPassword.Clear();
                 txtPassword.Focus();
                 return;
             }
+
+            // Successful login - reset throttle counter
+            ThrottleService.Reset(key);
 
             if (!user.IsActive)
             {
@@ -111,23 +130,25 @@ public partial class FrmLogin : Form
 
     private void lnkForgotPassword_LinkClicked(object? sender, LinkLabelLinkClickedEventArgs e)
     {
-        MessageBox.Show("Please contact your administrator to reset your password.",
-            "Forgot Password", MessageBoxButtons.OK, MessageBoxIcon.Information);
+        using var frm = new FrmPasswordReset();
+        frm.ShowDialog(this);
     }
 
     private void btnTogglePassword_Click(object? sender, EventArgs e)
     {
         if (txtPassword.UseSystemPasswordChar)
         {
+            // Show password
             txtPassword.UseSystemPasswordChar = false;
             txtPassword.PasswordChar = '\0';
-            btnTogglePassword.Text = "🙈";
+            btnTogglePassword.Text = "\uD83D\uDC41"; // 👁 eye open
         }
         else
         {
+            // Hide password
             txtPassword.UseSystemPasswordChar = true;
-            txtPassword.PasswordChar = '●';
-            btnTogglePassword.Text = "👁";
+            txtPassword.PasswordChar = '\0';
+            btnTogglePassword.Text = "\uD83D\uDE48"; // 🙈 eye closed
         }
     }
 
@@ -154,10 +175,21 @@ public partial class FrmLogin : Form
     private new bool Validate()
     {
         lblError.Visible = false;
-        if (string.IsNullOrWhiteSpace(txtUsername.Text))
-        { ShowError("Username is required."); txtUsername.Focus(); return false; }
+        var username = txtUsername.Text.Trim();
+        if (string.IsNullOrWhiteSpace(username))
+        {
+            ShowError("Please enter your username.");
+            txtUsername.Focus();
+            return false;
+        }
+
         if (string.IsNullOrWhiteSpace(txtPassword.Text))
-        { ShowError("Password is required."); txtPassword.Focus(); return false; }
+        {
+            ShowError("Please enter your password.");
+            txtPassword.Focus();
+            return false;
+        }
+
         return true;
     }
 

@@ -16,8 +16,16 @@ public partial class FrmCustomerRegister : Form
         UIThemeHelper.StyleAuthForm(this, pnlCard, btnRegister, btnBack);
         UIThemeHelper.LoadAuthLogo(picLogo);
         CenterCardContents();
-        pnlCard.SizeChanged += (_, _) => CenterCardContents();
         InputValidator.RestrictToPhoneInput(txtPhone);
+        InputValidator.RestrictToUsernameInput(txtUsername, 30);
+
+        txtFullName.TextChanged += (_, _) => lblError.Visible = false;
+        txtPhone.TextChanged += (_, _) => lblError.Visible = false;
+        txtUsername.TextChanged += (_, _) => lblError.Visible = false;
+        txtPassword.TextChanged += (_, _) => lblError.Visible = false;
+        txtConfirmPassword.TextChanged += (_, _) => lblError.Visible = false;
+        txtEmail.TextChanged += (_, _) => lblError.Visible = false;
+        txtAddress.TextChanged += (_, _) => lblError.Visible = false;
     }
 
     protected override void OnPaintBackground(PaintEventArgs e)
@@ -112,9 +120,9 @@ public partial class FrmCustomerRegister : Form
     {
         lblError.Visible = false;
 
-        if (string.IsNullOrWhiteSpace(txtFullName.Text) || txtFullName.Text.Trim().Length < 2)
+        if (!InputValidator.IsValidFullName(txtFullName.Text, out var nameErr))
         {
-            ShowError("Please enter your full name.");
+            ShowError(nameErr);
             txtFullName.Focus();
             return false;
         }
@@ -134,9 +142,9 @@ public partial class FrmCustomerRegister : Form
             return false;
         }
 
-        if (string.IsNullOrWhiteSpace(txtUsername.Text) || txtUsername.Text.Trim().Length < 3)
+        if (!InputValidator.IsValidUsername(txtUsername.Text, out var userErr))
         {
-            ShowError("Username must be at least 3 characters.");
+            ShowError(userErr);
             txtUsername.Focus();
             return false;
         }
@@ -162,19 +170,28 @@ public partial class FrmCustomerRegister : Form
             return false;
         }
 
-        var emailToCheck = string.IsNullOrWhiteSpace(txtEmail.Text) ? $"{txtUsername.Text.Trim()}@laundryhub.local" : txtEmail.Text.Trim();
-        if (!string.IsNullOrWhiteSpace(txtEmail.Text)
-            && !Regex.IsMatch(txtEmail.Text.Trim(), @"^[^@\s]+@[^@\s]+\.[^@\s]+$"))
+        var emailText = txtEmail.Text.Trim();
+        if (!string.IsNullOrWhiteSpace(emailText))
         {
-            ShowError("Please enter a valid email address.");
-            txtEmail.Focus();
-            return false;
+            if (!InputValidator.IsValidEmail(emailText, out var emailErr))
+            {
+                ShowError(emailErr);
+                txtEmail.Focus();
+                return false;
+            }
+
+            if (AppServices.Users.EmailExists(emailText))
+            {
+                ShowError("This email address is already in use by another account.");
+                txtEmail.Focus();
+                return false;
+            }
         }
 
-        if (AppServices.Users.EmailExists(emailToCheck))
+        if (!string.IsNullOrWhiteSpace(txtAddress.Text) && txtAddress.Text.Trim().Length > 255)
         {
-            ShowError("This email address is already in use by another account.");
-            txtEmail.Focus();
+            ShowError("Address cannot exceed 255 characters.");
+            txtAddress.Focus();
             return false;
         }
 

@@ -1,4 +1,4 @@
-namespace LaundryHub.App.Helpers;
+﻿namespace LaundryHub.App.Helpers;
 
 /// <summary>
 /// A rounded dashboard card: colored accent strip, small caption, big value.
@@ -35,7 +35,7 @@ public class StatCard : RoundedCard
         _value.Font = new Font("Segoe UI", 20F, FontStyle.Bold);
         _value.TextAlign = ContentAlignment.MiddleLeft;
         _value.AutoEllipsis = true;
-        _value.Text = "—";
+        _value.Text = "";
 
         // Fill first, then Top, then Left: WinForms docks in reverse order.
         Controls.Add(_value);
@@ -107,6 +107,12 @@ public static class StatRow
         old.Dispose();
         parent.Controls.Add(table);
         parent.Controls.SetChildIndex(table, zIndex);
+        // Ensure sibling DockStyle.Fill controls (e.g. cardOrders) remain in front so they expand to fill
+        foreach (Control sibling in parent.Controls)
+        {
+            if (sibling != table && sibling.Dock == DockStyle.Fill)
+                sibling.BringToFront();
+        }
         parent.ResumeLayout(true);
 
         return cards;

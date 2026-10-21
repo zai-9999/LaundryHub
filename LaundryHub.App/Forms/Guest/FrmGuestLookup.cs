@@ -19,6 +19,10 @@ public partial class FrmGuestLookup : Form
         UIThemeHelper.StyleAuthForm(this, pnlCard, btnLookup, btnBack);
         pnlCard.Paint += (_, e) => UIThemeHelper.PaintRoundedSolidCard(pnlCard, e, Color.White, UIThemeHelper.LoginCardRadius);
 
+        InputValidator.RestrictToDigitsOnly(txtPhoneLast4, 4);
+        txtOrderNumber.TextChanged += (_, _) => lblError.Visible = false;
+        txtPhoneLast4.TextChanged += (_, _) => lblError.Visible = false;
+
         this.FormClosing += (_, _) => isLoading = false;
     }
 
@@ -72,17 +76,30 @@ public partial class FrmGuestLookup : Form
         var orderNo = txtOrderNumber.Text.Trim();
         var phone4 = txtPhoneLast4.Text.Trim();
 
-        if (string.IsNullOrWhiteSpace(orderNo))
+        if (string.IsNullOrWhiteSpace(orderNo) || orderNo.Length < 3)
         {
-            ShowError("Please enter your Order Number.");
+            ShowError("Please enter your Order Number (e.g. LH-20261021-001).");
             txtOrderNumber.Focus();
             return;
         }
 
-        if (phone4.Length != 4 || !phone4.All(c => c is >= '0' and <= '9'))
+        if (phone4.Length != 4 || !phone4.All(char.IsDigit))
         {
-            ShowError("Please enter exactly 4 digits of your phone number.");
+            ShowError("Please enter exactly 4 digits of your registered phone number.");
             txtPhoneLast4.Focus();
+            return;
+        }
+
+        // Throttle guest lookup attempts per machine to reduce enumeration abuse
+        var key = "guestlookup:machine";
+        var limit = 8;
+        var window = TimeSpan.FromMinutes(5);
+        var lockout = TimeSpan.FromMinutes(10);
+
+        if (!ThrottleService.IsAllowed(key, limit, window, lockout))
+        {
+            var rem = ThrottleService.GetRemainingLockout(key);
+            ShowError($"Too many lookup attempts. Try again in {Math.Ceiling(rem.TotalMinutes)} minutes.");
             return;
         }
 
@@ -92,27 +109,32 @@ public partial class FrmGuestLookup : Form
 
         try
         {
-            var orderCacheKey = $"order_lookup_{orderNo}";
+            var orderCacheKey = $"guest_order_{orderNo}";
             var order = await DataCache.GetOrAddAsync(orderCacheKey,
                 () => Task.Run(() => AppServices.Orders.GetByOrderNumber(orderNo)),
                 TimeSpan.FromSeconds(30));
 
             if (order == null)
             {
+                ThrottleService.RegisterAttempt(key, limit, window, lockout);
                 ShowError("Order not found. Please verify the order number on your ticket.");
                 return;
             }
 
-            var customerCacheKey = $"customer_by_id_{order.CustomerId}";
+            var customerCacheKey = $"guest_customer_{order.CustomerId}";
             var customer = await DataCache.GetOrAddAsync(customerCacheKey,
                 () => Task.Run(() => AppServices.Customers.GetById(order.CustomerId)),
                 TimeSpan.FromSeconds(30));
 
             if (customer == null || !customer.Phone.EndsWith(phone4))
             {
+                ThrottleService.RegisterAttempt(key, limit, window, lockout);
                 ShowError("Order number and phone verification do not match our records.");
                 return;
             }
+
+            // Successful verification - reset throttle
+            ThrottleService.Reset(key);
 
             // Found & Verified! Populate result
             this.SafeInvoke(() =>
@@ -120,12 +142,12 @@ public partial class FrmGuestLookup : Form
                 lblResultOrder.Text = order.OrderNumber;
                 lblResultCustomer.Text = customer.FullName;
                 lblResultService.Text = $"{order.ServiceName ?? "Standard Laundry"} ({order.WeightKg} kg)";
-                lblResultTotal.Text = $"₱{order.TotalAmount:N2}";
+                lblResultTotal.Text = $"{order.TotalAmount:N2}";
                 lblResultPayment.Text = order.PaymentRecorded ? "Paid" : "Unpaid";
                 lblResultPayment.ForeColor = order.PaymentRecorded ? UIThemeHelper.Success : UIThemeHelper.Danger;
                 lblResultPickup.Text = order.PickupDate?.ToString("MMMM dd, yyyy") ?? "Pending schedule";
 
-                UpdateTimeline(order.Status);
+                UpdateTimeline(order.Status, order.CancelReason);
                 pnlResult.Visible = true;
             });
         }
@@ -140,8 +162,31 @@ public partial class FrmGuestLookup : Form
         }
     }
 
-    private void UpdateTimeline(string status)
+    private void UpdateTimeline(string status, string? cancelReason = null)
     {
+        // Handle Cancelled status specially
+        if (status == "Cancelled")
+        {
+            for (int i = 0; i < 4; i++)
+            {
+                progressSteps[i].BackColor = UIThemeHelper.Danger;
+                progressLabels[i].ForeColor = Color.White;
+            }
+            lblStep0.Text = " Cancelled";
+            lblStep1.Text = "";
+            lblStep2.Text = "";
+            lblStep3.Text = string.IsNullOrWhiteSpace(cancelReason) ? "" : $"Reason: {cancelReason}";
+            lblStep3.ForeColor = Color.White;
+            return;
+        }
+
+        // Reset labels for normal statuses
+        lblStep1.Text = " Drying";
+        lblStep2.Text = " Ready";
+        lblStep3.Text = " Claimed";
+
+        lblStep0.Text = " Washing";
+
         int activeIdx = status switch
         {
             "Washing"          => 0,
@@ -176,7 +221,7 @@ public partial class FrmGuestLookup : Form
 
     private void ShowError(string msg)
     {
-        lblError.Text = $"⚠ {msg}";
+        lblError.Text = $" {msg}";
         lblError.Visible = true;
     }
 }

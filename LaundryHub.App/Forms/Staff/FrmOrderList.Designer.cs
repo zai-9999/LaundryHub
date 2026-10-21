@@ -163,7 +163,7 @@ partial class FrmOrderList
         lblDotCancelled.Name = "lblDotCancelled";
         lblDotCancelled.Size = new Size(15, 15);
         lblDotCancelled.TabIndex = 8;
-        lblDotCancelled.Text = "●";
+        lblDotCancelled.Text = "";
         //
         // lblCancelled
         //
@@ -185,7 +185,7 @@ partial class FrmOrderList
         lblDotClaimed.Name = "lblDotClaimed";
         lblDotClaimed.Size = new Size(15, 15);
         lblDotClaimed.TabIndex = 6;
-        lblDotClaimed.Text = "●";
+        lblDotClaimed.Text = "";
         //
         // lblClaimed
         //
@@ -207,7 +207,7 @@ partial class FrmOrderList
         lblDotReady.Name = "lblDotReady";
         lblDotReady.Size = new Size(15, 15);
         lblDotReady.TabIndex = 4;
-        lblDotReady.Text = "●";
+        lblDotReady.Text = "";
         //
         // lblReady
         //
@@ -229,7 +229,7 @@ partial class FrmOrderList
         lblDotDrying.Name = "lblDotDrying";
         lblDotDrying.Size = new Size(15, 15);
         lblDotDrying.TabIndex = 2;
-        lblDotDrying.Text = "●";
+        lblDotDrying.Text = "";
         //
         // lblDrying
         //
@@ -251,7 +251,7 @@ partial class FrmOrderList
         lblDotWashing.Name = "lblDotWashing";
         lblDotWashing.Size = new Size(15, 15);
         lblDotWashing.TabIndex = 0;
-        lblDotWashing.Text = "●";
+        lblDotWashing.Text = "";
         //
         // lblWashing
         //

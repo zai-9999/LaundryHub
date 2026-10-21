@@ -1,4 +1,4 @@
-using LaundryHub.App.Helpers;
+﻿using LaundryHub.App.Helpers;
 using LaundryHub.Core.Models;
 using System.Text.RegularExpressions;
 
@@ -21,6 +21,12 @@ public partial class FrmUpdateProfile : Form
         UIThemeHelper.ApplyTheme(this);
 
         InputValidator.RestrictToPhoneInput(txtPhone);
+
+        txtFullName.TextChanged += (_, _) => lblError.Visible = false;
+        txtPhone.TextChanged += (_, _) => lblError.Visible = false;
+        txtEmail.TextChanged += (_, _) => lblError.Visible = false;
+        txtAddress.TextChanged += (_, _) => lblError.Visible = false;
+        txtNewPassword.TextChanged += (_, _) => lblError.Visible = false;
 
         if (customer != null)
         {
@@ -45,42 +51,55 @@ public partial class FrmUpdateProfile : Form
         var address = txtAddress.Text.Trim();
         var newPwd = txtNewPassword.Text;
 
-        if (string.IsNullOrWhiteSpace(name))
+        if (!InputValidator.IsValidFullName(name, out var nameErr))
         {
-            ShowError("Full Name cannot be empty.");
+            ShowError(nameErr);
+            txtFullName.Focus();
             return;
         }
 
         if (!InputValidator.IsValidPhone(phone))
         {
             ShowError(InputValidator.PhoneError);
+            txtPhone.Focus();
             return;
         }
 
         if (AppServices.Customers.PhoneExists(phone, _customer.CustomerId))
         {
             ShowError("Phone number is already used by another customer.");
+            txtPhone.Focus();
             return;
         }
 
         if (!string.IsNullOrWhiteSpace(email))
         {
-            if (!Regex.IsMatch(email, @"^[^@\s]+@[^@\s]+\.[^@\s]+$"))
+            if (!InputValidator.IsValidEmail(email, out var emailErr))
             {
-                ShowError("Please enter a valid email format.");
+                ShowError(emailErr);
+                txtEmail.Focus();
                 return;
             }
 
             if (AppServices.Users.EmailExists(email, _user.UserId))
             {
                 ShowError("Email address is already used by another account.");
+                txtEmail.Focus();
                 return;
             }
+        }
+
+        if (!string.IsNullOrWhiteSpace(address) && address.Length > 255)
+        {
+            ShowError("Address cannot exceed 255 characters.");
+            txtAddress.Focus();
+            return;
         }
 
         if (!string.IsNullOrWhiteSpace(newPwd) && !InputValidator.IsValidPassword(newPwd, out var pwdError))
         {
             ShowError(pwdError);
+            txtNewPassword.Focus();
             return;
         }
 
@@ -114,7 +133,7 @@ public partial class FrmUpdateProfile : Form
 
     private void ShowError(string msg)
     {
-        lblError.Text = $"⚠ {msg}";
+        lblError.Text = $" {msg}";
         lblError.Visible = true;
     }
 }

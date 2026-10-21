@@ -1,4 +1,4 @@
-using LaundryHub.App.Helpers;
+﻿using LaundryHub.App.Helpers;
 using LaundryHub.Core.Models;
 using CustomerModel = LaundryHub.Core.Models.Customer;
 
@@ -53,6 +53,10 @@ public partial class FrmNewOrder : Form
         btnSave.HoverTextColor = Color.White;
         dtpPickup.MinDate = DateTime.Today;
         dtpPickup.Value = DateTime.Today.AddDays(1);
+        InputValidator.RestrictToDecimalInput(txtWeight);
+        txtWeight.TextChanged += (_, _) => lblError.Visible = false;
+        cmbService.SelectedIndexChanged += (_, _) => lblError.Visible = false;
+        dtpPickup.ValueChanged += (_, _) => lblError.Visible = false;
         LoadServices();
     }
 
@@ -114,15 +118,25 @@ public partial class FrmNewOrder : Form
 
     private void ComputePrice()
     {
-        if (cmbService.SelectedItem is not ServiceType svc) return;
-        if (!decimal.TryParse(txtWeight.Text, out decimal rawKg) || rawKg <= 0) return;
+        if (cmbService.SelectedItem is not ServiceType svc)
+        {
+            lblPrice.Text = "0.00";
+            lblPriceBreakdown.Text = "Select a service";
+            return;
+        }
 
-        decimal kg = Math.Round(rawKg, 2, MidpointRounding.AwayFromZero);
+        if (!InputValidator.IsValidWeight(txtWeight.Text, out decimal kg, out _, min: 0.1m, max: 200m))
+        {
+            lblPrice.Text = "0.00";
+            lblPriceBreakdown.Text = $"Rate: {svc.PricePerKilo:N2}/kg | Min: {svc.MinimumWeight:F1} kg";
+            return;
+        }
+
         decimal total = svc.ComputePrice(kg);
-        lblPrice.Text = $"₱{total:N2}";
+        lblPrice.Text = $"{total:N2}";
         lblPriceBreakdown.Text =
-            $"Rate: ₱{svc.PricePerKilo}/kg  |  Min: {svc.MinimumWeight} kg  " +
-            $"|  Billed: {Math.Max(kg, svc.MinimumWeight)} kg";
+            $"Rate: {svc.PricePerKilo:N2}/kg  |  Min: {svc.MinimumWeight:F1} kg  " +
+            $"|  Billed: {Math.Max(kg, svc.MinimumWeight):F1} kg";
     }
 
     private void cmbService_SelectedIndexChanged(object? sender, EventArgs e) => ComputePrice();
@@ -135,7 +149,7 @@ public partial class FrmNewOrder : Form
         try
         {
             var svc = (ServiceType)cmbService.SelectedItem!;
-            var kg = Math.Round(decimal.Parse(txtWeight.Text), 2, MidpointRounding.AwayFromZero);
+            InputValidator.IsValidWeight(txtWeight.Text, out decimal kg, out _, min: 0.1m, max: 200m);
             var total = svc.ComputePrice(kg);
 
             var order = new Order
@@ -176,7 +190,7 @@ public partial class FrmNewOrder : Form
 
         using var ticketForm = new Form
         {
-            Text = $"QR Ticket – {order.OrderNumber}",
+            Text = $"QR Ticket  {order.OrderNumber}",
             Size = new Size(380, 480),
             StartPosition = FormStartPosition.CenterParent,
             FormBorderStyle = FormBorderStyle.FixedDialog,
@@ -194,7 +208,7 @@ public partial class FrmNewOrder : Form
         };
         var info = new Label
         {
-            Text = $"{order.OrderNumber}\n{_selectedCustomer!.FullName}\n{order.ServiceName}  |  {order.WeightKg} kg\n₱{order.TotalAmount:N2}  |  {order.PickupDate:MMM dd, yyyy}",
+            Text = $"{order.OrderNumber}\n{_selectedCustomer!.FullName}\n{order.ServiceName}  |  {order.WeightKg} kg\n{order.TotalAmount:N2}  |  {order.PickupDate:MMM dd, yyyy}",
             ForeColor = Color.White,
             Font = new Font("Segoe UI", 9.5f),
             Location = new Point(20, 255),
@@ -203,7 +217,7 @@ public partial class FrmNewOrder : Form
         };
         var btnPrint = new Button
         {
-            Text = "🖨  Print Ticket",
+            Text = "  Print Ticket",
             Location = new Point(50, 365),
             Size = new Size(260, 38),
             Font = new Font("Segoe UI", 10, FontStyle.Bold),
@@ -228,19 +242,39 @@ public partial class FrmNewOrder : Form
         lblError.Visible = false;
 
         if (_selectedCustomer == null)
-        { ShowErr("Please select or register a customer."); return false; }
+        {
+            ShowErr("Please select or register a customer.");
+            txtSearch.Focus();
+            return false;
+        }
 
-        if (cmbService.SelectedItem == null)
-        { ShowErr("Please select a service type."); return false; }
+        if (cmbService.SelectedItem is not ServiceType)
+        {
+            ShowErr("Please select a service type.");
+            cmbService.Focus();
+            return false;
+        }
 
-        if (!decimal.TryParse(txtWeight.Text, out decimal kg) || kg <= 0)
-        { ShowErr("Please enter a valid weight (kg)."); return false; }
-
-        if (kg > 100)
-        { ShowErr("Weight seems too high. Please verify."); return false; }
+        if (!InputValidator.IsValidWeight(txtWeight.Text, out _, out string weightErr, min: 0.1m, max: 200m))
+        {
+            ShowErr(weightErr);
+            txtWeight.Focus();
+            return false;
+        }
 
         if (dtpPickup.Value.Date < DateTime.Today)
-        { ShowErr("Pickup date cannot be in the past."); return false; }
+        {
+            ShowErr("Pickup date cannot be in the past.");
+            dtpPickup.Focus();
+            return false;
+        }
+
+        if (dtpPickup.Value.Date > DateTime.Today.AddYears(1))
+        {
+            ShowErr("Pickup date cannot be more than 1 year in advance.");
+            dtpPickup.Focus();
+            return false;
+        }
 
         return true;
     }

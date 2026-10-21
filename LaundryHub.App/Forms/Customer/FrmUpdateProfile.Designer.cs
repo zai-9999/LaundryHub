@@ -1,4 +1,4 @@
-﻿using Panel = System.Windows.Forms.Panel;
+using Panel = System.Windows.Forms.Panel;
 using CheckBox = System.Windows.Forms.CheckBox;
 using ReaLTaiizor;
 using ReaLTaiizor.Controls;
@@ -73,7 +73,7 @@ partial class FrmUpdateProfile
         lblTitle.Name = "lblTitle";
         lblTitle.Size = new Size(424, 32);
         lblTitle.TabIndex = 0;
-        lblTitle.Text = "👤 My Profile Details";
+        lblTitle.Text = " My Profile Details";
         // 
         // lblFullName
         // 
@@ -187,7 +187,7 @@ partial class FrmUpdateProfile
         txtNewPassword.ForeColor = Color.FromArgb(75, 86, 148);
         txtNewPassword.Location = new Point(24, 304);
         txtNewPassword.Name = "txtNewPassword";
-        txtNewPassword.PasswordChar = '●';
+        txtNewPassword.PasswordChar = '\0';
         txtNewPassword.UseSystemPasswordChar = true;
         txtNewPassword.Size = new Size(390, 32);
         txtNewPassword.TabIndex = 11;
@@ -246,7 +246,7 @@ partial class FrmUpdateProfile
         MaximizeBox = false;
         Name = "FrmUpdateProfile";
         StartPosition = FormStartPosition.CenterParent;
-        Text = "LaundryHub – Edit Profile";
+        Text = "LaundryHub  Edit Profile";
         pnlMain.ResumeLayout(false);
         ResumeLayout(false);
     }

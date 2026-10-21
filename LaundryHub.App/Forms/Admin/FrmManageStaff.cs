@@ -1,4 +1,4 @@
-using LaundryHub.App.Helpers;
+﻿using LaundryHub.App.Helpers;
 using LaundryHub.Core.Enums;
 using LaundryHub.Core.Models;
 using System.Text.RegularExpressions;
@@ -18,6 +18,14 @@ public partial class FrmManageStaff : Form
         UIThemeHelper.EnableStatusPills(dgvStaff);
         pnlHeader.BackColor = UIThemeHelper.Navy;
         cmbRole.SelectedIndex = 0;
+
+        InputValidator.RestrictToUsernameInput(txtUsername, 30);
+        txtFullName.TextChanged += (_, _) => lblError.Visible = false;
+        txtUsername.TextChanged += (_, _) => lblError.Visible = false;
+        txtEmail.TextChanged += (_, _) => lblError.Visible = false;
+        txtPassword.TextChanged += (_, _) => lblError.Visible = false;
+        cmbRole.SelectedIndexChanged += (_, _) => lblError.Visible = false;
+
         LoadStaff();
     }
 
@@ -53,8 +61,8 @@ public partial class FrmManageStaff : Form
             if (_selectedUser != null)
             {
                 _editingUserId = _selectedUser.UserId;
-                lblFormTitle.Text = $"✏ Edit Staff Member #{_selectedUser.UserId}";
-                btnSave.Text = "✔ Update Info";
+                lblFormTitle.Text = $" Edit Staff Member #{_selectedUser.UserId}";
+                btnSave.Text = " Update Info";
                 txtFullName.Text = _selectedUser.FullName;
                 txtUsername.Text = _selectedUser.Username;
                 txtUsername.Enabled = false; // keep username immutable
@@ -132,13 +140,13 @@ public partial class FrmManageStaff : Form
     {
         if (_selectedUser == null)
         {
-            MessageBox.Show("Please select a staff member first.", "Notice", MessageBoxButtons.OK, MessageBoxIcon.Information);
+            ShowError("Please select a staff member first.");
             return;
         }
 
         if (_selectedUser.UserId == SessionManager.CurrentUser?.UserId)
         {
-            MessageBox.Show("You cannot disable your own admin account.", "Action Blocked", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+            ShowError("You cannot disable your own admin account.");
             return;
         }
 
@@ -148,12 +156,27 @@ public partial class FrmManageStaff : Form
             AppServices.Users.SetActive(_selectedUser.UserId, newStatus);
             _selectedUser.IsActive = newStatus;
             chkActive.Checked = newStatus;
+
+            int currentSelectedId = _selectedUser.UserId;
             LoadStaff();
-            MessageBox.Show($"User {_selectedUser.Username} is now {(newStatus ? "Active" : "Disabled")}.", "Status Changed", MessageBoxButtons.OK, MessageBoxIcon.Information);
+
+            // Re-select the same staff member in the grid
+            foreach (DataGridViewRow row in dgvStaff.Rows)
+            {
+                if (row.Cells["UserId"].Value is int id && id == currentSelectedId)
+                {
+                    row.Selected = true;
+                    break;
+                }
+            }
+
+            lblError.ForeColor = newStatus ? UIThemeHelper.Success : UIThemeHelper.Warning;
+            lblError.Text = $" {_selectedUser.Username} is now {(newStatus ? "Active" : "Disabled")}.";
+            lblError.Visible = true;
         }
         catch (Exception ex)
         {
-            MessageBox.Show($"Failed to update status: {ex.Message}", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            ShowError($"Failed to update status: {ex.Message}");
         }
     }
 
@@ -161,8 +184,8 @@ public partial class FrmManageStaff : Form
     {
         _editingUserId = 0;
         _selectedUser = null;
-        lblFormTitle.Text = "➕ New Staff Member";
-        btnSave.Text = "💾 Save Account";
+        lblFormTitle.Text = " New Staff Member";
+        btnSave.Text = " Save Account";
         txtFullName.Clear();
         txtUsername.Clear();
         txtUsername.Enabled = true;
@@ -178,24 +201,31 @@ public partial class FrmManageStaff : Form
     {
         lblError.Visible = false;
 
-        if (string.IsNullOrWhiteSpace(txtFullName.Text))
+        if (!InputValidator.IsValidFullName(txtFullName.Text, out var nameErr))
         {
-            ShowError("Please enter staff member's full name.");
+            ShowError(nameErr);
             txtFullName.Focus();
+            return false;
+        }
+
+        if (cmbRole.SelectedItem == null)
+        {
+            ShowError("Please select a valid role (Admin or Staff).");
+            cmbRole.Focus();
             return false;
         }
 
         if (_editingUserId == 0)
         {
-            if (string.IsNullOrWhiteSpace(txtUsername.Text) || txtUsername.Text.Trim().Length < 3)
+            if (!InputValidator.IsValidUsername(txtUsername.Text, out var userErr))
             {
-                ShowError("Username must be at least 3 characters.");
+                ShowError(userErr);
                 txtUsername.Focus();
                 return false;
             }
             if (AppServices.Users.UsernameExists(txtUsername.Text.Trim()))
             {
-                ShowError("Username is already in use.");
+                ShowError("Username is already in use by another user.");
                 txtUsername.Focus();
                 return false;
             }
@@ -216,9 +246,9 @@ public partial class FrmManageStaff : Form
         }
 
         var email = txtEmail.Text.Trim();
-        if (string.IsNullOrWhiteSpace(email) || !Regex.IsMatch(email, @"^[^@\s]+@[^@\s]+\.[^@\s]+$"))
+        if (!InputValidator.IsValidEmail(email, out var emailErr))
         {
-            ShowError("Please enter a valid email address.");
+            ShowError(emailErr);
             txtEmail.Focus();
             return false;
         }
@@ -235,7 +265,7 @@ public partial class FrmManageStaff : Form
 
     private void ShowError(string msg)
     {
-        lblError.Text = $"⚠ {msg}";
+        lblError.Text = $" {msg}";
         lblError.Visible = true;
     }
 }
