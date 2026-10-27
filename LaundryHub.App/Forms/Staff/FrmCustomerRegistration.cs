@@ -11,8 +11,6 @@ public partial class FrmCustomerRegistration : Form
     private CustomerModel? _selectedCustomer;
     private int _editingCustomerId = 0;
 
-    private CheckBox? chkShowArchived;
-    private Button? btnRestore;
     public CustomerModel? CreatedCustomer { get; private set; }
 
     public FrmCustomerRegistration() : this(false)
@@ -62,28 +60,6 @@ public partial class FrmCustomerRegistration : Form
         lblTitle.Text = _returnCustomer ? "Select or Register Customer" : "Customer Directory & Registration";
         btnSelect.Visible = _returnCustomer;
 
-        chkShowArchived = new CheckBox { Text = "Show archived", AutoSize = true, Margin = new Padding(3, 10, 3, 3) };
-        btnRestore = new Button
-        {
-            Text = "Restore",
-            Size = new Size(150, 38),
-            FlatStyle = FlatStyle.Flat,
-            BackColor = Color.FromArgb(22, 101, 52),
-            ForeColor = Color.White,
-            Font = new Font("Segoe UI", 9.5F, FontStyle.Bold),
-            Cursor = Cursors.Hand,
-            Visible = false
-        };
-        btnRestore.FlatAppearance.BorderSize = 0;
-        btnRestore.Click += btnRestore_Click;
-        chkShowArchived.CheckedChanged += (_, _) =>
-        {
-            btnRestore.Visible = chkShowArchived.Checked;
-            LoadCustomers(txtSearch.Text.Trim());
-        };
-        flpButtons.Controls.Add(chkShowArchived);
-        flpButtons.Controls.Add(btnRestore);
-
         LoadCustomers();
         dgvCustomers.CellContentClick += dgvCustomers_CellContentClick;
     }
@@ -112,15 +88,7 @@ public partial class FrmCustomerRegistration : Form
     private void LoadCustomers(string filter = "")
     {
         IEnumerable<CustomerModel> customers;
-        if (chkShowArchived != null && chkShowArchived.Checked)
-        {
-            customers = AppServices.Customers.GetAll(includeArchived: true)
-                .Where(c => c.IsArchived &&
-                    (string.IsNullOrWhiteSpace(filter) ||
-                     c.FullName.Contains(filter, StringComparison.OrdinalIgnoreCase) ||
-                     c.Phone.Contains(filter)));
-        }
-        else if (string.IsNullOrWhiteSpace(filter))
+        if (string.IsNullOrWhiteSpace(filter))
             customers = AppServices.Customers.GetAll();
         else
             customers = AppServices.Customers.Search(filter);
@@ -304,19 +272,6 @@ public partial class FrmCustomerRegistration : Form
         dgvCustomers.Columns["colArchive"]!.DisplayIndex = dgvCustomers.Columns.Count - 1;
     }
 
-    private void btnRestore_Click(object? sender, EventArgs e)
-    {
-        if (_selectedCustomer == null || !_selectedCustomer.IsArchived)
-        {
-            MessageBox.Show("Select an archived customer from the list first.", "Notice", MessageBoxButtons.OK, MessageBoxIcon.Information);
-            return;
-        }
-
-        AppServices.Customers.Restore(_selectedCustomer.CustomerId);
-        ResetForm();
-        LoadCustomers(txtSearch.Text.Trim());
-        MessageBox.Show("Customer restored.", "Success", MessageBoxButtons.OK, MessageBoxIcon.Information);
-    }
     private void ResetForm()
     {
         _editingCustomerId = 0;

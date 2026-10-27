@@ -12,6 +12,7 @@ public partial class FrmLogin : Form
         DoubleBuffered = true;
         ResizeRedraw = true;
         UIThemeHelper.StyleAuthForm(this, pnlCard, btnLogin, btnSwitchToCustomer);
+        EyeToggle.Attach(btnTogglePassword, () => !txtPassword.UseSystemPasswordChar);
         UIThemeHelper.LoadAuthLogo(picLogo);
         CenterCardContents();
         pnlCard.SizeChanged += (_, _) => CenterCardContents();
@@ -45,20 +46,7 @@ public partial class FrmLogin : Form
         UIThemeHelper.PaintRoundedSolidCard(pnlCard, e, Color.White, UIThemeHelper.LoginCardRadius);
     }
 
-    private void CenterCardContents()
-    {
-        UIThemeHelper.CenterLoginFields(
-            pnlCard,
-            picLogo, lblTitle, lblSubtitle,
-            lblUser, txtUsername,
-            lblPass, txtPassword,
-            lblError, btnLogin,
-            lnkForgotPassword, lblSeparator,
-            btnSwitchToCustomer);
-        txtPassword.Width = 280;
-        btnTogglePassword.Location = new Point(txtPassword.Right + 6, txtPassword.Top + (txtPassword.Height - btnTogglePassword.Height) / 2);
-        lblError.TextAlign = ContentAlignment.MiddleCenter;
-    }
+    private void CenterCardContents() => AuthLayout.Arrange(pnlCard);
 
     private void btnLogin_Click(object? sender, EventArgs e)
     {
@@ -137,20 +125,10 @@ public partial class FrmLogin : Form
 
     private void btnTogglePassword_Click(object? sender, EventArgs e)
     {
-        if (txtPassword.UseSystemPasswordChar)
-        {
-            // Show password
-            txtPassword.UseSystemPasswordChar = false;
-            txtPassword.PasswordChar = '\0';
-            btnTogglePassword.Text = "\uD83D\uDC41"; // 👁 eye open
-        }
-        else
-        {
-            // Hide password
-            txtPassword.UseSystemPasswordChar = true;
-            txtPassword.PasswordChar = '\0';
-            btnTogglePassword.Text = "\uD83D\uDE48"; // 🙈 eye closed
-        }
+        bool hide = !txtPassword.UseSystemPasswordChar;
+        txtPassword.UseSystemPasswordChar = hide;
+        txtPassword.PasswordChar = '\0';
+        btnTogglePassword.Invalidate();
     }
 
     private void OpenDashboard()

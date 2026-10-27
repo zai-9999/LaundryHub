@@ -319,13 +319,17 @@ public static class UIThemeHelper
         }
     }
 
+    // Smallest font size (pt) allowed anywhere in the app. Raise/lower to taste.
+    private const float MinFontSize = 11F;
+
     private static void NormalizeFont(Control c)
     {
         var f = c.Font;
         if (f.Name.StartsWith("Segoe UI", StringComparison.OrdinalIgnoreCase)
             && !f.Name.Contains("Emoji") && !f.Name.Contains("Symbol"))
         {
-            c.Font = AppFonts.Make(f.Size, f.Style);   // also turns "Semibold" into regular family + Bold
+            float size = Math.Max(f.Size, MinFontSize);
+            c.Font = AppFonts.Make(size, f.Style);   // also turns "Semibold" into regular family + Bold
         }
     }
 

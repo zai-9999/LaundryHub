@@ -18,81 +18,84 @@ public class FrmPasswordReset : Form
     public FrmPasswordReset()
     {
         Text = "Password Reset";
-        StartPosition = FormStartPosition.CenterScreen;
-        FormBorderStyle = FormBorderStyle.Sizable;
-        MaximizeBox = true;
-        MinimizeBox = true;
-        MinimumSize = new Size(460, 260);
-        Size = new Size(460, 260);
+        StartPosition = FormStartPosition.CenterParent;
+        FormBorderStyle = FormBorderStyle.FixedDialog;
+        MaximizeBox = false;
+        MinimizeBox = false;
+        ClientSize = new Size(480, 340);
         BackColor = UIThemeHelper.Navy;
 
         pnlCard = new Panel
         {
-            BackColor = UIThemeHelper.CardWhite,
-            Location = new Point(40, 30),
-            Size = new Size(380, 170)
+            BackColor = Color.White,
+            Location = new Point(20, 20),
+            Size = new Size(440, 300)
         };
-        pnlCard.Paint += PnlCard_Paint;
 
         lblTitle = new Label
         {
-            Text = "Password Reset",
-            Font = new Font("Segoe UI Semibold", 12F, FontStyle.Bold),
-            ForeColor = UIThemeHelper.Navy,
-            Location = new Point(20, 16),
+            Text = "Reset your password",
+            Font = AppFonts.Make(17F, FontStyle.Bold),
+            ForeColor = UIThemeHelper.Indigo,
+            Location = new Point(30, 26),
             AutoSize = true
         };
 
         lblSubtitle = new Label
         {
-            Text = "Enter your username or email to receive a temporary password.",
-            Font = new Font("Segoe UI", 8.5F),
+            Text = "Enter your username or email and we'll send a temporary password to your registered email.",
+            Font = AppFonts.Make(10F),
             ForeColor = UIThemeHelper.TextMuted,
-            Location = new Point(20, 44),
-            Size = new Size(340, 28)
+            Location = new Point(30, 64),
+            Size = new Size(380, 44)
         };
 
         txtUserOrEmail = new TextBox
         {
             BackColor = Color.White,
             BorderStyle = BorderStyle.FixedSingle,
-            Font = new Font("Segoe UI", 11F),
-            ForeColor = UIThemeHelper.Navy,
-            Location = new Point(20, 78),
-            Size = new Size(340, 27)
+            Font = AppFonts.Make(12F),
+            ForeColor = UIThemeHelper.Indigo,
+            Location = new Point(30, 116),
+            Size = new Size(380, 32),
+            PlaceholderText = "Username or email"
         };
 
         lblError = new Label
         {
-            Font = new Font("Segoe UI", 8.5F),
+            Font = AppFonts.Make(9.5F),
             ForeColor = UIThemeHelper.Danger,
-            Location = new Point(20, 108),
-            Size = new Size(340, 18),
+            Location = new Point(30, 156),
+            Size = new Size(380, 22),
             Visible = false
         };
 
         btnSend = new Button
         {
-            Text = "Send",
+            Text = "Send Temporary Password",
             BackColor = UIThemeHelper.Indigo,
             FlatStyle = FlatStyle.Flat,
             ForeColor = Color.White,
-            Font = new Font("Segoe UI Semibold", 9F, FontStyle.Bold),
-            Location = new Point(20, 128),
-            Size = new Size(160, 30)
+            Font = AppFonts.Make(10F, FontStyle.Bold),
+            Cursor = Cursors.Hand,
+            Location = new Point(30, 196),
+            Size = new Size(210, 46)
         };
         btnSend.FlatAppearance.BorderSize = 0;
+        btnSend.FlatAppearance.MouseOverBackColor = UIThemeHelper.Navy;
 
         btnCancel = new Button
         {
             Text = "Cancel",
+            BackColor = UIThemeHelper.Sand,
             FlatStyle = FlatStyle.Flat,
             ForeColor = UIThemeHelper.Indigo,
-            Font = new Font("Segoe UI", 8.5F),
-            Location = new Point(200, 128),
-            Size = new Size(160, 30)
+            Font = AppFonts.Make(10F, FontStyle.Bold),
+            Cursor = Cursors.Hand,
+            Location = new Point(256, 196),
+            Size = new Size(154, 46)
         };
-        btnCancel.FlatAppearance.BorderColor = UIThemeHelper.BorderSoft;
+        btnCancel.FlatAppearance.BorderSize = 0;
 
         btnSend.Click += BtnSend_Click;
         btnCancel.Click += (_, _) => Close();
@@ -103,15 +106,14 @@ public class FrmPasswordReset : Form
         pnlCard.Controls.Add(lblError);
         pnlCard.Controls.Add(btnSend);
         pnlCard.Controls.Add(btnCancel);
-
         Controls.Add(pnlCard);
 
-        // Keep card sized to form on resize
-        SizeChanged += (_, _) =>
-        {
-            pnlCard.Size = new Size(ClientSize.Width - 80, ClientSize.Height - 60);
-            pnlCard.Location = new Point(40, 30);
-        };
+        UIThemeHelper.ApplyRoundedRegion(pnlCard, 24);
+        UIThemeHelper.ApplyRoundedRegion(btnSend, 12);
+        UIThemeHelper.ApplyRoundedRegion(btnCancel, 12);
+
+        AcceptButton = btnSend;
+        CancelButton = btnCancel;
     }
 
     private void BtnSend_Click(object? sender, EventArgs e)

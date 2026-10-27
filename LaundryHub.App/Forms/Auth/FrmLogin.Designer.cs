@@ -91,7 +91,7 @@ partial class FrmLogin
         lblSubtitle.Name = "lblSubtitle";
         lblSubtitle.Size = new Size(445, 27);
         lblSubtitle.TabIndex = 2;
-        lblSubtitle.Text = "Staff & Admin Portal";
+        lblSubtitle.Text = "Staff and Admin Portal";
         lblSubtitle.TextAlign = ContentAlignment.MiddleCenter;
         // 
         // lblUser
@@ -175,7 +175,7 @@ partial class FrmLogin
         btnTogglePassword.Name = "btnTogglePassword";
         btnTogglePassword.Size = new Size(34, 33);
         btnTogglePassword.TabIndex = 8;
-        btnTogglePassword.Text = "\uD83D\uDE48"; // 🙈 eye closed (default)
+        btnTogglePassword.Text = "";
         btnTogglePassword.UseVisualStyleBackColor = false;
         btnTogglePassword.Click += btnTogglePassword_Click;
         //
@@ -263,7 +263,7 @@ partial class FrmLogin
         AutoScaleDimensions = new SizeF(96F, 96F);
         AutoScaleMode = AutoScaleMode.Dpi;
         BackColor = Color.FromArgb(114, 136, 174);
-        ClientSize = new Size(1100, 800);
+        ClientSize = new Size(1100, 960);
         Controls.Add(pnlCard);
         FormBorderStyle = FormBorderStyle.Sizable;
         Margin = new Padding(3, 4, 3, 4);

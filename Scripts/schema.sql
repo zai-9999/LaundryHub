@@ -9,6 +9,7 @@
 -- If a full clean reset is needed during development, manually execute:
 -- DROP TABLE IF EXISTS order_status_log CASCADE;
 -- DROP TABLE IF EXISTS orders CASCADE;
+-- DROP TABLE IF EXISTS load_prices CASCADE;
 -- DROP TABLE IF EXISTS service_types CASCADE;
 -- DROP TABLE IF EXISTS customers CASCADE;
 -- DROP TABLE IF EXISTS users CASCADE;
@@ -54,6 +55,19 @@ CREATE TABLE IF NOT EXISTS service_types (
 );
 
 -- ─────────────────────────────────────────────
+-- LOAD PRICES (fixed maximum load sizes)
+-- ─────────────────────────────────────────────
+CREATE TABLE IF NOT EXISTS load_prices (
+    category      VARCHAR(40)  NOT NULL
+                  CHECK (category IN ('Clothes','Bedsheets/Towels/Blankets')),
+    load_size     VARCHAR(10)  NOT NULL
+                  CHECK (load_size IN ('SMALL','MEDIUM','LARGE')),
+    max_weight_kg NUMERIC(5,2) NOT NULL CHECK (max_weight_kg > 0),
+    price         NUMERIC(10,2) NOT NULL CHECK (price > 0),
+    PRIMARY KEY (category, load_size)
+);
+
+-- ─────────────────────────────────────────────
 -- ORDERS
 -- ─────────────────────────────────────────────
 CREATE TABLE IF NOT EXISTS orders (
@@ -61,10 +75,12 @@ CREATE TABLE IF NOT EXISTS orders (
     order_number     VARCHAR(25)   UNIQUE NOT NULL,  -- e.g. LH-20261011-001
     customer_id      INT           NOT NULL REFERENCES customers(customer_id),
     service_id       INT           NOT NULL REFERENCES service_types(service_id),
+    laundry_category VARCHAR(40)   NOT NULL DEFAULT 'Clothes'
+                     CHECK (laundry_category IN ('Clothes','Bedsheets/Towels/Blankets')),
     weight_kg        NUMERIC(6,2)  NOT NULL CHECK (weight_kg > 0),
     total_amount     NUMERIC(10,2) NOT NULL CHECK (total_amount >= 0),
-    status           VARCHAR(30)   NOT NULL DEFAULT 'Washing'
-                     CHECK (status IN ('Washing','Drying','Ready for Pickup','Claimed','Cancelled')),
+    status           VARCHAR(30)   NOT NULL DEFAULT 'Booked'
+                     CHECK (status IN ('Booked','Washing','Drying','Ready for Pickup','Claimed','Cancelled')),
     cancel_reason    TEXT,
     payment_recorded BOOLEAN       NOT NULL DEFAULT FALSE,
     amount_paid      NUMERIC(10,2) CHECK (amount_paid IS NULL OR amount_paid >= 0),
@@ -169,3 +185,12 @@ WHERE NOT EXISTS (SELECT 1 FROM service_types WHERE service_name = 'Dry Only');
 INSERT INTO service_types (service_name, price_per_kilo, minimum_weight)
 SELECT 'Fold Only', 20.00, 1.0
 WHERE NOT EXISTS (SELECT 1 FROM service_types WHERE service_name = 'Fold Only');
+
+INSERT INTO load_prices (category, load_size, max_weight_kg, price) VALUES
+    ('Clothes', 'SMALL', 5.00, 330.00),
+    ('Clothes', 'MEDIUM', 8.00, 440.00),
+    ('Clothes', 'LARGE', 15.00, 550.00),
+    ('Bedsheets/Towels/Blankets', 'SMALL', 3.00, 440.00),
+    ('Bedsheets/Towels/Blankets', 'MEDIUM', 5.00, 650.00),
+    ('Bedsheets/Towels/Blankets', 'LARGE', 9.00, 1120.00)
+ON CONFLICT (category, load_size) DO NOTHING;

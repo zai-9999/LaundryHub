@@ -1,4 +1,4 @@
-﻿using LaundryHub.App.Helpers;
+using LaundryHub.App.Helpers;
 using LaundryHub.Core.Models;
 using System.Drawing.Drawing2D;
 using System.Threading.Tasks;
@@ -189,7 +189,7 @@ public partial class FrmCustomerPortal : Form
         {
             o.OrderId,
             Order_No = o.OrderNumber,
-            Service = o.ServiceName ?? "Laundry",
+            Service = $"{o.ServiceName ?? "Laundry"} — {o.LaundryCategory}",
             Weight = $"{o.WeightKg} kg",
             Total = $"{o.TotalAmount:N2}",
             Payment = o.PaymentRecorded ? "Paid" : "Unpaid",
@@ -280,7 +280,7 @@ public partial class FrmCustomerPortal : Form
 
         var lblDetails = new Label
         {
-            Text = $"Service: {order.ServiceName} ({order.WeightKg} kg)\nTotal Amount: {order.TotalAmount:N2} ({(order.PaymentRecorded ? "Paid" : "Unpaid")})\nTarget Pickup: {order.PickupDate:MMMM dd, yyyy}",
+            Text = $"Service: {order.ServiceName} — {order.LaundryCategory} ({order.WeightKg} kg)\nTotal Amount: {order.TotalAmount:N2} ({(order.PaymentRecorded ? "Paid" : "Unpaid")})\nTarget Pickup: {order.PickupDate:MMMM dd, yyyy}",
             Font = new Font("Segoe UI", 9),
             ForeColor = UIThemeHelper.Indigo,
             Location = new Point(20, 290),
@@ -303,6 +303,7 @@ public partial class FrmCustomerPortal : Form
         btnClose.Click += (_, _) => dlg.Close();
 
         dlg.Controls.AddRange(new Control[] { pic, lblNo, lblStatus, lblDetails, btnClose });
+        UIThemeHelper.ApplyTheme(dlg);
         dlg.ShowDialog(this);
     }
 }

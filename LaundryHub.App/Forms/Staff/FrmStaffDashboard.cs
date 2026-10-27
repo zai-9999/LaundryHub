@@ -1,4 +1,4 @@
-﻿using LaundryHub.App.Helpers;
+using LaundryHub.App.Helpers;
 using LaundryHub.Core.Models;
 using System.ComponentModel;
 using System.Drawing.Drawing2D;
@@ -142,7 +142,7 @@ public partial class FrmStaffDashboard : Form
             o.OrderId,
             Order_No = o.OrderNumber,
             Customer = o.CustomerName,
-            Service = o.ServiceName,
+            Service = $"{o.ServiceName} — {o.LaundryCategory}",
             Weight = $"{o.WeightKg} kg",
             Total = $"{o.TotalAmount:N2}",
             Status = o.Status,
@@ -226,7 +226,7 @@ public partial class FrmStaffDashboard : Form
 
     private async void StatusMenu_ItemClicked(object? sender, ToolStripItemClickedEventArgs e)
     {
-        if (_selectedOrderId < 0 || e.ClickedItem.Tag is not string nextStatus) return;
+        if (_selectedOrderId < 0 || e.ClickedItem?.Tag is not string nextStatus) return;
 
         try
         {

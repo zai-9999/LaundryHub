@@ -6,6 +6,7 @@ public class Order
     public string OrderNumber { get; set; } = string.Empty;
     public int CustomerId { get; set; }
     public int ServiceId { get; set; }
+    public string LaundryCategory { get; set; } = LoadPricingCalculator.ClothesCategory;
     public decimal WeightKg { get; set; }
     public decimal TotalAmount { get; set; }
     public string Status { get; set; } = "Washing";

@@ -1,4 +1,4 @@
-﻿using ClosedXML.Excel;
+using ClosedXML.Excel;
 using LaundryHub.Core.Models;
 
 namespace LaundryHub.App.Helpers;
@@ -63,7 +63,7 @@ public static class ExcelHelper
             ws.Cell(row, 1).Value = o.OrderNumber ?? "";
             ws.Cell(row, 2).Value = o.CustomerName ?? "";
             ws.Cell(row, 3).Value = o.CustomerPhone ?? "";
-            ws.Cell(row, 4).Value = o.ServiceName ?? "";
+            ws.Cell(row, 4).Value = $"{o.ServiceName ?? "Laundry"} — {o.LaundryCategory}";
             ws.Cell(row, 5).Value = (double)o.WeightKg;
             ws.Cell(row, 6).Value = (double)o.TotalAmount;
             ws.Cell(row, 7).Value = o.Status ?? "";

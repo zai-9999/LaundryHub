@@ -1,4 +1,4 @@
-﻿using ReaLTaiizor;
+using ReaLTaiizor;
 using ReaLTaiizor.Controls;
 using ReaLTaiizor.Util;
 using System.IO;
@@ -22,6 +22,7 @@ partial class FrmCustomerLogin
     private void InitializeComponent()
     {
         pnlCard = new System.Windows.Forms.Panel();
+        picLogo = new PictureBox();
         lblTitle = new Label();
         lblSubtitle = new Label();
         lblUser = new Label();
@@ -33,15 +34,15 @@ partial class FrmCustomerLogin
         btnLogin = new HopeButton();
         lblSeparator = new Label();
         btnRegister = new HopeButton();
-        btnPricing = new HopeButton();
-        btnGuestLookup = new HopeButton();
         btnSwitchToStaff = new HopeButton();
         pnlCard.SuspendLayout();
+        ((System.ComponentModel.ISupportInitialize)picLogo).BeginInit();
         SuspendLayout();
         // 
         // pnlCard
         // 
         pnlCard.BackColor = Color.White;
+        pnlCard.Controls.Add(picLogo);
         pnlCard.Controls.Add(lblTitle);
         pnlCard.Controls.Add(lblSubtitle);
         pnlCard.Controls.Add(lblUser);
@@ -53,8 +54,6 @@ partial class FrmCustomerLogin
         pnlCard.Controls.Add(btnLogin);
         pnlCard.Controls.Add(lblSeparator);
         pnlCard.Controls.Add(btnRegister);
-        pnlCard.Controls.Add(btnPricing);
-        pnlCard.Controls.Add(btnGuestLookup);
         pnlCard.Controls.Add(btnSwitchToStaff);
         pnlCard.Location = new Point(301, 34);
         pnlCard.Margin = new Padding(3, 4, 3, 4);
@@ -62,6 +61,15 @@ partial class FrmCustomerLogin
         pnlCard.Size = new Size(445, 715);
         pnlCard.TabIndex = 0;
         pnlCard.Paint += pnlCard_Paint;
+        // 
+        // picLogo
+        //
+        picLogo.BackgroundImageLayout = ImageLayout.Center;
+        picLogo.Location = new Point(0, 24);
+        picLogo.Name = "picLogo";
+        picLogo.Size = new Size(445, 69);
+        picLogo.SizeMode = PictureBoxSizeMode.Zoom;
+        picLogo.TabStop = false;
         // 
         // lblTitle
         // 
@@ -166,7 +174,7 @@ partial class FrmCustomerLogin
         btnTogglePassword.Name = "btnTogglePassword";
         btnTogglePassword.Size = new Size(34, 33);
         btnTogglePassword.TabIndex = 8;
-        btnTogglePassword.Text = "\uD83D\uDE48"; // 🙈 eye closed (default)
+        btnTogglePassword.Text = "";
         btnTogglePassword.UseVisualStyleBackColor = false;
         btnTogglePassword.Click += btnTogglePassword_Click;
         //
@@ -236,50 +244,6 @@ partial class FrmCustomerLogin
         btnRegister.WarningColor = Color.FromArgb(214, 160, 80);
         btnRegister.Click += btnRegister_Click;
         // 
-        // btnPricing
-        // 
-        btnPricing.BorderColor = Color.FromArgb(114, 136, 174);
-        btnPricing.ButtonType = HopeButtonType.Default;
-        btnPricing.Cursor = Cursors.Hand;
-        btnPricing.DangerColor = Color.FromArgb(184, 72, 88);
-        btnPricing.DefaultColor = Color.FromArgb(246, 242, 234);
-        btnPricing.Font = new Font("Segoe UI", 9.5F, FontStyle.Bold);
-        btnPricing.HoverTextColor = Color.FromArgb(75, 86, 148);
-        btnPricing.InfoColor = Color.FromArgb(130, 138, 165);
-        btnPricing.Location = new Point(62, 497);
-        btnPricing.Margin = new Padding(3, 4, 3, 4);
-        btnPricing.Name = "btnPricing";
-        btnPricing.PrimaryColor = Color.FromArgb(114, 136, 174);
-        btnPricing.Size = new Size(320, 48);
-        btnPricing.SuccessColor = Color.FromArgb(74, 160, 120);
-        btnPricing.TabIndex = 5;
-        btnPricing.Text = "View Services & Pricing";
-        btnPricing.TextColor = Color.FromArgb(75, 86, 148);
-        btnPricing.WarningColor = Color.FromArgb(214, 160, 80);
-        btnPricing.Click += btnPricing_Click;
-        // 
-        // btnGuestLookup
-        // 
-        btnGuestLookup.BorderColor = Color.FromArgb(114, 136, 174);
-        btnGuestLookup.ButtonType = HopeButtonType.Default;
-        btnGuestLookup.Cursor = Cursors.Hand;
-        btnGuestLookup.DangerColor = Color.FromArgb(184, 72, 88);
-        btnGuestLookup.DefaultColor = Color.FromArgb(234, 224, 207);
-        btnGuestLookup.Font = new Font("Segoe UI", 9.5F, FontStyle.Bold);
-        btnGuestLookup.HoverTextColor = Color.FromArgb(75, 86, 148);
-        btnGuestLookup.InfoColor = Color.FromArgb(130, 138, 165);
-        btnGuestLookup.Location = new Point(62, 552);
-        btnGuestLookup.Margin = new Padding(3, 4, 3, 4);
-        btnGuestLookup.Name = "btnGuestLookup";
-        btnGuestLookup.PrimaryColor = Color.FromArgb(114, 136, 174);
-        btnGuestLookup.Size = new Size(320, 48);
-        btnGuestLookup.SuccessColor = Color.FromArgb(74, 160, 120);
-        btnGuestLookup.TabIndex = 6;
-        btnGuestLookup.Text = "Check Order Status (No Account)";
-        btnGuestLookup.TextColor = Color.FromArgb(75, 86, 148);
-        btnGuestLookup.WarningColor = Color.FromArgb(214, 160, 80);
-        btnGuestLookup.Click += btnGuestLookup_Click;
-        // 
         // btnSwitchToStaff
         // 
         btnSwitchToStaff.BorderColor = Color.FromArgb(114, 136, 174);
@@ -323,7 +287,7 @@ partial class FrmCustomerLogin
         AutoScaleDimensions = new SizeF(96F, 96F);
         AutoScaleMode = AutoScaleMode.Dpi;
         BackColor = Color.FromArgb(114, 136, 174);
-        ClientSize = new Size(1100, 800);
+        ClientSize = new Size(1100, 960);
         Controls.Add(pnlCard);
         FormBorderStyle = FormBorderStyle.Sizable;
         Margin = new Padding(3, 4, 3, 4);
@@ -332,6 +296,7 @@ partial class FrmCustomerLogin
         StartPosition = FormStartPosition.CenterScreen;
         Text = "LaundryHub  Customer Portal";
         Load += FrmCustomerLogin_Load;
+        ((System.ComponentModel.ISupportInitialize)picLogo).EndInit();
         pnlCard.ResumeLayout(false);
         pnlCard.PerformLayout();
         ResumeLayout(false);
@@ -340,13 +305,12 @@ partial class FrmCustomerLogin
     #endregion
 
     private System.Windows.Forms.Panel  pnlCard;
+    private PictureBox        picLogo;
     private HopeTextBox   txtUsername;
     private HopeTextBox   txtPassword;
     private Button         btnTogglePassword;
     private HopeButton    btnLogin;
     private HopeButton    btnRegister;
-    private HopeButton    btnPricing;
-    private HopeButton    btnGuestLookup;
     private HopeButton    btnSwitchToStaff;
     private Label         lblTitle;
     private Label         lblSubtitle;
