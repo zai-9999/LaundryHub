@@ -1,4 +1,4 @@
-﻿using LaundryHub.App.Helpers;
+using LaundryHub.App.Helpers;
 using LaundryHub.Core.Models;
 using LaundryHub.Core.Enums;
 using Customer = LaundryHub.Core.Models.Customer;
@@ -76,7 +76,7 @@ public partial class FrmOrderList : Form
                 o.OrderId,
                 Order_No = o.OrderNumber,
                 Customer = o.CustomerName,
-                Service = o.ServiceName,
+                Service = $"{o.ServiceName} — {o.LaundryCategory}",
                 Weight = $"{o.WeightKg} kg",
                 Total = $"{o.TotalAmount:N2}",
                 o.Status,

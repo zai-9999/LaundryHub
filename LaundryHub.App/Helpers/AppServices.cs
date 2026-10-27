@@ -18,6 +18,7 @@ public static class AppServices
     public static CustomerRepository     Customers     { get; private set; } = null!;
     public static OrderRepository        Orders        { get; private set; } = null!;
     public static ServiceTypeRepository  ServiceTypes  { get; private set; } = null!;
+    public static LoadPricingRepository  LoadPricing   { get; private set; } = null!;
 
     public static string ShopName => Configuration["App:ShopName"] ?? "LaundryHub";
 
@@ -36,6 +37,7 @@ public static class AppServices
         Customers    = new CustomerRepository(DbContext);
         Orders       = new OrderRepository(DbContext);
         ServiceTypes = new ServiceTypeRepository(DbContext);
+        LoadPricing  = new LoadPricingRepository(DbContext);
     }
 
     /// <summary>Tests the DB connection and throws if it fails.</summary>

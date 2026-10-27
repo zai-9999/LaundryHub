@@ -103,10 +103,10 @@ public class OrderRepository : IOrderRepository
 
             int orderId = conn.ExecuteScalar<int>(@"
                 INSERT INTO orders
-                  (order_number, customer_id, service_id, weight_kg, total_amount,
+                  (order_number, customer_id, service_id, laundry_category, weight_kg, total_amount,
                    status, created_by, pickup_date)
                 VALUES
-                  (@OrderNumber, @CustomerId, @ServiceId, @WeightKg, @TotalAmount,
+                  (@OrderNumber, @CustomerId, @ServiceId, @LaundryCategory, @WeightKg, @TotalAmount,
                    @Status, @CreatedBy, @PickupDate)
                 RETURNING order_id",
                 order, transaction: tran);
@@ -115,7 +115,7 @@ public class OrderRepository : IOrderRepository
             conn.Execute(@"
                 INSERT INTO order_status_log (order_id, old_status, new_status, changed_by, notes)
                 VALUES (@OrderId, NULL, @NewStatus, @ChangedBy, 'Order created')",
-                new { OrderId = orderId, NewStatus = order.Status ?? "Washing", ChangedBy = order.CreatedBy },
+                new { OrderId = orderId, NewStatus = order.Status ?? "Booked", ChangedBy = order.CreatedBy },
                 transaction: tran);
 
             tran.Commit();

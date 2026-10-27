@@ -1,4 +1,4 @@
-﻿using Panel = System.Windows.Forms.Panel;
+using Panel = System.Windows.Forms.Panel;
 using CheckBox = System.Windows.Forms.CheckBox;
 using ReaLTaiizor;
 using ReaLTaiizor.Controls;
@@ -32,6 +32,8 @@ partial class FrmNewOrder
         lstCustomers = new ListBox();
         lblSecService = new Label();
         lblServicePrompt = new Label();
+        lblCategoryPrompt = new Label();
+        cmbCategory = new ComboBox();
         cmbService = new ComboBox();
         lblWeightPrompt = new Label();
         txtWeight = new HopeTextBox();
@@ -144,17 +146,41 @@ partial class FrmNewOrder
         lblSecService.Name = "lblSecService";
         lblSecService.Size = new Size(117, 15);
         lblSecService.TabIndex = 7;
-        lblSecService.Text = " Service & Weight";
+        lblSecService.Text = "Laundry Category & Service";
+        // 
+        // lblCategoryPrompt
+        // 
+        lblCategoryPrompt.AutoSize = true;
+        lblCategoryPrompt.Font = new Font("Segoe UI", 8.5F, FontStyle.Bold);
+        lblCategoryPrompt.ForeColor = Color.FromArgb(75, 86, 148);
+        lblCategoryPrompt.Location = new Point(30, 184);
+        lblCategoryPrompt.Name = "lblCategoryPrompt";
+        lblCategoryPrompt.Size = new Size(105, 15);
+        lblCategoryPrompt.TabIndex = 8;
+        lblCategoryPrompt.Text = "Laundry Category:";
+        // 
+        // cmbCategory
+        // 
+        cmbCategory.BackColor = Color.White;
+        cmbCategory.DropDownStyle = ComboBoxStyle.DropDownList;
+        cmbCategory.Font = new Font("Segoe UI", 10F);
+        cmbCategory.ForeColor = Color.FromArgb(75, 86, 148);
+        cmbCategory.FormattingEnabled = true;
+        cmbCategory.Location = new Point(30, 202);
+        cmbCategory.Name = "cmbCategory";
+        cmbCategory.Size = new Size(440, 25);
+        cmbCategory.TabIndex = 9;
+        cmbCategory.SelectedIndexChanged += cmbCategory_SelectedIndexChanged;
         // 
         // lblServicePrompt
         // 
         lblServicePrompt.AutoSize = true;
         lblServicePrompt.Font = new Font("Segoe UI", 8.5F, FontStyle.Bold);
         lblServicePrompt.ForeColor = Color.FromArgb(75, 86, 148);
-        lblServicePrompt.Location = new Point(30, 184);
+        lblServicePrompt.Location = new Point(30, 238);
         lblServicePrompt.Name = "lblServicePrompt";
         lblServicePrompt.Size = new Size(76, 15);
-        lblServicePrompt.TabIndex = 8;
+        lblServicePrompt.TabIndex = 10;
         lblServicePrompt.Text = "Service Type:";
         // 
         // cmbService
@@ -164,10 +190,10 @@ partial class FrmNewOrder
         cmbService.Font = new Font("Segoe UI", 10F);
         cmbService.ForeColor = Color.FromArgb(75, 86, 148);
         cmbService.FormattingEnabled = true;
-        cmbService.Location = new Point(30, 202);
+        cmbService.Location = new Point(30, 256);
         cmbService.Name = "cmbService";
         cmbService.Size = new Size(440, 25);
-        cmbService.TabIndex = 9;
+        cmbService.TabIndex = 11;
         cmbService.SelectedIndexChanged += cmbService_SelectedIndexChanged;
         // 
         // lblWeightPrompt
@@ -175,10 +201,10 @@ partial class FrmNewOrder
         lblWeightPrompt.AutoSize = true;
         lblWeightPrompt.Font = new Font("Segoe UI", 8.5F, FontStyle.Bold);
         lblWeightPrompt.ForeColor = Color.FromArgb(75, 86, 148);
-        lblWeightPrompt.Location = new Point(30, 238);
+        lblWeightPrompt.Location = new Point(30, 292);
         lblWeightPrompt.Name = "lblWeightPrompt";
         lblWeightPrompt.Size = new Size(75, 15);
-        lblWeightPrompt.TabIndex = 10;
+        lblWeightPrompt.TabIndex = 12;
         lblWeightPrompt.Text = "Weight (kg):";
         // 
         // txtWeight
@@ -190,10 +216,10 @@ partial class FrmNewOrder
         txtWeight.Font = new Font("Segoe UI", 9.5F);
         txtWeight.ForeColor = Color.FromArgb(75, 86, 148);
         txtWeight.Hint = "e.g. 5.5";
-        txtWeight.Location = new Point(30, 256);
+        txtWeight.Location = new Point(30, 310);
         txtWeight.Name = "txtWeight";
         txtWeight.Size = new Size(440, 34);
-        txtWeight.TabIndex = 11;
+        txtWeight.TabIndex = 13;
         txtWeight.TextChanged += txtWeight_TextChanged;
         // 
         // pnlPriceBox
@@ -201,10 +227,10 @@ partial class FrmNewOrder
         pnlPriceBox.BackColor = Color.FromArgb(248, 245, 239);
         pnlPriceBox.Controls.Add(lblPriceBreakdown);
         pnlPriceBox.Controls.Add(lblPrice);
-        pnlPriceBox.Location = new Point(30, 300);
+        pnlPriceBox.Location = new Point(30, 354);
         pnlPriceBox.Name = "pnlPriceBox";
         pnlPriceBox.Size = new Size(440, 80);
-        pnlPriceBox.TabIndex = 12;
+        pnlPriceBox.TabIndex = 14;
         pnlPriceBox.Region = new Region(RoundRectangle.CreateRoundRect(0, 0, 440, 80, 8));
         // 
         // lblPriceBreakdown
@@ -213,7 +239,7 @@ partial class FrmNewOrder
         lblPriceBreakdown.ForeColor = Color.FromArgb(114, 136, 174);
         lblPriceBreakdown.Location = new Point(12, 47);
         lblPriceBreakdown.Name = "lblPriceBreakdown";
-        lblPriceBreakdown.Size = new Size(420, 20);
+        lblPriceBreakdown.Size = new Size(420, 25);
         lblPriceBreakdown.TabIndex = 1;
         lblPriceBreakdown.Text = "Select a service and enter weight to compute.";
         // 
@@ -233,10 +259,10 @@ partial class FrmNewOrder
         lblSecPickup.AutoSize = true;
         lblSecPickup.Font = new Font("Segoe UI Semibold", 9F, FontStyle.Bold);
         lblSecPickup.ForeColor = Color.FromArgb(114, 136, 174);
-        lblSecPickup.Location = new Point(30, 382);
+        lblSecPickup.Location = new Point(30, 444);
         lblSecPickup.Name = "lblSecPickup";
         lblSecPickup.Size = new Size(86, 15);
-        lblSecPickup.TabIndex = 13;
+        lblSecPickup.TabIndex = 15;
         lblSecPickup.Text = " Pickup Date";
         // 
         // lblPickupPrompt
@@ -244,28 +270,28 @@ partial class FrmNewOrder
         lblPickupPrompt.AutoSize = true;
         lblPickupPrompt.Font = new Font("Segoe UI", 8.5F, FontStyle.Bold);
         lblPickupPrompt.ForeColor = Color.FromArgb(75, 86, 148);
-        lblPickupPrompt.Location = new Point(30, 404);
+        lblPickupPrompt.Location = new Point(30, 466);
         lblPickupPrompt.Name = "lblPickupPrompt";
         lblPickupPrompt.Size = new Size(125, 15);
-        lblPickupPrompt.TabIndex = 14;
+        lblPickupPrompt.TabIndex = 16;
         lblPickupPrompt.Text = "Expected pickup date:";
         // 
         // dtpPickup
         // 
         dtpPickup.Font = new Font("Segoe UI", 10F);
-        dtpPickup.Location = new Point(30, 422);
+        dtpPickup.Location = new Point(30, 484);
         dtpPickup.Name = "dtpPickup";
         dtpPickup.Size = new Size(440, 25);
-        dtpPickup.TabIndex = 15;
+        dtpPickup.TabIndex = 17;
         // 
         // lblError
         // 
         lblError.Font = new Font("Segoe UI", 8.5F);
         lblError.ForeColor = Color.FromArgb(184, 72, 88);
-        lblError.Location = new Point(30, 455);
+        lblError.Location = new Point(30, 517);
         lblError.Name = "lblError";
         lblError.Size = new Size(440, 18);
-        lblError.TabIndex = 16;
+        lblError.TabIndex = 18;
         lblError.Visible = false;
         // 
         // btnSave
@@ -276,10 +302,10 @@ partial class FrmNewOrder
         btnSave.HoverTextColor = Color.White;
         btnSave.Cursor = Cursors.Hand;
         btnSave.Font = new Font("Segoe UI", 10F, FontStyle.Bold);
-        btnSave.Location = new Point(30, 480);
+        btnSave.Location = new Point(30, 540);
         btnSave.Name = "btnSave";
         btnSave.Size = new Size(440, 42);
-        btnSave.TabIndex = 17;
+        btnSave.TabIndex = 19;
         btnSave.Text = "Save Order & Generate QR Ticket";
         btnSave.Click += btnSave_Click;
         // 
@@ -292,10 +318,10 @@ partial class FrmNewOrder
         btnCancel.HoverTextColor = Color.FromArgb(75, 86, 148);
         btnCancel.Cursor = Cursors.Hand;
         btnCancel.Font = new Font("Segoe UI", 9F);
-        btnCancel.Location = new Point(30, 528);
+        btnCancel.Location = new Point(30, 588);
         btnCancel.Name = "btnCancel";
         btnCancel.Size = new Size(440, 34);
-        btnCancel.TabIndex = 18;
+        btnCancel.TabIndex = 20;
         btnCancel.Text = "Cancel";
         btnCancel.Click += btnCancel_Click;
         // 
@@ -304,7 +330,7 @@ partial class FrmNewOrder
         AutoScaleDimensions = new SizeF(96F, 96F);
         AutoScaleMode = AutoScaleMode.Dpi;
         BackColor = Color.FromArgb(246, 242, 234);
-        ClientSize = new Size(520, 585);
+        ClientSize = new Size(520, 645);
         Controls.Add(lstCustomers);
         Controls.Add(btnCancel);
         Controls.Add(btnSave);
@@ -316,6 +342,8 @@ partial class FrmNewOrder
         Controls.Add(txtWeight);
         Controls.Add(lblWeightPrompt);
         Controls.Add(cmbService);
+        Controls.Add(cmbCategory);
+        Controls.Add(lblCategoryPrompt);
         Controls.Add(lblServicePrompt);
         Controls.Add(lblSecService);
         Controls.Add(lblSelectedCustomer);
@@ -348,6 +376,8 @@ partial class FrmNewOrder
     private ListBox lstCustomers;
     private Label lblSecService;
     private Label lblServicePrompt;
+    private Label lblCategoryPrompt;
+    private ComboBox cmbCategory;
     private ComboBox cmbService;
     private Label lblWeightPrompt;
     private HopeTextBox txtWeight;
