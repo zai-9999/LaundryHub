@@ -61,18 +61,18 @@ partial class FrmOrderList
         pnlTopBar.Dock = DockStyle.Top;
         pnlTopBar.Location = new Point(0, 0);
         pnlTopBar.Name = "pnlTopBar";
-        pnlTopBar.Padding = new Padding(20, 14, 20, 14);
-        pnlTopBar.Size = new Size(1100, 68);
+        pnlTopBar.Padding = new Padding(20, 0, 16, 0);
+        pnlTopBar.Size = new Size(1100, 72);
         pnlTopBar.TabIndex = 0;
         // 
         // pnlSearch
         // 
         pnlSearch.Controls.Add(txtSearch);
         pnlSearch.Dock = DockStyle.Fill;
-        pnlSearch.Location = new Point(200, 14);
+        pnlSearch.Location = new Point(200, 0);
         pnlSearch.Name = "pnlSearch";
-        pnlSearch.Padding = new Padding(16, 1, 16, 1);
-        pnlSearch.Size = new Size(490, 40);
+        pnlSearch.Padding = new Padding(12, 16, 12, 16);
+        pnlSearch.Size = new Size(500, 72);
         pnlSearch.TabIndex = 1;
         // 
         // txtSearch
@@ -99,9 +99,10 @@ partial class FrmOrderList
         flpActions.Controls.Add(btnViewDetail);
         flpActions.Dock = DockStyle.Right;
         flpActions.FlowDirection = FlowDirection.LeftToRight;
-        flpActions.Location = new Point(690, 14);
+        flpActions.Location = new Point(700, 0);
         flpActions.Name = "flpActions";
-        flpActions.Size = new Size(390, 40);
+        flpActions.Padding = new Padding(0, 18, 0, 18);
+        flpActions.Size = new Size(400, 72);
         flpActions.TabIndex = 2;
         flpActions.WrapContents = false;
         // 
@@ -111,10 +112,10 @@ partial class FrmOrderList
         chkFilterDate.Cursor = Cursors.Hand;
         chkFilterDate.Font = new Font("Segoe UI", 9F, FontStyle.Bold);
         chkFilterDate.ForeColor = Color.FromArgb(226, 232, 240);
-        chkFilterDate.Location = new Point(0, 9);
-        chkFilterDate.Margin = new Padding(0, 9, 8, 0);
+        chkFilterDate.Location = new Point(0, 0);
+        chkFilterDate.Margin = new Padding(0, 0, 8, 0);
         chkFilterDate.Name = "chkFilterDate";
-        chkFilterDate.Size = new Size(111, 24);
+        chkFilterDate.Size = new Size(111, 36);
         chkFilterDate.TabIndex = 0;
         chkFilterDate.Text = "Filter date:";
         chkFilterDate.UseVisualStyleBackColor = true;
@@ -124,8 +125,8 @@ partial class FrmOrderList
         // 
         dtpFilter.Font = new Font("Segoe UI", 9F);
         dtpFilter.Format = DateTimePickerFormat.Short;
-        dtpFilter.Location = new Point(122, 6);
-        dtpFilter.Margin = new Padding(3, 6, 12, 0);
+        dtpFilter.Location = new Point(122, 4);
+        dtpFilter.Margin = new Padding(3, 4, 12, 0);
         dtpFilter.Name = "dtpFilter";
         dtpFilter.Size = new Size(115, 27);
         dtpFilter.TabIndex = 1;
@@ -138,11 +139,11 @@ partial class FrmOrderList
         btnViewDetail.Cursor = Cursors.Hand;
         btnViewDetail.Font = new Font("Segoe UI", 9F, FontStyle.Bold);
         btnViewDetail.HoverTextColor = Color.White;
-        btnViewDetail.Location = new Point(252, 1);
-        btnViewDetail.Margin = new Padding(3, 1, 0, 0);
+        btnViewDetail.Location = new Point(252, 0);
+        btnViewDetail.Margin = new Padding(3, 0, 0, 0);
         btnViewDetail.Name = "btnViewDetail";
         btnViewDetail.PrimaryColor = Color.FromArgb(75, 86, 148);
-        btnViewDetail.Size = new Size(135, 38);
+        btnViewDetail.Size = new Size(140, 36);
         btnViewDetail.TabIndex = 2;
         btnViewDetail.Text = "Manage Order";
         btnViewDetail.TextColor = Color.White;
@@ -153,9 +154,9 @@ partial class FrmOrderList
         lblTitle.Dock = DockStyle.Left;
         lblTitle.Font = new Font("Segoe UI", 14F, FontStyle.Bold);
         lblTitle.ForeColor = Color.White;
-        lblTitle.Location = new Point(20, 14);
+        lblTitle.Location = new Point(20, 0);
         lblTitle.Name = "lblTitle";
-        lblTitle.Size = new Size(180, 40);
+        lblTitle.Size = new Size(180, 72);
         lblTitle.TabIndex = 0;
         lblTitle.Text = "All Orders";
         lblTitle.TextAlign = ContentAlignment.MiddleLeft;
@@ -176,10 +177,10 @@ partial class FrmOrderList
         flpLegend.Controls.Add(lblCancelled);
         flpLegend.Dock = DockStyle.Top;
         flpLegend.FlowDirection = FlowDirection.LeftToRight;
-        flpLegend.Location = new Point(0, 68);
+        flpLegend.Location = new Point(0, 72);
         flpLegend.Name = "flpLegend";
-        flpLegend.Padding = new Padding(20, 8, 20, 8);
-        flpLegend.Size = new Size(1100, 36);
+        flpLegend.Padding = new Padding(20, 0, 20, 0);
+        flpLegend.Size = new Size(1100, 38);
         flpLegend.TabIndex = 1;
         flpLegend.WrapContents = false;
         // 
@@ -188,12 +189,13 @@ partial class FrmOrderList
         lblLegendTitle.AutoSize = true;
         lblLegendTitle.Font = new Font("Segoe UI", 8.5F, FontStyle.Bold);
         lblLegendTitle.ForeColor = Color.FromArgb(148, 163, 184);
-        lblLegendTitle.Location = new Point(20, 8);
+        lblLegendTitle.Location = new Point(20, 0);
         lblLegendTitle.Margin = new Padding(0, 0, 16, 0);
         lblLegendTitle.Name = "lblLegendTitle";
-        lblLegendTitle.Size = new Size(67, 20);
+        lblLegendTitle.Size = new Size(67, 38);
         lblLegendTitle.TabIndex = 0;
         lblLegendTitle.Text = "STATUS:";
+        lblLegendTitle.TextAlign = ContentAlignment.MiddleLeft;
         // 
         // lblDotWashing
         // 
@@ -322,19 +324,19 @@ partial class FrmOrderList
         dgvOrders.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.Fill;
         dgvOrders.BackgroundColor = Color.White;
         dgvOrders.BorderStyle = BorderStyle.None;
-        dgvOrders.ColumnHeadersHeight = 42;
+        dgvOrders.ColumnHeadersHeight = 40;
         dgvOrders.ColumnHeadersHeightSizeMode = DataGridViewColumnHeadersHeightSizeMode.DisableResizing;
         dgvOrders.Dock = DockStyle.Fill;
         dgvOrders.EnableHeadersVisualStyles = false;
         dgvOrders.GridColor = Color.FromArgb(234, 224, 207);
-        dgvOrders.Location = new Point(0, 104);
+        dgvOrders.Location = new Point(0, 110);
         dgvOrders.MultiSelect = false;
         dgvOrders.Name = "dgvOrders";
         dgvOrders.ReadOnly = true;
         dgvOrders.RowHeadersVisible = false;
         dgvOrders.RowTemplate.Height = 40;
         dgvOrders.SelectionMode = DataGridViewSelectionMode.FullRowSelect;
-        dgvOrders.Size = new Size(1100, 576);
+        dgvOrders.Size = new Size(1100, 570);
         dgvOrders.TabIndex = 2;
         dgvOrders.CellDoubleClick += dgvOrders_CellDoubleClick;
         dgvOrders.CellFormatting += DgvOrders_CellFormatting;

@@ -14,11 +14,8 @@ public partial class FrmOrderList : Form
         InitializeComponent();
         UIThemeHelper.StyleStandardForm(this);
         DoubleBuffered = true;
-        pnlTopBar.BackColor = UIThemeHelper.Navy;
-        lblTitle.BackColor = UIThemeHelper.Navy;
 
-        UIThemeHelper.StyleDataGridView(dgvOrders, 42);
-        dgvOrders.RowTemplate.Height = 40;
+        UIThemeHelper.StyleDataGridView(dgvOrders, 40);
         UIThemeHelper.EnableStatusPills(dgvOrders);
         dtpFilter.Value = DateTime.Today;
         InitSearch();

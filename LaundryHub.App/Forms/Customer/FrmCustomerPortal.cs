@@ -15,7 +15,6 @@ public partial class FrmCustomerPortal : Form
     public FrmCustomerPortal()
     {
         InitializeComponent();
-        btnViewTicket.Visible = false;
         DoubleBuffered = true;
         ResizeRedraw = true;
 
@@ -49,10 +48,9 @@ public partial class FrmCustomerPortal : Form
         // Header Setup
         pnlHeader.Title = "My Laundry Portal";
         pnlHeader.Subtitle = "TRACK LAUNDRY PROGRESS & PICKUP STATUS";
-        txtSearch.Hint = "Search order number...";
+        txtSearch.Hint = "Search order number, service, or status...";
         txtSearch.TextChanged += (s, e) => FilterOrders();
-        pnlHeader.SearchBox.Visible = false;   // search now lives above the table
-
+        pnlHeader.SearchBox.Visible = false;   // search lives in the toolbar above the table
 
         if (SessionManager.CurrentUser != null)
         {
