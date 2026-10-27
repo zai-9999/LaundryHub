@@ -40,15 +40,14 @@ public partial class FrmAdminDashboard : Form
 
         pnlSidebar.AddSection("SYSTEM");
         pnlSidebar.AddNavButton("", "Refresh Dashboard", btnRefresh_Click);
-        pnlSidebar.AddNavButton("", "Logout", btnLogout_Click);
+        pnlSidebar.AddLogoutButton(btnLogout_Click);
 
         // Header Bar Setup
         pnlHeader.Title = "Platform Overview & Analytics";
         pnlHeader.Subtitle = "ALL ORDERS  ·  REAL-TIME WORKFLOW, PERFORMANCE & REVENUE MONITORING";
         pnlHeader.SearchBox.Hint = "Search order #, customer, status...";
         pnlHeader.SearchBox.TextChanged += txtSearch_TextChanged;
-        pnlHeader.ActionButton.Text = " Logout";
-        pnlHeader.ActionButton.Click += btnLogout_Click;
+
 
         if (SessionManager.CurrentUser != null)
         {

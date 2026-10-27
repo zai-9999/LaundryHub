@@ -133,6 +133,36 @@ public class ModernSidebar : System.Windows.Forms.Panel
         return btn;
     }
 
+    /// <summary>Adds a red Logout button pinned to the bottom of the sidebar.</summary>
+    public ReaLTaiizor.Controls.HopeButton AddLogoutButton(EventHandler onClick)
+    {
+        var pnl = new System.Windows.Forms.Panel
+        {
+            Dock = DockStyle.Bottom,
+            Height = 68,
+            BackColor = Color.Transparent,
+            Padding = new Padding(20, 14, 20, 14)
+        };
+
+        var btn = new ReaLTaiizor.Controls.HopeButton
+        {
+            Dock = DockStyle.Fill,
+            Font = new Font("Segoe UI", 10F, FontStyle.Bold),
+            ButtonType = ReaLTaiizor.Util.HopeButtonType.Primary,
+            PrimaryColor = UIThemeHelper.Danger,
+            BorderColor = UIThemeHelper.Danger,
+            TextColor = Color.White,
+            HoverTextColor = Color.White,
+            Text = "Logout",
+            Cursor = Cursors.Hand
+        };
+        btn.Click += onClick;
+
+        pnl.Controls.Add(btn);
+        Controls.Add(pnl);
+        return btn;
+    }
+
     /// <summary>Sets the specified button as active and deactivates all others.</summary>
     public void SetActive(NavButton? activeButton)
     {

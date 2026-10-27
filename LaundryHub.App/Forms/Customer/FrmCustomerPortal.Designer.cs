@@ -33,6 +33,17 @@ partial class FrmCustomerPortal
         lblOrdersTitle = new Label();
         chkActiveOnly = new CheckBox();
         btnViewTicket = new HopeButton();
+        txtSearch = new HopeTextBox();
+        txtSearch.Anchor = AnchorStyles.Right;
+        txtSearch.BaseColor = Color.FromArgb(248, 249, 252);
+        txtSearch.BorderColorA = UIThemeHelper.Indigo;
+        txtSearch.BorderColorB = Color.FromArgb(220, 224, 235);
+        txtSearch.Font = new Font("Segoe UI", 9.5F);
+        txtSearch.ForeColor = UIThemeHelper.Navy;
+        txtSearch.Margin = new Padding(0);
+        txtSearch.Name = "txtSearch";
+        txtSearch.Size = new Size(244, 36);
+        txtSearch.TabIndex = 3;
         tlpStats = new TableLayoutPanel();
         cardActive = new RoundedCard();
         lblActiveStat = new Label();
@@ -127,10 +138,10 @@ partial class FrmCustomerPortal
         tlpToolbar.ColumnCount = 3;
         tlpToolbar.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 50F));
         tlpToolbar.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 50F));
-        tlpToolbar.ColumnStyles.Add(new ColumnStyle(SizeType.Absolute, 220F));
+        tlpToolbar.ColumnStyles.Add(new ColumnStyle(SizeType.Absolute, 264F));
         tlpToolbar.Controls.Add(lblOrdersTitle, 0, 0);
         tlpToolbar.Controls.Add(chkActiveOnly, 1, 0);
-        tlpToolbar.Controls.Add(btnViewTicket, 2, 0);
+        tlpToolbar.Controls.Add(txtSearch, 2, 0);
         tlpToolbar.Dock = DockStyle.Top;
         tlpToolbar.Location = new Point(16, 12);
         tlpToolbar.Name = "tlpToolbar";
@@ -407,6 +418,7 @@ partial class FrmCustomerPortal
     private Label lblOrdersTitle;
     private CheckBox chkActiveOnly;
     private HopeButton btnViewTicket;
+    private HopeTextBox txtSearch;
     private TableLayoutPanel tlpStats;
     private RoundedCard cardActive;
     private Panel stripActive;

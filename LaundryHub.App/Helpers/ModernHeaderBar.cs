@@ -18,7 +18,6 @@ public class ModernHeaderBar : System.Windows.Forms.Panel
     private readonly Label _lblName;
     private readonly Label _lblRole;
     private readonly HopeTextBox _txtSearch;
-    private readonly HopeButton _btnAction;
 
     public ModernHeaderBar()
     {
@@ -37,14 +36,14 @@ public class ModernHeaderBar : System.Windows.Forms.Panel
         var pnlRight = new System.Windows.Forms.Panel
         {
             Dock = DockStyle.Right,
-            Width = 570,
+            Width = 460,
             BackColor = Color.Transparent
         };
 
         //  Right-side User Profile 
         _pnlUserProfile = new System.Windows.Forms.Panel
         {
-            Location = new Point(370, 4),
+            Location = new Point(260, 4),
             Size = new Size(196, 40),
             BackColor = Color.Transparent
         };
@@ -97,21 +96,6 @@ public class ModernHeaderBar : System.Windows.Forms.Panel
         _pnlUserProfile.Controls.Add(_lblRole);
         _pnlUserProfile.Controls.Add(_lblAvatar);
 
-        //  Action Button (e.g. Logout / Refresh) 
-        _btnAction = new HopeButton
-        {
-            Location = new Point(260, 6),
-            Size = new Size(96, 36),
-            Font = new Font("Segoe UI", 9F, FontStyle.Bold),
-            ButtonType = ReaLTaiizor.Util.HopeButtonType.Primary,
-            PrimaryColor = UIThemeHelper.Danger,
-            BorderColor = UIThemeHelper.Danger,
-            TextColor = Color.White,
-            HoverTextColor = Color.White,
-            Text = " Logout",
-            Cursor = Cursors.Hand
-        };
-
         //  Search Box 
         _txtSearch = new HopeTextBox
         {
@@ -126,7 +110,6 @@ public class ModernHeaderBar : System.Windows.Forms.Panel
         };
 
         pnlRight.Controls.Add(_pnlUserProfile);
-        pnlRight.Controls.Add(_btnAction);
         pnlRight.Controls.Add(_txtSearch);
 
         //  Left Side: Title & Subtitle 
@@ -195,7 +178,6 @@ public class ModernHeaderBar : System.Windows.Forms.Panel
     }
 
     public HopeTextBox SearchBox => _txtSearch;
-    public HopeButton ActionButton => _btnAction;
 
     private void UpdateAvatar(string name)
     {

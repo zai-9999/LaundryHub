@@ -38,15 +38,14 @@ public partial class FrmStaffDashboard : Form
 
         pnlSidebar.AddSection("SYSTEM");
         pnlSidebar.AddNavButton("", "Refresh Queue", btnRefresh_Click);
-        pnlSidebar.AddNavButton("", "Logout", btnLogout_Click);
+        pnlSidebar.AddLogoutButton(btnLogout_Click);
 
         // Header Setup
         pnlHeader.Title = "Laundry Operations & Order Hub";
         pnlHeader.Subtitle = "REAL-TIME SERVICE QUEUE, ORDERS & CUSTOMER INTAKE";
         pnlHeader.SearchBox.Hint = "Quick search orders...";
         pnlHeader.SearchBox.TextChanged += (s, e) => FilterOrders();
-        pnlHeader.ActionButton.Text = " Logout";
-        pnlHeader.ActionButton.Click += btnLogout_Click;
+
 
         if (SessionManager.CurrentUser != null)
         {

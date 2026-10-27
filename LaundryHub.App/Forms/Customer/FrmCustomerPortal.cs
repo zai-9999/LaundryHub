@@ -33,7 +33,6 @@ public partial class FrmCustomerPortal : Form
         pnlSidebar.AddSection("SERVICES");
 
         pnlSidebar.AddNavButton("", "My Profile & Info", btnProfile_Click);
-        pnlSidebar.AddNavButton("", "View Invoice", BtnViewTicket_Click);
         pnlSidebar.AddNavButton("", "Request Cancellation", BtnRequestCancel_Click);
 
         pnlSidebar.AddSection("SYSTEM");
@@ -45,14 +44,15 @@ public partial class FrmCustomerPortal : Form
                 await LoadOrdersAsync();
             }
         });
-        pnlSidebar.AddNavButton("", "Sign Out", btnLogout_Click);
+        pnlSidebar.AddLogoutButton(btnLogout_Click);
 
         // Header Setup
         pnlHeader.Title = "My Laundry Portal";
         pnlHeader.Subtitle = "TRACK LAUNDRY PROGRESS & PICKUP STATUS";
-        pnlHeader.SearchBox.Hint = "Search order number...";
-        pnlHeader.SearchBox.TextChanged += (s, e) => FilterOrders();
-        pnlHeader.ActionButton.Visible = false;
+        txtSearch.Hint = "Search order number...";
+        txtSearch.TextChanged += (s, e) => FilterOrders();
+        pnlHeader.SearchBox.Visible = false;   // search now lives above the table
+
 
         if (SessionManager.CurrentUser != null)
         {
@@ -159,7 +159,7 @@ public partial class FrmCustomerPortal : Form
             filtered = filtered.Where(o => o.Status is "Booked" or "Washing" or "Drying" or "Ready for Pickup");
         }
 
-        var query = pnlHeader.SearchBox.Text.Trim();
+        var query = txtSearch.Text.Trim();
         if (!string.IsNullOrWhiteSpace(query))
         {
             var q = query.ToLower();
