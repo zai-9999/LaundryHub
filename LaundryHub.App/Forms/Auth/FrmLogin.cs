@@ -75,8 +75,8 @@ public partial class FrmLogin : Form
             if (user == null || string.IsNullOrWhiteSpace(user.PasswordHash) || !BCrypt.Net.BCrypt.Verify(password, user.PasswordHash))
             {
                 ThrottleService.RegisterAttempt(key, limit, window, lockout);
-                txtPassword.Clear();
                 ShowError("Invalid username or password.");
+                txtPassword.Clear();
                 txtPassword.Focus();
                 return;
             }
@@ -95,8 +95,8 @@ public partial class FrmLogin : Form
             if (user.Role == UserRole.Customer.ToString())
             {
                 SessionManager.Logout();
-                txtPassword.Clear();
                 ShowError("This portal is for Staff & Admin only. Please use the Customer Portal.");
+                txtPassword.Clear();
                 return;
             }
 

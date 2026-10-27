@@ -11,9 +11,6 @@ public class Order
     public decimal TotalAmount { get; set; }
     public string Status { get; set; } = "Washing";
     public string? CancelReason { get; set; }
-    public string? CancelRequestStatus { get; set; }
-    public string? CancelRequestReason { get; set; }
-    public DateTime? CancelRequestedAt { get; set; }
     public bool PaymentRecorded { get; set; } = false;
     public decimal? AmountPaid { get; set; }
     public int? CreatedBy { get; set; }

@@ -70,8 +70,8 @@ public partial class FrmCustomerLogin : Form
             if (user == null || string.IsNullOrWhiteSpace(user.PasswordHash) || !BCrypt.Net.BCrypt.Verify(password, user.PasswordHash))
             {
                 ThrottleService.RegisterAttempt(key, limit, window, lockout);
-                txtPassword.Clear();
                 ShowError("Invalid username or password.");
+                txtPassword.Clear();
                 txtPassword.Focus();
                 return;
             }
@@ -88,8 +88,8 @@ public partial class FrmCustomerLogin : Form
             // Block Staff/Admin from using the Customer Portal
             if (user.Role != UserRole.Customer.ToString())
             {
-                txtPassword.Clear();
                 ShowError("This portal is for Customers only. Staff & Admin please use the main portal.");
+                txtPassword.Clear();
                 return;
             }
 
@@ -114,6 +114,12 @@ public partial class FrmCustomerLogin : Form
     private void btnSwitchToStaff_Click(object? sender, EventArgs e)
     {
         this.Close(); // Returns to the Staff/Admin login (which re-shows via FormClosed)
+    }
+
+    private void lnkForgotPassword_LinkClicked(object? sender, LinkLabelLinkClickedEventArgs e)
+    {
+        using var reset = new FrmPasswordReset();
+        reset.ShowDialog(this);
     }
 
     private void lnkForgotPassword_LinkClicked(object? sender, LinkLabelLinkClickedEventArgs e)
