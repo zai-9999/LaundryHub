@@ -19,8 +19,8 @@ public sealed class FrmCustomerInvoice : Form
 
     // LogicalWidth : LogicalHeight = 440 : ~480 – keep a nice aspect ratio
     // We display at 440 px wide inside the dialog.
-    private const int PreviewW = 440;
-    private const int PreviewH = 480;   // matches InvoicePreviewPanel.DesignH
+    private const int PreviewW = 520;
+    private const int PreviewH = 560;   // matches InvoicePreviewPanel.DesignH
 
     public FrmCustomerInvoice(Order order, CustomerModel? customer = null)
     {
