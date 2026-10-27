@@ -89,21 +89,25 @@ public static class AuthLayout
 
             // ---- header ----
             if (Find("picLogo") is PictureBox pic && pic.Image != null)
-                Full(pic, 64, 8);
+                Full(pic, 72, 14);                       // more room between logo and title
 
             if (Find("lblTitle") is Label title)
             {
+                title.AutoSize = false;                  // stops the label shrinking to the text and clipping the "y"
+                title.UseCompatibleTextRendering = true; // GDI+ text, no descender clipping
+                title.Padding = Padding.Empty;
                 title.Font = AppFonts.Make(26F, FontStyle.Bold);
                 title.ForeColor = UIThemeHelper.Indigo;
                 title.TextAlign = ContentAlignment.MiddleCenter;
-                Full(title, 46, 8);
+                Full(title, 60, 4);
             }
             if (Find("lblSubtitle") is Label sub)
             {
+                sub.AutoSize = false;
                 sub.Font = AppFonts.Make(10.5F);
                 sub.ForeColor = UIThemeHelper.TextMuted;
                 sub.TextAlign = ContentAlignment.MiddleCenter;
-                Full(sub, 26, 30);
+                Full(sub, 26, 32);                       // more room before "Username"
             }
 
             // ---- fields ----
@@ -126,7 +130,7 @@ public static class AuthLayout
                 toggle.Cursor = Cursors.Hand;
                 toggle.TabStop = false;
                 toggle.SetBounds(x + FieldWidth - 58, passTop, 58, 44);
-                toggle.Text = pass is TextBox or Control ? (IsMasked(pass) ? "Show" : "Hide") : "Show";
+                toggle.Text = "";
             }
 
             if (Find("lnkForgotPassword") is LinkLabel forgot)
@@ -166,8 +170,6 @@ public static class AuthLayout
 
             Outlined(Find("btnRegister"));
             Outlined(Find("btnSwitchToCustomer"));
-            Ghost(Find("btnPricing"));
-            Ghost(Find("btnGuestLookup"));
             Ghost(Find("btnSwitchToStaff"));
 
             // ---- size the card to its content and keep it centred ----

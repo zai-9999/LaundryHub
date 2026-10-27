@@ -231,7 +231,7 @@ partial class FrmCustomerRegister
         lblEmail.Name = "lblEmail";
         lblEmail.Size = new Size(160, 20);
         lblEmail.TabIndex = 8;
-        lblEmail.Text = "Email (optional)";
+        lblEmail.Text = "Email *";
         // 
         // txtEmail
         // 

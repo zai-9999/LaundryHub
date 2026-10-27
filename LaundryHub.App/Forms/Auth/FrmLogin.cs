@@ -12,6 +12,7 @@ public partial class FrmLogin : Form
         DoubleBuffered = true;
         ResizeRedraw = true;
         UIThemeHelper.StyleAuthForm(this, pnlCard, btnLogin, btnSwitchToCustomer);
+        EyeToggle.Attach(btnTogglePassword, () => !txtPassword.UseSystemPasswordChar);
         UIThemeHelper.LoadAuthLogo(picLogo);
         CenterCardContents();
         pnlCard.SizeChanged += (_, _) => CenterCardContents();
@@ -127,7 +128,7 @@ public partial class FrmLogin : Form
         bool hide = !txtPassword.UseSystemPasswordChar;
         txtPassword.UseSystemPasswordChar = hide;
         txtPassword.PasswordChar = '\0';
-        btnTogglePassword.Text = hide ? "Show" : "Hide";
+        btnTogglePassword.Invalidate();
     }
 
     private void OpenDashboard()

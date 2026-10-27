@@ -11,7 +11,9 @@ public partial class FrmCustomerLogin : Form
         InitializeComponent();
         DoubleBuffered = true;
         ResizeRedraw = true;
-        UIThemeHelper.StyleAuthForm(this, pnlCard, btnLogin, btnRegister, btnPricing, btnGuestLookup, btnSwitchToStaff);
+        UIThemeHelper.StyleAuthForm(this, pnlCard, btnLogin, btnRegister, btnSwitchToStaff);
+        EyeToggle.Attach(btnTogglePassword, () => !txtPassword.UseSystemPasswordChar);
+        UIThemeHelper.LoadAuthLogo(picLogo);
         CenterCardContents();
         pnlCard.SizeChanged += (_, _) => CenterCardContents();
         txtUsername.TextChanged += (_, _) => lblError.Visible = false;
@@ -100,15 +102,6 @@ public partial class FrmCustomerLogin : Form
         }
     }
 
-    private void btnGuestLookup_Click(object? sender, EventArgs e)
-    {
-        var guestForm = new Guest.FrmGuestLookup();
-        guestForm.FormClosed += (_, _) => this.Show();
-        guestForm.WindowState = this.WindowState;
-        guestForm.Show();
-        this.Hide();
-    }
-
     private void btnRegister_Click(object? sender, EventArgs e)
     {
         var regForm = new Customer.FrmCustomerRegister();
@@ -116,12 +109,6 @@ public partial class FrmCustomerLogin : Form
         regForm.WindowState = this.WindowState;
         regForm.Show();
         this.Hide();
-    }
-
-    private void btnPricing_Click(object? sender, EventArgs e)
-    {
-        var pricing = new Guest.FrmGuestPricing();
-        pricing.ShowDialog(this);
     }
 
     private void btnSwitchToStaff_Click(object? sender, EventArgs e)
@@ -194,7 +181,7 @@ public partial class FrmCustomerLogin : Form
         bool hide = !txtPassword.UseSystemPasswordChar;
         txtPassword.UseSystemPasswordChar = hide;
         txtPassword.PasswordChar = '\0';
-        btnTogglePassword.Text = hide ? "Show" : "Hide";
+        btnTogglePassword.Invalidate();
     }
 
     private void pnlCard_Paint(object sender, PaintEventArgs e)

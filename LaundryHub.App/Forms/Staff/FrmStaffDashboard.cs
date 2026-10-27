@@ -1,4 +1,4 @@
-﻿using LaundryHub.App.Helpers;
+using LaundryHub.App.Helpers;
 using LaundryHub.Core.Models;
 using System.ComponentModel;
 using System.Drawing.Drawing2D;
@@ -226,7 +226,7 @@ public partial class FrmStaffDashboard : Form
 
     private async void StatusMenu_ItemClicked(object? sender, ToolStripItemClickedEventArgs e)
     {
-        if (_selectedOrderId < 0 || e.ClickedItem.Tag is not string nextStatus) return;
+        if (_selectedOrderId < 0 || e.ClickedItem?.Tag is not string nextStatus) return;
 
         try
         {

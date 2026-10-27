@@ -1,4 +1,4 @@
-﻿using ReaLTaiizor.Controls;
+using ReaLTaiizor.Controls;
 using System.Globalization;
 using System.Text.RegularExpressions;
 
@@ -10,9 +10,10 @@ public static class InputValidator
     public const int MaxPasswordLength = 100;
 
     public const string PhoneError =
-        "Phone number must be 7 to 15 digits (numbers only, optional leading +).";
+        "Phone number must be exactly 11 digits and start with 09 (numbers only, no letters or symbols).";
+    public const int PhoneLength = 11;
+    private static readonly Regex PhonePattern = new(@"^09[0-9]{9}$", RegexOptions.Compiled);
 
-    private static readonly Regex PhonePattern = new(@"^\+?[0-9]{7,15}$", RegexOptions.Compiled);
     private static readonly Regex EmailPattern = new(@"^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?(?:\.[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?)+$", RegexOptions.Compiled);
     private static readonly Regex UsernamePattern = new(@"^[a-zA-Z0-9._-]{3,30}$", RegexOptions.Compiled);
     private static readonly Regex NamePattern = new(@"^[a-zA-Z\u00C0-\u024F\s\.\-']{2,100}$", RegexOptions.Compiled);
@@ -196,27 +197,35 @@ public static class InputValidator
         return true;
     }
 
-    /// <summary>Standard WinForms TextBox overload for phone numbers.</summary>
+    /// <summary>Standard WinForms TextBox overload for phone numbers (digits only, 11 max).</summary>
     public static void RestrictToPhoneInput(TextBox box)
     {
-        box.MaxLength = 16;
+        box.MaxLength = PhoneLength;
         box.KeyPress += (_, e) =>
         {
             if (char.IsControl(e.KeyChar) || e.KeyChar is >= '0' and <= '9') return;
-            if (e.KeyChar == '+' && box.SelectionStart == 0 && !box.Text.Contains('+')) return;
             e.Handled = true;
+        };
+        box.TextChanged += (_, _) =>
+        {
+            var digits = new string(box.Text.Where(char.IsAsciiDigit).Take(PhoneLength).ToArray());
+            if (digits != box.Text) { box.Text = digits; box.SelectionStart = digits.Length; }
         };
     }
 
-    /// <summary>ReaLTaiizor HopeTextBox overload for phone numbers.</summary>
+    /// <summary>ReaLTaiizor HopeTextBox overload for phone numbers (digits only, 11 max).</summary>
     public static void RestrictToPhoneInput(HopeTextBox box)
     {
-        box.MaxLength = 16;
+        box.MaxLength = PhoneLength;
         box.KeyPress += (_, e) =>
         {
             if (char.IsControl(e.KeyChar) || e.KeyChar is >= '0' and <= '9') return;
-            if (e.KeyChar == '+' && box.SelectionStart == 0 && !box.Text.Contains('+')) return;
             e.Handled = true;
+        };
+        box.TextChanged += (_, _) =>
+        {
+            var digits = new string(box.Text.Where(char.IsAsciiDigit).Take(PhoneLength).ToArray());
+            if (digits != box.Text) { box.Text = digits; box.SelectionStart = digits.Length; }
         };
     }
 
