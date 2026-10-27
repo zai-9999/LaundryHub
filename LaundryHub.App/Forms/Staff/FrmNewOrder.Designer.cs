@@ -331,7 +331,7 @@ partial class FrmNewOrder
         btnSave.Name = "btnSave";
         btnSave.Size = new Size(440, 42);
         btnSave.TabIndex = 19;
-        btnSave.Text = "Save Order & Generate QR Ticket";
+        btnSave.Text = "Save Order & View Invoice";
         btnSave.Click += btnSave_Click;
         // 
         // btnCancel

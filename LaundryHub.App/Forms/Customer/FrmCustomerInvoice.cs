@@ -32,7 +32,7 @@ public partial class FrmCustomerInvoice : Form
     private void InitializeComponent()
     {
         Text = $"Invoice — {_order.OrderNumber}";
-        ClientSize = new Size(500, 710);
+        ClientSize = new Size(500, 510);
         StartPosition = FormStartPosition.CenterParent;
         FormBorderStyle = FormBorderStyle.FixedDialog;
         MaximizeBox = false;
@@ -219,15 +219,9 @@ public partial class FrmCustomerInvoice : Form
         var pnlDetails = BuildDetailsCard(cardW);
         pnlDetails.Location = new Point(16, y);
         pnlBody.Controls.Add(pnlDetails);
-        y += pnlDetails.Height + 10;
+        y += pnlDetails.Height + 14;
 
-        // Card B: Pickup QR Code Card
-        var pnlQr = BuildQrCard(cardW);
-        pnlQr.Location = new Point(16, y);
-        pnlBody.Controls.Add(pnlQr);
-        y += pnlQr.Height + 10;
-
-        // Card C: Total & Payment Summary
+        // Card B: Total & Payment Summary
         var pnlTotal = BuildTotalCard(cardW);
         pnlTotal.Location = new Point(16, y);
         pnlBody.Controls.Add(pnlTotal);
@@ -334,50 +328,6 @@ public partial class FrmCustomerInvoice : Form
         return card;
     }
 
-    private Panel BuildQrCard(int width)
-    {
-        var card = new Panel
-        {
-            Width = width,
-            Height = 175,
-            BackColor = Color.White
-        };
-
-        var pbQr = new PictureBox
-        {
-            Size = new Size(116, 116),
-            Location = new Point((width - 116) / 2, 12),
-            SizeMode = PictureBoxSizeMode.Zoom,
-            BackColor = Color.White
-        };
-
-        try
-        {
-            pbQr.Image = QrCodeHelper.GenerateQrCode(_order.OrderNumber);
-        }
-        catch { }
-
-        var lblCaption = new Label
-        {
-            Text = "Present this QR code or order number at the counter for pickup.",
-            Font = new Font("Segoe UI", 8.5f, FontStyle.Regular),
-            ForeColor = UIThemeHelper.TextMuted,
-            TextAlign = ContentAlignment.MiddleCenter,
-            Location = new Point(16, 136),
-            Size = new Size(width - 32, 26)
-        };
-
-        card.Controls.AddRange(new Control[] { pbQr, lblCaption });
-        card.Paint += (s, e) =>
-        {
-            using var pen = new Pen(UIThemeHelper.Border, 1f);
-            using var path = UIThemeHelper.CreateRoundedRectangle(new Rectangle(0, 0, card.Width - 1, card.Height - 1), 8);
-            e.Graphics.SmoothingMode = SmoothingMode.AntiAlias;
-            e.Graphics.DrawPath(pen, path);
-        };
-
-        return card;
-    }
 
     private Panel BuildTotalCard(int width)
     {
