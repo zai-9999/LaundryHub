@@ -128,6 +128,15 @@ public class OrderRepository : IOrderRepository
         }
     }
 
+    private static bool IsValidTransition(string? from, string to) => (from, to) switch
+    {
+        ("Washing", "Drying") => true,
+        ("Drying", "Ready for Pickup") => true,
+        ("Ready for Pickup", "Claimed") => true,
+        ("Booked" or "Washing" or "Drying", "Cancelled") => true,
+        _ => false
+    };
+
     public bool ConfirmDropOff(int orderId)
     {
         using var conn = _db.CreateConnection();
@@ -164,6 +173,9 @@ public class OrderRepository : IOrderRepository
             if (newStatus == "Cancelled" && oldStatus is not ("Booked" or "Washing" or "Drying"))
                 throw new InvalidOperationException(
                     $"An order that is '{oldStatus}' can no longer be cancelled.");
+
+            if (!IsValidTransition(oldStatus, newStatus))
+                throw new InvalidOperationException($"An order cannot move from '{oldStatus}' to '{newStatus}'.");
 
             conn.Execute(@"
                 UPDATE orders
@@ -217,6 +229,15 @@ public class OrderRepository : IOrderRepository
                 "SELECT status FROM orders WHERE order_id = @OrderId FOR UPDATE",
                 new { OrderId = orderId }, transaction: tran);
 
+            if (oldStatus != "Ready for Pickup")
+                throw new InvalidOperationException($"Only orders that are Ready for Pickup can be claimed (this one is '{oldStatus}').");
+
+            var total = conn.ExecuteScalar<decimal>(
+                "SELECT total_amount FROM orders WHERE order_id = @OrderId",
+                new { OrderId = orderId }, transaction: tran);
+            if (amountPaid < total)
+                throw new InvalidOperationException("Payment is less than the total due.");
+
             conn.Execute(@"
                 UPDATE orders
                 SET status = 'Claimed',
@@ -247,6 +268,79 @@ public class OrderRepository : IOrderRepository
         }
     }
 
+    public bool RequestCancellation(int orderId, int customerId, string reason)
+    {
+        using var conn = _db.CreateConnection();
+        return conn.Execute(@"
+            UPDATE orders
+            SET cancel_request_status = 'Pending',
+                cancel_request_reason = @Reason,
+                cancel_requested_at = NOW(),
+                updated_at = NOW()
+            WHERE order_id = @OrderId
+              AND customer_id = @CustomerId
+              AND status IN ('Booked', 'Washing')
+              AND (cancel_request_status IS NULL OR cancel_request_status = 'Rejected')",
+            new { OrderId = orderId, CustomerId = customerId, Reason = reason }) > 0;
+    }
+
+    public bool ApproveCancellationRequest(int orderId, int? changedBy = null)
+    {
+        using var conn = _db.CreateConnection();
+        if (conn.State != System.Data.ConnectionState.Open) conn.Open();
+        using var tran = conn.BeginTransaction();
+        try
+        {
+            var row = conn.QueryFirstOrDefault<(string Status, string? Request, string? Reason)>(@"
+                SELECT status, cancel_request_status, cancel_request_reason
+                FROM orders WHERE order_id = @OrderId FOR UPDATE",
+                new { OrderId = orderId }, transaction: tran);
+
+            if (row.Request != "Pending" || !IsValidTransition(row.Status, "Cancelled"))
+            {
+                tran.Rollback();
+                return false;
+            }
+
+            conn.Execute(@"
+                UPDATE orders
+                SET status = 'Cancelled',
+                    cancel_reason = @Reason,
+                    cancel_request_status = 'Approved',
+                    updated_at = NOW()
+                WHERE order_id = @OrderId",
+                new { OrderId = orderId, Reason = row.Reason }, transaction: tran);
+
+            conn.Execute(@"
+                INSERT INTO order_status_log (order_id, old_status, new_status, changed_by, notes)
+                VALUES (@OrderId, @OldStatus, 'Cancelled', @ChangedBy, @Notes)",
+                new
+                {
+                    OrderId = orderId,
+                    OldStatus = row.Status,
+                    ChangedBy = changedBy,
+                    Notes = "Customer cancellation request approved: " + row.Reason
+                }, transaction: tran);
+
+            tran.Commit();
+            return true;
+        }
+        catch
+        {
+            tran.Rollback();
+            throw;
+        }
+    }
+
+    public bool RejectCancellationRequest(int orderId, int? changedBy = null)
+    {
+        using var conn = _db.CreateConnection();
+        return conn.Execute(@"
+            UPDATE orders
+            SET cancel_request_status = 'Rejected', updated_at = NOW()
+            WHERE order_id = @OrderId AND cancel_request_status = 'Pending'",
+            new { OrderId = orderId }) > 0;
+    }
     public void Archive(int orderId)
     {
         using var conn = _db.CreateConnection();
@@ -270,20 +364,38 @@ public class OrderRepository : IOrderRepository
     public DailyReport GetDailyReport(DateTime date)
     {
         using var conn = _db.CreateConnection();
+
+        // Orders created on this date (this is the list shown in the grid)
         var orders = conn.Query<Order>($@"
-            {SelectJoined}
-            WHERE DATE(o.created_at) = @Date AND o.is_archived = FALSE
-            ORDER BY o.created_at DESC",
+        {SelectJoined}
+        WHERE DATE(o.created_at) = @Date AND o.is_archived = FALSE
+        ORDER BY o.created_at DESC",
             new { Date = date.Date }).ToList();
+
+        // Pending = every unfinished order, whatever day it was created
+        var pending = conn.ExecuteScalar<int>(@"
+        SELECT COUNT(1) FROM orders
+        WHERE is_archived = FALSE
+          AND status IN ('Washing', 'Drying', 'Ready for Pickup')");
+
+        // Sales = money collected on this date (claimed and paid that day),
+        // using the order total, not the cash handed over
+        var sales = conn.ExecuteScalar<decimal>(@"
+        SELECT COALESCE(SUM(total_amount), 0) FROM orders
+        WHERE is_archived = FALSE
+          AND status = 'Claimed'
+          AND payment_recorded = TRUE
+          AND DATE(claimed_at) = @Date",
+            new { Date = date.Date });
 
         return new DailyReport
         {
             ReportDate = date.Date,
             TotalOrders = orders.Count,
-            PendingOrders = orders.Count(o => o.Status is "Washing" or "Drying" or "Ready for Pickup"),
+            PendingOrders = pending,
             ClaimedOrders = orders.Count(o => o.Status == "Claimed"),
             CancelledOrders = orders.Count(o => o.Status == "Cancelled"),
-            TotalSales = orders.Where(o => o.Status == "Claimed").Sum(o => o.TotalAmount),
+            TotalSales = sales,
             Orders = orders
         };
     }
