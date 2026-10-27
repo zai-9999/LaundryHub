@@ -38,7 +38,7 @@ public partial class FrmOrderDetail : Form
         this.Text = $"Order Details – {_order.OrderNumber}";
         lblOrderNumber.Text = $"🧾 {_order.OrderNumber}";
         lblCustomerInfo.Text = $"{_customer?.FullName ?? _order.CustomerName} ({_customer?.Phone ?? _order.CustomerPhone})";
-        lblServiceInfo.Text = _order.ServiceName ?? "Standard Laundry";
+        lblServiceInfo.Text = $"{_order.ServiceName ?? "Standard Laundry"} — {_order.LaundryCategory}";
         lblWeightInfo.Text = $"{_order.WeightKg:F2} kg";
         lblTotalAmount.Text = $"₱{_order.TotalAmount:N2}";
 
@@ -183,17 +183,12 @@ public partial class FrmOrderDetail : Form
 
     private void btnEditWeight_Click(object? sender, EventArgs e)
     {
-        var service = AppServices.ServiceTypes.GetById(_order.ServiceId);
-        if (service == null)
-        {
-            MessageBox.Show("The service pricing could not be found.", "Unable to Update Weight", MessageBoxButtons.OK, MessageBoxIcon.Warning);
-            return;
-        }
+        var loadPrices = AppServices.LoadPricing.GetAll().ToList();
 
         using var dlg = new Form
         {
             Text = $"Confirm Actual Weight – {_order.OrderNumber}",
-            Size = new Size(410, 300),
+            Size = new Size(410, 340),
             StartPosition = FormStartPosition.CenterParent,
             BackColor = Color.FromArgb(15, 23, 42),
             ForeColor = Color.White,
@@ -220,15 +215,15 @@ public partial class FrmOrderDetail : Form
         };
         var lblTotal = new Label
         {
-            Location = new Point(30, 100),
-            Size = new Size(340, 45),
+            Location = new Point(30, 95),
+            Size = new Size(340, 65),
             Font = new Font("Segoe UI", 10, FontStyle.Bold),
             ForeColor = Color.FromArgb(52, 211, 153)
         };
         var btnConfirm = new Button
         {
             Text = "✔ Save Confirmed Weight",
-            Location = new Point(30, 165),
+            Location = new Point(30, 180),
             Size = new Size(340, 38),
             BackColor = Color.FromArgb(37, 99, 235),
             ForeColor = Color.White,
@@ -239,14 +234,20 @@ public partial class FrmOrderDetail : Form
 
         decimal? GetWeight()
         {
-            return decimal.TryParse(txtWeight.Text, out var weight) && weight > 0 ? weight : null;
+            return decimal.TryParse(txtWeight.Text, out var weight) &&
+                   weight > 0 && weight <= 100 && decimal.Round(weight, 2) == weight
+                ? weight
+                : null;
         }
 
         void UpdatePreview()
         {
             var weight = GetWeight();
-            lblTotal.Text = weight.HasValue
-                ? $"New total: ₱{service.ComputePrice(weight.Value):N2} (minimum {service.MinimumWeight:N2} kg)"
+            var quote = weight.HasValue
+                ? LoadPricingCalculator.Calculate(_order.LaundryCategory, weight.Value, loadPrices)
+                : null;
+            lblTotal.Text = quote != null
+                ? $"New total: ₱{quote.Total:N2}\n{quote.GetBreakdown()}"
                 : "Enter a Valid Weight.";
             lblTotal.ForeColor = weight.HasValue ? Color.FromArgb(52, 211, 153) : Color.FromArgb(248, 113, 113);
         }
@@ -257,11 +258,12 @@ public partial class FrmOrderDetail : Form
             var weight = GetWeight();
             if (!weight.HasValue)
             {
-                MessageBox.Show("Please enter a valid weight greater than zero.", "Invalid Weight", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                MessageBox.Show("Please enter a weight from 0.01 to 100 kg, using up to two decimal places.",
+                    "Invalid Weight", MessageBoxButtons.OK, MessageBoxIcon.Warning);
                 return;
             }
 
-            var total = service.ComputePrice(weight.Value);
+            var total = LoadPricingCalculator.Calculate(_order.LaundryCategory, weight.Value, loadPrices).Total;
             if (!AppServices.Orders.UpdateConfirmedWeight(_order.OrderId, weight.Value, total))
             {
                 MessageBox.Show("The weight was not updated. The order may already be paid, claimed, or cancelled.",
@@ -446,7 +448,7 @@ public partial class FrmOrderDetail : Form
                 ev.Graphics?.DrawString(AppServices.ShopName, fontTitle, Brushes.Black, 60, 40);
                 ev.Graphics?.DrawString($"Order E-Ticket: {_order.OrderNumber}", fontSub, Brushes.Black, 60, 75);
                 ev.Graphics?.DrawString($"Customer: {_order.CustomerName}", fontSub, Brushes.Black, 60, 95);
-                ev.Graphics?.DrawString($"Service: {_order.ServiceName} | {_order.WeightKg} kg", fontSub, Brushes.Black, 60, 115);
+                ev.Graphics?.DrawString($"Service: {_order.ServiceName} — {_order.LaundryCategory} | {_order.WeightKg} kg", fontSub, Brushes.Black, 60, 115);
                 ev.Graphics?.DrawString($"Amount Due: ₱{_order.TotalAmount:N2}", fontSub, Brushes.Black, 60, 135);
                 if (picQrCode.Image != null)
                 {

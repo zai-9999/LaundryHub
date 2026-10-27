@@ -8,6 +8,7 @@ public partial class FrmNewOrder : Form
 {
     private CustomerModel? _selectedCustomer;
     private List<ServiceType> _services = new();
+    private List<LoadPrice> _loadPrices = new();
 
     public FrmNewOrder()
     {
@@ -15,6 +16,7 @@ public partial class FrmNewOrder : Form
         dtpPickup.MinDate = DateTime.Today;
         dtpPickup.Value = DateTime.Today.AddDays(1);
         LoadServices();
+        LoadLoadPrices();
     }
 
     private void btnCancel_Click(object? sender, EventArgs e)
@@ -29,6 +31,17 @@ public partial class FrmNewOrder : Form
         cmbService.DisplayMember = "ServiceName";
         cmbService.ValueMember = "ServiceId";
         cmbService.SelectedIndex = -1;
+    }
+
+    private void LoadLoadPrices()
+    {
+        _loadPrices = AppServices.LoadPricing.GetAll().ToList();
+        cmbCategory.DataSource = new[]
+        {
+            LoadPricingCalculator.ClothesCategory,
+            LoadPricingCalculator.HouseholdTextilesCategory
+        };
+        cmbCategory.SelectedIndex = -1;
     }
 
     private void txtSearch_TextChanged(object? sender, EventArgs e)
@@ -69,16 +82,28 @@ public partial class FrmNewOrder : Form
 
     private void ComputePrice()
     {
-        if (cmbService.SelectedItem is not ServiceType svc) return;
-        if (!decimal.TryParse(txtWeight.Text, out decimal kg) || kg <= 0) return;
+        if (cmbService.SelectedItem is not ServiceType ||
+            cmbCategory.SelectedItem is not string category ||
+            !decimal.TryParse(txtWeight.Text, out decimal kg) || kg <= 0)
+        {
+            lblPrice.Text = "₱0.00";
+            lblPriceBreakdown.Text = "Select a category, service, and weight to compute.";
+            return;
+        }
 
-        decimal total = svc.ComputePrice(kg);
-        lblPrice.Text = $"₱{total:N2}";
-        lblPriceBreakdown.Text =
-            $"Rate: ₱{svc.PricePerKilo}/kg  |  Min: {svc.MinimumWeight} kg  " +
-            $"|  Billed: {Math.Max(kg, svc.MinimumWeight)} kg";
+        if (kg > 100)
+        {
+            lblPrice.Text = "—";
+            lblPriceBreakdown.Text = "Weight seems too high. Please verify.";
+            return;
+        }
+
+        var quote = LoadPricingCalculator.Calculate(category, kg, _loadPrices);
+        lblPrice.Text = $"₱{quote.Total:N2}";
+        lblPriceBreakdown.Text = $"{quote.GetBreakdown()}  |  {kg:N2} kg";
     }
 
+    private void cmbCategory_SelectedIndexChanged(object? sender, EventArgs e) => ComputePrice();
     private void cmbService_SelectedIndexChanged(object? sender, EventArgs e) => ComputePrice();
     private void txtWeight_TextChanged(object? sender, EventArgs e) => ComputePrice();
 
@@ -87,14 +112,16 @@ public partial class FrmNewOrder : Form
         if (!ValidateOrder()) return;
 
         var svc = (ServiceType)cmbService.SelectedItem!;
+        var category = (string)cmbCategory.SelectedItem!;
         var kg = decimal.Parse(txtWeight.Text);
-        var total = svc.ComputePrice(kg);
+        var total = LoadPricingCalculator.Calculate(category, kg, _loadPrices).Total;
 
-            var order = new Order
+        var order = new Order
         {
             OrderNumber = AppServices.Orders.GenerateOrderNumber(),
             CustomerId = _selectedCustomer!.CustomerId,
             ServiceId = svc.ServiceId,
+            LaundryCategory = category,
             WeightKg = kg,
             TotalAmount = total,
             Status = "Booked",
@@ -141,7 +168,7 @@ public partial class FrmNewOrder : Form
         };
         var info = new Label
         {
-            Text = $"{order.OrderNumber}\n{_selectedCustomer!.FullName}\n{order.ServiceName}  |  {order.WeightKg} kg\n₱{order.TotalAmount:N2}  |  {order.PickupDate:MMM dd, yyyy}",
+            Text = $"{order.OrderNumber}\n{_selectedCustomer!.FullName}\n{order.ServiceName} — {order.LaundryCategory}  |  {order.WeightKg} kg\n₱{order.TotalAmount:N2}  |  {order.PickupDate:MMM dd, yyyy}",
             ForeColor = Color.White,
             Font = new Font("Segoe UI", 9.5f),
             Location = new Point(20, 255),
@@ -180,8 +207,11 @@ public partial class FrmNewOrder : Form
         if (cmbService.SelectedItem == null)
         { ShowErr("Please select a service type."); return false; }
 
-        if (!decimal.TryParse(txtWeight.Text, out decimal kg) || kg <= 0)
-        { ShowErr("Please enter a valid weight (kg)."); return false; }
+        if (cmbCategory.SelectedItem is not string)
+        { ShowErr("Please select a laundry category."); return false; }
+
+        if (!decimal.TryParse(txtWeight.Text, out decimal kg) || kg <= 0 || decimal.Round(kg, 2) != kg)
+        { ShowErr("Enter a valid weight up to two decimal places."); return false; }
 
         if (kg > 100)
         { ShowErr("Weight seems too high. Please verify."); return false; }

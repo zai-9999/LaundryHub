@@ -7,6 +7,7 @@
 -- Drop existing tables (for clean re-run during dev)
 DROP TABLE IF EXISTS order_status_log CASCADE;
 DROP TABLE IF EXISTS orders CASCADE;
+DROP TABLE IF EXISTS load_prices CASCADE;
 DROP TABLE IF EXISTS service_types CASCADE;
 DROP TABLE IF EXISTS customers CASCADE;
 DROP TABLE IF EXISTS users CASCADE;
@@ -52,6 +53,19 @@ CREATE TABLE service_types (
 );
 
 -- ─────────────────────────────────────────────
+-- LOAD PRICES (fixed maximum load sizes)
+-- ─────────────────────────────────────────────
+CREATE TABLE load_prices (
+    category      VARCHAR(40)  NOT NULL
+                  CHECK (category IN ('Clothes','Bedsheets/Towels/Blankets')),
+    load_size     VARCHAR(10)  NOT NULL
+                  CHECK (load_size IN ('SMALL','MEDIUM','LARGE')),
+    max_weight_kg NUMERIC(5,2) NOT NULL CHECK (max_weight_kg > 0),
+    price         NUMERIC(10,2) NOT NULL CHECK (price > 0),
+    PRIMARY KEY (category, load_size)
+);
+
+-- ─────────────────────────────────────────────
 -- ORDERS
 -- ─────────────────────────────────────────────
 CREATE TABLE orders (
@@ -59,6 +73,8 @@ CREATE TABLE orders (
     order_number     VARCHAR(25)   UNIQUE NOT NULL,  -- e.g. LH-20261011-001
     customer_id      INT           NOT NULL REFERENCES customers(customer_id),
     service_id       INT           NOT NULL REFERENCES service_types(service_id),
+    laundry_category VARCHAR(40)   NOT NULL DEFAULT 'Clothes'
+                     CHECK (laundry_category IN ('Clothes','Bedsheets/Towels/Blankets')),
     weight_kg        NUMERIC(6,2)  NOT NULL CHECK (weight_kg > 0),
     total_amount     NUMERIC(10,2) NOT NULL,
     status           VARCHAR(30)   NOT NULL DEFAULT 'Washing'
@@ -118,3 +134,11 @@ INSERT INTO service_types (service_name, price_per_kilo, minimum_weight) VALUES
     ('Wash Only',    45.00, 4.0),
     ('Dry Only',     40.00, 4.0),
     ('Fold Only',    20.00, 1.0);
+
+INSERT INTO load_prices (category, load_size, max_weight_kg, price) VALUES
+    ('Clothes', 'SMALL', 5.00, 330.00),
+    ('Clothes', 'MEDIUM', 8.00, 440.00),
+    ('Clothes', 'LARGE', 15.00, 550.00),
+    ('Bedsheets/Towels/Blankets', 'SMALL', 3.00, 440.00),
+    ('Bedsheets/Towels/Blankets', 'MEDIUM', 5.00, 650.00),
+    ('Bedsheets/Towels/Blankets', 'LARGE', 9.00, 1120.00);

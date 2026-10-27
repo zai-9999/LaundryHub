@@ -5,150 +5,100 @@ namespace LaundryHub.App.Forms.Admin;
 
 public partial class FrmServicePricing : Form
 {
-    private ServiceType? _selectedService;
-    private int _editingServiceId = 0;
+    private List<LoadPrice> _prices = new();
 
     public FrmServicePricing()
     {
         InitializeComponent();
-        LoadServices();
-    }
 
-    private void btnClose_Click(object? sender, EventArgs e) => this.Close();
-
-    private void btnClear_Click(object? sender, EventArgs e) => ResetForm();
-
-    private void LoadServices()
-    {
-        var services = AppServices.ServiceTypes.GetAll(activeOnly: false).ToList();
-        dgvServices.DataSource = services.Select(s => new
+        if (!SessionManager.IsAdmin)
         {
-            s.ServiceId,
-            Service = s.ServiceName,
-            Rate = $"₱{s.PricePerKilo:N2} / kg",
-            Min_Weight = $"{s.MinimumWeight:F1} kg",
-            Status = s.IsActive ? "Active" : "Disabled"
-        }).ToList();
-
-        if (dgvServices.Columns["ServiceId"] != null)
-            dgvServices.Columns["ServiceId"].Visible = false;
-    }
-
-    private void dgvServices_SelectionChanged(object? sender, EventArgs e)
-    {
-        if (dgvServices.SelectedRows.Count == 0) return;
-        var row = dgvServices.SelectedRows[0];
-        if (row.Cells["ServiceId"].Value is int id)
-        {
-            _selectedService = AppServices.ServiceTypes.GetById(id);
-            if (_selectedService != null)
+            Enabled = false;
+            Shown += (_, _) =>
             {
-                _editingServiceId = _selectedService.ServiceId;
-                lblFormTitle.Text = $"✏ Edit Service #{_selectedService.ServiceId}";
-                btnSave.Text = "✔ Update Rate";
-                txtServiceName.Text = _selectedService.ServiceName;
-                txtPricePerKilo.Text = _selectedService.PricePerKilo.ToString("F2");
-                txtMinWeight.Text = _selectedService.MinimumWeight.ToString("F1");
-                chkActive.Checked = _selectedService.IsActive;
-                lblError.Visible = false;
-            }
-        }
-    }
-
-    private void btnSave_Click(object? sender, EventArgs e)
-    {
-        if (!ValidateForm()) return;
-
-        var name = txtServiceName.Text.Trim();
-        var price = decimal.Parse(txtPricePerKilo.Text.Trim());
-        var minWeight = decimal.Parse(txtMinWeight.Text.Trim());
-
-        if (_editingServiceId > 0 && _selectedService != null)
-        {
-            _selectedService.ServiceName = name;
-            _selectedService.PricePerKilo = price;
-            _selectedService.MinimumWeight = minWeight;
-            _selectedService.IsActive = chkActive.Checked;
-
-            AppServices.ServiceTypes.Update(_selectedService);
-            MessageBox.Show("Service type updated successfully!", "Success", MessageBoxButtons.OK, MessageBoxIcon.Information);
-        }
-        else
-        {
-            var newService = new ServiceType
-            {
-                ServiceName = name,
-                PricePerKilo = price,
-                MinimumWeight = minWeight,
-                IsActive = chkActive.Checked
+                MessageBox.Show("Only an administrator can edit load prices.", "Access Denied",
+                    MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                Close();
             };
-            AppServices.ServiceTypes.Add(newService);
-            MessageBox.Show($"New service '{name}' created!", "Success", MessageBoxButtons.OK, MessageBoxIcon.Information);
-        }
-
-        LoadServices();
-        ResetForm();
-    }
-
-    private void btnToggleActive_Click(object? sender, EventArgs e)
-    {
-        if (_selectedService == null)
-        {
-            MessageBox.Show("Please select a service type first.", "Notice", MessageBoxButtons.OK, MessageBoxIcon.Information);
             return;
         }
 
-        bool newStatus = !_selectedService.IsActive;
-        AppServices.ServiceTypes.SetActive(_selectedService.ServiceId, newStatus);
-        LoadServices();
-        MessageBox.Show($"Service '{_selectedService.ServiceName}' is now {(newStatus ? "Active" : "Disabled")}.", "Status Changed", MessageBoxButtons.OK, MessageBoxIcon.Information);
+        pnlLeftCard.Visible = false;
+        pnlRight.Dock = DockStyle.Fill;
+        Text = "LaundryHub – Load Pricing Management";
+        lblTitle.Text = "🏷 Laundry Load Pricing";
+        lblGridTitle.Text = "Edit the price for each maximum load size";
+        btnToggleActive.Text = "Save Prices";
+        btnToggleActive.Click -= btnToggleActive_Click;
+        btnToggleActive.Click += btnSavePrices_Click;
+
+        dgvServices.ReadOnly = false;
+        dgvServices.AllowUserToAddRows = false;
+        dgvServices.AllowUserToDeleteRows = false;
+        LoadPrices();
     }
 
-    private void ResetForm()
+    private void btnClose_Click(object? sender, EventArgs e) => Close();
+
+    private void LoadPrices()
     {
-        _editingServiceId = 0;
-        _selectedService = null;
-        lblFormTitle.Text = "➕ New Service Type";
-        btnSave.Text = "💾 Save Service";
-        txtServiceName.Clear();
-        txtPricePerKilo.Clear();
-        txtMinWeight.Clear();
-        chkActive.Checked = true;
-        lblError.Visible = false;
-        dgvServices.ClearSelection();
+        _prices = AppServices.LoadPricing.GetAll().ToList();
+        dgvServices.DataSource = _prices;
+
+        foreach (var column in dgvServices.Columns.Cast<DataGridViewColumn>())
+            column.ReadOnly = column.Name != nameof(LoadPrice.Price);
+
+        var categoryColumn = dgvServices.Columns[nameof(LoadPrice.Category)]
+            ?? throw new InvalidOperationException("The category column is missing.");
+        var sizeColumn = dgvServices.Columns[nameof(LoadPrice.LoadSize)]
+            ?? throw new InvalidOperationException("The load size column is missing.");
+        var weightColumn = dgvServices.Columns[nameof(LoadPrice.MaxWeightKg)]
+            ?? throw new InvalidOperationException("The maximum weight column is missing.");
+        var priceColumn = dgvServices.Columns[nameof(LoadPrice.Price)]
+            ?? throw new InvalidOperationException("The price column is missing.");
+        categoryColumn.HeaderText = "Laundry Category";
+        sizeColumn.HeaderText = "Load Size";
+        weightColumn.HeaderText = "Maximum Weight (kg)";
+        priceColumn.HeaderText = "Price (₱)";
+        priceColumn.DefaultCellStyle.Format = "N2";
+        weightColumn.DefaultCellStyle.Format = "0.##";
     }
 
-    private bool ValidateForm()
+    private void btnSavePrices_Click(object? sender, EventArgs e)
     {
-        lblError.Visible = false;
-
-        if (string.IsNullOrWhiteSpace(txtServiceName.Text))
+        if (!SessionManager.IsAdmin)
         {
-            ShowError("Please enter a service name.");
-            txtServiceName.Focus();
-            return false;
+            MessageBox.Show("Only an administrator can edit load prices.", "Access Denied",
+                MessageBoxButtons.OK, MessageBoxIcon.Warning);
+            return;
         }
 
-        if (!decimal.TryParse(txtPricePerKilo.Text.Trim(), out var p) || p <= 0)
+        dgvServices.EndEdit();
+        if (_prices.Any(price => price.Price <= 0))
         {
-            ShowError("Price per kilo must be a positive number.");
-            txtPricePerKilo.Focus();
-            return false;
+            MessageBox.Show("Every load price must be greater than zero.", "Invalid Price",
+                MessageBoxButtons.OK, MessageBoxIcon.Warning);
+            return;
         }
 
-        if (!decimal.TryParse(txtMinWeight.Text.Trim(), out var w) || w <= 0)
+        try
         {
-            ShowError("Minimum weight must be a positive number.");
-            txtMinWeight.Focus();
-            return false;
+            AppServices.LoadPricing.UpdatePrices(_prices);
+        }
+        catch (Exception ex)
+        {
+            MessageBox.Show($"Load prices could not be saved:\n{ex.Message}", "Save Failed",
+                MessageBoxButtons.OK, MessageBoxIcon.Error);
+            return;
         }
 
-        return true;
+        MessageBox.Show("Load prices updated successfully.", "Pricing Saved",
+            MessageBoxButtons.OK, MessageBoxIcon.Information);
+        LoadPrices();
     }
 
-    private void ShowError(string msg)
-    {
-        lblError.Text = $"⚠ {msg}";
-        lblError.Visible = true;
-    }
+    private void btnClear_Click(object? sender, EventArgs e) => LoadPrices();
+    private void btnSave_Click(object? sender, EventArgs e) => btnSavePrices_Click(sender, e);
+    private void dgvServices_SelectionChanged(object? sender, EventArgs e) { }
+    private void btnToggleActive_Click(object? sender, EventArgs e) => btnSavePrices_Click(sender, e);
 }

@@ -73,7 +73,7 @@ public partial class FrmCustomerPortal : Form
         {
             o.OrderId,
             Order_No = o.OrderNumber,
-            Service = o.ServiceName ?? "Laundry",
+            Service = $"{o.ServiceName ?? "Laundry"} — {o.LaundryCategory}",
             Weight = $"{o.WeightKg} kg",
             Total = $"₱{o.TotalAmount:N2}",
             Payment = o.PaymentRecorded ? "✔ Paid" : "⏳ Unpaid",
@@ -146,7 +146,7 @@ public partial class FrmCustomerPortal : Form
 
         var lblDetails = new Label
         {
-            Text = $"Service: {order.ServiceName} ({order.WeightKg} kg)\nTotal Amount: ₱{order.TotalAmount:N2} ({(order.PaymentRecorded ? "Paid" : "Unpaid")})\nTarget Pickup: {order.PickupDate:MMMM dd, yyyy}",
+            Text = $"Service: {order.ServiceName} — {order.LaundryCategory} ({order.WeightKg} kg)\nTotal Amount: ₱{order.TotalAmount:N2} ({(order.PaymentRecorded ? "Paid" : "Unpaid")})\nTarget Pickup: {order.PickupDate:MMMM dd, yyyy}",
             Font = new Font("Segoe UI", 9),
             ForeColor = Color.FromArgb(148, 163, 184),
             Location = new Point(20, 290),

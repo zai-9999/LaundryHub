@@ -33,7 +33,7 @@ public partial class FrmStaffDashboard : Form
         {
             Order_No = o.OrderNumber,
             Customer = o.CustomerName,
-            Service = o.ServiceName,
+            Service = $"{o.ServiceName} — {o.LaundryCategory}",
             Weight = $"{o.WeightKg} kg",
             Total = $"₱{o.TotalAmount:N2}",
             Status = o.Status,

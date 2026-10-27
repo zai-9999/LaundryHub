@@ -198,7 +198,7 @@ partial class FrmAdminDashboard
         btnServicePricing.Padding = new Padding(12, 0, 0, 0);
         btnServicePricing.Size = new Size(215, 42);
         btnServicePricing.TabIndex = 1;
-        btnServicePricing.Text = "🏷 Service & Rates";
+        btnServicePricing.Text = "🏷 Load Pricing";
         btnServicePricing.TextAlign = ContentAlignment.MiddleLeft;
         btnServicePricing.UseVisualStyleBackColor = false;
         btnServicePricing.Click += btnServicePricing_Click;

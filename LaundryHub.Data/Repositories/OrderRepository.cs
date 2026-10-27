@@ -74,10 +74,10 @@ public class OrderRepository : IOrderRepository
         using var conn = _db.CreateConnection();
         return conn.ExecuteScalar<int>(@"
             INSERT INTO orders
-              (order_number, customer_id, service_id, weight_kg, total_amount,
+              (order_number, customer_id, service_id, laundry_category, weight_kg, total_amount,
                status, created_by, pickup_date)
             VALUES
-              (@OrderNumber, @CustomerId, @ServiceId, @WeightKg, @TotalAmount,
+              (@OrderNumber, @CustomerId, @ServiceId, @LaundryCategory, @WeightKg, @TotalAmount,
                @Status, @CreatedBy, @PickupDate)
             RETURNING order_id",
             order);

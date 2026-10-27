@@ -32,7 +32,7 @@ public partial class FrmExportReport : Form
             Order_No = o.OrderNumber,
             Customer = o.CustomerName,
             Phone = o.CustomerPhone,
-            Service = o.ServiceName,
+            Service = $"{o.ServiceName} — {o.LaundryCategory}",
             Weight = $"{o.WeightKg} kg",
             Total = $"₱{o.TotalAmount:N2}",
             o.Status,
