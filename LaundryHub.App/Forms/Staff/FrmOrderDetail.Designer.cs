@@ -1,5 +1,4 @@
-using LaundryHub.App.Helpers;
-using Panel = System.Windows.Forms.Panel;
+﻿using Panel = System.Windows.Forms.Panel;
 using CheckBox = System.Windows.Forms.CheckBox;
 using Button = System.Windows.Forms.Button;
 using ReaLTaiizor;
@@ -28,13 +27,13 @@ partial class FrmOrderDetail
         pnlHeader = new Panel();
         btnClose = new HopeButton();
         lblStatusBadge = new Label();
-        lblOrderNumber = new SelectableLabel();
+        lblOrderNumber = new Label();
         pnlContainer = new Panel();
         pnlRightWrapper = new Panel();
         pnlRightCard = new Panel();
         btnResendEmail = new HopeButton();
         btnPrintQr = new HopeButton();
-        picQrCode = new InvoicePreviewPanel();
+        picQrCode = new PictureBox();
         lblQrTitle = new Label();
         pnlLeftCard = new Panel();
         flpActions = new FlowLayoutPanel();
@@ -44,27 +43,27 @@ partial class FrmOrderDetail
         btnEditWeight = new Button();
         tlpDetails = new TableLayoutPanel();
         lblHCustomer = new Label();
-        lblCustomerInfo = new SelectableLabel();
+        lblCustomerInfo = new Label();
         lblHService = new Label();
-        lblServiceInfo = new SelectableLabel();
+        lblServiceInfo = new Label();
         lblHWeight = new Label();
-        lblWeightInfo = new SelectableLabel();
+        lblWeightInfo = new Label();
         lblHTotal = new Label();
-        lblTotalAmount = new SelectableLabel();
+        lblTotalAmount = new Label();
         lblHPayment = new Label();
-        lblPaymentStatus = new SelectableLabel();
+        lblPaymentStatus = new Label();
         lblHPickup = new Label();
-        lblPickupDate = new SelectableLabel();
+        lblPickupDate = new Label();
         lblHCreated = new Label();
-        lblCreatedDate = new SelectableLabel();
+        lblCreatedDate = new Label();
         lblHCancelReason = new Label();
-        lblCancelReason = new SelectableLabel();
+        lblCancelReason = new Label();
         lblDetailsTitle = new Label();
         pnlHeader.SuspendLayout();
         pnlContainer.SuspendLayout();
         pnlRightWrapper.SuspendLayout();
         pnlRightCard.SuspendLayout();
-
+        ((System.ComponentModel.ISupportInitialize)picQrCode).BeginInit();
         pnlLeftCard.SuspendLayout();
         flpActions.SuspendLayout();
         tlpDetails.SuspendLayout();
@@ -116,13 +115,14 @@ partial class FrmOrderDetail
         // 
         // lblOrderNumber
         // 
+        lblOrderNumber.AutoSize = true;
         lblOrderNumber.Font = new Font("Segoe UI", 16F, FontStyle.Bold);
         lblOrderNumber.ForeColor = Color.FromArgb(246, 242, 234);
-        lblOrderNumber.Location = new Point(24, 22);
+        lblOrderNumber.Location = new Point(24, 18);
         lblOrderNumber.Name = "lblOrderNumber";
-        lblOrderNumber.Size = new Size(280, 30);
+        lblOrderNumber.Size = new Size(295, 37);
         lblOrderNumber.TabIndex = 0;
-        lblOrderNumber.Text = "LH-20261011-001";
+        lblOrderNumber.Text = "\U0001f9fe LH-20261011-001";
         // 
         // pnlContainer
         // 
@@ -170,10 +170,10 @@ partial class FrmOrderDetail
         btnResendEmail.Font = new Font("Segoe UI", 9F);
         btnResendEmail.HoverTextColor = Color.FromArgb(75, 86, 148);
         btnResendEmail.InfoColor = Color.FromArgb(130, 138, 165);
-        btnResendEmail.Location = new Point(20, 368);
+        btnResendEmail.Location = new Point(37, 320);
         btnResendEmail.Name = "btnResendEmail";
         btnResendEmail.PrimaryColor = Color.FromArgb(114, 136, 174);
-        btnResendEmail.Size = new Size(254, 38);
+        btnResendEmail.Size = new Size(220, 38);
         btnResendEmail.SuccessColor = Color.FromArgb(74, 160, 120);
         btnResendEmail.TabIndex = 3;
         btnResendEmail.Text = " Resend Email Receipt";
@@ -191,13 +191,13 @@ partial class FrmOrderDetail
         btnPrintQr.Font = new Font("Segoe UI", 9.5F, FontStyle.Bold);
         btnPrintQr.HoverTextColor = Color.White;
         btnPrintQr.InfoColor = Color.FromArgb(130, 138, 165);
-        btnPrintQr.Location = new Point(20, 320);
+        btnPrintQr.Location = new Point(37, 270);
         btnPrintQr.Name = "btnPrintQr";
         btnPrintQr.PrimaryColor = Color.FromArgb(75, 86, 148);
-        btnPrintQr.Size = new Size(254, 38);
+        btnPrintQr.Size = new Size(220, 38);
         btnPrintQr.SuccessColor = Color.FromArgb(74, 160, 120);
         btnPrintQr.TabIndex = 2;
-        btnPrintQr.Text = " Print Invoice";
+        btnPrintQr.Text = " Print QR Ticket";
         btnPrintQr.TextColor = Color.FromArgb(246, 242, 234);
         btnPrintQr.WarningColor = Color.FromArgb(214, 160, 80);
         btnPrintQr.Click += btnPrintQr_Click;
@@ -205,10 +205,11 @@ partial class FrmOrderDetail
         // picQrCode
         // 
         picQrCode.BackColor = Color.White;
-        picQrCode.BorderStyle = BorderStyle.None;
-        picQrCode.Location = new Point(20, 54);
+        picQrCode.BorderStyle = BorderStyle.FixedSingle;
+        picQrCode.Location = new Point(52, 60);
         picQrCode.Name = "picQrCode";
-        picQrCode.Size = new Size(254, 250);
+        picQrCode.Size = new Size(190, 190);
+        picQrCode.SizeMode = PictureBoxSizeMode.Zoom;
         picQrCode.TabIndex = 1;
         picQrCode.TabStop = false;
         // 
@@ -221,7 +222,7 @@ partial class FrmOrderDetail
         lblQrTitle.Name = "lblQrTitle";
         lblQrTitle.Size = new Size(254, 30);
         lblQrTitle.TabIndex = 0;
-        lblQrTitle.Text = "Invoice";
+        lblQrTitle.Text = "QR Code E-Ticket";
         lblQrTitle.TextAlign = ContentAlignment.MiddleCenter;
         // 
         // pnlLeftCard
@@ -581,6 +582,7 @@ partial class FrmOrderDetail
         pnlContainer.ResumeLayout(false);
         pnlRightWrapper.ResumeLayout(false);
         pnlRightCard.ResumeLayout(false);
+        ((System.ComponentModel.ISupportInitialize)picQrCode).EndInit();
         pnlLeftCard.ResumeLayout(false);
         flpActions.ResumeLayout(false);
         tlpDetails.ResumeLayout(false);
@@ -590,7 +592,7 @@ partial class FrmOrderDetail
     #endregion
 
     private Panel pnlHeader;
-    private SelectableLabel lblOrderNumber;
+    private Label lblOrderNumber;
     private Label lblStatusBadge;
     private HopeButton btnClose;
     private Panel pnlContainer;
@@ -598,21 +600,21 @@ partial class FrmOrderDetail
     private Label lblDetailsTitle;
     private TableLayoutPanel tlpDetails;
     private Label lblHCustomer;
-    private SelectableLabel lblCustomerInfo;
+    private Label lblCustomerInfo;
     private Label lblHService;
-    private SelectableLabel lblServiceInfo;
+    private Label lblServiceInfo;
     private Label lblHWeight;
-    private SelectableLabel lblWeightInfo;
+    private Label lblWeightInfo;
     private Label lblHTotal;
-    private SelectableLabel lblTotalAmount;
+    private Label lblTotalAmount;
     private Label lblHPayment;
-    private SelectableLabel lblPaymentStatus;
+    private Label lblPaymentStatus;
     private Label lblHPickup;
-    private SelectableLabel lblPickupDate;
+    private Label lblPickupDate;
     private Label lblHCreated;
-    private SelectableLabel lblCreatedDate;
+    private Label lblCreatedDate;
     private Label lblHCancelReason;
-    private SelectableLabel lblCancelReason;
+    private Label lblCancelReason;
     private FlowLayoutPanel flpActions;
     private HopeButton btnAdvanceStatus;
     private HopeButton btnClaimOrder;
@@ -621,7 +623,7 @@ partial class FrmOrderDetail
     private Panel pnlRightWrapper;
     private Panel pnlRightCard;
     private Label lblQrTitle;
-    private InvoicePreviewPanel picQrCode;
+    private PictureBox picQrCode;
     private HopeButton btnPrintQr;
     private HopeButton btnResendEmail;
 }

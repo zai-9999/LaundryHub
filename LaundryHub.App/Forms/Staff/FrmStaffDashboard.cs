@@ -216,12 +216,6 @@ public partial class FrmStaffDashboard : Form
                 break;
         }
 
-        if (_selectedOrderStatus == "Ready for Pickup")
-        {
-            if (_statusMenu.Items.Count == 0) e.Cancel = true;
-            return;
-        }
-
         if (_statusMenu.Items.Count > 0)
         {
             _statusMenu.Items.Add(new ToolStripSeparator());

@@ -1,4 +1,4 @@
-using MailKit.Net.Smtp;
+﻿using MailKit.Net.Smtp;
 using MailKit.Security;
 using MimeKit;
 using MimeKit.Utils;
@@ -91,7 +91,11 @@ public static class EmailHelper
         message.To.Add(new MailboxAddress(customer.FullName, customer.Email!));
         message.Subject = $"[{shopName}] Order Receipt  {order.OrderNumber}";
 
+        // Attach QR code image
+        var qrPath    = QrCodeHelper.SaveToTempFile(order.OrderNumber);
         var builder   = new BodyBuilder();
+        var qrImage   = builder.LinkedResources.Add(qrPath);
+        qrImage.ContentId = MimeUtils.GenerateMessageId();
 
         builder.HtmlBody = $@"
 <html><body style='font-family:Arial,sans-serif;color:#333;max-width:520px;margin:auto'>
@@ -116,8 +120,10 @@ public static class EmailHelper
       <tr><td style='padding:8px;background:#f3f4f6'><strong>Status</strong></td>
           <td style='padding:8px'>{order.Status}</td></tr>
     </table>
+    <p style='text-align:center'><strong>Your QR E-Ticket:</strong><br/>
+      <img src='cid:{qrImage.ContentId}' style='margin-top:8px;border:4px solid #e5e7eb;border-radius:4px'/></p>
     <p style='color:#6b7280;font-size:12px;text-align:center'>
-      Present your order number <strong>{order.OrderNumber}</strong> when claiming your laundry.<br/>
+      Present this QR code when claiming your laundry.<br/>
       For inquiries, visit our shop or call us directly.
     </p>
   </div>

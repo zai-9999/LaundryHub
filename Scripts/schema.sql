@@ -82,6 +82,10 @@ CREATE TABLE IF NOT EXISTS orders (
     status           VARCHAR(30)   NOT NULL DEFAULT 'Booked'
                      CHECK (status IN ('Booked','Washing','Drying','Ready for Pickup','Claimed','Cancelled')),
     cancel_reason    TEXT,
+    cancel_request_status VARCHAR(10)
+                     CHECK (cancel_request_status IS NULL OR cancel_request_status IN ('Pending','Approved','Rejected')),
+    cancel_request_reason TEXT,
+    cancel_requested_at   TIMESTAMP,	
     payment_recorded BOOLEAN       NOT NULL DEFAULT FALSE,
     amount_paid      NUMERIC(10,2) CHECK (amount_paid IS NULL OR amount_paid >= 0),
     created_by       INT           REFERENCES users(user_id),

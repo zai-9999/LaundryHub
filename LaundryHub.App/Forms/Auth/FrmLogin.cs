@@ -75,8 +75,8 @@ public partial class FrmLogin : Form
             if (user == null || string.IsNullOrWhiteSpace(user.PasswordHash) || !BCrypt.Net.BCrypt.Verify(password, user.PasswordHash))
             {
                 ThrottleService.RegisterAttempt(key, limit, window, lockout);
-                ShowError("Invalid username or password.");
                 txtPassword.Clear();
+                ShowError("Invalid username or password.");
                 txtPassword.Focus();
                 return;
             }
@@ -95,8 +95,8 @@ public partial class FrmLogin : Form
             if (user.Role == UserRole.Customer.ToString())
             {
                 SessionManager.Logout();
-                ShowError("This portal is for Staff & Admin only. Please use the Customer Portal.");
                 txtPassword.Clear();
+                ShowError("This portal is for Staff & Admin only. Please use the Customer Portal.");
                 return;
             }
 
@@ -111,7 +111,6 @@ public partial class FrmLogin : Form
     private void btnSwitchToCustomer_Click(object? sender, EventArgs e)
     {
         var customerLogin = new FrmCustomerLogin();
-        customerLogin.FormClosing += (_, _) => this.WindowState = customerLogin.WindowState;
         customerLogin.FormClosed += (_, _) => this.Show();
         customerLogin.WindowState = this.WindowState;
         customerLogin.Show();
@@ -141,7 +140,6 @@ public partial class FrmLogin : Form
             _ => throw new InvalidOperationException("Unknown role")
         };
 
-        dashboard.FormClosing += (_, _) => this.WindowState = dashboard.WindowState;
         dashboard.FormClosed += (_, _) =>
         {
             SessionManager.Logout();
