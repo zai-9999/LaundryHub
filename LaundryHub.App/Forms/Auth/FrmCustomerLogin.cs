@@ -105,6 +105,7 @@ public partial class FrmCustomerLogin : Form
     private void btnRegister_Click(object? sender, EventArgs e)
     {
         var regForm = new Customer.FrmCustomerRegister();
+        regForm.FormClosing += (_, _) => this.WindowState = regForm.WindowState;
         regForm.FormClosed += (_, _) => this.Show();
         regForm.WindowState = this.WindowState;
         regForm.Show();
@@ -122,18 +123,13 @@ public partial class FrmCustomerLogin : Form
         reset.ShowDialog(this);
     }
 
-    private void lnkForgotPassword_LinkClicked(object? sender, LinkLabelLinkClickedEventArgs e)
-    {
-        using var reset = new FrmPasswordReset();
-        reset.ShowDialog(this);
-    }
-
     //  Navigation 
 
     private void OpenCustomerPortal()
     {
         var portal = new Customer.FrmCustomerPortal();
 
+        portal.FormClosing += (_, _) => this.WindowState = portal.WindowState;
         portal.FormClosed += (_, _) =>
         {
             SessionManager.Logout();

@@ -111,6 +111,7 @@ public partial class FrmLogin : Form
     private void btnSwitchToCustomer_Click(object? sender, EventArgs e)
     {
         var customerLogin = new FrmCustomerLogin();
+        customerLogin.FormClosing += (_, _) => this.WindowState = customerLogin.WindowState;
         customerLogin.FormClosed += (_, _) => this.Show();
         customerLogin.WindowState = this.WindowState;
         customerLogin.Show();
@@ -140,6 +141,7 @@ public partial class FrmLogin : Form
             _ => throw new InvalidOperationException("Unknown role")
         };
 
+        dashboard.FormClosing += (_, _) => this.WindowState = dashboard.WindowState;
         dashboard.FormClosed += (_, _) =>
         {
             SessionManager.Logout();
