@@ -33,7 +33,7 @@ public partial class FrmAdminDashboard : Form
         pnlSidebar.BrandSubtitle.Text = "ADMIN & OPERATIONS";
 
         pnlSidebar.AddSection("GENERAL");
-        var btnNavDash = pnlSidebar.AddNavButton("", "Overview & Analytics");
+        var btnNavDash = pnlSidebar.AddNavButton("", "Dashboard");
         btnNavDash.IsActive = true;
 
         pnlSidebar.AddSection("OPERATIONS");
@@ -43,17 +43,20 @@ public partial class FrmAdminDashboard : Form
         pnlSidebar.AddSection("ADMINISTRATION");
         pnlSidebar.AddNavButton("", "Manage Staff", btnManageStaff_Click);
         pnlSidebar.AddNavButton("", "Services & Rates", btnServicePricing_Click);
-        pnlSidebar.AddNavButton("", "Daily Reports & Excel", btnExportReport_Click);
 
         pnlSidebar.AddSection("SYSTEM");
         pnlSidebar.AddNavButton("", "Refresh Dashboard", btnRefresh_Click);
         pnlSidebar.AddNavButton("", "Logout", btnLogout_Click);
 
         // Header Bar Setup
-        pnlHeader.Title = "Platform Overview & Analytics";
+        pnlHeader.Title = "Dashboard";
         pnlHeader.Subtitle = "ALL ORDERS  ·  REAL-TIME WORKFLOW, PERFORMANCE & REVENUE MONITORING";
+        pnlHeader.SearchBox.Parent?.Controls.Remove(pnlHeader.SearchBox);
+        pnlTableBar.Controls.Add(pnlHeader.SearchBox);
         pnlHeader.SearchBox.Hint = "Search order #, customer, status...";
         pnlHeader.SearchBox.TextChanged += txtSearch_TextChanged;
+        pnlTableBar.Resize += (_, _) => LayoutOrderTableBar();
+        LayoutOrderTableBar();
         pnlHeader.ActionButton.Text = " Logout";
         pnlHeader.ActionButton.Click += btnLogout_Click;
 
@@ -125,6 +128,25 @@ public partial class FrmAdminDashboard : Form
     {
         searchDebounceTimer?.Stop();
         searchDebounceTimer?.Start();
+    }
+
+    private void LayoutOrderTableBar()
+    {
+        const int spacing = 8;
+
+        lblLiveBadge.Location = new Point(pnlTableBar.ClientSize.Width - lblLiveBadge.Width, 8);
+        pnlHeader.SearchBox.Anchor = AnchorStyles.Top | AnchorStyles.Right;
+        pnlHeader.SearchBox.Location = new Point(
+            lblLiveBadge.Left - pnlHeader.SearchBox.Width - spacing,
+            6);
+
+        var textWidth = Math.Max(0, pnlHeader.SearchBox.Left - spacing);
+        lblTableTitle.Dock = DockStyle.None;
+        lblTableTitle.Location = Point.Empty;
+        lblTableTitle.Size = new Size(textWidth, 24);
+        lblTableSubtitle.Dock = DockStyle.None;
+        lblTableSubtitle.Location = new Point(0, 24);
+        lblTableSubtitle.Size = new Size(textWidth, 20);
     }
 
     private void SearchDebounceTimer_Tick(object? sender, EventArgs e)
