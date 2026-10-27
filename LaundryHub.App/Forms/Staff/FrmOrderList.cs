@@ -17,7 +17,8 @@ public partial class FrmOrderList : Form
         pnlTopBar.BackColor = UIThemeHelper.Navy;
         lblTitle.BackColor = UIThemeHelper.Navy;
 
-        UIThemeHelper.StyleDataGridView(dgvOrders, 34);
+        UIThemeHelper.StyleDataGridView(dgvOrders, 42);
+        dgvOrders.RowTemplate.Height = 40;
         UIThemeHelper.EnableStatusPills(dgvOrders);
         dtpFilter.Value = DateTime.Today;
         InitSearch();
@@ -166,6 +167,23 @@ public partial class FrmOrderList : Form
                 cancelCol.HeaderCell.Style.Alignment = DataGridViewContentAlignment.MiddleCenter;
                 cancelCol.DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleCenter;
             }
+
+            void SetWeight(string name, float weight)
+            {
+                if (dgvOrders.Columns[name] is { } c) c.FillWeight = weight;
+            }
+            if (dgvOrders.Columns["Order_No"] is { } cOrder) cOrder.HeaderText = "Order No";
+            if (dgvOrders.Columns["Pickup"] is { } cPick) cPick.HeaderText = "Target Pickup";
+            if (dgvOrders.Columns["Date"] is { } cDate) cDate.HeaderText = "Date Placed";
+
+            SetWeight("Order_No", 140);
+            SetWeight("Customer", 150);
+            SetWeight("Service", 160);
+            SetWeight("Weight", 80);
+            SetWeight("Total", 85);
+            SetWeight("Status", 125);
+            SetWeight("Pickup", 100);
+            SetWeight("Date", 115);
 
             dgvOrders.ClearSelection();
             foreach (DataGridViewRow r in dgvOrders.Rows)
