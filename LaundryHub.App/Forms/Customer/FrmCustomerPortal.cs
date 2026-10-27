@@ -235,75 +235,7 @@ public partial class FrmCustomerPortal : Form
 
     private void ShowTicketModal(Order order)
     {
-        using var dlg = new Form
-        {
-            Text = $"E-Ticket  {order.OrderNumber}",
-            Size = new Size(380, 480),
-            StartPosition = FormStartPosition.CenterParent,
-            BackColor = Color.White,
-            ForeColor = UIThemeHelper.Navy,
-            FormBorderStyle = FormBorderStyle.FixedDialog,
-            MaximizeBox = false,
-            MinimizeBox = false
-        };
-
-        var pic = new PictureBox
-        {
-            Size = new Size(200, 200),
-            Location = new Point(85, 20),
-            SizeMode = PictureBoxSizeMode.Zoom,
-            BackColor = Color.White,
-            BorderStyle = BorderStyle.FixedSingle,
-            Image = QrCodeHelper.GenerateImage(order.OrderNumber)
-        };
-        dlg.FormClosed += (_, _) => pic.Image?.Dispose();
-
-        var lblNo = new Label
-        {
-            Text = order.OrderNumber,
-            Font = new Font("Segoe UI", 13, FontStyle.Bold),
-            ForeColor = UIThemeHelper.Navy,
-            Location = new Point(20, 230),
-            Size = new Size(330, 25),
-            TextAlign = ContentAlignment.MiddleCenter
-        };
-
-        var lblStatus = new Label
-        {
-            Text = $"Status: {order.Status.ToUpper()}",
-            Font = new Font("Segoe UI", 10, FontStyle.Bold),
-            ForeColor = UIThemeHelper.Indigo,
-            Location = new Point(20, 260),
-            Size = new Size(330, 22),
-            TextAlign = ContentAlignment.MiddleCenter
-        };
-
-        var lblDetails = new Label
-        {
-            Text = $"Service: {order.ServiceName} — {order.LaundryCategory} ({order.WeightKg} kg)\nTotal Amount: {order.TotalAmount:N2} ({(order.PaymentRecorded ? "Paid" : "Unpaid")})\nTarget Pickup: {order.PickupDate:MMMM dd, yyyy}",
-            Font = new Font("Segoe UI", 9),
-            ForeColor = UIThemeHelper.Indigo,
-            Location = new Point(20, 290),
-            Size = new Size(330, 65),
-            TextAlign = ContentAlignment.MiddleCenter
-        };
-
-        var btnClose = new Button
-        {
-            Text = "Close Ticket",
-            Location = new Point(100, 380),
-            Size = new Size(170, 36),
-            BackColor = UIThemeHelper.Navy,
-            ForeColor = Color.White,
-            FlatStyle = FlatStyle.Flat,
-            Font = new Font("Segoe UI", 9.5f, FontStyle.Bold),
-            Cursor = Cursors.Hand
-        };
-        btnClose.FlatAppearance.BorderSize = 0;
-        btnClose.Click += (_, _) => dlg.Close();
-
-        dlg.Controls.AddRange(new Control[] { pic, lblNo, lblStatus, lblDetails, btnClose });
-        UIThemeHelper.ApplyTheme(dlg);
+        using var dlg = new FrmCustomerInvoice(order, _customer);
         dlg.ShowDialog(this);
     }
 }

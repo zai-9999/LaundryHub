@@ -103,7 +103,7 @@ public partial class FrmOrderDetail : Form
             btnAdvanceStatus.BackColor = UIThemeHelper.Slate;
         }
 
-        btnClaimOrder.Visible = _order.Status == "Ready for Pickup" || (_order.Status is "Washing" or "Drying" && !_order.PaymentRecorded);
+        btnClaimOrder.Visible = _order.Status == "Ready for Pickup";
         btnCancelOrder.Visible = _order.Status is not ("Ready for Pickup" or "Claimed" or "Cancelled");
         btnEditWeight.Visible = _order.Status is "Washing" or "Drying" or "Ready for Pickup" && !_order.PaymentRecorded;
     }

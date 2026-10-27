@@ -133,7 +133,7 @@ public class OrderRepository : IOrderRepository
         ("Washing", "Drying") => true,
         ("Drying", "Ready for Pickup") => true,
         ("Ready for Pickup", "Claimed") => true,
-        ("Washing" or "Drying" or "Ready for Pickup", "Cancelled") => true,
+        ("Booked" or "Washing" or "Drying", "Cancelled") => true,
         _ => false
     };
 
@@ -173,6 +173,9 @@ public class OrderRepository : IOrderRepository
             if (newStatus == "Cancelled" && oldStatus is not ("Booked" or "Washing" or "Drying"))
                 throw new InvalidOperationException(
                     $"An order that is '{oldStatus}' can no longer be cancelled.");
+
+            if (!IsValidTransition(oldStatus, newStatus))
+                throw new InvalidOperationException($"An order cannot move from '{oldStatus}' to '{newStatus}'.");
 
             conn.Execute(@"
                 UPDATE orders

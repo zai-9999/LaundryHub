@@ -231,8 +231,8 @@ public partial class FrmNewOrder : Form
             int orderId = AppServices.Orders.Add(order);
             order.OrderId = orderId;
 
-            // Show QR ticket
-            ShowQrTicket(order);
+            // Show invoice after order creation
+            ShowOrderInvoice(order);
 
             // Send email receipt in background
             EmailHelper.SendReceiptAsync(order, _selectedCustomer);
@@ -246,58 +246,11 @@ public partial class FrmNewOrder : Form
         }
     }
 
-    private void ShowQrTicket(Order order)
+    private void ShowOrderInvoice(Order order)
     {
-        using var bmp = Helpers.QrCodeHelper.GenerateQrCode(order.OrderNumber);
-
-        using var ticketForm = new Form
-        {
-            Text = $"QR Ticket  {order.OrderNumber}",
-            Size = new Size(380, 480),
-            StartPosition = FormStartPosition.CenterParent,
-            FormBorderStyle = FormBorderStyle.FixedDialog,
-            MaximizeBox = false,
-            BackColor = UIThemeHelper.Slate
-        };
-
-        var pb = new PictureBox
-        {
-            Image = bmp,
-            SizeMode = PictureBoxSizeMode.Zoom,
-            Size = new Size(220, 220),
-            Location = new Point(80, 20),
-            BackColor = Color.White
-        };
-        var info = new Label
-        {
-            Text = $"{order.OrderNumber}\n{_selectedCustomer!.FullName}\n{order.ServiceName} — {order.LaundryCategory}  |  {order.WeightKg} kg\n{order.TotalAmount:N2}  |  {order.PickupDate:MMM dd, yyyy}",
-            ForeColor = Color.White,
-            Font = new Font("Segoe UI", 9.5f),
-            Location = new Point(20, 255),
-            Size = new Size(330, 100),
-            TextAlign = ContentAlignment.MiddleCenter
-        };
-        var btnPrint = new Button
-        {
-            Text = "  Print Ticket",
-            Location = new Point(50, 365),
-            Size = new Size(260, 38),
-            Font = new Font("Segoe UI", 10, FontStyle.Bold),
-            BackColor = UIThemeHelper.Navy,
-            ForeColor = Color.White,
-            FlatStyle = FlatStyle.Flat,
-            Cursor = Cursors.Hand
-        };
-        btnPrint.FlatAppearance.BorderSize = 0;
-        btnPrint.Click += (_, _) =>
-        {
-            var path = Helpers.QrCodeHelper.SaveToTempFile(order.OrderNumber);
-            System.Diagnostics.Process.Start(new System.Diagnostics.ProcessStartInfo(path) { UseShellExecute = true });
-        };
-
-        ticketForm.Controls.AddRange(new Control[] { pb, info, btnPrint });
-        UIThemeHelper.ApplyTheme(ticketForm);
-        ticketForm.ShowDialog(this);
+        var customer = AppServices.Customers.GetById(order.CustomerId);
+        using var dlg = new Customer.FrmCustomerInvoice(order, customer);
+        dlg.ShowDialog(this);
     }
 
     private bool ValidateOrder()
