@@ -21,6 +21,7 @@ public partial class FrmOrderList : Form
         UIThemeHelper.EnableStatusPills(dgvOrders);
         dtpFilter.Value = DateTime.Today;
         InitSearch();
+        InitCancelRequestIcon();
         LoadOrders();
     }
 
@@ -54,6 +55,72 @@ public partial class FrmOrderList : Form
         };
     }
 
+    private bool IsPendingCancelCell(int rowIndex, int columnIndex) =>
+        rowIndex >= 0 && columnIndex >= 0
+        && dgvOrders.Columns[columnIndex].Name == "Cancel"
+        && (dgvOrders.Rows[rowIndex].Cells[columnIndex].Value as string) == "Pending";
+
+    private void InitCancelRequestIcon()
+    {
+        var tip = new ToolTip();
+        FormClosed += (_, _) => tip.Dispose();
+
+        dgvOrders.CellPainting += (_, e) =>
+        {
+            if (e.Graphics == null || !IsPendingCancelCell(e.RowIndex, e.ColumnIndex)) return;
+
+            e.Handled = true;
+            e.Paint(e.CellBounds, DataGridViewPaintParts.Background | DataGridViewPaintParts.Border);
+
+            // Selected rows use a light tint in this grid, so the icon stays red on every row.
+            var icon = new Rectangle(
+                e.CellBounds.X + (e.CellBounds.Width - 22) / 2,
+                e.CellBounds.Y + (e.CellBounds.Height - 22) / 2, 22, 22);
+            CancelRequestIcon.Draw(e.Graphics, icon, UIThemeHelper.Danger);
+        };
+
+        dgvOrders.CellMouseEnter += (_, e) =>
+        {
+            if (IsPendingCancelCell(e.RowIndex, e.ColumnIndex))
+            {
+                dgvOrders.Cursor = Cursors.Hand;
+                var bounds = dgvOrders.GetCellDisplayRectangle(e.ColumnIndex, e.RowIndex, false);
+                tip.Show("Cancellation request — click to review", dgvOrders, bounds.Left, bounds.Bottom, 2500);
+            }
+        };
+        dgvOrders.CellMouseLeave += (_, _) =>
+        {
+            dgvOrders.Cursor = Cursors.Default;
+            tip.Hide(dgvOrders);
+        };
+
+        dgvOrders.CellClick += (_, e) =>
+        {
+            if (!IsPendingCancelCell(e.RowIndex, e.ColumnIndex)) return;
+            if (dgvOrders.Rows[e.RowIndex].Cells["OrderId"].Value is not int orderId) return;
+            OpenCancelRequest(orderId);
+        };
+    }
+
+    private void OpenCancelRequest(int orderId)
+    {
+        var order = AppServices.Orders.GetById(orderId);
+        if (order == null) return;
+
+        // Someone else may have handled it since the list loaded.
+        if (order.CancelRequestStatus != "Pending")
+        {
+            MessageBox.Show(this, "This cancellation request has already been handled.", "Cancellation Request",
+                MessageBoxButtons.OK, MessageBoxIcon.Information);
+            RefreshCurrentView();
+            return;
+        }
+
+        using var dlg = new FrmCancelRequest(order);
+        dlg.ShowDialog(this);
+        RefreshCurrentView();
+    }
+
     private void LoadOrders(string searchTerm = "")
     {
         var orders = string.IsNullOrWhiteSpace(searchTerm)
@@ -81,11 +148,24 @@ public partial class FrmOrderList : Form
                 Total = $"{o.TotalAmount:N2}",
                 o.Status,
                 Pickup = o.PickupDate?.ToString("MM/dd/yyyy") ?? "",
-                Date = o.CreatedAt.ToString("MM/dd hh:mm tt")
+                Date = o.CreatedAt.ToString("MM/dd hh:mm tt"),
+                Cancel = o.CancelRequestStatus == "Pending" ? "Pending" : ""
             }).ToList();
 
             if (dgvOrders.Columns["OrderId"] is { } col)
                 col.Visible = false;
+
+            // Far-right column that shows the calendar-X icon only when a cancel request is pending.
+            if (dgvOrders.Columns["Cancel"] is { } cancelCol)
+            {
+                cancelCol.HeaderText = "Cancel";
+                cancelCol.AutoSizeMode = DataGridViewAutoSizeColumnMode.None;
+                cancelCol.Width = 80;
+                cancelCol.MinimumWidth = 80;
+                cancelCol.SortMode = DataGridViewColumnSortMode.NotSortable;
+                cancelCol.HeaderCell.Style.Alignment = DataGridViewContentAlignment.MiddleCenter;
+                cancelCol.DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleCenter;
+            }
 
             dgvOrders.ClearSelection();
             foreach (DataGridViewRow r in dgvOrders.Rows)
@@ -106,6 +186,7 @@ public partial class FrmOrderList : Form
     private void dgvOrders_CellDoubleClick(object? sender, DataGridViewCellEventArgs e)
     {
         if (e.RowIndex < 0) return;
+        if (IsPendingCancelCell(e.RowIndex, e.ColumnIndex)) return;
         OpenOrderDetail();
     }
 
@@ -173,13 +254,13 @@ public partial class FrmOrderList : Form
         if (dgvOrders.Columns[e.ColumnIndex].Name != "Status") return;
         e.CellStyle.ForeColor = e.Value?.ToString() switch
         {
-            "Booked"           => UIThemeHelper.Slate,
-            "Washing"          => UIThemeHelper.Indigo,
-            "Drying"           => UIThemeHelper.Slate,
+            "Booked" => UIThemeHelper.Slate,
+            "Washing" => UIThemeHelper.Indigo,
+            "Drying" => UIThemeHelper.Slate,
             "Ready for Pickup" => UIThemeHelper.Success,
-            "Claimed"          => UIThemeHelper.Neutral,
-            "Cancelled"        => UIThemeHelper.Danger,
-            _                  => UIThemeHelper.Indigo
+            "Claimed" => UIThemeHelper.Neutral,
+            "Cancelled" => UIThemeHelper.Danger,
+            _ => UIThemeHelper.Indigo
         };
         e.CellStyle.Font = new Font("Segoe UI Semibold", 9, FontStyle.Bold);
     }
