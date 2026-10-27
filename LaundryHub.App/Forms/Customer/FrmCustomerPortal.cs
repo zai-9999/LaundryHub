@@ -15,7 +15,7 @@ public partial class FrmCustomerPortal : Form
     public FrmCustomerPortal()
     {
         InitializeComponent();
-        btnViewTicket.Text = " View Invoice";
+        btnViewTicket.Visible = false;
         DoubleBuffered = true;
         ResizeRedraw = true;
 
@@ -52,9 +52,7 @@ public partial class FrmCustomerPortal : Form
         pnlHeader.Subtitle = "TRACK LAUNDRY PROGRESS & PICKUP STATUS";
         pnlHeader.SearchBox.Hint = "Search order number...";
         pnlHeader.SearchBox.TextChanged += (s, e) => FilterOrders();
-        pnlHeader.ActionButton.Text = " Logout";
-        pnlHeader.ActionButton.PrimaryColor = UIThemeHelper.Indigo;
-        pnlHeader.ActionButton.Click += btnLogout_Click;
+        pnlHeader.ActionButton.Visible = false;
 
         if (SessionManager.CurrentUser != null)
         {
