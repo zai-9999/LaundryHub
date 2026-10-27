@@ -105,6 +105,7 @@ public partial class FrmCustomerLogin : Form
     private void btnRegister_Click(object? sender, EventArgs e)
     {
         var regForm = new Customer.FrmCustomerRegister();
+        regForm.FormClosing += (_, _) => this.WindowState = regForm.WindowState;
         regForm.FormClosed += (_, _) => this.Show();
         regForm.WindowState = this.WindowState;
         regForm.Show();
@@ -128,6 +129,7 @@ public partial class FrmCustomerLogin : Form
     {
         var portal = new Customer.FrmCustomerPortal();
 
+        portal.FormClosing += (_, _) => this.WindowState = portal.WindowState;
         portal.FormClosed += (_, _) =>
         {
             SessionManager.Logout();
