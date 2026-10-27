@@ -44,6 +44,16 @@ public partial class FrmNewOrder : Form
         Controls.Add(pnlCard);
 
         UIThemeHelper.StyleStandardForm(this);
+
+        // The theme makes combo boxes flat white (borderless); use the standard style so they stay visible.
+        foreach (var cb in new[] { cmbCategory, cmbService, cmbLoadSize })
+            cb.FlatStyle = FlatStyle.Standard;
+        nudLoads.BackColor = Color.White;
+
+        lblSecService.UseMnemonic = false;           // keep the "&" visible
+        lblSecCustomer.Text = "Customer";
+        lblSecService.Text = "Laundry Category & Service";
+        lblSecPickup.Text = "Pickup Date";
         this.ClientSize = new Size(pnlCard.Right + margin, pnlCard.Bottom + margin);
         UIThemeHelper.ApplyRoundedRegion(pnlCard, UIThemeHelper.LoginCardRadius);
         pnlCard.SizeChanged += (s, e) =>
@@ -60,8 +70,8 @@ public partial class FrmNewOrder : Form
         btnSave.HoverTextColor = Color.White;
         dtpPickup.MinDate = DateTime.Today;
         dtpPickup.Value = DateTime.Today.AddDays(1);
-        InputValidator.RestrictToDecimalInput(txtWeight);
-        txtWeight.TextChanged += (_, _) => lblError.Visible = false;
+        cmbLoadSize.SelectedIndexChanged += (_, _) => lblError.Visible = false;
+        nudLoads.ValueChanged += (_, _) => lblError.Visible = false;
         cmbService.SelectedIndexChanged += (_, _) => lblError.Visible = false;
         dtpPickup.ValueChanged += (_, _) => lblError.Visible = false;
         LoadServices();
@@ -96,7 +106,26 @@ public partial class FrmNewOrder : Form
             LoadPricingCalculator.ClothesCategory,
             LoadPricingCalculator.HouseholdTextilesCategory
         };
-        cmbCategory.SelectedIndex = -1;
+        cmbCategory.SelectedIndex = 0;   // default to Clothes
+    }
+
+    // One entry in the Load Size dropdown (Small / Medium / Large for the chosen category).
+    private sealed record LoadOption(LoadPrice Tier)
+    {
+        public override string ToString() =>
+            $"{char.ToUpper(Tier.LoadSize[0])}{Tier.LoadSize[1..].ToLower()}  (up to {Tier.MaxWeightKg:0.##} kg)  -  ₱{Tier.Price:N2}";
+    }
+
+    private void PopulateLoadSizes()
+    {
+        cmbLoadSize.Items.Clear();
+        if (cmbCategory.SelectedItem is string category)
+        {
+            foreach (var tier in _loadPrices.Where(p => p.Category == category).OrderBy(p => p.MaxWeightKg))
+                cmbLoadSize.Items.Add(new LoadOption(tier));
+        }
+        cmbLoadSize.SelectedIndex = cmbLoadSize.Items.Count > 0 ? 0 : -1;   // default to Small
+        nudLoads.Value = 1;
     }
 
     private void txtSearch_TextChanged(object? sender, EventArgs e)
@@ -135,32 +164,44 @@ public partial class FrmNewOrder : Form
         }
     }
 
+    // Weight and price are derived from the selected load size and number of loads.
+    private bool TryGetLoad(out LoadPrice tier, out int loads, out decimal weightKg, out decimal total)
+    {
+        tier = null!;
+        loads = (int)nudLoads.Value;
+        weightKg = 0;
+        total = 0;
+        if (cmbLoadSize.SelectedItem is not LoadOption option) return false;
+
+        tier = option.Tier;
+        weightKg = tier.MaxWeightKg * loads;
+        total = tier.Price * loads;
+        return true;
+    }
+
     private void ComputePrice()
     {
         if (cmbService.SelectedItem is not ServiceType ||
-            cmbCategory.SelectedItem is not string category ||
-            !decimal.TryParse(txtWeight.Text, out decimal kg) || kg <= 0)
+            cmbCategory.SelectedItem is not string ||
+            !TryGetLoad(out var tier, out var loads, out var kg, out var total))
         {
             lblPrice.Text = "0.00";
-            lblPriceBreakdown.Text = "Select a category, service, and weight to compute.";
+            lblPriceBreakdown.Text = "Select a category, service, and load size to compute.";
             return;
         }
 
-        if (kg > 100)
-        {
-            lblPrice.Text = "—";
-            lblPriceBreakdown.Text = "Weight seems too high. Please verify.";
-            return;
-        }
-
-        var quote = LoadPricingCalculator.Calculate(category, kg, _loadPrices);
-        lblPrice.Text = $"{quote.Total:N2}";
-        lblPriceBreakdown.Text = $"{quote.GetBreakdown()}  |  {kg:N2} kg";
+        lblPrice.Text = $"{total:N2}";
+        lblPriceBreakdown.Text = $"{loads} x {tier.LoadSize.ToLower()} load  |  {kg:0.##} kg (auto)";
     }
 
-    private void cmbCategory_SelectedIndexChanged(object? sender, EventArgs e) => ComputePrice();
+    private void cmbCategory_SelectedIndexChanged(object? sender, EventArgs e)
+    {
+        PopulateLoadSizes();
+        ComputePrice();
+    }
     private void cmbService_SelectedIndexChanged(object? sender, EventArgs e) => ComputePrice();
-    private void txtWeight_TextChanged(object? sender, EventArgs e) => ComputePrice();
+    private void cmbLoadSize_SelectedIndexChanged(object? sender, EventArgs e) => ComputePrice();
+    private void nudLoads_ValueChanged(object? sender, EventArgs e) => ComputePrice();
 
     private void btnSave_Click(object? sender, EventArgs e)
     {
@@ -170,8 +211,7 @@ public partial class FrmNewOrder : Form
         {
             var svc = (ServiceType)cmbService.SelectedItem!;
             var category = (string)cmbCategory.SelectedItem!;
-            var kg = decimal.Parse(txtWeight.Text);
-            var total = LoadPricingCalculator.Calculate(category, kg, _loadPrices).Total;
+            TryGetLoad(out _, out _, out var kg, out var total);
 
             var order = new Order
             {
@@ -191,8 +231,8 @@ public partial class FrmNewOrder : Form
             int orderId = AppServices.Orders.Add(order);
             order.OrderId = orderId;
 
-            // Show QR ticket
-            ShowQrTicket(order);
+            // Show invoice after order creation
+            ShowOrderInvoice(order);
 
             // Send email receipt in background
             EmailHelper.SendReceiptAsync(order, _selectedCustomer);
@@ -206,58 +246,11 @@ public partial class FrmNewOrder : Form
         }
     }
 
-    private void ShowQrTicket(Order order)
+    private void ShowOrderInvoice(Order order)
     {
-        using var bmp = Helpers.QrCodeHelper.GenerateQrCode(order.OrderNumber);
-
-        using var ticketForm = new Form
-        {
-            Text = $"QR Ticket  {order.OrderNumber}",
-            Size = new Size(380, 480),
-            StartPosition = FormStartPosition.CenterParent,
-            FormBorderStyle = FormBorderStyle.FixedDialog,
-            MaximizeBox = false,
-            BackColor = UIThemeHelper.Slate
-        };
-
-        var pb = new PictureBox
-        {
-            Image = bmp,
-            SizeMode = PictureBoxSizeMode.Zoom,
-            Size = new Size(220, 220),
-            Location = new Point(80, 20),
-            BackColor = Color.White
-        };
-        var info = new Label
-        {
-            Text = $"{order.OrderNumber}\n{_selectedCustomer!.FullName}\n{order.ServiceName} — {order.LaundryCategory}  |  {order.WeightKg} kg\n{order.TotalAmount:N2}  |  {order.PickupDate:MMM dd, yyyy}",
-            ForeColor = Color.White,
-            Font = new Font("Segoe UI", 9.5f),
-            Location = new Point(20, 255),
-            Size = new Size(330, 100),
-            TextAlign = ContentAlignment.MiddleCenter
-        };
-        var btnPrint = new Button
-        {
-            Text = "  Print Ticket",
-            Location = new Point(50, 365),
-            Size = new Size(260, 38),
-            Font = new Font("Segoe UI", 10, FontStyle.Bold),
-            BackColor = UIThemeHelper.Navy,
-            ForeColor = Color.White,
-            FlatStyle = FlatStyle.Flat,
-            Cursor = Cursors.Hand
-        };
-        btnPrint.FlatAppearance.BorderSize = 0;
-        btnPrint.Click += (_, _) =>
-        {
-            var path = Helpers.QrCodeHelper.SaveToTempFile(order.OrderNumber);
-            System.Diagnostics.Process.Start(new System.Diagnostics.ProcessStartInfo(path) { UseShellExecute = true });
-        };
-
-        ticketForm.Controls.AddRange(new Control[] { pb, info, btnPrint });
-        UIThemeHelper.ApplyTheme(ticketForm);
-        ticketForm.ShowDialog(this);
+        var customer = AppServices.Customers.GetById(order.CustomerId);
+        using var dlg = new Customer.FrmCustomerInvoice(order, customer);
+        dlg.ShowDialog(this);
     }
 
     private bool ValidateOrder()
@@ -285,17 +278,10 @@ public partial class FrmNewOrder : Form
             return false;
         }
 
-        if (!decimal.TryParse(txtWeight.Text, out decimal kg) || kg <= 0 || decimal.Round(kg, 2) != kg)
+        if (!TryGetLoad(out _, out _, out _, out _))
         {
-            ShowErr("Enter a valid weight up to two decimal places.");
-            txtWeight.Focus();
-            return false;
-        }
-
-        if (kg > 100)
-        {
-            ShowErr("Weight seems too high. Please verify (max 100 kg).");
-            txtWeight.Focus();
+            ShowErr("Please select a load size.");
+            cmbLoadSize.Focus();
             return false;
         }
 

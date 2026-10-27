@@ -70,8 +70,8 @@ public partial class FrmCustomerLogin : Form
             if (user == null || string.IsNullOrWhiteSpace(user.PasswordHash) || !BCrypt.Net.BCrypt.Verify(password, user.PasswordHash))
             {
                 ThrottleService.RegisterAttempt(key, limit, window, lockout);
-                txtPassword.Clear();
                 ShowError("Invalid username or password.");
+                txtPassword.Clear();
                 txtPassword.Focus();
                 return;
             }
@@ -88,8 +88,8 @@ public partial class FrmCustomerLogin : Form
             // Block Staff/Admin from using the Customer Portal
             if (user.Role != UserRole.Customer.ToString())
             {
-                txtPassword.Clear();
                 ShowError("This portal is for Customers only. Staff & Admin please use the main portal.");
+                txtPassword.Clear();
                 return;
             }
 
@@ -105,6 +105,7 @@ public partial class FrmCustomerLogin : Form
     private void btnRegister_Click(object? sender, EventArgs e)
     {
         var regForm = new Customer.FrmCustomerRegister();
+        regForm.FormClosing += (_, _) => this.WindowState = regForm.WindowState;
         regForm.FormClosed += (_, _) => this.Show();
         regForm.WindowState = this.WindowState;
         regForm.Show();
@@ -128,6 +129,7 @@ public partial class FrmCustomerLogin : Form
     {
         var portal = new Customer.FrmCustomerPortal();
 
+        portal.FormClosing += (_, _) => this.WindowState = portal.WindowState;
         portal.FormClosed += (_, _) =>
         {
             SessionManager.Logout();
