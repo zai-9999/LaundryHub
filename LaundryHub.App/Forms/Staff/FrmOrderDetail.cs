@@ -39,6 +39,7 @@ public partial class FrmOrderDetail : Form
         lblOrderNumber.BackColor = UIThemeHelper.Navy;
         pnlContainer.BackColor = UIThemeHelper.Surface;
         pnlRightWrapper.BackColor = UIThemeHelper.Surface;
+        BuildExtras();
         RefreshOrderData();
     }
 
@@ -63,7 +64,7 @@ public partial class FrmOrderDetail : Form
         }
 
         this.Text = $"Order Details  {_order.OrderNumber}";
-        lblOrderNumber.Text = $" {_order.OrderNumber}";
+        lblOrderNumber.Text = _order.OrderNumber;
         lblCustomerInfo.Text = $"{_customer?.FullName ?? _order.CustomerName} ({_customer?.Phone ?? _order.CustomerPhone})";
         lblServiceInfo.Text = $"{_order.ServiceName ?? "Standard Laundry"} — {_order.LaundryCategory}";
         lblWeightInfo.Text = $"{_order.WeightKg:F2} kg";
@@ -87,14 +88,7 @@ public partial class FrmOrderDetail : Form
         // Status badge styling
         UpdateStatusBadge();
 
-        // QR Code
-        try
-        {
-            var oldImg = picQrCode.Image;
-            picQrCode.Image = QrCodeHelper.GenerateImage(_order.OrderNumber);
-            oldImg?.Dispose();
-        }
-        catch { }
+        picQrCode.SetInvoice(_order, _customer, LoadPrices());
 
         // Update button states
         btnAdvanceStatus.Visible = _order.Status is "Washing" or "Drying";
@@ -110,7 +104,7 @@ public partial class FrmOrderDetail : Form
         }
 
         btnClaimOrder.Visible = _order.Status == "Ready for Pickup" || (_order.Status is "Washing" or "Drying" && !_order.PaymentRecorded);
-        btnCancelOrder.Visible = _order.Status != "Claimed" && _order.Status != "Cancelled";
+        btnCancelOrder.Visible = _order.Status is not ("Ready for Pickup" or "Claimed" or "Cancelled");
         btnEditWeight.Visible = _order.Status is "Washing" or "Drying" or "Ready for Pickup" && !_order.PaymentRecorded;
     }
 
@@ -411,6 +405,14 @@ public partial class FrmOrderDetail : Form
 
     private void btnCancelOrder_Click(object? sender, EventArgs e)
     {
+        RefreshOrderData();
+        if (_order.Status is "Ready for Pickup" or "Claimed" or "Cancelled")
+        {
+            MessageBox.Show($"This order is '{_order.Status}' and can no longer be cancelled.",
+                "Cannot Cancel", MessageBoxButtons.OK, MessageBoxIcon.Information);
+            return;
+        }
+
         using var dlg = new Form
         {
             Text = "Cancel Order",
@@ -489,23 +491,32 @@ public partial class FrmOrderDetail : Form
     {
         try
         {
-            using var printDoc = new PrintDocument();
+            RefreshOrderData();
+            var prices = LoadPrices();
+
+            using var printDoc = new PrintDocument { DocumentName = $"Invoice {_order.OrderNumber}" };
             printDoc.PrintPage += (s, ev) =>
             {
-                using var fontTitle = new Font("Segoe UI", 16, FontStyle.Bold);
-                using var fontSub = new Font("Segoe UI", 10);
-                ev.Graphics?.DrawString(AppServices.ShopName, fontTitle, Brushes.Black, 60, 40);
-                ev.Graphics?.DrawString($"Order E-Ticket: {_order.OrderNumber}", fontSub, Brushes.Black, 60, 75);
-                ev.Graphics?.DrawString($"Customer: {_order.CustomerName}", fontSub, Brushes.Black, 60, 95);
-                ev.Graphics?.DrawString($"Service: {_order.ServiceName} — {_order.LaundryCategory} | {_order.WeightKg} kg", fontSub, Brushes.Black, 60, 115);
-                ev.Graphics?.DrawString($"Amount Due: {_order.TotalAmount:N2}", fontSub, Brushes.Black, 60, 135);
-                if (picQrCode.Image != null)
-                {
-                    ev.Graphics?.DrawImage(picQrCode.Image, 60, 165, 180, 180);
-                }
+                if (ev.Graphics == null) return;
+
+                // Scale the invoice to fill the printable area (page units are 1/100 inch)
+                var area = ev.MarginBounds;
+                float scale = Math.Min(area.Width  / InvoiceRenderer.LogicalWidth,
+                                       area.Height / InvoiceRenderer.LogicalHeight);
+                float width = InvoiceRenderer.LogicalWidth * scale;
+                float x = area.Left + (area.Width - width) / 2f;   // centre horizontally
+
+                InvoiceRenderer.Draw(ev.Graphics, new RectangleF(x, area.Top, width, 0),
+                    _order, _customer, AppServices.ShopName, prices);
+                ev.HasMorePages = false;
             };
 
-            using var preview = new PrintPreviewDialog { Document = printDoc };
+            using var preview = new PrintPreviewDialog
+            {
+                Document = printDoc,
+                Text = $"Invoice  {_order.OrderNumber}",
+                WindowState = FormWindowState.Maximized
+            };
             preview.ShowDialog(this);
         }
         catch (Exception ex)
@@ -524,5 +535,46 @@ public partial class FrmOrderDetail : Form
 
         EmailHelper.SendReceiptAsync(_order, _customer);
         MessageBox.Show($"A digital receipt has been sent to {_customer.Email}.", "Email Sent", MessageBoxButtons.OK, MessageBoxIcon.Information);
+    }
+
+    private void BuildExtras()
+    {
+        // Right-click the invoice to copy
+        var menu = new ContextMenuStrip();
+        menu.Items.Add("Copy invoice number", null, (_, _) => CopyText(_order.OrderNumber));
+        menu.Items.Add("Copy invoice details", null, (_, _) => CopyText(BuildInvoiceText()));
+        picQrCode.ContextMenuStrip = menu;
+
+        var tip = new ToolTip();
+        tip.SetToolTip(lblOrderNumber, "Double-click to copy the invoice number");
+        foreach (Control ctl in lblOrderNumber.Controls)
+            tip.SetToolTip(ctl, "Double-click to copy the invoice number");
+        lblOrderNumber.DoubleClick += (_, _) => CopyText(_order.OrderNumber);
+    }
+
+    private string BuildInvoiceText() => string.Join(Environment.NewLine,
+        AppServices.ShopName,
+        $"Invoice No: {_order.OrderNumber}",
+        $"Customer: {lblCustomerInfo.Text}",
+        $"Service: {lblServiceInfo.Text}",
+        $"Weight: {lblWeightInfo.Text}",
+        $"Total: {lblTotalAmount.Text}",
+        $"Payment: {lblPaymentStatus.Text}",
+        $"Pickup: {lblPickupDate.Text}",
+        $"Order Date: {lblCreatedDate.Text}");
+
+    private static void CopyText(string text)
+    {
+        try { Clipboard.SetText(text); }
+        catch (Exception ex)
+        {
+            MessageBox.Show($"Could not copy: {ex.Message}", "Copy Failed", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+        }
+    }
+
+    private static List<LoadPrice>? LoadPrices()
+    {
+        try { return AppServices.LoadPricing.GetAll().ToList(); }
+        catch { return null; }
     }
 }

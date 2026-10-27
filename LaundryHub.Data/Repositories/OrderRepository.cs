@@ -161,6 +161,10 @@ public class OrderRepository : IOrderRepository
         {
             var oldStatus = conn.ExecuteScalar<string?>("SELECT status FROM orders WHERE order_id = @OrderId FOR UPDATE", new { OrderId = orderId }, transaction: tran);
 
+            if (newStatus == "Cancelled" && oldStatus is not ("Booked" or "Washing" or "Drying"))
+                throw new InvalidOperationException(
+                    $"An order that is '{oldStatus}' can no longer be cancelled.");
+
             conn.Execute(@"
                 UPDATE orders
                 SET status = @Status,
