@@ -36,7 +36,6 @@ public partial class FrmAdminDashboard : Form
         pnlSidebar.AddSection("ADMINISTRATION");
         pnlSidebar.AddNavButton("", "Manage Staff", btnManageStaff_Click);
         pnlSidebar.AddNavButton("", "Services & Rates", btnServicePricing_Click);
-        pnlSidebar.AddNavButton("", "Daily Reports & Excel", btnExportReport_Click);
 
         pnlSidebar.AddSection("SYSTEM");
         pnlSidebar.AddNavButton("", "Refresh Dashboard", btnRefresh_Click);
@@ -103,11 +102,6 @@ public partial class FrmAdminDashboard : Form
         f.ShowDialog(this);
     }
 
-    private void btnExportReport_Click(object? sender, EventArgs e)
-    {
-        using var f = new FrmExportReport();
-        f.ShowDialog(this);
-    }
 
     private void btnCustomerRegistration_Click(object? sender, EventArgs e)
     {
