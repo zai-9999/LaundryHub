@@ -133,7 +133,7 @@ public class OrderRepository : IOrderRepository
         ("Washing", "Drying") => true,
         ("Drying", "Ready for Pickup") => true,
         ("Ready for Pickup", "Claimed") => true,
-        ("Washing" or "Drying" or "Ready for Pickup", "Cancelled") => true,
+        ("Booked" or "Washing" or "Drying" or "Ready for Pickup", "Cancelled") => true,
         _ => false
     };
 
@@ -264,6 +264,79 @@ public class OrderRepository : IOrderRepository
         }
     }
 
+    public bool RequestCancellation(int orderId, int customerId, string reason)
+    {
+        using var conn = _db.CreateConnection();
+        return conn.Execute(@"
+            UPDATE orders
+            SET cancel_request_status = 'Pending',
+                cancel_request_reason = @Reason,
+                cancel_requested_at = NOW(),
+                updated_at = NOW()
+            WHERE order_id = @OrderId
+              AND customer_id = @CustomerId
+              AND status IN ('Booked', 'Washing')
+              AND (cancel_request_status IS NULL OR cancel_request_status = 'Rejected')",
+            new { OrderId = orderId, CustomerId = customerId, Reason = reason }) > 0;
+    }
+
+    public bool ApproveCancellationRequest(int orderId, int? changedBy = null)
+    {
+        using var conn = _db.CreateConnection();
+        if (conn.State != System.Data.ConnectionState.Open) conn.Open();
+        using var tran = conn.BeginTransaction();
+        try
+        {
+            var row = conn.QueryFirstOrDefault<(string Status, string? Request, string? Reason)>(@"
+                SELECT status, cancel_request_status, cancel_request_reason
+                FROM orders WHERE order_id = @OrderId FOR UPDATE",
+                new { OrderId = orderId }, transaction: tran);
+
+            if (row.Request != "Pending" || !IsValidTransition(row.Status, "Cancelled"))
+            {
+                tran.Rollback();
+                return false;
+            }
+
+            conn.Execute(@"
+                UPDATE orders
+                SET status = 'Cancelled',
+                    cancel_reason = @Reason,
+                    cancel_request_status = 'Approved',
+                    updated_at = NOW()
+                WHERE order_id = @OrderId",
+                new { OrderId = orderId, Reason = row.Reason }, transaction: tran);
+
+            conn.Execute(@"
+                INSERT INTO order_status_log (order_id, old_status, new_status, changed_by, notes)
+                VALUES (@OrderId, @OldStatus, 'Cancelled', @ChangedBy, @Notes)",
+                new
+                {
+                    OrderId = orderId,
+                    OldStatus = row.Status,
+                    ChangedBy = changedBy,
+                    Notes = "Customer cancellation request approved: " + row.Reason
+                }, transaction: tran);
+
+            tran.Commit();
+            return true;
+        }
+        catch
+        {
+            tran.Rollback();
+            throw;
+        }
+    }
+
+    public bool RejectCancellationRequest(int orderId, int? changedBy = null)
+    {
+        using var conn = _db.CreateConnection();
+        return conn.Execute(@"
+            UPDATE orders
+            SET cancel_request_status = 'Rejected', updated_at = NOW()
+            WHERE order_id = @OrderId AND cancel_request_status = 'Pending'",
+            new { OrderId = orderId }) > 0;
+    }
     public void Archive(int orderId)
     {
         using var conn = _db.CreateConnection();

@@ -15,6 +15,7 @@ public partial class FrmCustomerPortal : Form
     public FrmCustomerPortal()
     {
         InitializeComponent();
+        btnViewTicket.Text = " View Invoice";
         DoubleBuffered = true;
         ResizeRedraw = true;
 
@@ -30,9 +31,10 @@ public partial class FrmCustomerPortal : Form
         btnNavOrders.IsActive = true;
 
         pnlSidebar.AddSection("SERVICES");
-        pnlSidebar.AddNavButton("", "Book New Laundry", btnBookOrder_Click);
+
         pnlSidebar.AddNavButton("", "My Profile & Info", btnProfile_Click);
-        pnlSidebar.AddNavButton("", "View E-Ticket", BtnViewTicket_Click);
+        pnlSidebar.AddNavButton("", "View Invoice", BtnViewTicket_Click);
+        pnlSidebar.AddNavButton("", "Request Cancellation", BtnRequestCancel_Click);
 
         pnlSidebar.AddSection("SYSTEM");
         pnlSidebar.AddNavButton("", "Refresh Status", async (s, e) =>
@@ -47,12 +49,12 @@ public partial class FrmCustomerPortal : Form
 
         // Header Setup
         pnlHeader.Title = "My Laundry Portal";
-        pnlHeader.Subtitle = "TRACK LAUNDRY PROGRESS, PICKUP STATUS & BOOK ONLINE";
+        pnlHeader.Subtitle = "TRACK LAUNDRY PROGRESS & PICKUP STATUS";
         pnlHeader.SearchBox.Hint = "Search order number...";
         pnlHeader.SearchBox.TextChanged += (s, e) => FilterOrders();
-        pnlHeader.ActionButton.Text = " Book";
+        pnlHeader.ActionButton.Text = " Logout";
         pnlHeader.ActionButton.PrimaryColor = UIThemeHelper.Indigo;
-        pnlHeader.ActionButton.Click += btnBookOrder_Click;
+        pnlHeader.ActionButton.Click += btnLogout_Click;
 
         if (SessionManager.CurrentUser != null)
         {
@@ -82,22 +84,7 @@ public partial class FrmCustomerPortal : Form
         }
     }
 
-    private async void btnBookOrder_Click(object? sender, EventArgs e)
-    {
-        if (_customer == null)
-        {
-            MessageBox.Show("Please complete your profile before booking an order.", "Notice", MessageBoxButtons.OK, MessageBoxIcon.Information);
-            return;
-        }
 
-        var bookForm = new FrmBookOrder(_customer, _user);
-        if (bookForm.ShowDialog(this) == DialogResult.OK && bookForm.CreatedOrder != null)
-        {
-            DataCache.Invalidate($"portal_customer_orders_{_customer.CustomerId}");
-            await LoadOrdersAsync();
-            ShowTicketModal(bookForm.CreatedOrder);
-        }
-    }
 
     private void btnLogout_Click(object? sender, EventArgs e)
     {
@@ -155,7 +142,7 @@ public partial class FrmCustomerPortal : Form
 
         this.SafeInvoke(() =>
         {
-            lblActiveStat.Text = orders.Count(o => o.Status is "Washing" or "Drying").ToString();
+            lblActiveStat.Text = orders.Count(o => o.Status is "Booked" or "Washing" or "Drying").ToString();
             lblReadyStat.Text = orders.Count(o => o.Status == "Ready for Pickup").ToString();
             lblTotalStat.Text = orders.Count.ToString();
 
@@ -171,7 +158,7 @@ public partial class FrmCustomerPortal : Form
 
         if (chkActiveOnly.Checked)
         {
-            filtered = filtered.Where(o => o.Status is "Washing" or "Drying" or "Ready for Pickup");
+            filtered = filtered.Where(o => o.Status is "Booked" or "Washing" or "Drying" or "Ready for Pickup");
         }
 
         var query = pnlHeader.SearchBox.Text.Trim();
@@ -194,6 +181,8 @@ public partial class FrmCustomerPortal : Form
             Total = $"{o.TotalAmount:N2}",
             Payment = o.PaymentRecorded ? "Paid" : "Unpaid",
             o.Status,
+            Cancel_Request = o.CancelRequestStatus == "Pending" ? "Cancel requested"
+               : o.CancelRequestStatus == "Rejected" ? "Cancel declined" : "",
             Pickup_Date = o.PickupDate?.ToString("MMM dd, yyyy") ?? "",
             Date_Placed = o.CreatedAt.ToString("MMM dd, yyyy")
         }).ToList();
@@ -215,30 +204,39 @@ public partial class FrmCustomerPortal : Form
         SetWeight("Date_Placed", 105);
     }
 
-    private void BtnViewTicket_Click(object? sender, EventArgs e)
+    private async void BtnRequestCancel_Click(object? sender, EventArgs e)
     {
-        if (dgvOrders.SelectedRows.Count == 0)
+        if (_customer == null) return;
+
+        if (dgvOrders.SelectedRows.Count == 0 ||
+            dgvOrders.SelectedRows[0].Cells["OrderId"].Value is not int orderId)
         {
-            MessageBox.Show("Please select an order from the list first to view its e-ticket.", "No Order Selected", MessageBoxButtons.OK, MessageBoxIcon.Information);
+            MessageBox.Show("Please select an order from the list first.", "No Order Selected",
+                MessageBoxButtons.OK, MessageBoxIcon.Information);
             return;
         }
-        var row = dgvOrders.SelectedRows[0];
-        if (row.Cells["OrderId"].Value is int orderId)
-        {
-            var order = AppServices.Orders.GetById(orderId);
-            if (order != null)
-            {
-                ShowTicketModal(order);
-            }
-        }
-    }
 
-    private void ShowTicketModal(Order order)
-    {
+        var order = AppServices.Orders.GetById(orderId);
+        if (order == null || order.CustomerId != _customer.CustomerId) return;
+
+        if (order.Status is not ("Booked" or "Washing"))
+        {
+            MessageBox.Show("Only orders that are Booked or Washing can be cancelled. Please contact the shop.",
+                "Cannot Request Cancellation", MessageBoxButtons.OK, MessageBoxIcon.Information);
+            return;
+        }
+
+        if (order.CancelRequestStatus == "Pending")
+        {
+            MessageBox.Show("You already sent a cancellation request for this order. Please wait for the shop's reply.",
+                "Request Pending", MessageBoxButtons.OK, MessageBoxIcon.Information);
+            return;
+        }
+
         using var dlg = new Form
         {
-            Text = $"E-Ticket  {order.OrderNumber}",
-            Size = new Size(380, 480),
+            Text = $"Request Cancellation  {order.OrderNumber}",
+            Size = new Size(420, 280),
             StartPosition = FormStartPosition.CenterParent,
             BackColor = Color.White,
             ForeColor = UIThemeHelper.Navy,
@@ -247,51 +245,203 @@ public partial class FrmCustomerPortal : Form
             MinimizeBox = false
         };
 
-        var pic = new PictureBox
+        var lblPrompt = new Label
         {
-            Size = new Size(200, 200),
-            Location = new Point(85, 20),
-            SizeMode = PictureBoxSizeMode.Zoom,
-            BackColor = Color.White,
-            BorderStyle = BorderStyle.FixedSingle,
-            Image = QrCodeHelper.GenerateImage(order.OrderNumber)
+            Text = "Reason for cancelling (the shop will review it) *:",
+            Font = new Font("Segoe UI", 9.5f, FontStyle.Bold),
+            ForeColor = UIThemeHelper.Navy,
+            Location = new Point(24, 18),
+            Size = new Size(360, 24)
         };
-        dlg.FormClosed += (_, _) => pic.Image?.Dispose();
-
-        var lblNo = new Label
+        var txtReason = new TextBox
         {
-            Text = order.OrderNumber,
+            Location = new Point(24, 48),
+            Size = new Size(360, 80),
+            Multiline = true,
+            MaxLength = 250,
+            Font = new Font("Segoe UI", 9.5f),
+            BorderStyle = BorderStyle.FixedSingle
+        };
+        var btnSend = new Button
+        {
+            Text = "Send Request",
+            Location = new Point(24, 148),
+            Size = new Size(360, 38),
+            BackColor = UIThemeHelper.Danger,
+            ForeColor = Color.White,
+            FlatStyle = FlatStyle.Flat,
+            Font = new Font("Segoe UI", 9.5f, FontStyle.Bold),
+            Cursor = Cursors.Hand
+        };
+        btnSend.FlatAppearance.BorderSize = 0;
+        btnSend.Click += (_, _) =>
+        {
+            var reason = txtReason.Text.Trim();
+            if (reason.Length < 5)
+            {
+                MessageBox.Show("Please explain your reason (at least 5 characters).", "Reason Required",
+                    MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                txtReason.Focus();
+                return;
+            }
+
+            try
+            {
+                if (!AppServices.Orders.RequestCancellation(order.OrderId, _customer.CustomerId, reason))
+                {
+                    MessageBox.Show("The request could not be sent. The order may have moved to the next stage. Please contact the shop.",
+                        "Request Not Sent", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                    return;
+                }
+                dlg.DialogResult = DialogResult.OK;
+                dlg.Close();
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"Failed to send request: {ex.Message}", "Error",
+                    MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
+        };
+
+        dlg.Controls.AddRange(new Control[] { lblPrompt, txtReason, btnSend });
+        UIThemeHelper.ApplyTheme(dlg);
+        if (dlg.ShowDialog(this) == DialogResult.OK)
+        {
+            DataCache.Invalidate($"portal_customer_orders_{_customer.CustomerId}");
+            await LoadOrdersAsync();
+            MessageBox.Show("Your cancellation request was sent. The shop will review it.",
+                "Request Sent", MessageBoxButtons.OK, MessageBoxIcon.Information);
+        }
+    }
+    private void BtnViewTicket_Click(object? sender, EventArgs e)
+    {
+        if (dgvOrders.SelectedRows.Count == 0)
+        {
+            MessageBox.Show("Please select an order from the list first to view its invoice.", "No Order Selected", MessageBoxButtons.OK, MessageBoxIcon.Information);
+            return;
+        }
+        var row = dgvOrders.SelectedRows[0];
+        if (row.Cells["OrderId"].Value is int orderId)
+        {
+            var order = AppServices.Orders.GetById(orderId);
+            if (order != null)
+            {
+                ShowInvoiceModal(order);
+            }
+        }
+    }
+
+    private void ShowInvoiceModal(Order order)
+    {
+        const string peso = "\u20B1";
+        var customerName = order.CustomerName ?? _customer?.FullName ?? "";
+        var customerPhone = order.CustomerPhone ?? _customer?.Phone ?? "";
+
+        var rows = new List<(string Label, string Value)>
+        {
+            ("Invoice No.", order.OrderNumber),
+            ("Date issued", order.CreatedAt.ToString("MMM dd, yyyy hh:mm tt")),
+            ("Customer", customerName),
+            ("Phone", customerPhone),
+            ("Service", order.ServiceName ?? "Laundry"),
+            ("Category", order.LaundryCategory),
+            ("Weight", $"{order.WeightKg:N2} kg"),
+            ("Target pickup", order.PickupDate?.ToString("MMMM dd, yyyy") ?? "-"),
+            ("Order status", order.Status),
+            ("Payment", order.PaymentRecorded ? "Paid" : "Unpaid")
+        };
+        if (order.PaymentRecorded && order.AmountPaid.HasValue)
+        {
+            rows.Add(("Amount paid", $"{peso}{order.AmountPaid.Value:N2}"));
+            rows.Add(("Change", $"{peso}{Math.Max(0, order.AmountPaid.Value - order.TotalAmount):N2}"));
+        }
+
+        using var dlg = new Form
+        {
+            Text = $"Invoice  {order.OrderNumber}",
+            StartPosition = FormStartPosition.CenterParent,
+            BackColor = Color.White,
+            ForeColor = UIThemeHelper.Navy,
+            FormBorderStyle = FormBorderStyle.FixedDialog,
+            MaximizeBox = false,
+            MinimizeBox = false
+        };
+
+        var controls = new List<Control>
+        {
+            new Label
+            {
+                Text = AppServices.ShopName,
+                Font = new Font("Segoe UI", 14, FontStyle.Bold),
+                ForeColor = UIThemeHelper.Navy,
+                Location = new Point(20, 16),
+                Size = new Size(374, 28),
+                TextAlign = ContentAlignment.MiddleCenter
+            },
+            new Label
+            {
+                Text = "INVOICE",
+                Font = new Font("Segoe UI", 10, FontStyle.Bold),
+                ForeColor = UIThemeHelper.Indigo,
+                Location = new Point(20, 46),
+                Size = new Size(374, 22),
+                TextAlign = ContentAlignment.MiddleCenter
+            }
+        };
+
+        int y = 84;
+        foreach (var (label, value) in rows)
+        {
+            controls.Add(new Label
+            {
+                Text = label,
+                Font = new Font("Segoe UI", 9),
+                ForeColor = UIThemeHelper.Slate,
+                Location = new Point(24, y),
+                Size = new Size(120, 22)
+            });
+            controls.Add(new Label
+            {
+                Text = value,
+                Font = new Font("Segoe UI", 9, FontStyle.Bold),
+                ForeColor = UIThemeHelper.Navy,
+                AutoEllipsis = true,
+                Location = new Point(150, y),
+                Size = new Size(244, 22)
+            });
+            y += 26;
+        }
+
+        controls.Add(new Panel
+        {
+            BackColor = Color.Gainsboro,
+            Location = new Point(24, y + 4),
+            Size = new Size(366, 1)
+        });
+        y += 14;
+
+        controls.Add(new Label
+        {
+            Text = "TOTAL",
+            Font = new Font("Segoe UI", 11, FontStyle.Bold),
+            ForeColor = UIThemeHelper.Navy,
+            Location = new Point(24, y),
+            Size = new Size(120, 28)
+        });
+        controls.Add(new Label
+        {
+            Text = $"{peso}{order.TotalAmount:N2}",
             Font = new Font("Segoe UI", 13, FontStyle.Bold),
             ForeColor = UIThemeHelper.Navy,
-            Location = new Point(20, 230),
-            Size = new Size(330, 25),
-            TextAlign = ContentAlignment.MiddleCenter
-        };
-
-        var lblStatus = new Label
-        {
-            Text = $"Status: {order.Status.ToUpper()}",
-            Font = new Font("Segoe UI", 10, FontStyle.Bold),
-            ForeColor = UIThemeHelper.Indigo,
-            Location = new Point(20, 260),
-            Size = new Size(330, 22),
-            TextAlign = ContentAlignment.MiddleCenter
-        };
-
-        var lblDetails = new Label
-        {
-            Text = $"Service: {order.ServiceName} — {order.LaundryCategory} ({order.WeightKg} kg)\nTotal Amount: {order.TotalAmount:N2} ({(order.PaymentRecorded ? "Paid" : "Unpaid")})\nTarget Pickup: {order.PickupDate:MMMM dd, yyyy}",
-            Font = new Font("Segoe UI", 9),
-            ForeColor = UIThemeHelper.Indigo,
-            Location = new Point(20, 290),
-            Size = new Size(330, 65),
-            TextAlign = ContentAlignment.MiddleCenter
-        };
+            Location = new Point(150, y - 2),
+            Size = new Size(244, 30)
+        });
+        y += 46;
 
         var btnClose = new Button
         {
-            Text = "Close Ticket",
-            Location = new Point(100, 380),
+            Text = "Close",
+            Location = new Point(122, y),
             Size = new Size(170, 36),
             BackColor = UIThemeHelper.Navy,
             ForeColor = Color.White,
@@ -301,8 +451,10 @@ public partial class FrmCustomerPortal : Form
         };
         btnClose.FlatAppearance.BorderSize = 0;
         btnClose.Click += (_, _) => dlg.Close();
+        controls.Add(btnClose);
 
-        dlg.Controls.AddRange(new Control[] { pic, lblNo, lblStatus, lblDetails, btnClose });
+        dlg.ClientSize = new Size(414, y + 60);
+        dlg.Controls.AddRange(controls.ToArray());
         UIThemeHelper.ApplyTheme(dlg);
         dlg.ShowDialog(this);
     }
