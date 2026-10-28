@@ -14,7 +14,7 @@ public class UserRepository : IUserRepository
     {
         using var conn = _db.CreateConnection();
         return conn.QueryFirstOrDefault<User>(
-            "SELECT * FROM users WHERE (LOWER(username) = LOWER(@Username) OR LOWER(email) = LOWER(@Username))",
+            "SELECT * FROM users WHERE (LOWER(username) = LOWER(@Username) OR LOWER(email) = LOWER(@Username)) AND is_archived = FALSE",
             new { Username = username });
     }
 
@@ -34,11 +34,27 @@ public class UserRepository : IUserRepository
             new { Email = email });
     }
 
-    public IEnumerable<User> GetAllStaff()
+    public IEnumerable<User> GetAllStaff(bool includeArchived = false)
     {
         using var conn = _db.CreateConnection();
-        return conn.Query<User>(
-            "SELECT * FROM users WHERE role IN ('Staff','Admin') ORDER BY full_name");
+        var sql = includeArchived
+            ? "SELECT * FROM users WHERE role IN ('Staff','Admin') ORDER BY full_name"
+            : "SELECT * FROM users WHERE role IN ('Staff','Admin') AND is_archived = FALSE ORDER BY full_name";
+        return conn.Query<User>(sql);
+    }
+
+    public void Archive(int userId)
+    {
+        using var conn = _db.CreateConnection();
+        conn.Execute("UPDATE users SET is_archived = TRUE, is_active = FALSE WHERE user_id = @UserId",
+            new { UserId = userId });
+    }
+
+    public void Restore(int userId)
+    {
+        using var conn = _db.CreateConnection();
+        conn.Execute("UPDATE users SET is_archived = FALSE, is_active = TRUE WHERE user_id = @UserId",
+            new { UserId = userId });
     }
 
     public void Add(User user)

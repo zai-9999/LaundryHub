@@ -229,6 +229,19 @@ public partial class FrmStaffDashboard : Form
 
         try
         {
+            if (nextStatus == "Cancelled")
+            {
+                var order = AppServices.Orders.GetById(_selectedOrderId);
+                if (order != null &&
+                    OrderCancelHelper.Prompt(this, order.OrderId, order.OrderNumber, order.Status))
+                {
+                    DataCache.InvalidatePrefix("daily_report");
+                    DataCache.InvalidatePrefix("recent_orders");
+                    await LoadSummaryAsync();
+                }
+                return;
+            }
+
             AppServices.Orders.UpdateStatus(_selectedOrderId, nextStatus,
                 changedBy: SessionManager.CurrentUser?.UserId);
             await LoadSummaryAsync();

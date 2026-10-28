@@ -35,6 +35,7 @@ partial class FrmManageStaff
         dgvStaff = new DataGridView();
         pnlToolBar = new Panel();
         btnToggleStatus = new HopeButton();
+        chkShowArchived = new CheckBox();
         lblGridTitle = new Label();
         pnlLeftCard = new Panel();
         flpForm = new FlowLayoutPanel();
@@ -175,12 +176,13 @@ partial class FrmManageStaff
         dgvStaff.SelectionMode = DataGridViewSelectionMode.FullRowSelect;
         dgvStaff.Size = new Size(534, 461);
         dgvStaff.TabIndex = 0;
-        dgvStaff.SelectionChanged += dgvStaff_SelectionChanged;
+        // Row selection is handled via CellMouseDown — no SelectionChanged wired here
         // 
         // pnlToolBar
         // 
         pnlToolBar.BackColor = Color.Transparent;
         pnlToolBar.Controls.Add(btnToggleStatus);
+        pnlToolBar.Controls.Add(chkShowArchived);
         pnlToolBar.Controls.Add(lblGridTitle);
         pnlToolBar.Dock = DockStyle.Top;
         pnlToolBar.Location = new Point(16, 0);
@@ -204,7 +206,20 @@ partial class FrmManageStaff
         btnToggleStatus.Size = new Size(194, 36);
         btnToggleStatus.TabIndex = 1;
         btnToggleStatus.Text = "Toggle Active/Disabled";
-        btnToggleStatus.Click += btnToggleStatus_Click;
+        // btnToggleStatus is hidden at runtime; do not wire Click here
+        // 
+        // chkShowArchived
+        // 
+        chkShowArchived.Dock = DockStyle.Right;
+        chkShowArchived.Font = new Font("Segoe UI", 9F, FontStyle.Bold);
+        chkShowArchived.ForeColor = Color.FromArgb(75, 86, 148);
+        chkShowArchived.Location = new Point(370, 4);
+        chkShowArchived.Name = "chkShowArchived";
+        chkShowArchived.Padding = new Padding(4, 0, 4, 0);
+        chkShowArchived.Size = new Size(164, 36);
+        chkShowArchived.TabIndex = 2;
+        chkShowArchived.Text = " Show Archived";
+        chkShowArchived.UseVisualStyleBackColor = true;
         // 
         // lblGridTitle
         // 
@@ -518,6 +533,7 @@ partial class FrmManageStaff
     private Panel pnlToolBar;
     private Label lblGridTitle;
     private HopeButton btnToggleStatus;
+    private CheckBox chkShowArchived;
     private Panel pnlGridWrap;
     private DataGridView dgvStaff;
 }

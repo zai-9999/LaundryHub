@@ -1,4 +1,4 @@
-﻿using LaundryHub.App.Helpers;
+using LaundryHub.App.Helpers;
 using LaundryHub.Core.Models;
 using System.Text.RegularExpressions;
 using CustomerModel = LaundryHub.Core.Models.Customer;
@@ -44,7 +44,7 @@ public partial class FrmCustomerRegistration : Form
         }
 
         foreach (var l in new[] { lblFullName, lblPhone, lblEmail, lblAddress })
-            l.ForeColor = UIThemeHelper.TextMuted;
+            l.ForeColor = UIThemeHelper.Indigo;
 
         lblFormTitle.ForeColor = UIThemeHelper.Navy;
         lblTitle.UseMnemonic = false;   // shows "&" instead of underlining the next letter
@@ -60,8 +60,38 @@ public partial class FrmCustomerRegistration : Form
         lblTitle.Text = _returnCustomer ? "Select or Register Customer" : "Customer Directory & Registration";
         btnSelect.Visible = _returnCustomer;
 
-        LoadCustomers();
+        // Window / grid / button polish
+        ClientSize = new Size(1240, 720);   // wider and taller so nothing is cut off
+        flpForm.AutoScroll = false;         // no scrollbar, no ghost buttons
+        flpButtons.AutoSize = true;
+        flpButtons.AutoSizeMode = AutoSizeMode.GrowAndShrink;
+
+        // Keep the Close button pinned to the right edge of the header
+        void PlaceClose() =>
+            btnClose.Location = new Point(pnlHeader.ClientSize.Width - btnClose.Width - 24,
+                                          (pnlHeader.Height - btnClose.Height) / 2);
+        btnClose.TextColor = Color.White;
+        btnClose.BorderColor = UIThemeHelper.Slate;
+        btnClose.Visible = true;
+        pnlHeader.SizeChanged += (_, _) => PlaceClose();
+        PlaceClose();
+        btnClose.BringToFront();
+
+        dgvCustomers.MultiSelect = false;
+        dgvCustomers.CellClick += dgvCustomers_CellClick;
+        dgvCustomers.CellMouseDown += dgvCustomers_CellMouseDown;
+        dgvCustomers.CellFormatting += dgvCustomers_CellFormatting;
         dgvCustomers.CellContentClick += dgvCustomers_CellContentClick;
+
+        btnSave.Size = new Size(156, 42);
+        btnClear.Size = new Size(156, 42);
+        flpButtons.Width = 330;
+        btnClear.DefaultColor = Color.FromArgb(234, 224, 207);
+        btnClear.BorderColor = UIThemeHelper.Slate;
+        btnClear.TextColor = UIThemeHelper.Indigo;
+        btnClear.HoverTextColor = UIThemeHelper.Indigo;
+
+        LoadCustomers();
     }
 
     protected override void OnPaintBackground(PaintEventArgs e)
@@ -75,15 +105,23 @@ public partial class FrmCustomerRegistration : Form
         this.Close();
     }
 
+    private string _lastSearch = "";
+
     private void txtSearch_TextChanged(object? sender, EventArgs e)
     {
-        LoadCustomers(txtSearch.Text.Trim());
+        var term = txtSearch.Text.Trim();
+        if (term == _lastSearch) return;   // ignore events that didn't change the text
+        _lastSearch = term;
+        LoadCustomers(term);
     }
 
     private void btnClear_Click(object? sender, EventArgs e)
     {
         ResetForm();
     }
+
+    private bool _binding;   // true while the grid is being filled
+    private static readonly Font ArchiveFont = new("Segoe UI", 9.5F, FontStyle.Bold);
 
     private void LoadCustomers(string filter = "")
     {
@@ -103,31 +141,121 @@ public partial class FrmCustomerRegistration : Form
             Joined = c.CreatedAt.ToString("MM/dd/yyyy")
         }).ToList();
 
-        dgvCustomers.DataSource = list;
-        if (dgvCustomers.Columns["CustomerId"] is { } col)
-            col.Visible = false;
-        EnsureActionColumn();
-    }
-
-    private void dgvCustomers_SelectionChanged(object? sender, EventArgs e)
-    {
-        if (dgvCustomers.SelectedRows.Count == 0) return;
-        var row = dgvCustomers.SelectedRows[0];
-        if (row.Cells["CustomerId"].Value is int id)
+        _binding = true;   // don't let the automatic "first row selected" overwrite the form
+        try
         {
-            _selectedCustomer = AppServices.Customers.GetById(id);
-            if (_selectedCustomer != null)
+            dgvCustomers.DataSource = list;
+            if (dgvCustomers.Columns["CustomerId"] is { } col)
+                col.Visible = false;
+            EnsureActionColumn();
+            ApplyGridLayout();
+
+            dgvCustomers.ClearSelection();
+
+            // Keep the highlight on the customer currently shown in the form
+            if (_editingCustomerId > 0)
             {
-                _editingCustomerId = _selectedCustomer.CustomerId;
-                lblFormTitle.Text = $"Edit Customer #{_selectedCustomer.CustomerId}";
-                btnSave.Text = "Update Info";
-                txtFullName.Text = _selectedCustomer.FullName;
-                txtPhone.Text = _selectedCustomer.Phone;
-                txtEmail.Text = _selectedCustomer.Email ?? "";
-                txtAddress.Text = _selectedCustomer.Address ?? "";
-                lblError.Visible = false;
+                foreach (DataGridViewRow r in dgvCustomers.Rows)
+                {
+                    if (r.Cells["CustomerId"].Value is int rid && rid == _editingCustomerId)
+                    {
+                        r.Selected = true;
+                        break;
+                    }
+                }
             }
         }
+        finally { _binding = false; }
+    }
+
+    private void ApplyGridLayout()
+    {
+        void Weight(string name, float w)
+        {
+            if (dgvCustomers.Columns[name] is { } c) c.FillWeight = w;
+        }
+        Weight("Name", 22);
+        Weight("Phone", 24);
+        Weight("Email", 32);
+        Weight("Address", 28);
+        Weight("Joined", 22);
+
+        if (dgvCustomers.Columns["colArchive"] is { } a)
+        {
+            a.AutoSizeMode = DataGridViewAutoSizeColumnMode.None;
+            a.Width = 96;
+        }
+    }
+
+    // Mouse-down gives the exact row that was clicked, before any selection logic runs.
+    private void dgvCustomers_CellMouseDown(object? sender, DataGridViewCellMouseEventArgs e)
+    {
+        if (e.Button != MouseButtons.Left || e.RowIndex < 0) return;
+        if (dgvCustomers.Columns[e.ColumnIndex].Name == "colArchive") return;
+        LoadCustomerIntoForm(e.RowIndex);
+    }
+
+    private void dgvCustomers_CellClick(object? sender, DataGridViewCellEventArgs e)
+    {
+        if (e.RowIndex < 0) return;
+        if (dgvCustomers.Columns[e.ColumnIndex].Name == "colArchive") return;
+        LoadCustomerIntoForm(e.RowIndex);
+    }
+
+    // Keyboard navigation. The current cell is only updated just after this event, so read it a moment later.
+    private void dgvCustomers_SelectionChanged(object? sender, EventArgs e)
+    {
+        if (_binding || !IsHandleCreated) return;
+        BeginInvoke(new Action(() =>
+        {
+            if (_binding) return;
+            var cell = dgvCustomers.CurrentCell;
+            if (cell?.OwningRow != null && cell.OwningRow.Selected &&
+                dgvCustomers.Columns[cell.ColumnIndex].Name != "colArchive")
+                LoadCustomerIntoForm(cell.RowIndex);
+        }));
+    }
+
+    private void LoadCustomerIntoForm(int rowIndex)
+    {
+        try
+        {
+            if (rowIndex < 0 || rowIndex >= dgvCustomers.Rows.Count) return;
+            if (dgvCustomers.Rows[rowIndex].Cells["CustomerId"].Value is not int id) return;
+
+            var c = AppServices.Customers.GetById(id);
+            if (c == null) return;
+
+            _selectedCustomer = c;
+            _editingCustomerId = c.CustomerId;
+            lblFormTitle.Text = $"Edit Customer #{c.CustomerId}";
+            btnSave.Text = "Update Info";
+            txtFullName.Text = c.FullName;
+            txtPhone.Text = c.Phone;
+            txtEmail.Text = c.Email ?? "";
+            txtAddress.Text = c.Address ?? "";
+            lblError.Visible = false;
+
+            // TEMPORARY check: shows which customer was loaded. Delete this line once it works.
+            Text = $"Customer Management  -  loaded #{c.CustomerId} {c.FullName}";
+        }
+        catch (Exception ex)
+        {
+            MessageBox.Show(ex.Message, "Could not load customer");
+        }
+    }
+
+    // Same soft-red Archive button on every row (alternating row colors were overriding it).
+    private void dgvCustomers_CellFormatting(object? sender, DataGridViewCellFormattingEventArgs e)
+    {
+        if (e.RowIndex < 0 || dgvCustomers.Columns[e.ColumnIndex].Name != "colArchive") return;
+
+        var back = Color.FromArgb(250, 232, 235);
+        e.CellStyle.BackColor = back;
+        e.CellStyle.SelectionBackColor = back;
+        e.CellStyle.ForeColor = UIThemeHelper.Danger;
+        e.CellStyle.SelectionForeColor = UIThemeHelper.Danger;
+        e.CellStyle.Font = ArchiveFont;
     }
 
     private void dgvCustomers_CellDoubleClick(object? sender, DataGridViewCellEventArgs e)
@@ -284,6 +412,10 @@ public partial class FrmCustomerRegistration : Form
         txtAddress.Clear();
         lblError.Visible = false;
         dgvCustomers.ClearSelection();
+        if (dgvCustomers.Rows.Count > 0)
+        {
+            try { dgvCustomers.CurrentCell = null; } catch { }
+        }
     }
 
     private bool ValidateForm()

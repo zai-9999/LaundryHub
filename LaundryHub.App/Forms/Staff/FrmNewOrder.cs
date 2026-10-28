@@ -8,8 +8,12 @@ public partial class FrmNewOrder : Form
 {
     private CustomerModel? _selectedCustomer;
     private List<ServiceType> _services = new();
-    private Panel? pnlCard;
     private List<LoadPrice> _loadPrices = new();
+
+    // Current selections (driven by the chip / card buttons)
+    private string _category = LoadPricingCalculator.ClothesCategory;
+    private ServiceType? _selectedService;
+    private LoadPrice? _selectedTier;
 
     public FrmNewOrder()
     {
@@ -17,65 +21,38 @@ public partial class FrmNewOrder : Form
         DoubleBuffered = true;
         ResizeRedraw = true;
 
-        // Wrap the form contents in a white card so it matches the login surface,
-        // then grow the window so the card sits on the gradient with a margin.
-        const int pad = 30, margin = 24;
-        int minX = int.MaxValue, minY = int.MaxValue, maxX = 0, maxY = 0;
-        foreach (Control c in Controls)
-        {
-            minX = Math.Min(minX, c.Left);
-            minY = Math.Min(minY, c.Top);
-            maxX = Math.Max(maxX, c.Right);
-            maxY = Math.Max(maxY, c.Bottom);
-        }
-
-        pnlCard = new Panel { BackColor = Color.White };
-        while (Controls.Count > 0)
-            Controls[0].Parent = pnlCard;
-
-        int shiftX = pad - minX, shiftY = pad - minY;
-        foreach (Control c in pnlCard.Controls)
-        {
-            c.Left += shiftX;
-            c.Top += shiftY;
-        }
-
-        pnlCard.Bounds = new Rectangle(margin, margin, (maxX - minX) + pad * 2, (maxY - minY) + pad * 2);
-        Controls.Add(pnlCard);
-
         UIThemeHelper.StyleStandardForm(this);
 
-        // The theme makes combo boxes flat white (borderless); use the standard style so they stay visible.
-        foreach (var cb in new[] { cmbCategory, cmbService, cmbLoadSize })
-            cb.FlatStyle = FlatStyle.Standard;
-        nudLoads.BackColor = Color.White;
+        btnSave.PrimaryColor = UIThemeHelper.Indigo;
+        btnSave.TextColor = UIThemeHelper.CardCream;
+        btnSave.HoverTextColor = Color.White;
+        pnlPriceBox.BackColor = UIThemeHelper.SandLight;
+        dtpPickup.MinDate = DateTime.Today;
+        dtpPickup.Value = DateTime.Today.AddDays(1);
+        dtpPickup.ValueChanged += (_, _) => lblError.Visible = false;
+        nudLoads.ValueChanged += (_, _) => lblError.Visible = false;
 
-        lblSecService.UseMnemonic = false;           // keep the "&" visible
-        lblSecCustomer.Text = "Customer";
-        lblSecService.Text = "Laundry Category & Service";
-        lblSecPickup.Text = "Pickup Date";
-        this.ClientSize = new Size(pnlCard.Right + margin, pnlCard.Bottom + margin);
-        UIThemeHelper.ApplyRoundedRegion(pnlCard, UIThemeHelper.LoginCardRadius);
-        pnlCard.SizeChanged += (s, e) =>
+        // Whenever the stacked content changes height (theme font bump, error label,
+        // extra chip rows), resize the card and window to match.
+        flowMain.SizeChanged += (_, _) => FitToContent();
+        pnlCard.SizeChanged += (_, _) =>
         {
-            if (this.WindowState == FormWindowState.Maximized)
+            if (WindowState == FormWindowState.Maximized)
                 pnlCard.Region = null;
             else
                 UIThemeHelper.ApplyRoundedRegion(pnlCard, UIThemeHelper.LoginCardRadius);
         };
 
-        pnlPriceBox.BackColor = UIThemeHelper.SandLight;
-        btnSave.PrimaryColor = UIThemeHelper.Indigo;
-        btnSave.TextColor = UIThemeHelper.CardCream;
-        btnSave.HoverTextColor = Color.White;
-        dtpPickup.MinDate = DateTime.Today;
-        dtpPickup.Value = DateTime.Today.AddDays(1);
-        cmbLoadSize.SelectedIndexChanged += (_, _) => lblError.Visible = false;
-        nudLoads.ValueChanged += (_, _) => lblError.Visible = false;
-        cmbService.SelectedIndexChanged += (_, _) => lblError.Visible = false;
-        dtpPickup.ValueChanged += (_, _) => lblError.Visible = false;
+        BuildCategoryChips();
         LoadServices();
         LoadLoadPrices();
+        FitToContent();
+    }
+
+    private void FitToContent()
+    {
+        pnlCard.Size = new Size(flowMain.Right + 30, flowMain.Bottom + 28);
+        ClientSize = new Size(pnlCard.Right + 24, pnlCard.Bottom + 24);
     }
 
     protected override void OnPaintBackground(PaintEventArgs e)
@@ -89,44 +66,141 @@ public partial class FrmNewOrder : Form
         this.Close();
     }
 
+    // ---------- Selectable chips / cards ----------
+
+    private static RadioButton MakeChip(string text, object tag, bool card)
+    {
+        var rb = new RadioButton
+        {
+            Appearance = Appearance.Button,
+            FlatStyle = FlatStyle.Flat,
+            Text = text,
+            Tag = tag,
+            Cursor = Cursors.Hand,
+            TextAlign = ContentAlignment.MiddleCenter,
+            UseVisualStyleBackColor = false,
+            Font = new Font("Segoe UI", 10F, card ? FontStyle.Regular : FontStyle.Bold)
+        };
+
+        if (card)
+        {
+            rb.Size = new Size(135, 88);   // 3 cards + margins must fit in 440 px
+            rb.Margin = new Padding(0, 0, 10, 0);
+        }
+        else
+        {
+            rb.AutoSize = true;
+            rb.MinimumSize = new Size(0, 36);
+            rb.Padding = new Padding(8, 2, 8, 2);
+            rb.Margin = new Padding(0, 0, 8, 8);
+        }
+
+        rb.FlatAppearance.BorderSize = 1;
+        rb.CheckedChanged += (_, _) => StyleChip(rb);
+        StyleChip(rb);
+        return rb;
+    }
+
+    private static void StyleChip(RadioButton rb)
+    {
+        var back = rb.Checked ? UIThemeHelper.Indigo : UIThemeHelper.SandLight;
+        rb.BackColor = back;
+        rb.ForeColor = rb.Checked ? Color.White : UIThemeHelper.Navy;
+        rb.FlatAppearance.BorderColor = rb.Checked ? UIThemeHelper.Indigo : UIThemeHelper.BorderSoft;
+        rb.FlatAppearance.CheckedBackColor = UIThemeHelper.Indigo;
+        rb.FlatAppearance.MouseOverBackColor = rb.Checked ? UIThemeHelper.Indigo : UIThemeHelper.Tint;
+        rb.FlatAppearance.MouseDownBackColor = UIThemeHelper.Indigo;
+    }
+
+    private static void ClearFlow(FlowLayoutPanel flow)
+    {
+        foreach (var c in flow.Controls.Cast<Control>().ToList())
+            c.Dispose();
+    }
+
+    private void BuildCategoryChips()
+    {
+        ClearFlow(flowCategory);
+        foreach (var name in new[]
+                 {
+                     LoadPricingCalculator.ClothesCategory,
+                     LoadPricingCalculator.HouseholdTextilesCategory
+                 })
+        {
+            var chip = MakeChip(name, name, card: false);
+            chip.CheckedChanged += (_, _) =>
+            {
+                if (!chip.Checked) return;
+                _category = name;
+                lblError.Visible = false;
+                nudLoads.Value = 1;
+                BuildSizeCards();
+                ComputePrice();
+            };
+            flowCategory.Controls.Add(chip);
+        }
+    }
+
     private void LoadServices()
     {
         _services = AppServices.ServiceTypes.GetAll(activeOnly: true).ToList();
-        cmbService.DataSource = _services;
-        cmbService.DisplayMember = "ServiceName";
-        cmbService.ValueMember = "ServiceId";
-        cmbService.SelectedIndex = -1;
+        ClearFlow(flowService);
+        _selectedService = null;
+
+        foreach (var svc in _services)
+        {
+            var chip = MakeChip(svc.ServiceName, svc, card: false);
+            chip.CheckedChanged += (_, _) =>
+            {
+                if (!chip.Checked) return;
+                _selectedService = svc;
+                lblError.Visible = false;
+                ComputePrice();
+            };
+            flowService.Controls.Add(chip);
+        }
     }
 
     private void LoadLoadPrices()
     {
         _loadPrices = AppServices.LoadPricing.GetAll().ToList();
-        cmbCategory.DataSource = new[]
-        {
-            LoadPricingCalculator.ClothesCategory,
-            LoadPricingCalculator.HouseholdTextilesCategory
-        };
-        cmbCategory.SelectedIndex = 0;   // default to Clothes
+
+        // Default to the first category (Clothes), which also builds the size cards.
+        if (flowCategory.Controls.Count > 0)
+            ((RadioButton)flowCategory.Controls[0]).Checked = true;
     }
 
-    // One entry in the Load Size dropdown (Small / Medium / Large for the chosen category).
-    private sealed record LoadOption(LoadPrice Tier)
-    {
-        public override string ToString() =>
-            $"{char.ToUpper(Tier.LoadSize[0])}{Tier.LoadSize[1..].ToLower()}  (up to {Tier.MaxWeightKg:0.##} kg)  -  ₱{Tier.Price:N2}";
-    }
+    private static string Title(string s) =>
+        s.Length == 0 ? s : char.ToUpper(s[0]) + s[1..].ToLower();
 
-    private void PopulateLoadSizes()
+    private void BuildSizeCards()
     {
-        cmbLoadSize.Items.Clear();
-        if (cmbCategory.SelectedItem is string category)
+        flowSize.SuspendLayout();
+        ClearFlow(flowSize);
+        _selectedTier = null;
+
+        foreach (var tier in _loadPrices.Where(p => p.Category == _category).OrderBy(p => p.MaxWeightKg))
         {
-            foreach (var tier in _loadPrices.Where(p => p.Category == category).OrderBy(p => p.MaxWeightKg))
-                cmbLoadSize.Items.Add(new LoadOption(tier));
+            var text = $"{Title(tier.LoadSize)} Bag\n(max {tier.MaxWeightKg:0.##} kg)\n\u20B1{tier.Price:N2}";
+            var card = MakeChip(text, tier, card: true);
+            card.CheckedChanged += (_, _) =>
+            {
+                if (!card.Checked) return;
+                _selectedTier = tier;
+                lblError.Visible = false;
+                ComputePrice();
+            };
+            flowSize.Controls.Add(card);
         }
-        cmbLoadSize.SelectedIndex = cmbLoadSize.Items.Count > 0 ? 0 : -1;   // default to Small
-        nudLoads.Value = 1;
+
+        flowSize.ResumeLayout(true);
+
+        // Default to the smallest load
+        if (flowSize.Controls.Count > 0)
+            ((RadioButton)flowSize.Controls[0]).Checked = true;
     }
+
+    // ---------- Customer search ----------
 
     private void txtSearch_TextChanged(object? sender, EventArgs e)
     {
@@ -137,6 +211,12 @@ public partial class FrmNewOrder : Form
         lstCustomers.DataSource = results;
         lstCustomers.DisplayMember = "FullName";
         lstCustomers.ValueMember = "CustomerId";
+
+        // Float the results list right under the search box.
+        lstCustomers.Location = pnlCard.PointToClient(
+            pnlSearchRow.PointToScreen(new Point(txtSearch.Left, txtSearch.Bottom + 2)));
+        lstCustomers.Width = pnlSearchRow.Width;
+        lstCustomers.BringToFront();
         lstCustomers.Visible = results.Count > 0;
     }
 
@@ -164,16 +244,18 @@ public partial class FrmNewOrder : Form
         }
     }
 
-    // Weight and price are derived from the selected load size and number of loads.
+    // ---------- Pricing ----------
+
+    // Weight and price come from the selected load size x number of loads.
     private bool TryGetLoad(out LoadPrice tier, out int loads, out decimal weightKg, out decimal total)
     {
         tier = null!;
         loads = (int)nudLoads.Value;
         weightKg = 0;
         total = 0;
-        if (cmbLoadSize.SelectedItem is not LoadOption option) return false;
+        if (_selectedTier == null) return false;
 
-        tier = option.Tier;
+        tier = _selectedTier;
         weightKg = tier.MaxWeightKg * loads;
         total = tier.Price * loads;
         return true;
@@ -181,27 +263,20 @@ public partial class FrmNewOrder : Form
 
     private void ComputePrice()
     {
-        if (cmbService.SelectedItem is not ServiceType ||
-            cmbCategory.SelectedItem is not string ||
-            !TryGetLoad(out var tier, out var loads, out var kg, out var total))
+        if (_selectedService == null || !TryGetLoad(out var tier, out var loads, out var kg, out var total))
         {
-            lblPrice.Text = "0.00";
-            lblPriceBreakdown.Text = "Select a category, service, and load size to compute.";
+            lblPrice.Text = "\u20B10.00";
+            lblPriceBreakdown.Text = "Select a service and load size to compute.";
             return;
         }
 
-        lblPrice.Text = $"{total:N2}";
+        lblPrice.Text = $"\u20B1{total:N2}";
         lblPriceBreakdown.Text = $"{loads} x {tier.LoadSize.ToLower()} load  |  {kg:0.##} kg (auto)";
     }
 
-    private void cmbCategory_SelectedIndexChanged(object? sender, EventArgs e)
-    {
-        PopulateLoadSizes();
-        ComputePrice();
-    }
-    private void cmbService_SelectedIndexChanged(object? sender, EventArgs e) => ComputePrice();
-    private void cmbLoadSize_SelectedIndexChanged(object? sender, EventArgs e) => ComputePrice();
     private void nudLoads_ValueChanged(object? sender, EventArgs e) => ComputePrice();
+
+    // ---------- Save ----------
 
     private void btnSave_Click(object? sender, EventArgs e)
     {
@@ -209,8 +284,7 @@ public partial class FrmNewOrder : Form
 
         try
         {
-            var svc = (ServiceType)cmbService.SelectedItem!;
-            var category = (string)cmbCategory.SelectedItem!;
+            var svc = _selectedService!;
             TryGetLoad(out _, out _, out var kg, out var total);
 
             var order = new Order
@@ -218,7 +292,7 @@ public partial class FrmNewOrder : Form
                 OrderNumber = AppServices.Orders.GenerateOrderNumber(),
                 CustomerId = _selectedCustomer!.CustomerId,
                 ServiceId = svc.ServiceId,
-                LaundryCategory = category,
+                LaundryCategory = _category,
                 WeightKg = kg,
                 TotalAmount = total,
                 Status = "Booked",
@@ -264,24 +338,15 @@ public partial class FrmNewOrder : Form
             return false;
         }
 
-        if (cmbService.SelectedItem is not ServiceType)
+        if (_selectedService == null)
         {
             ShowErr("Please select a service type.");
-            cmbService.Focus();
-            return false;
-        }
-
-        if (cmbCategory.SelectedItem is not string)
-        {
-            ShowErr("Please select a laundry category.");
-            cmbCategory.Focus();
             return false;
         }
 
         if (!TryGetLoad(out _, out _, out _, out _))
         {
             ShowErr("Please select a load size.");
-            cmbLoadSize.Focus();
             return false;
         }
 

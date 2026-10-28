@@ -21,6 +21,21 @@ public partial class FrmAdminDashboard : Form
         UIThemeHelper.StyleDataGridView(dgvTodayOrders);
         UIThemeHelper.EnableStatusPills(dgvTodayOrders);
 
+        // Right-click menu on the orders grid
+        var orderMenu = new ContextMenuStrip();
+        orderMenu.Items.Add("Manage order...", null, (_, _) => OpenSelectedOrderDetail());
+        orderMenu.Items.Add("Cancel order...", null, async (_, _) => await CancelSelectedOrderAsync());
+        dgvTodayOrders.ContextMenuStrip = orderMenu;
+        dgvTodayOrders.CellMouseDown += (_, e) =>
+        {
+            // Right-click selects the row under the cursor so the menu acts on it.
+            if (e.Button == MouseButtons.Right && e.RowIndex >= 0)
+            {
+                dgvTodayOrders.ClearSelection();
+                dgvTodayOrders.Rows[e.RowIndex].Selected = true;
+            }
+        };
+
         // Sidebar Branding & Navigation
         pnlSidebar.BrandLabel.Text = " LaundryHub";
         pnlSidebar.BrandSubtitle.Text = "ADMIN & OPERATIONS";
@@ -209,6 +224,27 @@ public partial class FrmAdminDashboard : Form
 
         if (dgvTodayOrders.Columns["OrderId"] is { } col)
             col.Visible = false;
+    }
+
+    private async Task CancelSelectedOrderAsync()
+    {
+        if (dgvTodayOrders.SelectedRows.Count == 0 ||
+            dgvTodayOrders.SelectedRows[0].Cells["OrderId"].Value is not int id)
+        {
+            MessageBox.Show("Select an order first.", "Cancel Order",
+                MessageBoxButtons.OK, MessageBoxIcon.Information);
+            return;
+        }
+
+        var order = AppServices.Orders.GetById(id);
+        if (order == null) return;
+
+        if (OrderCancelHelper.Prompt(this, order.OrderId, order.OrderNumber, order.Status))
+        {
+            DataCache.Invalidate($"admin_daily_{DateTime.Today:yyyyMMdd}");
+            DataCache.Invalidate("admin_all_orders");
+            await LoadDashboardDataAsync();
+        }
     }
 
     private async void OpenSelectedOrderDetail()

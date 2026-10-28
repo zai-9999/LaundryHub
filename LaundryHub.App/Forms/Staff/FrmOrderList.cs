@@ -40,6 +40,7 @@ public partial class FrmOrderList : Form
 
         var menu = new ContextMenuStrip();
         menu.Items.Add("Manage order...", null, (_, _) => OpenOrderDetail());
+        menu.Items.Add("Cancel order...", null, (_, _) => CancelSelectedOrder());
         menu.Items.Add("Refresh", null, (_, _) => RefreshCurrentView());
         dgvOrders.ContextMenuStrip = menu;
         dgvOrders.CellMouseDown += (_, e) =>
@@ -223,6 +224,23 @@ public partial class FrmOrderList : Form
         var f = new FrmOrderDetail(order);
         f.ShowDialog(this);
         RefreshCurrentView();
+    }
+
+    private void CancelSelectedOrder()
+    {
+        if (dgvOrders.SelectedRows.Count == 0 ||
+            dgvOrders.SelectedRows[0].Cells["OrderId"].Value is not int orderId)
+        {
+            MessageBox.Show("Select an order first.", "Cancel Order",
+                MessageBoxButtons.OK, MessageBoxIcon.Information);
+            return;
+        }
+
+        var order = AppServices.Orders.GetById(orderId);
+        if (order == null) return;
+
+        if (OrderCancelHelper.Prompt(this, order.OrderId, order.OrderNumber, order.Status))
+            RefreshCurrentView();
     }
 
     private void RefreshCurrentView()

@@ -9,5 +9,6 @@ public class User
     public string Email { get; set; } = string.Empty;
     public string Role { get; set; } = "Staff";
     public bool IsActive { get; set; } = true;
+    public bool IsArchived { get; set; } = false;
     public DateTime CreatedAt { get; set; } = DateTime.Now;
 }

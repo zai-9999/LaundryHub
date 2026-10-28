@@ -405,86 +405,8 @@ public partial class FrmOrderDetail : Form
 
     private void btnCancelOrder_Click(object? sender, EventArgs e)
     {
-        RefreshOrderData();
-        if (_order.Status is "Ready for Pickup" or "Claimed" or "Cancelled")
-        {
-            MessageBox.Show($"This order is '{_order.Status}' and can no longer be cancelled.",
-                "Cannot Cancel", MessageBoxButtons.OK, MessageBoxIcon.Information);
-            return;
-        }
-
-        using var dlg = new Form
-        {
-            Text = "Cancel Order",
-            Size = new Size(400, 240),
-            StartPosition = FormStartPosition.CenterParent,
-            BackColor = Color.White,
-            ForeColor = UIThemeHelper.Navy,
-            FormBorderStyle = FormBorderStyle.FixedDialog,
-            MaximizeBox = false,
-            MinimizeBox = false
-        };
-
-        var lblPrompt = new Label
-        {
-            Text = "Reason for cancellation *:",
-            Location = new Point(30, 20),
-            Size = new Size(330, 25),
-            Font = new Font("Segoe UI", 9.5f, FontStyle.Bold),
-            ForeColor = UIThemeHelper.Navy
-        };
-        var txtReason = new TextBox
-        {
-            Location = new Point(30, 50),
-            Size = new Size(330, 55),
-            Multiline = true,
-            MaxLength = 250,
-            Font = new Font("Segoe UI", 9.5f),
-            BackColor = UIThemeHelper.Surface,
-            ForeColor = UIThemeHelper.Navy,
-            BorderStyle = BorderStyle.FixedSingle
-        };
-        var btnConfirm = new Button
-        {
-            Text = "Confirm Cancel",
-            Location = new Point(30, 125),
-            Size = new Size(330, 36),
-            BackColor = UIThemeHelper.Danger,
-            ForeColor = Color.White,
-            FlatStyle = FlatStyle.Flat,
-            Font = new Font("Segoe UI", 9.5f, FontStyle.Bold),
-            Cursor = Cursors.Hand
-        };
-        btnConfirm.FlatAppearance.BorderSize = 0;
-        btnConfirm.Click += (_, _) =>
-        {
-            var reason = txtReason.Text.Trim();
-            if (string.IsNullOrWhiteSpace(reason) || reason.Length < 3)
-            {
-                MessageBox.Show("Please provide a valid cancellation reason (at least 3 characters).", "Reason Required", MessageBoxButtons.OK, MessageBoxIcon.Warning);
-                txtReason.Focus();
-                return;
-            }
-
-            try
-            {
-                AppServices.Orders.UpdateStatus(_order.OrderId, "Cancelled", txtReason.Text.Trim(), changedBy: SessionManager.CurrentUser?.UserId);
-                dlg.DialogResult = DialogResult.OK;
-                dlg.Close();
-            }
-            catch (Exception ex)
-            {
-                MessageBox.Show($"Failed to cancel order: {ex.Message}", "Database Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
-            }
-        };
-
-        dlg.Controls.AddRange(new Control[] { lblPrompt, txtReason, btnConfirm });
-        UIThemeHelper.ApplyTheme(dlg);
-        if (dlg.ShowDialog(this) == DialogResult.OK)
-        {
+        if (OrderCancelHelper.Prompt(this, _order.OrderId, _order.OrderNumber, _order.Status))
             RefreshOrderData();
-            MessageBox.Show("Order cancelled.", "Notice", MessageBoxButtons.OK, MessageBoxIcon.Information);
-        }
     }
 
     private void btnPrintQr_Click(object? sender, EventArgs e)

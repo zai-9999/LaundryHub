@@ -15,6 +15,9 @@ public partial class FrmCustomerPortal : Form
     public FrmCustomerPortal()
     {
         InitializeComponent();
+        // The E-Ticket / Receipt button is no longer used
+        btnViewTicket.Visible = false;
+
         DoubleBuffered = true;
         ResizeRedraw = true;
 
